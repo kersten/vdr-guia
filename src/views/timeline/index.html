@@ -1,0 +1,28 @@
+<div class="container" style="margin-top: 50px;">
+    <div class="page-header">
+        <h1>
+            Timeline
+            <small>The complete TV program always in your view</small>
+        </h1>
+    </div>
+    <% if (channels.length) {
+        channels.forEach(function (channel) { 
+        %>
+        <div class="row" style="overflow: hidden; margin-bottom: 0px;">
+            <div class="span2 columns"><h5><%= channel.name %></h5></div>
+            <div class="span14 columns" style="overflow: hidden; white-space:nowrap; position: relative;">
+                <% if (channel.epg.events.length) {
+                    channel.epg.events.forEach(function (broadcast) { %>
+                <div class="alert-message warning" style="width: <%= broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
+                    <p>
+                        <%= broadcast.title %>
+                    </p>
+                </div>
+                <%
+                })
+                } %>
+            </div>
+        </div>
+    <%  })
+    } %>
+</div>
