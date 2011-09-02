@@ -1,9 +1,11 @@
 var express = require('express');
 var app = express.createServer();
 var rest = require('restler');
+var config = require('./etc/config');
 
-app.configure('development', function(){
-    app.use(express.static(__dirname + '/../public'));
+app.configure('development', function() {
+
+    app.use(express.static(__dirname + '/../public/'));
     app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
 });
 
@@ -15,9 +17,12 @@ app.set('view engine', 'html');
 var RedisStore = require('connect-redis')(express);
 app.use(express.bodyParser());
 app.use(express.cookieParser());
-app.use(express.session({secret: "keyboard cat", store: new RedisStore}));
+app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
+
+var restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
 
 app.all('*', function (req, res, next) {
+    console.log(req.url);
     if (req.url == '/login') {
         next();
         return;
@@ -28,6 +33,11 @@ app.all('*', function (req, res, next) {
         res.redirect('/login');
         return;
     }
+    
+    if (req.url == '/') {
+        res.redirect('/timeline');
+        return;
+    }
 
     next();
 });
@@ -35,7 +45,7 @@ app.all('*', function (req, res, next) {
 app.get('/timeline', function(req, res) {
     var channels = new Object();
     
-    rest.get('http://127.0.0.1:8002/channels/.json?&start=0&limit=10').on('complete', function(data, entry) {
+    rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
         var render = function () {
             if (data.channels.length != waitForFinish) return;
 
@@ -69,7 +79,7 @@ app.get('/timeline', function(req, res) {
         var waitForFinish = 1;
         
         data.channels.forEach(function (channel) {
-            rest.get('http://127.0.0.1:8002/events/' + channel.channel_id + '/86000.json?start=0', {channel: channel}).on('complete',  function (epg) {
+            rest.get(restfulUrl + '/events/' + channel.channel_id + '/86000.json?start=0', {channel: channel}).on('complete',  function (epg) {
                 channels[this.options.channel.number] = {
                     channel: this.options.channel,
                     epg: epg
@@ -112,7 +122,7 @@ app.post('/login', function (req, res) {
     var username = req.param("username");
     var password = req.param("password");
     
-    if (username == 'kersten' && password == 'manager') {
+    if (username == config.username && password == config.password) {
         req.session.loggedIn = true;
         res.redirect('/');
     } else {
@@ -123,13 +133,50 @@ app.post('/login', function (req, res) {
 });
 
 app.get('/program', function (req, res) {
-    res.render('program', {
+    var chan = 0;
+    
+    if (req.param("chan")) {
+        chan = req.param("chan")
+    }
+    
+    rest.get(restfulUrl + '/channels/.json?&start=0').on('complete', function(data) {
+        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/86000.json?start=0').on('complete',  function (epg) {
+            res.render('program', {
+                global: {
+                    title: 'Program',
+                    loggedIn: req.session.loggedIn,
+                    page: 'program'
+                },
+                channel: data.channels[chan],
+                channelEpg: epg.events,
+                channels: data.channels
+            });
+        });
+    }); 
+});
+
+app.get('/watch', function (req, res) {
+    res.render('watch', {
         global: {
-            title: 'Program',
+            title: 'Watch',
             loggedIn: req.session.loggedIn,
-            page: 'program'
+            page: 'watch'
         }
     });
+});
+
+app.post('/program', function (req, res) {
+    var username = req.param("username");
+    var password = req.param("password");
+    
+    if (username == 'kersten' && password == 'manager') {
+        req.session.loggedIn = true;
+        res.redirect('/');
+    } else {
+        res.redirect('/login?failed=true');
+    }
+    
+    res.end();
 });
 
 app.get('/logout', function (req, res) {
@@ -144,11 +191,16 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('*', function(req, res) {
-    console.log('Requested unknown url: ' + req.url);
-    res.redirect('/timeline');
+    res.render('404', {
+        global: {
+            title: '404 - Site not found',
+            loggedIn: req.session.loggedIn,
+            page: '404'
+        }
+    });
 });
 
-app.listen(8007);
+app.listen(config.web.port);
 
 function ksort (inputArr, sort_flags) {
     // Sort an array by key  

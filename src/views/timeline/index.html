@@ -1,5 +1,18 @@
-<script type="text/javascipt">
-    $('.alert-message')
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".scroller").mousedown(function (e) {
+        $(".scroller").mousemove(function (e) {
+            console.log($('.scroller').css('margin-left', -(e.pageX - this.offsetLeft)));
+            $('.scroller').css({
+                "margin-left": $('.scroller').css('margin-left') -(e.pageX - this.offsetLeft)
+            });
+        });
+    });
+    
+    $(".scroller").mouseup(function (e) {
+        $(".scroller").unbind("mousemove");
+    });
+});
 </script>
 <div class="container" style="margin-top: 50px;">
     <div class="page-header">
@@ -12,11 +25,14 @@
         for (i in channels) { 
         %>
         <div class="row" style="overflow: hidden; margin-bottom: 0px;">
-            <div class="span3 columns" style="white-space:nowrap; overflow: hidden;"><h5><%= channels[i].channel.name %></h5></div>
+            <div class="span3 columns" style="white-space:nowrap; overflow: hidden;">
+                <h5><%= channels[i].channel.name %></h5>
+            </div>
             <div class="span13 columns" style="overflow: hidden; white-space:nowrap; position: relative;">
+                <div class="scroller">
                 <% if (channels[i].epg) {
                     channels[i].epg.events.forEach(function (broadcast) { %>
-                    <div id="" class="alert-message warning" style="width: <%= broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
+                    <div class="alert-message warning" style="width: <%= broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
                         <p>
                             <%= broadcast.title %>
                         </p>
@@ -24,6 +40,7 @@
                     <% 
                     })
                 } %>
+                </div>
             </div>
         </div>
     <%  }

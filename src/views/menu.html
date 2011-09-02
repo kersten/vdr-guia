@@ -1,3 +1,16 @@
+<script type="text/javascript">
+$(document).ready(function(){
+    $("body").bind("click", function (e) {
+        $('a.menu').parent("li").removeClass("open");
+    });
+
+    $("a.menu").click(function (e) {
+        var $li = $(this).parent("li").toggleClass('open');
+        return false;
+    });
+});
+</script>
+
 <div class="topbar">
     <div class="fill">
         <div class="container">
@@ -37,6 +50,21 @@
                 <li class="<% if (global.page == 'logout') { %>active<% } %>">
                     <a href="/logout">Logout</a>
                 </li>
+                
+                <% if (global.page == 'program') { %>
+                    <ul class="nav secondary-nav">
+                        <li class="menu">
+                            <a class="menu" href="#">Channels</a>
+                            <ul class="menu-dropdown" style="height: 500px; overflow: auto;">
+                                <% if (channels.length) {
+                                channels.forEach(function (broadcast, i) { %>
+                                    <li><a href="/program?chan=<%= i %>"><%= broadcast.name %></a></li>
+                                <% })
+                                }%>
+                            </ul>
+                        </li>
+                    </ul>
+                <% } %>
             </ul>
         </div>
     </div>
