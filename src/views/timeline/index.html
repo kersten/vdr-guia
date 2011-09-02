@@ -1,17 +1,45 @@
 <script type="text/javascript">
 $(document).ready(function(){
-    $(".scroller").mousedown(function (e) {
-        $(".scroller").mousemove(function (e) {
-            console.log($('.scroller').css('margin-left', -(e.pageX - this.offsetLeft)));
-            $('.scroller').css({
-                "margin-left": $('.scroller').css('margin-left') -(e.pageX - this.offsetLeft)
-            });
-        });
+    $(".scrollerMother").mousedown(function () {
+        $(".scrollerMother").hover(startScroll,stopScroll);
+    }).mouseup(function () {
+        $(".scrollerMother").unbind('mousemove hover');
     });
     
-    $(".scroller").mouseup(function (e) {
-        $(".scroller").unbind("mousemove");
-    });
+    function startScroll(e)
+    {
+       var div = $(this).bind('mousemove', scrollThis);
+       var o = div.offset();
+       this.tempPosition = {
+          left:o.left,
+          top:o.top,
+          right:o.left+div.width(),
+          bottom:o.top+div.height(),
+          scrollOffsetX:this.scrollWidth-this.clientWidth,
+          scrollOffsetY:this.scrollHeight-this.clientHeight
+       };
+
+    }
+
+    function stopScroll(e)
+    {
+       $(this).unbind('mousemove').removeAttr('tempPosition');
+
+    }
+
+    function scrollThis(e)
+    {
+       // Use the e.clientX and e.clientY vs this.tempPosition
+       // to determine how much to move the scrollbars according
+       // to your tastes.
+       
+       this.scrollTop = $(".scroller").height() - 500;
+       this.scrollLeft = -(this.tempPosition.left + e.clientX);
+       console.log($(".scroller").offset().left +'-'+ this.tempPosition.left +'+'+ e.clientX)
+       console.log(-(this.tempPosition.left - e.clientX));
+        $(".scroller").css("margin-left", -(this.tempPosition.left - e.clientX));
+
+    } 
 });
 </script>
 <div class="container" style="margin-top: 50px;">
@@ -28,7 +56,7 @@ $(document).ready(function(){
             <div class="span3 columns" style="white-space:nowrap; overflow: hidden;">
                 <h5><%= channels[i].channel.name %></h5>
             </div>
-            <div class="span13 columns" style="overflow: hidden; white-space:nowrap; position: relative;">
+            <div class="span13 columns scrollerMother" style="overflow: hidden; white-space:nowrap; position: relative;">
                 <div class="scroller">
                 <% if (channels[i].epg) {
                     channels[i].epg.events.forEach(function (broadcast) { %>
