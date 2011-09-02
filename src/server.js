@@ -152,7 +152,7 @@ app.get('/program', function (req, res) {
                 channels: data.channels
             });
         });
-    }); 
+    });
 });
 
 app.get('/watch', function (req, res) {
@@ -180,12 +180,15 @@ app.post('/program', function (req, res) {
 });
 
 app.get('/timer', function (req, res) {
-    res.render('timer', {
-        global: {
-            title: 'Timer',
-            loggedIn: req.session.loggedIn,
-            page: 'timer'
-        }
+    rest.get(restfulUrl + '/timers.json').on('complete', function(data) {
+        res.render('timer', {
+            global: {
+                title: 'Timer',
+                loggedIn: req.session.loggedIn,
+                page: 'timer'
+            },
+            timers: data.timers
+        });
     });
 });
 
