@@ -1,0 +1,27 @@
+<div class="container" style="margin-top: 50px;">
+    <div class="page-header">
+        <h1>
+            Program
+            <small>What's running on CHANNELNAME</small>
+        </h1>
+    </div>
+    <div class="span4 columns">
+        <div class="well">
+            <div class="station">
+                <h5><a href="schedule.html?channel=<$ chNumber $>" <& tooltip.hint text=(tr("View the schedule of this channel")) &>><$ chNumber $><$ tr(" - ") $><$ (epgEvent->Caption()) $></a></h5>
+            </div>
+            <div class="content">
+                <div class="tools">
+                    <& pageelems.epg_tool_box detail=(1) epgid=(epgEvent->Id()) title=(epgEvent->Title()) startTime=(epgEvent->GetStartTime()) endTime=(epgEvent->GetEndTime()) &>
+                </div>
+                <div>
+                    <div class="info nowrap"><div class="date"><$ (startDate) $></div><div class="time"><$ (timeSpan) $></div></div>
+                    <div class="progress"><div><& pageelems.progressbar progress=(epgEvent->Elapsed()) duration=(epgEvent->Duration()) &></div></div>
+                    <div class="title withmargin"><$ (epgEvent->Title()) $></div>
+                    <div class="short withmargin"><$ (epgEvent->ShortDescr()) $></div>
+                    <div class="description withmargin"><$ truncDescription $></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
