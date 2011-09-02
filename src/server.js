@@ -179,6 +179,56 @@ app.post('/program', function (req, res) {
     res.end();
 });
 
+app.get('/timer', function (req, res) {
+    res.render('timer', {
+        global: {
+            title: 'Timer',
+            loggedIn: req.session.loggedIn,
+            page: 'timer'
+        }
+    });
+});
+
+app.get('/Search', function (req, res) {
+    res.render('watch', {
+        global: {
+            title: 'Search',
+            loggedIn: req.session.loggedIn,
+            page: 'search'
+        }
+    });
+});
+
+app.get('/searchtimer', function (req, res) {
+    res.render('watch', {
+        global: {
+            title: 'Searchtimer',
+            loggedIn: req.session.loggedIn,
+            page: 'searchtimer'
+        }
+    });
+});
+
+app.get('/records', function (req, res) {
+    res.render('watch', {
+        global: {
+            title: 'Records',
+            loggedIn: req.session.loggedIn,
+            page: 'records'
+        }
+    });
+});
+
+app.get('/about', function (req, res) {
+    res.render('about', {
+        global: {
+            title: 'About',
+            loggedIn: req.session.loggedIn,
+            page: 'about'
+        }
+    });
+});
+
 app.get('/logout', function (req, res) {
     if (typeof(req.session.loggedIn) != 'undefined' && req.session.loggedIn) {
         req.session.loggedIn = false;
