@@ -189,7 +189,7 @@ app.get('/timer', function (req, res) {
     });
 });
 
-app.get('/Search', function (req, res) {
+app.get('/search', function (req, res) {
     res.render('search', {
         global: {
             title: 'Search',
