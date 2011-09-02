@@ -190,7 +190,7 @@ app.get('/timer', function (req, res) {
 });
 
 app.get('/Search', function (req, res) {
-    res.render('watch', {
+    res.render('search', {
         global: {
             title: 'Search',
             loggedIn: req.session.loggedIn,
@@ -200,7 +200,7 @@ app.get('/Search', function (req, res) {
 });
 
 app.get('/searchtimer', function (req, res) {
-    res.render('watch', {
+    res.render('searchtimer', {
         global: {
             title: 'Searchtimer',
             loggedIn: req.session.loggedIn,
@@ -210,7 +210,7 @@ app.get('/searchtimer', function (req, res) {
 });
 
 app.get('/records', function (req, res) {
-    res.render('watch', {
+    res.render('records', {
         global: {
             title: 'Records',
             loggedIn: req.session.loggedIn,
