@@ -12,5 +12,5 @@
 
 ## Configuration
 
-To configure VDRManager you have to edit the file _src/etc/config_ and changes
+To configure VDRManager you have to edit the file _src/etc/config_ and change
 the parameters to suite your needs.
