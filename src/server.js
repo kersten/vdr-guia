@@ -22,14 +22,11 @@ app.use(express.cookieParser());
 app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
 
 var restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
+var isMobileDevice = false;
 
 app.all('*', function (req, res, next) {
-    console.log(req.monomi.browserType);
-    
     if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
-        console.log('Mobile views');
-    } else {
-        console.log('Desktop views');
+        isMobileDevice = true;
     }
     
     if (req.url == '/login') {
@@ -60,7 +57,8 @@ app.get('/timeline', function(req, res) {
 
             channels = ksort(channels);
 
-            res.render('timeline', {
+            res.render((isMobileDevice) ? 'mob/timeline': 'timeline', {
+                layout: (isMobileDevice) ? 'mob/layout': 'layout',
                 global: {
                     title: 'Timeline',
                     loggedIn: req.session.loggedIn,
