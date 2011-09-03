@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express.createServer();
 var rest = require('restler');
+var monomi = require("monomi");
 var config = require('./etc/config');
 
 app.configure('development', function() {
@@ -16,13 +17,21 @@ app.set('view engine', 'html');
 
 var RedisStore = require('connect-redis')(express);
 app.use(express.bodyParser());
+app.use(monomi.detectBrowserType());
 app.use(express.cookieParser());
 app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
 
 var restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
 
 app.all('*', function (req, res, next) {
-    console.log(req.url);
+    console.log(req.monomi.browserType);
+    
+    if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
+        console.log('Mobile views');
+    } else {
+        console.log('Desktop views');
+    }
+    
     if (req.url == '/login') {
         next();
         return;
@@ -46,7 +55,6 @@ app.get('/timeline', function(req, res) {
     var channels = new Object();
     
     rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
-        console.log(data);
         var render = function () {
             if (data.channels.length != waitForFinish) return;
 
