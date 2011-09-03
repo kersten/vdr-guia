@@ -46,6 +46,7 @@ app.get('/timeline', function(req, res) {
     var channels = new Object();
     
     rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
+        console.log(data);
         var render = function () {
             if (data.channels.length != waitForFinish) return;
 
@@ -76,7 +77,7 @@ app.get('/timeline', function(req, res) {
          * is_radio: false
          */
         
-        var waitForFinish = 1;
+        var waitForFinish = 0;
         
         data.channels.forEach(function (channel) {
             rest.get(restfulUrl + '/events/' + channel.channel_id + '/86000.json?start=0', {channel: channel}).on('complete',  function (epg) {
