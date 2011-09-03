@@ -1,5 +1,10 @@
 # VDRManager
 
+## Requirements
+
+	- nodejs
+	- redis
+
 ## Installation
     git clone git://github.com/kersten/vdr-manager.git ./vdr-manager
     cd vdr-manager
