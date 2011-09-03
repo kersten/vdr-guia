@@ -1,0 +1,34 @@
+<div class="page-header">
+    <h1>
+        Program
+        <small>What's running on <strong><%= channel.name %></strong></small>
+    </h1>
+</div>
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th style="width: 100px;">Airtime</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (channelEpg.length) {
+        channelEpg.forEach(function (epg, i) {
+        var date = new Date();
+
+        date.setTime(epg.start_time * 1000);
+        var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+
+        date.setTime((epg.start_time + epg.duration) * 1000);
+        var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+        %>
+        <tr>
+            <td style="width: 20px; text-align: center;"><img src="/img/tango/16x16/actions/media-record.png" width="16px" height="16px" title="Record this show" /></td>
+            <td><%= start %> - <%= end %></td>
+            <td><%= epg.title %></td>
+        </tr>
+        <% })
+        }%>
+    </tbody>
+</table>
