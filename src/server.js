@@ -188,6 +188,20 @@ app.post('/program', function (req, res) {
 
 app.get('/timer', function (req, res) {
     rest.get(restfulUrl + '/timers.json').on('complete', function(data) {
+        var sorted = new Array();
+        
+        for (i in data.timers) {
+            sorted[data.timers[i].day + '' +data.timers[i].start] = data.timers[i];
+        }
+        
+        sorted = ksort(sorted);
+        
+        data.timers = new Array();
+        
+        for (i in sorted) {
+            data.timers.push(sorted[i]); 
+        }
+        
         res.render('timer', {
             global: {
                 title: 'Timer',
