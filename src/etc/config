@@ -4,6 +4,10 @@ config.vdr = {};
 config.redis = {};
 config.web = {};
 
+config.app = {
+    entries: 20
+}
+
 config.username = 'kersten';
 config.password = 'manager';
 
