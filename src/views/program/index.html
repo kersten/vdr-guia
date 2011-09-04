@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1>
         Program
-        <small>What's running on <strong><%= channel.name %></strong></small>
+        <small>What's running on <strong><%= channel.name %></strong> <img style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
     </h1>
 </div>
 <table class="zebra-striped">
@@ -24,7 +24,7 @@
         var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
         %>
         <tr>
-            <td style="width: 20px; text-align: center;"><img src="/img/tango/16x16/actions/media-record.png" width="16px" height="16px" title="Record this show" /></td>
+            <td style="width: 20px; text-align: center;"><img style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
             <td><%= start %> - <%= end %></td>
             <td><%= epg.title %></td>
         </tr>
