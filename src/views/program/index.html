@@ -41,34 +41,70 @@
         <small>What's running on <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
     </h1>
 </div>
-<table class="zebra-striped">
-    <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th style="width: 100px;">Airtime</th>
-            <th>Title</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if (channelEpg.length) {
-        channelEpg.forEach(function (epg, i) {
-        var date = new Date();
 
-        date.setTime(epg.start_time * 1000);
-        var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+<div class="row">
+    <div class="span16 columns">
+        <table class="zebra-striped">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th style="width: 100px;">Airtime</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (channelEpg.length) {
+                channelEpg.forEach(function (epg, i) {
+                var date = new Date();
 
-        date.setTime((epg.start_time + epg.duration) * 1000);
-        var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+                date.setTime(epg.start_time * 1000);
+                var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+
+                date.setTime((epg.start_time + epg.duration) * 1000);
+                var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
+                %>
+                <tr>
+                    <td style="width: 20px; text-align: center;"><img style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
+                    <td><%= start %> - <%= end %></td>
+                    <td><%= epg.title %></td>
+                </tr>
+                <% })
+                }%>
+            </tbody>
+        </table>
+        <% if (paginator.total > 10) {
+            var query = '&chan=' + channelNumber;
         %>
-        <tr>
-            <td style="width: 20px; text-align: center;"><img style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
-            <td><%= start %> - <%= end %></td>
-            <td><%= epg.title %></td>
-        </tr>
-        <% })
-        }%>
-    </tbody>
-</table>
+        <div class="span16 columns">
+            <div class="pagination" style="padding-left: 25%;">
+                <ul>
+                    <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
+                        <a<% if (paginator.cur != 1) {%> href="/program?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
+                    </li>
+                    <% var cnt = paginator.cur + 3;
+                    var start = paginator.cur;
+                    if (paginator.sites < 9) {
+                        cnt = paginator.sites + 1;
+                        start = 1;
+                     } %>
+                    <% for (i = start; i < cnt; i++) { %>
+                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
+                    <% } %>
+                    <% if (paginator.sites > 8) { %>
+                    <li class="disabled"><a href="#">…</a></li>
+                    <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
+                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
+                    <% } %>
+                    <% } %>
+                    <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
+                        <a<% if (paginator.cur != paginator.sites) {%> href="/program?site=<%= paginator.next %><%= query %>"<% } %>>Next →</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
 
 <div id="overlay" style="position: absolute; top: 0; left: 0; z-index: 101; display: none; color: #CCCCCC;">
     

@@ -142,9 +142,10 @@ app.post('/login', function (req, res) {
 
 app.get('/program', function (req, res) {
     var chan = req.param("chan", 0);
+    var start = req.param("site", 1) * config.app.entries;
     
-    rest.get(restfulUrl + '/channels/.json?&start=0').on('complete', function(data) {
-        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/86000.json?start=0').on('complete',  function (epg) {
+    rest.get(restfulUrl + '/channels/.json?start=0').on('complete', function(data) {
+        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/0.json?start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
             res.render('program', {
                 global: {
                     title: 'Program',
@@ -152,8 +153,16 @@ app.get('/program', function (req, res) {
                     page: 'program'
                 },
                 channel: data.channels[chan],
+                channelNumber: chan,
                 channelEpg: epg.events,
-                channels: data.channels
+                channels: data.channels,
+                paginator: {
+                    total: epg.total,
+                    cur: parseInt(req.param("site", 1)),
+                    sites: Math.floor(epg.total / config.app.entries),
+                    next: parseInt(req.param("site", 1)) + 1,
+                    previous: parseInt(req.param("site", 1)) -1
+                }
             });
         });
     });
@@ -170,7 +179,10 @@ app.get('/watch', function (req, res) {
 });
 
 app.get('/timer', function (req, res) {
-    rest.get(restfulUrl + '/timers.json').on('complete', function(data) {
+    var start = req.param("site", 0) * config.app.entries;
+    
+    rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
+        console.log(data)
         var sorted = new Array();
         
         for (i in data.timers) {
@@ -191,7 +203,14 @@ app.get('/timer', function (req, res) {
                 loggedIn: req.session.loggedIn,
                 page: 'timer'
             },
-            timers: data.timers
+            timers: data.timers,
+            paginator: {
+                    total: data.total,
+                    cur: parseInt(req.param("site", 1)),
+                    sites: Math.floor(data.total / config.app.entries),
+                    next: parseInt(req.param("site", 1)) + 1,
+                    previous: parseInt(req.param("site", 1)) -1
+                }
         });
     });
 });
