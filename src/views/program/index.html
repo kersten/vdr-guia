@@ -1,7 +1,44 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#switch').click(function () {
+            console.log("Switching vdr to channel: "+ $(this).attr('channel'));
+            
+            $.post('/switch', {channel: $(this).attr('channel')}, function () {
+                $('#overlay').css({
+                    opacity: 0.5,
+                    width: $(document).width(),
+                    height: $(document).height()
+                }).show();
+
+                $('#dialog').css({
+                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
+                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
+                }).show();
+            }).error(function () {
+                $('#overlay').css({
+                    opacity: 0.5,
+                    width: $(document).width(),
+                    height: $(document).height()
+                }).show();
+
+                $('#errordialog').css({
+                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
+                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
+                }).show();
+            });
+
+            $('.btn_ok').click(function () {
+                $('#overlay').hide();
+                $('.modal').hide();
+            });
+        });
+    });
+</script>
+        
 <div class="page-header">
     <h1>
         Program
-        <small>What's running on <strong><%= channel.name %></strong> <img style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
+        <small>What's running on <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
     </h1>
 </div>
 <table class="zebra-striped">
@@ -32,3 +69,29 @@
         }%>
     </tbody>
 </table>
+
+<div id="overlay" style="position: absolute; top: 0; left: 0; z-index: 101; display: none; color: #CCCCCC;">
+    
+</div>
+<div id="dialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
+    <div class="modal-header">
+        <h3>Switched</h3>
+    </div>
+    <div class="modal-body">
+        <p>VDR switched to channel <%= channel.name %></p>
+    </div>
+    <div class="modal-footer">
+        <a class="btn_ok btn primary">OK</a>
+    </div>
+</div>
+<div id="errordialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
+    <div class="modal-header">
+        <h3>Error occurred</h3>
+    </div>
+    <div class="modal-body">
+        <p>Please try again</p>
+    </div>
+    <div class="modal-footer">
+        <a class="btn_ok btn primary">OK</a>
+    </div>
+</div>

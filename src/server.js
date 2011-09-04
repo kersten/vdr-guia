@@ -210,7 +210,6 @@ app.get('/search', function (req, res) {
                 use_description: (req.param("d", false) != false) ? true : false
             }
         }).on('complete', function(data) {
-            console.log(Math.floor(data.total / config.app.entries));
             res.render('search', {
                 global: {
                     title: 'Search',
@@ -283,6 +282,14 @@ app.get('/logout', function (req, res) {
         res.redirect('/login');
         return;
     }
+});
+
+app.post('/switch', function (req, res) {
+    rest.post(restfulUrl + '/remote/switch/' + req.param('channel'), {
+        data: {channel: req.param('channel')}
+    }).on('complete', function(data) {
+        res.end();
+    });
 });
 
 app.get('*', function(req, res) {
