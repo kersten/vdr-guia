@@ -182,6 +182,7 @@ app.get('/watch', function (req, res) {
 });
 
 app.get('/timer', function (req, res) {
+    config.app.entries = config.app.entries - 10;
     var start = req.param("site", 0) * config.app.entries;
     
     rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
