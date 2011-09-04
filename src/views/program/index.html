@@ -76,7 +76,7 @@
                 var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
                 %>
                 <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/<% if (epg.timer_exists == true && epg.timer_active == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
                     <td><%= start %> - <%= end %></td>
                     <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
                 </tr>

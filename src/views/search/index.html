@@ -72,10 +72,10 @@
                             var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
                             %>
                             <tr>
-                                <td style="width: 20px; text-align: center;"><img src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
+                                <td style="width: 20px; text-align: center;"><img src="/img/devine/black/<% if (result.timer_exists == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
                                 <td><%= day %>.<%= month %> <%= weekday[date.getDay()] %></td>
                                 <td><%= start %> - <%= end %></td>
-                                <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= result.title %></a></td>
+                                <td><a href="/details?channelid=<%= result.channel %>&eventid=<%= result.id %>"><%= result.title %></a></td>
                             </tr>
                         <% }) %>
                     </tbody>
