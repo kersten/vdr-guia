@@ -2,14 +2,28 @@
     $(document).ready(function () {
         $('.btn_timer').click(function () {
             if ($(this).attr('active') == "true") {
-                $(this).attr('src', '/img/devine/black/Circle.png');
-                $(this).attr('active', "false");
+                $.ajax({
+                    url: '<%= restfulUrl %>/timers?timer_id=' + $(this).attr('timerid') + '&flags=0',
+                    type: 'PUT',
+                    success: function () {
+                        $(this).attr('src', '/img/devine/black/Circle-2.png');
+                        $(this).attr('active', "true");
+                    }
+                });
             } else {
-                $(this).attr('src', '/img/devine/black/Circle-2.png');
-                $(this).attr('active', "true");
+                $.ajax({
+                    url: '<%= restfulUrl %>/timers',
+                    type: 'PUT',
+                    data: {
+                        timer_id: $(this).attr('timerid'),
+                        flags: 0
+                    },
+                    success: function () {
+                        $(this).attr('src', '/img/devine/black/Circle-2.png');
+                        $(this).attr('active', "true");
+                    }
+                });
             }
-            
-            console.log($(this).attr('eventid'));
         });
     });
 </script>
@@ -67,7 +81,7 @@
                     }
                 %>
                 <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= timer.id %>" active="<%= timer.is_active %>" style="cursor: pointer;" src="/img/devine/black/<% if (timer.is_active) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="<% if (timer.is_active) { %>Disable this timer<% } else {%>Enable this timer<% } %>" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_timer" timerid="<%= timer.id %>" active="<%= timer.is_active %>" style="cursor: pointer;" src="/img/devine/black/<% if (timer.is_active) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="<% if (timer.is_active) { %>Disable this timer<% } else {%>Enable this timer<% } %>" /></td>
                     <td><%= timerDate[2] %>.<%= timerDate[1] %> <%= weekday[date.getDay()] %></td>
                     <td><%= timer.start %> - <%= timer.stop %></td>
                     <td><%= timer.channel_name %></td>
