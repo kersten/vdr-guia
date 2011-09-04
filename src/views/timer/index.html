@@ -1,3 +1,19 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn_timer').click(function () {
+            if ($(this).attr('active') == "true") {
+                $(this).attr('src', '/img/devine/black/Circle.png');
+                $(this).attr('active', "false");
+            } else {
+                $(this).attr('src', '/img/devine/black/Circle-2.png');
+                $(this).attr('active', "true");
+            }
+            
+            console.log($(this).attr('eventid'));
+        });
+    });
+</script>
+
 <div class="page-header">
     <h1>
         Timer
@@ -47,7 +63,7 @@
             }
         %>
         <tr>
-            <td style="width: 20px; text-align: center;"><img src="/img/tango/16x16/actions/process-stop.png" width="16px" height="16px" title="Disable this timer" /></td>
+            <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= timer.id %>" active="<%= timer.is_active %>" style="cursor: pointer;" src="/img/devine/black/<% if (timer.is_active) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="<% if (timer.is_active) { %>Disable this timer<% } else {%>Enable this timer<% } %>" /></td>
             <td><%= timerDate[2] %>.<%= timerDate[1] %> <%= weekday[date.getDay()] %></td>
             <td><%= timer.start %> - <%= timer.stop %></td>
             <td><%= timer.filename %></td>
