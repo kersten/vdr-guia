@@ -10,6 +10,7 @@
             <thead>
                 <tr>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>Title</th>
                 </tr>
             </thead>
@@ -17,7 +18,8 @@
                 <% if (searchtimers.length) {
                 searchtimers.forEach(function (searchtimer, i) { %>
                 <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/Circle-2.png" width="16px" height="16px" title="Deactivate searchtimer" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_show" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/List.png" width="16px" height="16px" title="Show results for this searchtimer" /></td>
                     <td><%= searchtimer.search %></td>
                 </tr>
                 <% })
