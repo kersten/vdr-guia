@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express.createServer();
+var http = require('http');
 var rest = require('restler');
 var monomi = require("monomi");
 var config = require('./etc/config');
@@ -162,7 +163,8 @@ app.get('/program', function (req, res) {
                     sites: Math.floor(epg.total / config.app.entries),
                     next: parseInt(req.param("site", 1)) + 1,
                     previous: parseInt(req.param("site", 1)) -1
-                }
+                },
+                switchUrl: restfulUrl + '/remote/switch'
             });
         });
     });
@@ -301,14 +303,6 @@ app.get('/logout', function (req, res) {
         res.redirect('/login');
         return;
     }
-});
-
-app.post('/switch', function (req, res) {
-    rest.post(restfulUrl + '/remote/switch/' + req.param('channel'), {
-        data: {channel: req.param('channel')}
-    }).on('complete', function(data) {
-        res.end();
-    });
 });
 
 app.get('*', function(req, res) {

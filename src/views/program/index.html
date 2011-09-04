@@ -3,7 +3,7 @@
         $('#switch').click(function () {
             console.log("Switching vdr to channel: "+ $(this).attr('channel'));
             
-            $.post('/switch', {channel: $(this).attr('channel')}, function () {
+            $.post('<%= switchUrl %>/' + $(this).attr('channel'), function () {
                 $('#overlay').css({
                     opacity: 0.5,
                     width: $(document).width(),
@@ -31,6 +31,18 @@
                 $('#overlay').hide();
                 $('.modal').hide();
             });
+        });
+        
+        $('.btn_timer').click(function () {
+            if ($(this).attr('active') == "true") {
+                $(this).attr('src', '/img/devine/black/Circle.png');
+                $(this).attr('active', "false");
+            } else {
+                $(this).attr('src', '/img/devine/black/Circle-2.png');
+                $(this).attr('active', "true");
+            }
+            
+            console.log($(this).attr('eventid'));
         });
     });
 </script>
@@ -64,7 +76,7 @@
                 var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
                 %>
                 <tr>
-                    <td style="width: 20px; text-align: center;"><img style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
                     <td><%= start %> - <%= end %></td>
                     <td><%= epg.title %></td>
                 </tr>
@@ -86,7 +98,17 @@
                     if (paginator.sites < 9) {
                         cnt = paginator.sites + 1;
                         start = 1;
-                     } %>
+                    } else {
+                        if (paginator.cur != 1) {
+                            start = paginator.cur -1;
+                            cnt = paginator.cur + 2;
+                        }
+                        
+                        if (paginator.cur > paginator.sites - 3) {
+                            start = 1;
+                            cnt = 4;
+                        }
+                    } %>
                     <% for (i = start; i < cnt; i++) { %>
                     <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
                     <% } %>
