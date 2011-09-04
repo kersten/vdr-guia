@@ -67,7 +67,8 @@ app.get('/timeline', function(req, res) {
                     page: 'timeline'
                 },
                 channels: channels,
-                switchUrl: restfulUrl + '/remote/switch'
+                switchUrl: restfulUrl + '/remote/switch',
+                ts: Math.round((new Date()).getTime() / 1000)
             });
         };
         
@@ -200,8 +201,6 @@ app.get('/timer', function (req, res) {
             data.timers.push(sorted[i]); 
         }
         
-        console.log(data);
-        
         res.render('timer', {
             global: {
                 title: 'Timer',
@@ -211,12 +210,13 @@ app.get('/timer', function (req, res) {
             },
             timers: data.timers,
             paginator: {
-                    total: data.total,
-                    cur: parseInt(req.param("site", 1)),
-                    sites: Math.floor(data.total / config.app.entries),
-                    next: parseInt(req.param("site", 1)) + 1,
-                    previous: parseInt(req.param("site", 1)) -1
-                }
+                total: data.total,
+                cur: parseInt(req.param("site", 1)),
+                sites: Math.floor(data.total / config.app.entries),
+                next: parseInt(req.param("site", 1)) + 1,
+                previous: parseInt(req.param("site", 1)) -1
+            },
+            restfulUrl: restfulUrl
         });
     });
 });
@@ -235,6 +235,8 @@ app.get('/search', function (req, res) {
                 use_description: (req.param("d", false) != false) ? true : false
             }
         }).on('complete', function(data) {
+            console.log(data);
+            
             res.render('search', {
                 global: {
                     title: 'Search',

@@ -75,7 +75,7 @@
                                 <td style="width: 20px; text-align: center;"><img src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
                                 <td><%= day %>.<%= month %> <%= weekday[date.getDay()] %></td>
                                 <td><%= start %> - <%= end %></td>
-                                <td><%= result.title %></td>
+                                <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= result.title %></a></td>
                             </tr>
                         <% }) %>
                     </tbody>

@@ -40,6 +40,10 @@ $(document).ready(function () {
             $('.modal').hide();
         });
     });
+    
+    $('.show_details').click(function () {
+        window.location = '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid');
+    });
 });
 </script>
 <div class="page-header">
@@ -63,12 +67,12 @@ $(document).ready(function () {
         <div>
             <% if (channels[i].epg) {
             channels[i].epg.events.forEach(function (broadcast) { %>
-            <div class="alert-message warning" id="<%= broadcast.id / 20 %>" title="<%= broadcast.title %>" style="cursor: pointer; width: <%= broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
+            <div class="alert-message warning show_details" channelid="<%= channels[i].channel.channel_id %>" eventid="<%= broadcast.id %>" id="<%= broadcast.id %>" title="<%= broadcast.title %>" style="cursor: pointer; width: <%= (broadcast.start_time < ts) ? Math.ceil((broadcast.duration + broadcast.start_time - ts) / 20) : broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
                 <p>
                     <%= broadcast.title %>
                 </p>
             </div>
-            <% 
+            <%
             })
         }} %>
         </div>
