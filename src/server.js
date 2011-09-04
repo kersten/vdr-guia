@@ -89,7 +89,7 @@ app.get('/timeline', function(req, res) {
         var waitForFinish = 0;
         
         data.channels.forEach(function (channel) {
-            rest.get(restfulUrl + '/events/' + channel.channel_id + '/86000.json?start=0', {channel: channel}).on('complete',  function (epg) {
+            rest.get(restfulUrl + '/events/' + channel.channel_id + '/0.json?start=0', {channel: channel}).on('complete',  function (epg) {
                 channels[this.options.channel.number] = {
                     channel: this.options.channel,
                     epg: epg
@@ -144,7 +144,7 @@ app.post('/login', function (req, res) {
 
 app.get('/program', function (req, res) {
     var chan = req.param("chan", 0);
-    var start = req.param("site", 1) * config.app.entries;
+    var start = (req.param("site", 1) - 1) * config.app.entries;
     
     rest.get(restfulUrl + '/channels/.json?start=0').on('complete', function(data) {
         rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/0.json?start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
@@ -162,7 +162,7 @@ app.get('/program', function (req, res) {
                     total: epg.total,
                     cur: parseInt(req.param("site", 1)),
                     sites: Math.floor(epg.total / config.app.entries),
-                    next: parseInt(req.param("site", 1)) + 1,
+                    next: parseInt(req.param("site", 1) - 1) + 1,
                     previous: parseInt(req.param("site", 1)) -1
                 },
                 switchUrl: restfulUrl + '/remote/switch'
