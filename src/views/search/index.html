@@ -91,7 +91,7 @@
                         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
                             <a<% if (paginator.cur != 1) {%> href="/search?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
                         </li>
-                        <% var cnt = 4;
+                        <% var cnt = paginator.cur + 3;
                         var start = paginator.cur;
                         if (paginator.sites < 9) {
                             cnt = paginator.sites + 1;
