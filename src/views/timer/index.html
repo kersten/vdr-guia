@@ -77,14 +77,14 @@
                 }%>
             </tbody>
         </table>
-        <% if (paginator.total > 10) {
+        <% if (paginator.total > global.maxEntries) {
             var query = '&chan=';
         %>
         <div class="span16 columns">
             <div class="pagination" style="padding-left: 25%;">
                 <ul>
                     <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != 1) {%> href="/program?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
+                        <a<% if (paginator.cur != 1) {%> href="/timer?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
                     </li>
                     <% var cnt = paginator.cur + 3;
                     var start = paginator.cur;
@@ -103,16 +103,16 @@
                         }
                     } %>
                     <% for (i = start; i < cnt; i++) { %>
-                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
+                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/timer?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
                     <% } %>
                     <% if (paginator.sites > 8) { %>
                     <li class="disabled"><a href="#">…</a></li>
                     <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
+                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/timer?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
                     <% } %>
                     <% } %>
                     <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != paginator.sites) {%> href="/program?site=<%= paginator.next %><%= query %>"<% } %>>Next →</a>
+                        <a<% if (paginator.cur != paginator.sites) {%> href="/timer?site=<%= paginator.next %><%= query %>"<% } %>>Next →</a>
                     </li>
                 </ul>
             </div>

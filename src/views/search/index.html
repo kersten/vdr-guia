@@ -81,7 +81,7 @@
                     </tbody>
                 </table>
             </div>
-            <% if (paginator.total > 10) {
+            <% if (paginator.total > global.maxEntries) {
                 var query = new Array((q != "") ? 'q=' + q : '', (s != "") ? 's=' + s : '', (d != "") ? 'd=' + d : '');
                 query = '&' + query.join('&');
             %>

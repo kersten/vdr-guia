@@ -152,7 +152,8 @@ app.get('/program', function (req, res) {
                 global: {
                     title: 'Program',
                     loggedIn: req.session.loggedIn,
-                    page: 'program'
+                    page: 'program',
+                    maxEntries: config.app.entries
                 },
                 channel: data.channels[chan],
                 channelNumber: chan,
@@ -162,7 +163,7 @@ app.get('/program', function (req, res) {
                     total: epg.total,
                     cur: parseInt(req.param("site", 1)),
                     sites: Math.floor(epg.total / config.app.entries),
-                    next: parseInt(req.param("site", 1) - 1) + 1,
+                    next: parseInt(req.param("site", 1)) + 1,
                     previous: parseInt(req.param("site", 1)) -1
                 },
                 switchUrl: restfulUrl + '/remote/switch'
@@ -182,8 +183,7 @@ app.get('/watch', function (req, res) {
 });
 
 app.get('/timer', function (req, res) {
-    config.app.entries = config.app.entries - 10;
-    var start = req.param("site", 0) * config.app.entries;
+    var start = (req.param("site", 1) - 1) * config.app.entries;
     
     rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
         var sorted = new Array();
@@ -200,11 +200,14 @@ app.get('/timer', function (req, res) {
             data.timers.push(sorted[i]); 
         }
         
+        console.log(data);
+        
         res.render('timer', {
             global: {
                 title: 'Timer',
                 loggedIn: req.session.loggedIn,
-                page: 'timer'
+                page: 'timer',
+                maxEntries: config.app.entries
             },
             timers: data.timers,
             paginator: {
@@ -236,7 +239,8 @@ app.get('/search', function (req, res) {
                 global: {
                     title: 'Search',
                     loggedIn: req.session.loggedIn,
-                    page: 'search'
+                    page: 'search',
+                    maxEntries: config.app.entries
                 },
                 results: data.events,
                 paginator: {
@@ -289,7 +293,8 @@ app.get('/searchtimer', function (req, res) {
             global: {
                 title: 'Searchtimer',
                 loggedIn: req.session.loggedIn,
-                page: 'searchtimer'
+                page: 'searchtimer',
+                maxEntries: config.app.entries
             },
             searchtimers: data.searchtimers,
             paginator: {
@@ -320,6 +325,29 @@ app.get('/about', function (req, res) {
             loggedIn: req.session.loggedIn,
             page: 'about'
         }
+    });
+});
+
+app.get('/details', function (req, res) {
+    var eventId = req.param("eventid", false);
+    var channelId = req.param("channelid", false);
+    
+    if (!eventId || !channelId) {
+        res.end();
+        return;
+    }
+    
+    rest.get(restfulUrl + '/events/' + channelId + '/0.json?eventid=' + eventId).on('complete', function(data) {
+        console.log(data);
+        
+        res.render('details', {
+            global: {
+                title: 'Details on ' + data.events[0].title,
+                loggedIn: req.session.loggedIn,
+                page: 'details'
+            },
+            broadcast: data.events[0]
+        });
     });
 });
 

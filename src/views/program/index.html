@@ -78,13 +78,13 @@
                 <tr>
                     <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/Circle.png" width="16px" height="16px" title="Record this show" /></td>
                     <td><%= start %> - <%= end %></td>
-                    <td><%= epg.title %></td>
+                    <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
                 </tr>
                 <% })
                 }%>
             </tbody>
         </table>
-        <% if (paginator.total > 10) {
+        <% if (paginator.total > global.maxEntries) {
             var query = '&chan=' + channelNumber;
         %>
         <div class="span16 columns">
