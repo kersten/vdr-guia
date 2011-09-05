@@ -5,9 +5,9 @@ var rest = require('restler');
 var monomi = require("monomi");
 var config = require('./etc/config');
 var ksort = require('./lib/ksort');
+var categories = require('./lib/category_mapper');
 
 app.configure('development', function() {
-
     app.use(express.static(__dirname + '/../public/'));
     app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
 });
@@ -30,18 +30,18 @@ app.all('*', function (req, res, next) {
     if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
         isMobileDevice = true;
     }
-    
+
     if (req.url == '/login') {
         next();
         return;
     }
-    
+
     if (typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
         req.session.loggedIn = false;
         res.redirect('/login');
         return;
     }
-    
+
     if (req.url == '/') {
         res.redirect('/timeline');
         return;
@@ -52,7 +52,7 @@ app.all('*', function (req, res, next) {
 
 app.get('/timeline', function(req, res) {
     var channels = new Object();
-    
+
     rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
         var render = function () {
             if (data.channels.length != waitForFinish) return;
@@ -71,7 +71,7 @@ app.get('/timeline', function(req, res) {
                 ts: Math.round((new Date()).getTime() / 1000)
             });
         };
-        
+
         /*
          * name: 'arte HD',
          * number: 5,
@@ -86,16 +86,56 @@ app.get('/timeline', function(req, res) {
          * is_sat: true,
          * is_radio: false
          */
-        
+
         var waitForFinish = 0;
-        
+
         data.channels.forEach(function (channel) {
             rest.get(restfulUrl + '/events/' + channel.channel_id + '/0.json?start=0', {channel: channel}).on('complete',  function (epg) {
+                for (var i in epg.events) {
+                    var regEx = /Kategorie: (.*?)$/im;
+                    regEx.exec(epg.events[i].description);
+
+                    var cat = RegExp.$1;
+
+                    for (var x in categories) {
+                        for(var y = 0; y < categories[x].equals.length; y++) {
+                            if(categories[x].equals[y] == cat) {
+                                epg.events[i].category = x;
+                                epg.events[i].color = categories[x].color;
+                                break;
+                            }
+                        }
+
+                        if (typeof(epg.events[i].category) == 'undefined') {
+                            for(var y = 0; y < categories[x].regex.length; y++) {
+                                if(cat.match(categories[x].regex[y])) {
+                                    epg.events[i].category = x;
+                                    epg.events[i].color = categories[x].color;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (typeof(epg.events[i].category) != 'undefined') {
+                            break;
+                        }
+                    }
+
+                    if (typeof(epg.events[i].category) == 'undefined') {
+                        epg.events[i].category = 'Sonstiges';
+                        epg.events[i].color = {
+                            'background-color': '#CCCCCC',
+                            'background-image': '-moz-linear-gradient(center top , #666666, #CCCCCC)',
+                            'font-color': '#FFFFFF'
+                        };
+                    }
+                }
+
                 channels[this.options.channel.number] = {
                     channel: this.options.channel,
                     epg: epg
                 };
-                
+
                 waitForFinish++;
                 render();
             }).on('error', function (err) {
@@ -132,21 +172,21 @@ app.get('/login', function(req, res) {
 app.post('/login', function (req, res) {
     var username = req.param("username");
     var password = req.param("password");
-    
+
     if (username == config.username && password == config.password) {
         req.session.loggedIn = true;
         res.redirect('/');
     } else {
         res.redirect('/login?failed=true');
     }
-    
+
     res.end();
 });
 
 app.get('/program', function (req, res) {
     var chan = req.param("chan", 0);
     var start = (req.param("site", 1) - 1) * config.app.entries;
-    
+
     rest.get(restfulUrl + '/channels/.json?start=0').on('complete', function(data) {
         rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/0.json?start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
             res.render('program', {
@@ -185,22 +225,22 @@ app.get('/watch', function (req, res) {
 
 app.get('/timer', function (req, res) {
     var start = (req.param("site", 1) - 1) * config.app.entries;
-    
+
     rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
         var sorted = new Array();
-        
+
         for (i in data.timers) {
             sorted[data.timers[i].day + '' +data.timers[i].start] = data.timers[i];
         }
-        
+
         sorted = ksort(sorted);
-        
+
         data.timers = new Array();
-        
+
         for (i in sorted) {
-            data.timers.push(sorted[i]); 
+            data.timers.push(sorted[i]);
         }
-        
+
         res.render('timer', {
             global: {
                 title: 'Timer',
@@ -224,7 +264,7 @@ app.get('/timer', function (req, res) {
 app.get('/search', function (req, res) {
     if (req.param("q", "") != "") {
         var start = req.param("site", 1) * config.app.entries;
-    
+
         rest.post(restfulUrl + '/events/search.json?start=' + start + '&limit=' + config.app.entries, {
             data: {
                 query: req.param("q"),
@@ -236,7 +276,7 @@ app.get('/search', function (req, res) {
             }
         }).on('complete', function(data) {
             console.log(data);
-            
+
             res.render('search', {
                 global: {
                     title: 'Search',
@@ -273,24 +313,24 @@ app.get('/search', function (req, res) {
 
 app.get('/searchtimer', function (req, res) {
     var start = req.param("site", 0) * config.app.entries;
-    
+
     rest.get(restfulUrl + '/searchtimers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
         var sorted = new Array();
-        
+
         for (i in data.searchtimers) {
             sorted[data.searchtimers[i].id] = data.searchtimers[i];
         }
-        
+
         sorted = ksort(sorted);
-        
+
         data.searchtimers = new Array();
-        
+
         for (i in sorted) {
-            data.searchtimers.push(sorted[i]); 
+            data.searchtimers.push(sorted[i]);
         }
-        
+
         console.log(data);
-        
+
         res.render('searchtimer', {
             global: {
                 title: 'Searchtimer',
@@ -333,15 +373,15 @@ app.get('/about', function (req, res) {
 app.get('/details', function (req, res) {
     var eventId = req.param("eventid", false);
     var channelId = req.param("channelid", false);
-    
+
     if (!eventId || !channelId) {
         res.end();
         return;
     }
-    
+
     rest.get(restfulUrl + '/events/' + channelId + '/0.json?eventid=' + eventId).on('complete', function(data) {
         console.log(data);
-        
+
         res.render('details', {
             global: {
                 title: 'Details on ' + data.events[0].title,

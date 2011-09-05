@@ -3,10 +3,10 @@ $(document).ready(function () {
     $('.alert-message').mouseover(function () {
         console.log(this.id);
     });
-    
+
     $('.switch').click(function () {
         console.log("Switching vdr to channel: "+ $(this).attr('channel'));
-        
+
         var channelname = $(this).attr('channelname');
 
         $.post('<%= switchUrl %>/' + $(this).attr('channel'), function () {
@@ -15,7 +15,7 @@ $(document).ready(function () {
                 width: $(document).width(),
                 height: $(document).height()
             }).show();
-            
+
             $('#channelinfo').html('VDR switched to channel '+ channelname);
 
             $('#dialog').css({
@@ -40,7 +40,7 @@ $(document).ready(function () {
             $('.modal').hide();
         });
     });
-    
+
     $('.show_details').click(function () {
         window.location = '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid');
     });
@@ -56,7 +56,7 @@ $(document).ready(function () {
 <div class="row" style="overflow: hidden; margin-bottom: 0px;">
     <div class="span3 columns" style="white-space:nowrap; overflow: hidden;">
         <% if (channels) {
-        for (i in channels) { 
+        for (i in channels) {
         %>
         <h5 style="height: 56px;"><%= channels[i].channel.name %> <img class="switch" channelname="<%= channels[i].channel.name %>" channel="<%= channels[i].channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></h5>
         <% }} %>
@@ -67,7 +67,7 @@ $(document).ready(function () {
         <div>
             <% if (channels[i].epg) {
             channels[i].epg.events.forEach(function (broadcast) { %>
-            <div class="alert-message warning show_details" channelid="<%= channels[i].channel.channel_id %>" eventid="<%= broadcast.id %>" id="<%= broadcast.id %>" title="<%= broadcast.title %>" style="cursor: pointer; width: <%= (broadcast.start_time < ts) ? Math.ceil((broadcast.duration + broadcast.start_time - ts) / 20) : broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden">
+            <div class="alert-message warning show_details" channelid="<%= channels[i].channel.channel_id %>" eventid="<%= broadcast.id %>" id="<%= broadcast.id %>" title="<%= broadcast.title %>" style="cursor: pointer; width: <%= (broadcast.start_time < ts) ? Math.ceil((broadcast.duration + broadcast.start_time - ts) / 20) : broadcast.duration / 20 %>px; position: realtive; display: inline-block; margin-left: 5px; overflow: hidden; background-color: <%= broadcast.color['background-color'] %>; background-image: <%= broadcast.color['background-image'] %>; color: <%= broadcast.color['font-color'] %>;">
                 <p>
                     <%= broadcast.title %>
                 </p>
@@ -81,7 +81,7 @@ $(document).ready(function () {
 </div>
 
 <div id="overlay" style="position: absolute; top: 0; left: 0; z-index: 101; display: none; color: #CCCCCC;">
-    
+
 </div>
 <div id="dialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
     <div class="modal-header">
