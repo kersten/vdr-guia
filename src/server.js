@@ -72,31 +72,22 @@ app.get('/timeline', function(req, res) {
             });
         };
 
-        /*
-         * name: 'arte HD',
-         * number: 5,
-         * channel_id: 'S19.2E-1-1011-11120',
-         * image: false,
-         * group: 'Public HDTV FTA',
-         * transponder: 111361,
-         * stream: 'S19.2E-1-1011-11120.ts',
-         * is_atsc: false,
-         * is_cable: false,
-         * is_terr: false,
-         * is_sat: true,
-         * is_radio: false
-         */
-
         var waitForFinish = 0;
 
         data.channels.forEach(function (channel) {
-            rest.get(restfulUrl + '/events/' + channel.channel_id + '/0.json?start=0', {channel: channel}).on('complete',  function (epg) {
+            rest.get(restfulUrl + '/events/' + channel.channel_id + '.json?start=0', {channel: channel}).on('complete',  function (epg) {
                 for (var i in epg.events) {
-                    var regEx = /Kategorie: (.*?)$/im;
-                    regEx.exec(epg.events[i].description);
+                    //var regEx = /Kategorie: (.*?)$/im; // tvm2vdr
+                    var regEx = /^(.*?)\ .*$/i;
+                    regEx.exec(epg.events[i].short_text);
+                    
+                    if (RegExp.$1 == "") {
+                        regEx.exec(epg.events[i].description);
+                    }
 
                     var cat = RegExp.$1;
-
+                    
+                    console.log(cat);
                     for (var x in categories) {
                         for(var y = 0; y < categories[x].equals.length; y++) {
                             if(categories[x].equals[y] == cat) {
@@ -126,7 +117,7 @@ app.get('/timeline', function(req, res) {
                         epg.events[i].color = {
                             'background-color': '#CCCCCC',
                             'background-image': '-moz-linear-gradient(center top , #666666, #CCCCCC)',
-                            'font-color': '#FFFFFF'
+                            'font-color': '#000000'
                         };
                     }
                 }
@@ -187,8 +178,8 @@ app.get('/program', function (req, res) {
     var chan = req.param("chan", 0);
     var start = (req.param("site", 1) - 1) * config.app.entries;
 
-    rest.get(restfulUrl + '/channels/.json?start=0').on('complete', function(data) {
-        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '/0.json?start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+    rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
             res.render('program', {
                 global: {
                     title: 'Program',
@@ -207,7 +198,8 @@ app.get('/program', function (req, res) {
                     next: parseInt(req.param("site", 1)) + 1,
                     previous: parseInt(req.param("site", 1)) -1
                 },
-                switchUrl: restfulUrl + '/remote/switch'
+                switchUrl: restfulUrl + '/remote/switch',
+                restfulUrl: restfulUrl
             });
         });
     });
@@ -360,6 +352,16 @@ app.get('/records', function (req, res) {
     });
 });
 
+app.get('/settings', function (req, res) {
+    res.render('settings', {
+        global: {
+            title: 'Settings',
+            loggedIn: req.session.loggedIn,
+            page: 'settings'
+        }
+    });
+});
+
 app.get('/about', function (req, res) {
     res.render('about', {
         global: {
@@ -379,7 +381,7 @@ app.get('/details', function (req, res) {
         return;
     }
 
-    rest.get(restfulUrl + '/events/' + channelId + '/0.json?eventid=' + eventId).on('complete', function(data) {
+    rest.get(restfulUrl + '/events/' + channelId + '/' + eventId + '.json').on('complete', function(data) {
         console.log(data);
 
         res.render('details', {
