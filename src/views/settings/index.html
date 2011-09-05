@@ -1,0 +1,73 @@
+<div class="page-header">
+    <h1>
+        Settings
+        <small>Change your defaults</small>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="span16 columns">
+        <form method="POST" action="/settings">
+            <fieldset>
+                <legend>VDRManager settings</legend>
+                <div class="clearfix">
+                    <label for="maxEntries">
+                        Maximum entries
+                    </label>
+                    <div class="input">
+                        <input id="maxEntries" class="mini" type="text" name="maxEntries" />
+                    </div>
+                </div>
+                
+                <div class="clearfix">
+                    <label for="username">
+                        Username
+                    </label>
+                    <div class="input">
+                        <input id="username" class="xlarge" type="text" name="username" />
+                    </div>
+                </div>
+                
+                <div class="clearfix">
+                    <label for="q">
+                        Password
+                    </label>
+                    <div class="input">
+                        <input id="password" class="xlarge" type="password" name="password" />
+                    </div>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>VDR settings</legend>
+                <div class="clearfix">
+                    <label for="username">
+                        Host:Port
+                    </label>
+                    <div class="input">
+                        <div class="inline-inputs">
+                            <input id="host" class="large" type="text" name="host" />
+                            <input id="port" class="mini" type="text" name="port" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Redis</legend>
+                <div class="clearfix">
+                    <label for="username">
+                        Secret
+                    </label>
+                    <div class="input">
+                        <input id="redisSecret" class="xlarge" type="text" name="redisSecret" />
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <input type="submit" value="Save Changes" class="btn primary">&nbsp;<button class="btn" type="reset">Cancel</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
