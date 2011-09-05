@@ -48,10 +48,19 @@
 </script>
         
 <div class="page-header">
-    <h1>
-        Program
-        <small>What's running on <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
-    </h1>
+    <div class="row">
+        <div class="span10">
+            <h1>
+                Program
+                <small>What's running on <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
+            </h1>
+        </div>
+        <div class="span1 offset4" style="text-align: right;">
+            <% if (channel.image) {%>
+            <img style="height: 36px;" src="<%= restfulUrl %>/channels/images/<%= channel.channel_id %>" />
+            <% } %>
+        </div>
+    </div>
 </div>
 
 <div class="row">
