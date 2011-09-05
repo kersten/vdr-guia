@@ -7,7 +7,7 @@ var categories = {
             'Historienfilm', 'Antikriegsfilm', 'Piratenfilm', 'Kriegsfilm',
             'Vampirfilm', 'Psychokrimi', 'Fantasyabenteuer', 'Comicverfilmung',
             'Road Movie', 'Liebesfilm', 'Krimi', 'Monumentalfilm',
-            'Kurzfilm-Kompilation'
+            'Kurzfilm-Kompilation', 'Spielfilm', 'Fernsehfilm'
         ],
         regex: [],
         color: {
