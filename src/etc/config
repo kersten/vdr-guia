@@ -11,7 +11,7 @@ config.app = {
 config.username = 'kersten';
 config.password = 'manager';
 
-config.vdr.host = '127.0.0.1'
+config.vdr.host = '192.168.0.192'
 config.vdr.restfulport = 8002
 
 config.redis.secret = 'zy8qSFwF2OpIChvxZFz0TVUU7DLhQnEYsEB7nD1fP3SLkGVMlmC1i0fQscbky5w';
