@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1>
-        Searchtimers
-        <small>Don't worry about changing airtimes anymore ..</small>
+        <%= __('Searchtimers') %>
+        <small><%= __('Don\'t worry about changing airtimes anymore ..') %></small>
     </h1>
 </div>
 <div class="row">
@@ -11,15 +11,15 @@
                 <tr>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
-                    <th>Title</th>
+                    <th><%= __('Title') %></th>
                 </tr>
             </thead>
             <tbody>
                 <% if (searchtimers.length) {
                 searchtimers.forEach(function (searchtimer, i) { %>
                 <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/Circle-2.png" width="16px" height="16px" title="Deactivate searchtimer" /></td>
-                    <td style="width: 20px; text-align: center;"><img class="btn_show" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/List.png" width="16px" height="16px" title="Show results for this searchtimer" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/Circle-2.png" width="16px" height="16px" title="<%= __('Deactivate searchtimer') %>" /></td>
+                    <td style="width: 20px; text-align: center;"><img class="btn_show" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/List.png" width="16px" height="16px" title="<%= __('Show results for this searchtimer') %>" /></td>
                     <td><%= searchtimer.search %></td>
                 </tr>
                 <% })

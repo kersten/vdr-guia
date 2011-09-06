@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1>
-        Search
-        <small>Looking for some show?</small>
+        <%= __('Search') %>
+        <small><%= __('Looking for some show?') %></small>
     </h1>
 </div>
 <div class="well">
@@ -9,18 +9,18 @@
         <div class="clearfix">
             <div class="input">
                 <input id="q" class="xlarge" type="text" size="30" name="q" <% if (q != '') { %>value="<%= q %>"<% } %>/>
-                <button class="btn small primary" type="submit">Search</button>
+                <button class="btn small primary" type="submit"><%= __('Search') %></button>
             </div>
         </div>
         <div class="clearfix">
             <div class="input">
             <label style="white-space: nowrap; width: 140px; text-align: left;">
                 <input type="checkbox" id="s" value="s" name="s" <% if (s != '') { %>checked="checked"<% } %>/>
-                <span>Search in short text</span>
+                <span><%= __('Search in short text') %></span>
             </label>
             <label style="white-space: nowrap; width: 140px; text-align: left;">
                 <input type="checkbox" id="d" value="d" name="d" <% if (d != '') { %>checked="checked"<% } %>/>
-                <span>Search in description</span>
+                <span><%= __('Search in description') %></span>
             </label>
             </div>
         </div>
@@ -30,18 +30,18 @@
     if (results.length == 0) { %>
         <div class="page-header">
             <h1>
-                Results
+                <%= __('Results') %>
             </h1>
         </div>
         <div class="row">
             <div class="span16 columns">
-                <p>Your search term did not match anything ..</p>
+                <p><%= __('Your search term did not match anything ..') %></p>
             </div>
         </div>
     <% } else { %>
         <div class="page-header">
             <h1>
-                Results
+                <%= __('Results') %>
             </h1>
         </div>
         <div class="row">
@@ -50,21 +50,21 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
-                            <th style="width: 120px;">Airdate</th>
-                            <th style="width: 100px;">Airtime</th>
+                            <th style="width: 120px;"><%= __('Airdate') %></th>
+                            <th style="width: 100px;"><%= __('Airtime') %></th>
                             <th>Title</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%
                         results.forEach(function (result) {
-                            var weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+                            var weekday = new Array(__('Sunday'), __('Monday'), __('Tuesday'), __('Wednesday'), __('Thursday'), __('Friday'), __('Saturday'));
 
                             var date = new Date();
                             date.setTime(result.start_time * 1000);
 
                             var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
-                            
+
                             var day = ((date.getDate() < 10) ? 0 : '') + '' + date.getDate();
                             var month = (((date.getMonth() + 1) < 10) ? 0 : '') + '' + (date.getMonth() + 1);
 
@@ -89,7 +89,7 @@
                 <div class="pagination" style="padding-left: 25%;">
                     <ul>
                         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-                            <a<% if (paginator.cur != 1) {%> href="/search?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
+                            <a<% if (paginator.cur != 1) {%> href="/search?site=<%= paginator.previous %><%= query %>"<% } %>>← <%= __('Previous') %></a>
                         </li>
                         <% var cnt = paginator.cur + 3;
                         var start = paginator.cur;
@@ -117,7 +117,7 @@
                         <% } %>
                         <% } %>
                         <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-                            <a<% if (paginator.cur != paginator.sites) {%> href="/search?site=<%= paginator.next %><%= query %>"<% } %>>Next →</a>
+                            <a<% if (paginator.cur != paginator.sites) {%> href="/search?site=<%= paginator.next %><%= query %>"<% } %>><%= __('Next') %> →</a>
                         </li>
                     </ul>
                 </div>

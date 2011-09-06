@@ -4,11 +4,15 @@ var http = require('http');
 var rest = require('restler');
 var monomi = require("monomi");
 var i18n = require("i18n");
+var syslog = require('node-syslog');
 var config = require('./etc/config');
 var ksort = require('./lib/ksort');
 var categories = require('./lib/category_mapper');
 
 app.configure('development', function() {
+    syslog.init("VDRManager", syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0);
+    syslog.log(syslog.LOG_INFO, "Starting VDRManager webserver");
+
     app.use(i18n.init);
     //app.use(app.router);
     app.use(express.static(__dirname + '/../public/'));
@@ -65,8 +69,6 @@ app.all('*', function (req, res, next) {
         res.redirect('/timeline');
         return;
     }*/
-
-    console.log(__('Timeline'));
 
     next();
 });
@@ -257,10 +259,10 @@ app.post('/program', function (req, res) {
                 restfulUrl: restfulUrl
             });
         }).on('error', function () {
-            console.log('Error getting epg for channel ' + data.channels[chan].name);
+            syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + data.channels[chan].name);
         });
     }).on('error', function () {
-        console.log('Error getting channel');
+        syslog.log(syslog.LOG_ERR, 'Error getting channel');
     });
 });
 

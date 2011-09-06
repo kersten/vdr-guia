@@ -52,7 +52,7 @@
         <div class="span10">
             <h1>
                 <%= __('Program') %>
-                <small><%= __('What\'s running on <strong>%s</strong>', channel.name) %> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small>
+                <small><%= __('What\'s running on') %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small>
             </h1>
         </div>
         <div class="span1 offset4" style="text-align: right;">
@@ -69,8 +69,8 @@
             <thead>
                 <tr>
                     <th>&nbsp;</th>
-                    <th style="width: 100px;">Airtime</th>
-                    <th>Title</th>
+                    <th style="width: 100px;"><%= __('Airtime') %></th>
+                    <th><%= __('Title') %></th>
                 </tr>
             </thead>
             <tbody>
@@ -100,7 +100,7 @@
             <div class="pagination" style="padding-left: 25%;">
                 <ul>
                     <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != 1) {%> href="/program?site=<%= paginator.previous %><%= query %>"<% } %>>← Previous</a>
+                        <a<% if (paginator.cur != 1) {%> href="/program?site=<%= paginator.previous %><%= query %>"<% } %>>← <%= __('Previous') %></a>
                     </li>
                     <% var cnt = paginator.cur + 3;
                     var start = paginator.cur;
@@ -128,7 +128,7 @@
                     <% } %>
                     <% } %>
                     <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != paginator.sites) {%> href="/program?site=<%= paginator.next %><%= query %>"<% } %>>Next →</a>
+                        <a<% if (paginator.cur != paginator.sites) {%> href="/program?site=<%= paginator.next %><%= query %>"<% } %>><%= __('Next') %> →</a>
                     </li>
                 </ul>
             </div>
@@ -142,23 +142,23 @@
 </div>
 <div id="dialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
     <div class="modal-header">
-        <h3>Switched</h3>
+        <h3><%= __('Switched') %></h3>
     </div>
     <div class="modal-body">
-        <p>VDR switched to channel <%= channel.name %></p>
+        <p><%= __('VDR switched to channel') %> <%= channel.name %></p>
     </div>
     <div class="modal-footer">
-        <a class="btn_ok btn primary">OK</a>
+        <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>
 <div id="errordialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
     <div class="modal-header">
-        <h3>Error occurred</h3>
+        <h3><%= __('Error occurred') %></h3>
     </div>
     <div class="modal-body">
-        <p>Please try again</p>
+        <p><%= __('Please try again') %></p>
     </div>
     <div class="modal-footer">
-        <a class="btn_ok btn primary">OK</a>
+        <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>
