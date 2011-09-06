@@ -11,59 +11,59 @@
             <fieldset>
                 <legend>VDRManager settings</legend>
                 <div class="clearfix">
-                    <label for="maxEntries">
+                    <label for="config.app.entries">
                         Maximum entries
                     </label>
                     <div class="input">
-                        <input id="maxEntries" class="mini" type="text" name="maxEntries" />
+                        <input id="config.app.entries" class="mini" type="text" name="config.app.entries" <% if (typeof(config.app.entries) != 'undefined') { %>value="<%= config.app.entries %>"<% } %> />
                     </div>
                 </div>
-                
+
                 <div class="clearfix">
-                    <label for="username">
+                    <label for="config.app.username">
                         Username
                     </label>
                     <div class="input">
-                        <input id="username" class="xlarge" type="text" name="username" />
+                        <input id="config.app.username" class="xlarge" type="text" name="config.app.username" <% if (typeof(config.app.username) != 'undefined') { %>value="<%= config.app.username %>"<% } %> />
                     </div>
                 </div>
-                
+
                 <div class="clearfix">
-                    <label for="q">
+                    <label for="config.app.password">
                         Password
                     </label>
                     <div class="input">
-                        <input id="password" class="xlarge" type="password" name="password" />
+                        <input id="config.app.password" class="xlarge" type="password" name="config.app.password" <% if (typeof(config.app.password) != 'undefined') { %>value="<%= config.app.password %>"<% } %> />
                     </div>
                 </div>
             </fieldset>
-            
+
             <fieldset>
-                <legend>VDR settings</legend>
+                <legend>VDR restfulapi settings</legend>
                 <div class="clearfix">
-                    <label for="username">
+                    <label for="config.vdr.host">
                         Host:Port
                     </label>
                     <div class="input">
                         <div class="inline-inputs">
-                            <input id="host" class="large" type="text" name="host" />
-                            <input id="port" class="mini" type="text" name="port" />
+                            <input id="config.vdr.host" class="large" type="text" name="config.vdr.host" <% if (typeof(config.vdr.host) != 'undefined') { %>value="<%= config.vdr.host %>"<% } %> />
+                            <input id="config.vdr.restfulport" class="mini" type="text" name="config.vdr.restfulport" <% if (typeof(config.vdr.restfulport) != 'undefined') { %>value="<%= config.vdr.restfulport %>"<% } %> />
                         </div>
                     </div>
                 </div>
             </fieldset>
-            
+
             <fieldset>
                 <legend>Redis</legend>
                 <div class="clearfix">
-                    <label for="username">
+                    <label for="config.redis.secret">
                         Secret
                     </label>
                     <div class="input">
-                        <input id="redisSecret" class="xlarge" type="text" name="redisSecret" />
+                        <input id="config.redis.secret" class="xlarge" type="text" name="config.redis.secret" <% if (typeof(config.redis.secret) != 'undefined') { %>value="<%= config.redis.secret %>"<% } %> />
                     </div>
                 </div>
-                
+
                 <div class="actions">
                     <input type="submit" value="Save Changes" class="btn primary">&nbsp;<button class="btn" type="reset">Cancel</button>
                 </div>
