@@ -48,8 +48,8 @@ $(document).ready(function () {
 </script>
 <div class="page-header">
     <h1>
-        Timeline
-        <small>The complete TV program always in your view</small>
+        <%= __('Timeline') %>
+        <small><%= __('The complete TV program always in your view') %></small>
     </h1>
 </div>
 
@@ -85,23 +85,23 @@ $(document).ready(function () {
 </div>
 <div id="dialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
     <div class="modal-header">
-        <h3>Switched</h3>
+        <h3><%= __('Switched') %></h3>
     </div>
     <div class="modal-body">
-        <p id="channelinfo">VDR switched to channel </p>
+        <p id="channelinfo"><%= __('VDR switched to channel') %></p>
     </div>
     <div class="modal-footer">
-        <a class="btn_ok btn primary">OK</a>
+        <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>
 <div id="errordialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
     <div class="modal-header">
-        <h3>Error occurred</h3>
+        <h3><%= __('Error occurred') %></h3>
     </div>
     <div class="modal-body">
-        <p>Please try again</p>
+        <p><%= __('Please try again') %></p>
     </div>
     <div class="modal-footer">
-        <a class="btn_ok btn primary">OK</a>
+        <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>

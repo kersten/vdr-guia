@@ -3,13 +3,27 @@ var app = express.createServer();
 var http = require('http');
 var rest = require('restler');
 var monomi = require("monomi");
+var i18n = require("i18n");
 var config = require('./etc/config');
 var ksort = require('./lib/ksort');
 var categories = require('./lib/category_mapper');
 
 app.configure('development', function() {
+    app.use(i18n.init);
+    //app.use(app.router);
     app.use(express.static(__dirname + '/../public/'));
-    app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
+    app.use(express.errorHandler({
+        dumpExceptions: true,
+        showStack: true
+    }));
+});
+
+i18n.configure({
+    // setup some locales - other locales default to en silently
+    locales:['en', 'de'],
+
+    // where to register __() and __n() to, might be "global" if you know what you are doing
+    register: global
 });
 
 app.register('.html', require('ejs'));
@@ -31,26 +45,53 @@ app.all('*', function (req, res, next) {
         isMobileDevice = true;
     }
 
-    if (req.url == '/login') {
+    /*if (req.url == '/login') {
         next();
         return;
     }
+    */
 
     if (typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
         req.session.loggedIn = false;
-        res.redirect('/login');
-        return;
+
+        if (req.url != '/' && req.url != '/login' && req.url != '/login.do') {
+            res.writeHead(403);
+            res.end();
+            return;
+        }
     }
 
-    if (req.url == '/') {
+    /*if (req.url == '/') {
         res.redirect('/timeline');
         return;
-    }
+    }*/
+
+    console.log(__('Timeline'));
 
     next();
 });
 
-app.get('/timeline', function(req, res) {
+app.get('/', function (req, res) {
+    res.render('layout', {
+        layout: true,
+        global: {
+            loggedIn: req.session.loggedIn,
+            page: 'layout'
+        }
+    });
+});
+
+app.post('/menu', function (req, res) {
+    res.render('menu', {
+        layout: false,
+        global: {
+            loggedIn: req.session.loggedIn,
+            page: 'menu'
+        }
+    });
+});
+
+app.post('/timeline', function(req, res) {
     var channels = new Object();
 
     rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
@@ -60,7 +101,7 @@ app.get('/timeline', function(req, res) {
             channels = ksort(channels);
 
             res.render((isMobileDevice) ? 'mob/timeline': 'timeline', {
-                layout: (isMobileDevice) ? 'mob/layout': 'layout',
+                layout: false,
                 global: {
                     title: 'Timeline',
                     loggedIn: req.session.loggedIn,
@@ -142,7 +183,19 @@ app.get('/timeline', function(req, res) {
     });
 });
 
-app.get('/login', function(req, res) {
+app.post('/tvguide', function (req, res) {
+    res.render('tvguide', {
+        layout: false,
+        global: {
+            title: 'TV Guide',
+            loggedIn: req.session.loggedIn,
+            page: 'tvguide'
+        },
+        err: req.param('failed', false)
+    });
+});
+
+app.post('/login', function(req, res) {
     if (typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
         req.session.loggedIn = false;
     } else {
@@ -151,16 +204,16 @@ app.get('/login', function(req, res) {
     }
 
     res.render('login', {
+        layout: false,
         global: {
             title: 'Login',
             loggedIn: req.session.loggedIn,
             page: 'login'
-        },
-        err: req.param('failed', false)
+        }
     });
 });
 
-app.post('/login', function (req, res) {
+app.post('/login.do', function (req, res) {
     var username = req.param("username");
     var password = req.param("password");
 
@@ -168,19 +221,21 @@ app.post('/login', function (req, res) {
         req.session.loggedIn = true;
         res.redirect('/');
     } else {
-        res.redirect('/login?failed=true');
+        res.writeHead(403);
+        res.end();
     }
 
     res.end();
 });
 
-app.get('/program', function (req, res) {
+app.post('/program', function (req, res) {
     var chan = req.param("chan", 0);
     var start = (req.param("site", 1) - 1) * config.app.entries;
 
     rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
         rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
             res.render('program', {
+                layout: false,
                 global: {
                     title: 'Program',
                     loggedIn: req.session.loggedIn,
@@ -209,8 +264,9 @@ app.get('/program', function (req, res) {
     });
 });
 
-app.get('/watch', function (req, res) {
+app.post('/watch', function (req, res) {
     res.render('watch', {
+        layout: false,
         global: {
             title: 'Watch',
             loggedIn: req.session.loggedIn,
@@ -219,7 +275,7 @@ app.get('/watch', function (req, res) {
     });
 });
 
-app.get('/timer', function (req, res) {
+app.post('/timer', function (req, res) {
     var start = (req.param("site", 1) - 1) * config.app.entries;
 
     rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
@@ -238,6 +294,7 @@ app.get('/timer', function (req, res) {
         }
 
         res.render('timer', {
+            layout: false,
             global: {
                 title: 'Timer',
                 loggedIn: req.session.loggedIn,
@@ -257,7 +314,7 @@ app.get('/timer', function (req, res) {
     });
 });
 
-app.get('/search', function (req, res) {
+app.post('/search', function (req, res) {
     if (req.param("q", "") != "") {
         var start = req.param("site", 1) * config.app.entries;
 
@@ -274,6 +331,7 @@ app.get('/search', function (req, res) {
             console.log(data);
 
             res.render('search', {
+                layout: false,
                 global: {
                     title: 'Search',
                     loggedIn: req.session.loggedIn,
@@ -295,6 +353,7 @@ app.get('/search', function (req, res) {
         });
     } else {
         res.render('search', {
+            layout: false,
             global: {
                 title: 'Search',
                 loggedIn: req.session.loggedIn,
@@ -307,7 +366,7 @@ app.get('/search', function (req, res) {
     }
 });
 
-app.get('/searchtimer', function (req, res) {
+app.post('/searchtimer', function (req, res) {
     var start = req.param("site", 0) * config.app.entries;
 
     rest.get(restfulUrl + '/searchtimers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
@@ -328,6 +387,7 @@ app.get('/searchtimer', function (req, res) {
         console.log(data);
 
         res.render('searchtimer', {
+            layout: false,
             global: {
                 title: 'Searchtimer',
                 loggedIn: req.session.loggedIn,
@@ -346,8 +406,9 @@ app.get('/searchtimer', function (req, res) {
     });
 });
 
-app.get('/records', function (req, res) {
+app.post('/records', function (req, res) {
     res.render('records', {
+        layout: false,
         global: {
             title: 'Records',
             loggedIn: req.session.loggedIn,
@@ -356,8 +417,9 @@ app.get('/records', function (req, res) {
     });
 });
 
-app.get('/settings', function (req, res) {
+app.post('/settings', function (req, res) {
     res.render('settings', {
+        layout: false,
         global: {
             title: 'Settings',
             loggedIn: req.session.loggedIn,
@@ -367,17 +429,39 @@ app.get('/settings', function (req, res) {
     });
 });
 
-app.post('/settings', function (req, res) {
+app.post('/settings/vdrmanager', function (req, res) {
+    res.render('settings/vdrmanager', {
+        layout: false,
+        config: config
+    });
+});
+
+app.post('/settings/timeline', function (req, res) {
+    res.render('settings/timeline', {
+        layout: false,
+        config: config
+    });
+});
+
+app.post('/settings/tvguide', function (req, res) {
+    res.render('settings/tvguide', {
+        layout: false,
+        config: config
+    });
+});
+
+/*app.post('/settings', function (req, res) {
     for (var i in req.body) {
         console.log(i + ' :: ' + req.body[i]);
     }
 
     res.redirect('/settings');
     res.end();
-});
+});*/
 
-app.get('/about', function (req, res) {
+app.post('/about', function (req, res) {
     res.render('about', {
+        layout: false,
         global: {
             title: 'About',
             loggedIn: req.session.loggedIn,
@@ -386,7 +470,7 @@ app.get('/about', function (req, res) {
     });
 });
 
-app.get('/details', function (req, res) {
+app.post('/details', function (req, res) {
     var eventId = req.param("eventid", false);
     var channelId = req.param("channelid", false);
 
@@ -399,6 +483,7 @@ app.get('/details', function (req, res) {
         console.log(data);
 
         res.render('details', {
+            layout: false,
             global: {
                 title: 'Details on ' + data.events[0].title,
                 loggedIn: req.session.loggedIn,
@@ -409,19 +494,22 @@ app.get('/details', function (req, res) {
     });
 });
 
-app.get('/logout', function (req, res) {
+app.post('/logout', function (req, res) {
     if (typeof(req.session.loggedIn) != 'undefined' && req.session.loggedIn) {
         req.session.loggedIn = false;
-        res.redirect('/');
-        return;
+        res.render('login', {
+            layout: false
+        });
     } else {
-        res.redirect('/login');
-        return;
+        res.render('login', {
+            layout: false
+        });
     }
 });
 
 app.get('*', function(req, res) {
     res.render('404', {
+        layout: false,
         global: {
             title: '404 - Site not found',
             loggedIn: req.session.loggedIn,

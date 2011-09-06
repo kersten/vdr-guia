@@ -51,8 +51,8 @@
     <div class="row">
         <div class="span10">
             <h1>
-                Program
-                <small>What's running on <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="Switch to this channel" /></small>
+                <%= __('Program') %>
+                <small><%= __('What\'s running on <strong>%s</strong>', channel.name) %> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small>
             </h1>
         </div>
         <div class="span1 offset4" style="text-align: right;">
