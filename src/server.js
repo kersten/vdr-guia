@@ -80,13 +80,13 @@ app.get('/timeline', function(req, res) {
                     //var regEx = /Kategorie: (.*?)$/im; // tvm2vdr
                     var regEx = /^(.*?)\ .*$/i;
                     regEx.exec(epg.events[i].short_text);
-                    
+
                     if (RegExp.$1 == "") {
                         regEx.exec(epg.events[i].description);
                     }
 
                     var cat = RegExp.$1;
-                    
+
                     console.log(cat);
                     for (var x in categories) {
                         for(var y = 0; y < categories[x].equals.length; y++) {
@@ -164,7 +164,7 @@ app.post('/login', function (req, res) {
     var username = req.param("username");
     var password = req.param("password");
 
-    if (username == config.username && password == config.password) {
+    if (username == config.app.username && password == config.app.password) {
         req.session.loggedIn = true;
         res.redirect('/');
     } else {
@@ -201,7 +201,11 @@ app.get('/program', function (req, res) {
                 switchUrl: restfulUrl + '/remote/switch',
                 restfulUrl: restfulUrl
             });
+        }).on('error', function () {
+            console.log('Error getting epg for channel ' + data.channels[chan].name);
         });
+    }).on('error', function () {
+        console.log('Error getting channel');
     });
 });
 
@@ -358,8 +362,18 @@ app.get('/settings', function (req, res) {
             title: 'Settings',
             loggedIn: req.session.loggedIn,
             page: 'settings'
-        }
+        },
+        config: config
     });
+});
+
+app.post('/settings', function (req, res) {
+    for (var i in req.body) {
+        console.log(i + ' :: ' + req.body[i]);
+    }
+
+    res.redirect('/settings');
+    res.end();
 });
 
 app.get('/about', function (req, res) {
