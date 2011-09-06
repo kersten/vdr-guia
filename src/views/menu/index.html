@@ -18,7 +18,16 @@ $(document).ready(function(){
             success: function (res) {
                 if ($(el).attr('load') == '/logout') {
                     $('#topmenu').remove();
-
+                }
+                
+                if ($(el).attr('load') == '/program') {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/menu/channellist',
+                        success: function (channels) {
+                            $('#channellist').html(channels);
+                        }
+                    });
                 }
 
                 $('#topmenu > li.active').removeClass('active');
@@ -82,19 +91,4 @@ $(document).ready(function(){
     <li>
         <a class="toplinks" href="#logout" load="/logout"><%= __('Logout') %></a>
     </li>
-
-    <% if (global.page == 'program') { %>
-        <ul class="nav secondary-nav">
-            <li class="menu">
-                <a class="menu" href="#">Channels</a>
-                <ul class="menu-dropdown" style="height: 500px; overflow: auto;">
-                    <% if (channels.length) {
-                    channels.forEach(function (broadcast, i) { %>
-                        <li><a href="/program?chan=<%= i %>"><%= broadcast.name %></a></li>
-                    <% })
-                    }%>
-                </ul>
-            </li>
-        </ul>
-    <% } %>
 </ul>

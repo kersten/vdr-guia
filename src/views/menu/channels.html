@@ -1,0 +1,50 @@
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th><%= __('Channels') %></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (channels.length) {
+        channels.forEach(function (broadcast, i) { %>
+        <tr>
+            <td><%= ++i %></td>
+            <td><a class="channellinks" href="#program/<%= broadcast.channel_id %>" load="/program" channel="<%= broadcast.channel_id %>"><%= broadcast.name %></a></td>
+        </tr>
+        <% })
+        }%>
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.channellinks').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('load'),
+                data: {
+                    channel: $(this).attr('channel')
+                },
+                success: function (res) {
+                    if ($(el).attr('load') == '/logout') {
+                        $('#topmenu').remove();
+                    }
+
+                    $('#body').html(res);
+                },
+                statusCode: {
+                    403: function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/login',
+                            success: function (res) {
+                                $('#topmenu').remove();
+                                $('#body').html(res);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>

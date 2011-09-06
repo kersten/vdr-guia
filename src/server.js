@@ -93,6 +93,15 @@ app.post('/menu', function (req, res) {
     });
 });
 
+app.post('/menu/channellist', function (req, res) {
+    rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+        res.render('menu/channels', {
+            layout: false,
+            channels: data.channels
+        });
+    });
+});
+
 app.post('/timeline', function(req, res) {
     var channels = new Object();
 
@@ -231,38 +240,50 @@ app.post('/login.do', function (req, res) {
 });
 
 app.post('/program', function (req, res) {
-    var chan = req.param("chan", 0);
+    var chan = req.param("channel", false);
+    
+    if (chan == false) {
+        res.render('program', {
+            layout: false,
+            global: {
+                title: 'Program',
+                loggedIn: req.session.loggedIn,
+                page: 'program',
+                maxEntries: config.app.entries
+            },
+            paginator: {
+                total: 0
+            },
+            switchUrl: restfulUrl + '/remote/switch',
+            restfulUrl: restfulUrl
+        });
+        return;
+    }
+    
     var start = (req.param("site", 1) - 1) * config.app.entries;
-
-    rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
-        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
-            res.render('program', {
-                layout: false,
-                global: {
-                    title: 'Program',
-                    loggedIn: req.session.loggedIn,
-                    page: 'program',
-                    maxEntries: config.app.entries
-                },
-                channel: data.channels[chan],
-                channelNumber: chan,
-                channelEpg: epg.events,
-                channels: data.channels,
-                paginator: {
-                    total: epg.total,
-                    cur: parseInt(req.param("site", 1)),
-                    sites: Math.floor(epg.total / config.app.entries),
-                    next: parseInt(req.param("site", 1)) + 1,
-                    previous: parseInt(req.param("site", 1)) -1
-                },
-                switchUrl: restfulUrl + '/remote/switch',
-                restfulUrl: restfulUrl
-            });
-        }).on('error', function () {
-            syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + data.channels[chan].name);
+    
+    rest.get(restfulUrl + '/events/' + chan + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+        res.render('program', {
+            layout: false,
+            global: {
+                title: 'Program',
+                loggedIn: req.session.loggedIn,
+                page: 'program',
+                maxEntries: config.app.entries
+            },
+            channelEpg: epg.events,
+            paginator: {
+                total: epg.total,
+                cur: parseInt(req.param("site", 1)),
+                sites: Math.floor(epg.total / config.app.entries),
+                next: parseInt(req.param("site", 1)) + 1,
+                previous: parseInt(req.param("site", 1)) -1
+            },
+            switchUrl: restfulUrl + '/remote/switch',
+            restfulUrl: restfulUrl
         });
     }).on('error', function () {
-        syslog.log(syslog.LOG_ERR, 'Error getting channel');
+        syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + chan);
     });
 });
 

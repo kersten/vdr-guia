@@ -52,19 +52,21 @@
         <div class="span10">
             <h1>
                 <%= __('Program') %>
-                <small><%= __('What\'s running on') %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small>
+                <% if(typeof(channel) != 'undefined') { %><small><%= __('What\'s running on') %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small><% } %>
             </h1>
         </div>
+        <% if(typeof(channel) != 'undefined') { %>
         <div class="span1 offset4" style="text-align: right;">
             <% if (channel.image) {%>
             <img style="height: 36px;" src="<%= restfulUrl %>/channels/images/<%= channel.channel_id %>" />
             <% } %>
         </div>
+        <% } %>
     </div>
 </div>
 
 <div class="row">
-    <div class="span16 columns">
+    <div class="span10 columns">
         <table class="zebra-striped">
             <thead>
                 <tr>
@@ -74,7 +76,7 @@
                 </tr>
             </thead>
             <tbody>
-                <% if (typeof(channelEpg) != 'undefined' && channelEpg.length) {
+                <% if (typeof(channelEpg) != 'undefined' && channelEpg.length != 0) {
                 channelEpg.forEach(function (epg, i) {
                 var date = new Date();
 
@@ -135,8 +137,12 @@
         </div>
         <% } %>
     </div>
+    <div class="span6" id="channellist" style="height: 600px; overflow: auto;">
+        
+    </div>
 </div>
 
+<% if(typeof(channel) != 'undefined') { %>
 <div id="overlay" style="position: absolute; top: 0; left: 0; z-index: 101; display: none; color: #CCCCCC;">
 
 </div>
@@ -162,3 +168,4 @@
         <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>
+<% } %>
