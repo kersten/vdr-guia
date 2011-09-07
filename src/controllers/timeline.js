@@ -1,5 +1,5 @@
-module.exports = function () {
-    app.post('/timeline', function(req, res) {
+module.exports = {
+    index: function (req, res) {
         var channels = new Object();
 
         rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
@@ -93,5 +93,5 @@ module.exports = function () {
         }).on('error', function () {
             console.log('No Host');
         });
-    });
+    }
 };

@@ -34,7 +34,7 @@
                             403: function () {
                                 $.ajax({
                                     type: 'POST',
-                                    url: '/login',
+                                    url: '/auth',
                                     success: function (res) {
                                         $('#topmenu').remove();
                                         $('#body').html(res);

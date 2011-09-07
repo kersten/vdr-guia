@@ -67,7 +67,7 @@
                 403: function () {
                     $.ajax({
                         type: 'POST',
-                        url: '/login',
+                        url: '/auth',
                         success: function (res) {
                             $('#topmenu').remove();
                             $('#body').html(res);
@@ -85,7 +85,7 @@
 <div class="pagination" style="padding-left: 10%;">
     <ul>
         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program/<%= channel.channel_id %>?site=<%= paginator.previous %>" load="/program/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
+            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
         </li>
         <% var cnt = paginator.cur + 3;
         var start = paginator.cur;
@@ -104,16 +104,16 @@
             }
         } %>
         <% for (i = start; i < cnt; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program/<%= channel.channel_id %>?site=<%= i %>" load="/program/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% if (paginator.sites > 8) { %>
         <li class="disabled"><a href="#">…</a></li>
         <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program/<%= channel.channel_id %>?site=<%= i %>" load="/program/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% } %>
         <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program/<%= channel.channel_id %>?site=<%= paginator.next %>" load="/program/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
+            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
         </li>
     </ul>
 </div>
@@ -152,7 +152,7 @@
 <div class="pagination" style="padding-left: 10%;">
     <ul>
         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program/<%= channel.channel_id %>?site=<%= paginator.previous %>" load="/program/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
+            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
         </li>
         <% var cnt = paginator.cur + 3;
         var start = paginator.cur;
@@ -171,16 +171,16 @@
             }
         } %>
         <% for (i = start; i < cnt; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program/<%= channel.channel_id %>?site=<%= i %>" load="/program/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% if (paginator.sites > 8) { %>
         <li class="disabled"><a href="#">…</a></li>
         <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program/<%= channel.channel_id %>?site=<%= i %>" load="/program/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% } %>
         <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program/<%= channel.channel_id %>?site=<%= paginator.next %>" load="/program/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
+            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
         </li>
     </ul>
 </div>

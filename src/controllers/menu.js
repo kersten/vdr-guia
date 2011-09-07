@@ -1,9 +1,8 @@
 module.exports = {
     index: function (req, res) {
-        res.render('about', {
+        res.render('menu', {
             layout: false,
             global: {
-                title: 'About',
                 loggedIn: req.session.loggedIn
             }
         });

@@ -23,7 +23,7 @@
             if (loggedIn === 'false') {
                 $.ajax({
                     type: 'POST',
-                    url: '/login',
+                    url: '/auth',
                     success: function (res) {
                         $('#body').html(res);
                     }

@@ -7,7 +7,8 @@ var fs = require('fs'),
     syslog = require('node-syslog'),
     i18n = require("i18n"),
     config = require('./etc/config'),
-    monomi = require("monomi");
+    monomi = require("monomi"),
+    rest = require('restler');
 
 exports.boot = function (app){
   bootApplication(app);
@@ -17,6 +18,12 @@ exports.boot = function (app){
 // App settings and middleware
 
 function bootApplication (app) {
+    var RedisStore = require('connect-redis')(express);
+    app.use(express.bodyParser());
+    app.use(monomi.detectBrowserType());
+    app.use(express.cookieParser());
+    app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
+    
     app.use(express.logger());
 
     syslog.init("VDRManager", syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0);
@@ -31,20 +38,34 @@ function bootApplication (app) {
         // where to register __() and __n() to, might be "global" if you know what you are doing
         register: global
     });
-
-    app.use(app.router);
-    app.use(express.static(__dirname + '/public'));
-
-    var RedisStore = require('connect-redis')(express);
-    app.use(express.bodyParser());
-    app.use(monomi.detectBrowserType());
-    app.use(express.cookieParser());
-    app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
-
+    
     app.register('.html', require('ejs'));
 
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
+    
+    app.use(express.static(__dirname + '/public'));
+    app.use(app.router);
+    
+    app.configure('development', function(){
+        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    });
+    
+    global.ksort = require('./lib/ksort');
+    global.rest = rest;
+    global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
+    global.config = config;
+    global.vdr = {
+        plugins: {}
+    };
+    
+    rest.get(restfulUrl + '/info.json').on('complete', function(data) {
+        for (var i in data.vdr.plugins) {
+            if (data.vdr.plugins[i].name == 'epgsearch') {
+                vdr.plugins.epgsearch = true;
+            }
+        }
+    });
 
     // Some dynamic view helpers
     app.dynamicHelpers({
@@ -91,30 +112,19 @@ function bootController (app, file) {
     if (name == 'app') prefix = '/';
 
     app.all('*', function (req, res, next) {
-        /*if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
-            isMobileDevice = true;
-        }*/
-
-        /*if (req.url == '/login') {
-            next();
-            return;
+        if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
+            global.isMobileDevice = true;
         }
-        */
 
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            if (req.url != '/' && req.url != '/login' && req.url != '/login.do') {
+            if (req.url != '/' && req.url != '/login' && req.url != '/login/submit') {
                 res.writeHead(403);
                 res.end();
                 return;
             }
         }
-
-        /*if (req.url == '/') {
-            res.redirect('/timeline');
-            return;
-        }*/
 
         next();
     });
@@ -124,29 +134,16 @@ function bootController (app, file) {
 
         switch(action) {
             case 'index':
-                app.get(prefix, fn);
-                break;
-            case 'show':
-                app.get(prefix + '/:id.:format?', fn);
-                break;
-            case 'add':
-                app.get(prefix + '/:id/add', fn);
-                break;
-            case 'create':
-                app.post(prefix + '/:id', fn);
-                break;
-            case 'edit':
-                app.get(prefix + '/:id/edit', fn);
-                break;
-            case 'update':
-                app.put(prefix + '/:id', fn);
-                break;
-            case 'destroy':
-                app.del(prefix + '/:id', fn);
+                if (prefix != '/') {
+                    app.post(prefix, fn);
+                } else {
+                    app.get(prefix, fn);
+                }
+                
                 break;
             default:
+                console.log('Register post: ' + prefix + '/' + action);
                 app.post(prefix, fn);
-                console.log('POST: ' + action);
                 break;
         }
     });
