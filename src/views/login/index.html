@@ -5,7 +5,7 @@
         $('#login').click(function () {
             $.ajax({
                 type: 'POST',
-                url: '/auth/login',
+                url: '/authenticate/login',
                 data: {
                     username: $('#username').val(),
                     password: $('#password').val()

@@ -37,7 +37,7 @@ $(document).ready(function(){
                 403: function () {
                     $.ajax({
                         type: 'POST',
-                        url: '/auth',
+                        url: '/authenticate',
                         success: function (res) {
                             $('#topmenu').remove();
                             $('#body').html(res);

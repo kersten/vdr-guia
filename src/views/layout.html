@@ -23,7 +23,7 @@
             if (loggedIn === 'false') {
                 $.ajax({
                     type: 'POST',
-                    url: '/auth',
+                    url: '/authenticate',
                     success: function (res) {
                         $('#body').html(res);
                     }
@@ -40,7 +40,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/timeline',
+                    url: '/app/frontsite',
                     beforeSend: function () {
                         overlay.show();
                     },

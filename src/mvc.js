@@ -133,7 +133,9 @@ function bootController (app, file) {
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            if (req.url != '/' && req.url != '/auth' && req.url != '/auth/login') {
+            console.log(req);
+
+            if (req.url != '/' && req.url != '/authenticate' && req.url != '/authenticate/login') {
                 res.writeHead(403);
                 res.end();
                 return;
@@ -161,8 +163,10 @@ function bootController (app, file) {
             if (prefix == '/program' && action == 'view') {
                 action = action + '/:channelid';
             }
+            
             console.log('Register POST: ' + prefix + '/' + action);
             app.post(prefix, fn);
+            
             break;
         }
     });

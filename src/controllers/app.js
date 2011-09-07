@@ -8,5 +8,8 @@ module.exports = {
                 page: 'layout'
             }
         });
+    },
+    frontsite: function (req, res) {
+        
     }
 };
