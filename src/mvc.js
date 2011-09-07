@@ -133,14 +133,14 @@ function bootController (app, file) {
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            console.log(req);
-
-            if (req.url != '/' && req.url != '/authenticate' && req.url != '/authenticate/login') {
+            if (req.url != '/' && req.url != '/authenticate' && req.url != '/authenticate/login' && req.url != '/authenticate/logout') {
                 res.writeHead(403);
                 res.end();
                 return;
             }
         }
+        
+        console.log(req.url);
 
         next();
     });
@@ -179,7 +179,7 @@ function controllerAction (name, action, fn) {
         var render = res.render,
         format = req.params.format,
         path = __dirname + '/views/' + name + '/' + action + '.html';
-
+    
         res.render = function(obj, options, fn){
             res.render = render;
             // Template path

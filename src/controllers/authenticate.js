@@ -7,7 +7,7 @@ module.exports = {
             return;
         }
 
-        res.render('login', {
+        res.render('authenticate', {
             layout: false,
             global: {
                 title: 'Login',
@@ -18,6 +18,8 @@ module.exports = {
     login: function (req, res) {
         var username = req.param("username");
         var password = req.param("password");
+        
+        console.log(this);
 
         if (username == config.app.username && password == config.app.password) {
             req.session.loggedIn = true;
@@ -30,11 +32,11 @@ module.exports = {
     logout: function (req, res) {
         if (typeof(req.session.loggedIn) != 'undefined' && req.session.loggedIn) {
             req.session.loggedIn = false;
-            res.render('login', {
+            res.render('authenticate', {
                 layout: false
             });
         } else {
-            res.render('login', {
+            res.render('authenticate', {
                 layout: false
             });
         }
