@@ -16,7 +16,6 @@ exports.boot = function (app){
 };
 
 // App settings and middleware
-
 function bootApplication (app) {
     var RedisStore = require('connect-redis')(express);
     app.use(express.bodyParser());
