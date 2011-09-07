@@ -10,6 +10,10 @@ $(document).ready(function(){
     });
 
     $('a.toplinks').click(function () {
+        if ($(this).parent().hasClass('active')) {
+            return;
+        }
+
         var el = this;
 
         $.ajax({
@@ -18,12 +22,16 @@ $(document).ready(function(){
             success: function (res) {
                 if ($(el).attr('load') == '/logout') {
                     $('#topmenu').remove();
-
                 }
 
                 $('#topmenu > li.active').removeClass('active');
                 $(el).parent().addClass('active');
                 $('#body').html(res);
+                overlay.hide();
+            },
+            beforeSend: function () {
+                $('#body').html('&nbsp;');
+                overlay.show();
             },
             statusCode: {
                 403: function () {
@@ -33,6 +41,7 @@ $(document).ready(function(){
                         success: function (res) {
                             $('#topmenu').remove();
                             $('#body').html(res);
+                            overlay.hide();
                         }
                     });
                 }
@@ -59,6 +68,7 @@ $(document).ready(function(){
         <a class="toplinks" href="#timer" load="/timer"><%= __('Timer') %></a>
     </li>
 
+    <% if (typeof(vdr.plugins.epgsearch) != 'undefined' && vdr.plugins.epgsearch == true) { %>
     <li>
         <a class="toplinks" href="#search" load="/search"><%= __('Search') %></a>
     </li>
@@ -66,6 +76,7 @@ $(document).ready(function(){
     <li>
         <a class="toplinks" href="#searchtimer" load="/searchtimer"><%= __('Searchtimer') %></a>
     </li>
+    <% } %>
 
     <li>
         <a class="toplinks" href="#records" load="/records"><%= __('Records') %></a>
@@ -82,19 +93,4 @@ $(document).ready(function(){
     <li>
         <a class="toplinks" href="#logout" load="/logout"><%= __('Logout') %></a>
     </li>
-
-    <% if (global.page == 'program') { %>
-        <ul class="nav secondary-nav">
-            <li class="menu">
-                <a class="menu" href="#">Channels</a>
-                <ul class="menu-dropdown" style="height: 500px; overflow: auto;">
-                    <% if (channels.length) {
-                    channels.forEach(function (broadcast, i) { %>
-                        <li><a href="/program?chan=<%= i %>"><%= broadcast.name %></a></li>
-                    <% })
-                    }%>
-                </ul>
-            </li>
-        </ul>
-    <% } %>
 </ul>

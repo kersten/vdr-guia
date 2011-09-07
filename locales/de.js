@@ -51,6 +51,7 @@
 	"Crash if epgsearch plugin missing and click on search or searchtimers": "Crash if epgsearch plugin missing and click on search or searchtimers",
 	"Airtime": "Airtime",
 	"Title": "Title",
+<<<<<<< HEAD
 	"Not found": "Not found",
 	"Sorry, the site you've requested does not exist": "Sorry, the site you've requested does not exist",
 	"Previous": "Previous",
@@ -66,4 +67,17 @@
 	"Change your defaults": "Change your defaults",
 	"Details": "Details",
 	"on %s": "on %s"
+=======
+	"Channels": "Channels",
+	"Previous": "Previous",
+	"Next": "Next",
+	"Not found": "Not found",
+	"Sorry, the site you've requested does not exist": "Sorry, the site you've requested does not exist",
+	"Airday": "Airday",
+	"Station": "Station",
+	"Searchtimers": "Searchtimers",
+	"Don't worry about changing airtimes anymore ..": "Don't worry about changing airtimes anymore ..",
+	"Change your defaults": "Change your defaults",
+	"Plug it, play it, burn it, rip it!": "Plug it, play it, burn it, rip it!"
+>>>>>>> f08153b4de1d32cb5fd421e77afbead4e6812638
 }

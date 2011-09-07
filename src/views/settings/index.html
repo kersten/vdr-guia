@@ -1,5 +1,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
+        $(this).attr('title', 'VDRManager // <%= __("Settings") %>');
+
         $.ajax({
             type: 'POST',
             url: $('.tabs > .active').attr('href'),

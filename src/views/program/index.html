@@ -1,164 +1,69 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#switch').click(function () {
-            console.log("Switching vdr to channel: "+ $(this).attr('channel'));
+        $(this).attr('title', 'VDRManager // <%= __("Program") %>');
 
-            $.post('<%= switchUrl %>/' + $(this).attr('channel'), function () {
-                $('#overlay').css({
-                    opacity: 0.5,
-                    width: $(document).width(),
-                    height: $(document).height()
-                }).show();
+        $.ajax({
+            type: 'POST',
+            url: '/program/channellist',
+            success: function (channels) {
+                $('#channellist').css('height', $(window).height() - $('#channellist').offset().top);
 
-                $('#dialog').css({
-                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
-                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
-                }).show();
-            }).error(function () {
-                $('#overlay').css({
-                    opacity: 0.5,
-                    width: $(document).width(),
-                    height: $(document).height()
-                }).show();
+                $(window).unbind('scroll');
 
-                $('#errordialog').css({
-                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
-                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
-                }).show();
-            });
+                $(window).scroll(function (e) {
+                    if ($('#channellist').offset().top <= $(window).scrollTop()) {
+                        $('#channellist').css('top', $(window).scrollTop());
+                        console.log($('#channellist').offset().top + ' :: ' + $(window).scrollTop());
+                    }
+                })
 
-            $('.btn_ok').click(function () {
-                $('#overlay').hide();
-                $('.modal').hide();
-            });
-        });
+                $('#channellist').html(channels);
 
-        $('.btn_timer').click(function () {
-            if ($(this).attr('active') == "true") {
-                $(this).attr('src', '/img/devine/black/Circle.png');
-                $(this).attr('active', "false");
-            } else {
-                $(this).attr('src', '/img/devine/black/Circle-2.png');
-                $(this).attr('active', "true");
+                $('a.channellinks').click(function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('load'),
+                        success: function (res) {
+                            $('#programlist').html(res);
+                            overlay.hide();
+                        },
+                        beforeSend: function () {
+                            overlay.show();
+                        },
+                        statusCode: {
+                            403: function () {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/login',
+                                    success: function (res) {
+                                        $('#topmenu').remove();
+                                        $('#body').html(res);
+                                        overlay.hide();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
             }
-
-            console.log($(this).attr('eventid'));
         });
     });
 </script>
-
 <div class="page-header">
-    <div class="row">
+    <div class="row" id="program_header_div">
         <div class="span10">
             <h1>
                 <%= __('Program') %>
-                <small><%= __('What\'s running on') %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __('Switch to this channel') %>" /></small>
             </h1>
-        </div>
-        <div class="span1 offset4" style="text-align: right;">
-            <% if (channel.image) {%>
-            <img style="height: 36px;" src="<%= restfulUrl %>/channels/images/<%= channel.channel_id %>" />
-            <% } %>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="span16 columns">
-        <table class="zebra-striped">
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th style="width: 100px;"><%= __('Airtime') %></th>
-                    <th><%= __('Title') %></th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (typeof(channelEpg) != 'undefined' && channelEpg.length) {
-                channelEpg.forEach(function (epg, i) {
-                var date = new Date();
+    <div class="span10 columns" id="programlist">
+        &nbsp;
+    </div>
+    <div class="span6" id="channellist" style="overflow: auto;">
 
-                date.setTime(epg.start_time * 1000);
-                var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
-
-                date.setTime((epg.start_time + epg.duration) * 1000);
-                var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
-                %>
-                <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/<% if (epg.timer_exists == true && epg.timer_active == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
-                    <td><%= start %> - <%= end %></td>
-                    <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
-                </tr>
-                <% })
-                }%>
-            </tbody>
-        </table>
-        <% if (paginator.total > global.maxEntries) {
-            var query = '&chan=' + channelNumber;
-        %>
-        <div class="span16 columns">
-            <div class="pagination" style="padding-left: 25%;">
-                <ul>
-                    <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != 1) {%> href="/program?site=<%= paginator.previous %><%= query %>"<% } %>>← <%= __('Previous') %></a>
-                    </li>
-                    <% var cnt = paginator.cur + 3;
-                    var start = paginator.cur;
-                    if (paginator.sites < 9) {
-                        cnt = paginator.sites + 1;
-                        start = 1;
-                    } else {
-                        if (paginator.cur != 1) {
-                            start = paginator.cur -1;
-                            cnt = paginator.cur + 2;
-                        }
-
-                        if (paginator.cur > paginator.sites - 3) {
-                            start = 1;
-                            cnt = 4;
-                        }
-                    } %>
-                    <% for (i = start; i < cnt; i++) { %>
-                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
-                    <% } %>
-                    <% if (paginator.sites > 8) { %>
-                    <li class="disabled"><a href="#">…</a></li>
-                    <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-                    <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/program?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
-                    <% } %>
-                    <% } %>
-                    <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-                        <a<% if (paginator.cur != paginator.sites) {%> href="/program?site=<%= paginator.next %><%= query %>"<% } %>><%= __('Next') %> →</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <% } %>
-    </div>
-</div>
-
-<div id="overlay" style="position: absolute; top: 0; left: 0; z-index: 101; display: none; color: #CCCCCC;">
-
-</div>
-<div id="dialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
-    <div class="modal-header">
-        <h3><%= __('Switched') %></h3>
-    </div>
-    <div class="modal-body">
-        <p><%= __('VDR switched to channel') %> <%= channel.name %></p>
-    </div>
-    <div class="modal-footer">
-        <a class="btn_ok btn primary"><%= __('OK') %></a>
-    </div>
-</div>
-<div id="errordialog" class="modal" style="position: fixed; top: auto; left: auto; z-index: 101; display: none">
-    <div class="modal-header">
-        <h3><%= __('Error occurred') %></h3>
-    </div>
-    <div class="modal-body">
-        <p><%= __('Please try again') %></p>
-    </div>
-    <div class="modal-footer">
-        <a class="btn_ok btn primary"><%= __('OK') %></a>
     </div>
 </div>

@@ -1,48 +1,39 @@
 var express = require('express');
 var app = express.createServer();
+var config = require('./etc/config');
+
+require('./mvc').boot(app);
+
+app.listen(config.web.port);
+console.log('Express app started on port ' + config.web.port);
+
+return;
+
 var http = require('http');
 var rest = require('restler');
 var monomi = require("monomi");
-var i18n = require("i18n");
 var syslog = require('node-syslog');
-var config = require('./etc/config');
+
 var ksort = require('./lib/ksort');
 var categories = require('./lib/category_mapper');
 
-app.configure('development', function() {
-    syslog.init("VDRManager", syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0);
-    syslog.log(syslog.LOG_INFO, "Starting VDRManager webserver");
-
-    app.use(i18n.init);
-    //app.use(app.router);
-    app.use(express.static(__dirname + '/../public/'));
-    app.use(express.errorHandler({
-        dumpExceptions: true,
-        showStack: true
-    }));
-});
-
-i18n.configure({
-    // setup some locales - other locales default to en silently
-    locales:['en', 'de'],
-
-    // where to register __() and __n() to, might be "global" if you know what you are doing
-    register: global
-});
-
-app.register('.html', require('ejs'));
-
-app.set('views', __dirname + '/views');
-app.set('view engine', 'html');
-
-var RedisStore = require('connect-redis')(express);
-app.use(express.bodyParser());
-app.use(monomi.detectBrowserType());
-app.use(express.cookieParser());
-app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
+require('./etc/environment.js')(app, express);
+require('./etc/i18n.js');
+require('./controller');
 
 var restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
 var isMobileDevice = false;
+var vdr = {
+    plugins: {}
+};
+
+rest.get(restfulUrl + '/info.json').on('complete', function(data) {
+    for (var i in data.vdr.plugins) {
+        if (data.vdr.plugins[i].name == 'epgsearch') {
+            vdr.plugins.epgsearch = true;
+        }
+    }
+});
 
 app.all('*', function (req, res, next) {
     if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
@@ -55,7 +46,7 @@ app.all('*', function (req, res, next) {
     }
     */
 
-    if (typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
+    if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
         req.session.loggedIn = false;
 
         if (req.url != '/' && req.url != '/login' && req.url != '/login.do') {
@@ -89,99 +80,8 @@ app.post('/menu', function (req, res) {
         global: {
             loggedIn: req.session.loggedIn,
             page: 'menu'
-        }
-    });
-});
-
-app.post('/timeline', function(req, res) {
-    var channels = new Object();
-
-    rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
-        var render = function () {
-            if (data.channels.length != waitForFinish) return;
-
-            channels = ksort(channels);
-
-            res.render((isMobileDevice) ? 'mob/timeline': 'timeline', {
-                layout: false,
-                global: {
-                    title: 'Timeline',
-                    loggedIn: req.session.loggedIn,
-                    page: 'timeline'
-                },
-                channels: channels,
-                switchUrl: restfulUrl + '/remote/switch',
-                ts: Math.round((new Date()).getTime() / 1000)
-            });
-        };
-
-        var waitForFinish = 0;
-
-        data.channels.forEach(function (channel) {
-            rest.get(restfulUrl + '/events/' + channel.channel_id + '.json?start=0', {channel: channel}).on('complete',  function (epg) {
-                for (var i in epg.events) {
-                    //var regEx = /Kategorie: (.*?)$/im; // tvm2vdr
-                    var regEx = /^(.*?)\ .*$/i;
-                    regEx.exec(epg.events[i].short_text);
-
-                    if (RegExp.$1 == "") {
-                        regEx.exec(epg.events[i].description);
-                    }
-
-                    var cat = RegExp.$1;
-
-                    console.log(cat);
-                    for (var x in categories) {
-                        for(var y = 0; y < categories[x].equals.length; y++) {
-                            if(categories[x].equals[y] == cat) {
-                                epg.events[i].category = x;
-                                epg.events[i].color = categories[x].color;
-                                break;
-                            }
-                        }
-
-                        if (typeof(epg.events[i].category) == 'undefined') {
-                            for(var y = 0; y < categories[x].regex.length; y++) {
-                                if(cat.match(categories[x].regex[y])) {
-                                    epg.events[i].category = x;
-                                    epg.events[i].color = categories[x].color;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (typeof(epg.events[i].category) != 'undefined') {
-                            break;
-                        }
-                    }
-
-                    if (typeof(epg.events[i].category) == 'undefined') {
-                        epg.events[i].category = 'Sonstiges';
-                        epg.events[i].color = {
-                            'background-color': '#CCCCCC',
-                            'background-image': '-moz-linear-gradient(center top , #666666, #CCCCCC)',
-                            'font-color': '#000000'
-                        };
-                    }
-                }
-
-                channels[this.options.channel.number] = {
-                    channel: this.options.channel,
-                    epg: epg
-                };
-
-                waitForFinish++;
-                render();
-            }).on('error', function (err) {
-                waitForFinish++;
-                render();
-            }).on('404', function () {
-                waitForFinish++;
-                render();
-            });
-        });
-    }).on('error', function () {
-        console.log('No Host');
+        },
+        vdr: vdr
     });
 });
 
@@ -231,12 +131,37 @@ app.post('/login.do', function (req, res) {
 });
 
 app.post('/program', function (req, res) {
-    var chan = req.param("chan", 0);
+    res.render('program', {
+        layout: false,
+        global: {
+            title: 'Program',
+            loggedIn: req.session.loggedIn,
+            page: 'program',
+            maxEntries: config.app.entries
+        },
+        paginator: {
+            total: 0
+        },
+        switchUrl: restfulUrl + '/remote/switch',
+        restfulUrl: restfulUrl
+    });
+});
+
+app.post('/program/channellist', function (req, res) {
+    rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+        res.render('program/channels', {
+            layout: false,
+            channels: data.channels
+        });
+    });
+});
+
+app.post('/program/:channelid', function (req, res) {
     var start = (req.param("site", 1) - 1) * config.app.entries;
 
-    rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
-        rest.get(restfulUrl + '/events/' + data.channels[chan].channel_id + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
-            res.render('program', {
+    rest.get(restfulUrl + '/channels/' + req.params.channelid + '.json?start=0&limit=1').on('complete', function(channel) {
+        rest.get(restfulUrl + '/events/' + req.params.channelid + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+            res.render('program/epg', {
                 layout: false,
                 global: {
                     title: 'Program',
@@ -244,10 +169,8 @@ app.post('/program', function (req, res) {
                     page: 'program',
                     maxEntries: config.app.entries
                 },
-                channel: data.channels[chan],
-                channelNumber: chan,
                 channelEpg: epg.events,
-                channels: data.channels,
+                channel: channel.channels[0],
                 paginator: {
                     total: epg.total,
                     cur: parseInt(req.param("site", 1)),
@@ -259,21 +182,8 @@ app.post('/program', function (req, res) {
                 restfulUrl: restfulUrl
             });
         }).on('error', function () {
-            syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + data.channels[chan].name);
+            syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + chan);
         });
-    }).on('error', function () {
-        syslog.log(syslog.LOG_ERR, 'Error getting channel');
-    });
-});
-
-app.post('/watch', function (req, res) {
-    res.render('watch', {
-        layout: false,
-        global: {
-            title: 'Watch',
-            loggedIn: req.session.loggedIn,
-            page: 'watch'
-        }
     });
 });
 
@@ -452,26 +362,6 @@ app.post('/settings/tvguide', function (req, res) {
     });
 });
 
-/*app.post('/settings', function (req, res) {
-    for (var i in req.body) {
-        console.log(i + ' :: ' + req.body[i]);
-    }
-
-    res.redirect('/settings');
-    res.end();
-});*/
-
-app.post('/about', function (req, res) {
-    res.render('about', {
-        layout: false,
-        global: {
-            title: 'About',
-            loggedIn: req.session.loggedIn,
-            page: 'about'
-        }
-    });
-});
-
 app.post('/details', function (req, res) {
     var eventId = req.param("eventid", false);
     var channelId = req.param("channelid", false);
@@ -520,4 +410,4 @@ app.get('*', function(req, res) {
     });
 });
 
-app.listen(config.web.port);
+
