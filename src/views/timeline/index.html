@@ -42,7 +42,18 @@ $(document).ready(function () {
     });
 
     $('.show_details').click(function () {
-        window.location = '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid');
+        $.ajax({
+            url: '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid'),
+            type: 'POST',
+            success: function (res) {
+                $('#body').html(res);
+            },
+            statusCode: {
+                403: function () {
+                    
+                }
+            }
+        });
     });
 });
 </script>

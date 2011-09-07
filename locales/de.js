@@ -1,4 +1,5 @@
 {
+	"404": "404",
 	"Timeline": "Zeitleiste",
 	"TV Guide": "TV Zeitung",
 	"Program": "Programm",
@@ -49,5 +50,20 @@
 	"Known bugs": "Known bugs",
 	"Crash if epgsearch plugin missing and click on search or searchtimers": "Crash if epgsearch plugin missing and click on search or searchtimers",
 	"Airtime": "Airtime",
-	"Title": "Title"
+	"Title": "Title",
+	"Not found": "Not found",
+	"Sorry, the site you've requested does not exist": "Sorry, the site you've requested does not exist",
+	"Previous": "Previous",
+	"Next": "Next",
+	"Airday": "Airday",
+	"Station": "Station",
+	"Disable this timer": "Disable this timer",
+	"Searchtimers": "Searchtimers",
+	"Don't worry about changing airtimes anymore ..": "Don't worry about changing airtimes anymore ..",
+	"Deactivate searchtimer": "Deactivate searchtimer",
+	"Show results for this searchtimer": "Show results for this searchtimer",
+	"Plug it, play it, burn it, rip it!": "Plug it, play it, burn it, rip it!",
+	"Change your defaults": "Change your defaults",
+	"Details": "Details",
+	"on %s": "on %s"
 }
