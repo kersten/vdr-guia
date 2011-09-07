@@ -8,6 +8,7 @@
 		content="text/html;charset=utf-8" />
 
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
 
         <style type="text/css">
             @import url('/css/bootstrap.css');
@@ -40,8 +41,12 @@
                 $.ajax({
                     type: 'POST',
                     url: '/timeline',
+                    beforeSend: function () {
+                        overlay.show();
+                    },
                     success: function (res) {
                         $('#body').html(res);
+                        overlay.hide();
                     }
                 });
             }

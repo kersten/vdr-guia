@@ -1,5 +1,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
+        $(this).attr('title', 'VDRManager // <%= __("Timer") %>');
+
         $('.btn_timer').click(function () {
             if ($(this).attr('active') == "true") {
                 $.ajax({

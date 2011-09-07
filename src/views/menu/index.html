@@ -10,6 +10,10 @@ $(document).ready(function(){
     });
 
     $('a.toplinks').click(function () {
+        if ($(this).parent().hasClass('active')) {
+            return;
+        }
+
         var el = this;
 
         $.ajax({
@@ -19,20 +23,15 @@ $(document).ready(function(){
                 if ($(el).attr('load') == '/logout') {
                     $('#topmenu').remove();
                 }
-                
-                if ($(el).attr('load') == '/program') {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/menu/channellist',
-                        success: function (channels) {
-                            $('#channellist').html(channels);
-                        }
-                    });
-                }
 
                 $('#topmenu > li.active').removeClass('active');
                 $(el).parent().addClass('active');
                 $('#body').html(res);
+                overlay.hide();
+            },
+            beforeSend: function () {
+                $('#body').html('&nbsp;');
+                overlay.show();
             },
             statusCode: {
                 403: function () {
@@ -42,6 +41,7 @@ $(document).ready(function(){
                         success: function (res) {
                             $('#topmenu').remove();
                             $('#body').html(res);
+                            overlay.hide();
                         }
                     });
                 }
@@ -68,6 +68,7 @@ $(document).ready(function(){
         <a class="toplinks" href="#timer" load="/timer"><%= __('Timer') %></a>
     </li>
 
+    <% if (typeof(vdr.plugins.epgsearch) != 'undefined' && vdr.plugins.epgsearch == true) { %>
     <li>
         <a class="toplinks" href="#search" load="/search"><%= __('Search') %></a>
     </li>
@@ -75,6 +76,7 @@ $(document).ready(function(){
     <li>
         <a class="toplinks" href="#searchtimer" load="/searchtimer"><%= __('Searchtimer') %></a>
     </li>
+    <% } %>
 
     <li>
         <a class="toplinks" href="#records" load="/records"><%= __('Records') %></a>
