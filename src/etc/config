@@ -10,7 +10,7 @@ config.app = {
     password: 'manager'
 }
 
-config.vdr.host = '192.168.0.192'
+config.vdr.host = process.env.WEB_PORT || '127.0.0.1';
 config.vdr.restfulport = 8002
 
 config.redis.secret = 'zy8qSFwF2OpIChvxZFz0TVUU7DLhQnEYsEB7nD1fP3SLkGVMlmC1i0fQscbky5w';
