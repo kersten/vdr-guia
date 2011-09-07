@@ -64,5 +64,6 @@
 	"Crash if epgsearch plugin missing and click on search or searchtimers": "Crash if epgsearch plugin missing and click on search or searchtimers",
 	"Not found": "Not found",
 	"Sorry, the site you've requested does not exist": "Sorry, the site you've requested does not exist",
-	"Channels": "Channels"
+	"Channels": "Channels",
+	"404 - Not found": "404 - Not found"
 }

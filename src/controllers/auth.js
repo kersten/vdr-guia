@@ -26,8 +26,6 @@ module.exports = {
             res.writeHead(403);
             res.end();
         }
-
-        res.end();
     },
     logout: function (req, res) {
         if (typeof(req.session.loggedIn) != 'undefined' && req.session.loggedIn) {

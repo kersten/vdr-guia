@@ -51,6 +51,20 @@ function bootApplication (app) {
         app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     });
     
+    app.error(function(err, req, res, next){
+        if (err instanceof NotFound) {
+            res.render('404', {
+                layout: false,
+                global: {
+                    title: '404 - Site not found',
+                    loggedIn: req.session.loggedIn
+                }
+            });
+        } else {
+            next(err);
+        }
+    });
+    
     global.ksort = require('./lib/ksort');
     global.rest = rest;
     global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
@@ -119,7 +133,7 @@ function bootController (app, file) {
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            if (req.url != '/' && req.url != '/login' && req.url != '/login/submit') {
+            if (req.url != '/' && req.url != '/auth' && req.url != '/auth/login') {
                 res.writeHead(403);
                 res.end();
                 return;
@@ -128,23 +142,26 @@ function bootController (app, file) {
 
         next();
     });
-
+    
     Object.keys(actions).map(function (action) {
         var fn = controllerAction(name, action, actions[action]);
 
         switch(action) {
-            case 'index':
-                if (prefix != '/') {
-                    app.post(prefix, fn);
-                } else {
-                    app.get(prefix, fn);
-                }
-                
-                break;
-            default:
-                console.log('Register post: ' + prefix + '/' + action);
+        case 'index':
+            if (prefix != '/') {
                 app.post(prefix, fn);
-                break;
+            } else {
+                app.get(prefix, fn);
+            }
+
+            break;
+        default:
+            if (prefix == '/program' && action == 'view') {
+                action = action + '/:channelid';
+            }
+            console.log('Register post: ' + prefix + '/' + action);
+            app.post(prefix, fn);
+            break;
         }
     });
 }
