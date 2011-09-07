@@ -65,5 +65,6 @@
 	"Not found": "Not found",
 	"Sorry, the site you've requested does not exist": "Sorry, the site you've requested does not exist",
 	"Channels": "Channels",
-	"404 - Not found": "404 - Not found"
+	"404 - Not found": "404 - Not found",
+	"Login connection not found": "Login connection not found"
 }

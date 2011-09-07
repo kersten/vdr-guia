@@ -24,7 +24,7 @@ function bootApplication (app) {
     app.use(express.cookieParser());
     app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
     
-    app.use(express.logger());
+    //app.use(express.logger());
 
     syslog.init("VDRManager", syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0);
     syslog.log(syslog.LOG_INFO, "Starting VDRManager webserver");
@@ -149,8 +149,10 @@ function bootController (app, file) {
         switch(action) {
         case 'index':
             if (prefix != '/') {
+                console.log('Register POST: ' + prefix);
                 app.post(prefix, fn);
             } else {
+                console.log('Register GET: ' + prefix);
                 app.get(prefix, fn);
             }
 
@@ -159,7 +161,7 @@ function bootController (app, file) {
             if (prefix == '/program' && action == 'view') {
                 action = action + '/:channelid';
             }
-            console.log('Register post: ' + prefix + '/' + action);
+            console.log('Register POST: ' + prefix + '/' + action);
             app.post(prefix, fn);
             break;
         }
