@@ -1,3 +1,5 @@
+var socket = io.connect();
+
 jQuery.fn.center = function () {
     this.css("position","absolute");
     this.css("top", (($(window).height() - this.outerHeight()) / 2) + $(window).scrollTop() + "px");
@@ -32,17 +34,11 @@ var overlay = {
 
 $(document).ready(function () {
     overlay.show();
-    var socket = io.connect();
-
-    socket.on('connection', function (data) {
-        console.log(data);
-    });
-
+    
     socket.emit('checksession');
 
     socket.on('loggedIn', function (data) {
-        console.log(data);
-        if (loggedIn === data.loggedIn) {
+        if (data.loggedIn === false) {
             $.ajax({
                 type: 'POST',
                 url: '/authenticate',
@@ -64,9 +60,6 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/app/frontsite',
-                beforeSend: function () {
-                    overlay.show();
-                },
                 success: function (res) {
                     $('#body').html(res);
                     overlay.hide();

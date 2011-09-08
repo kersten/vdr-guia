@@ -46,5 +46,19 @@
 	"Cancel": "Cancel",
 	"Plug it, play it, burn it, rip it!": "Plug it, play it, burn it, rip it!",
 	"Searchtimers": "Searchtimers",
-	"Don't worry about changing airtimes anymore ..": "Don't worry about changing airtimes anymore .."
+	"Don't worry about changing airtimes anymore ..": "Don't worry about changing airtimes anymore ..",
+	"Disable this timer": "Disable this timer",
+	"Why this?": "Why this?",
+	"Readme": "Readme",
+	"VDRManger aims to be the replacement for old VDRLive.": "VDRManger aims to be the replacement for old VDRLive.",
+	"Developers": "Developers",
+	"Contact": "Contact",
+	"Website": "Website",
+	"Thanks to ..": "Thanks to ..",
+	"aelo and gda for their wonderful restful api": "aelo and gda for their wonderful restful api",
+	"the complete yavdr team for their fast help": "the complete yavdr team for their fast help",
+	"Features": "Features",
+	"content": "content",
+	"Known bugs": "Known bugs",
+	"Crash if epgsearch plugin missing and click on search or searchtimers": "Crash if epgsearch plugin missing and click on search or searchtimers"
 }

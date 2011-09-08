@@ -1,38 +1,53 @@
 var parseCookie = require('express/node_modules/connect').utils.parseCookie;
+var Session = require('express/node_modules/connect').middleware.session.Session;
 
-io.set('authorization', function (data, accept) {
-    if (data.headers.cookie) {
-        data.cookie = parseCookie(data.headers.cookie);
-        data.sessionID = data.cookie['VDRManager.id'];
-        // save the session store to the data object
-        // (as required by the Session constructor)
-        
-        console.log(data);
-        
-        data.sessionStore = redis;
-        redis.get(data.sessionID, function (err, session) {
-            if (err) {
-                console.log(session);
-                accept(err.message, false);
-            } else {
-                // create a session object, passing data as request and our
-                // just acquired session data
-                data.session = new Session(data, session);
-                accept(null, true);
-            }
-        });
-    } else {
-        return accept('No cookie transmitted.', false);
-    }
+io.configure(function (){
+    io.set('authorization', function (data, accept) {
+        if (data.headers.cookie) {
+            data.cookie = parseCookie(data.headers.cookie);
+            data.sessionID = data.cookie['vdrmanager.id'];
+            // save the session store to the data object
+            // (as required by the Session constructor)
+
+            data.sessionStore = sessionStore;
+            sessionStore.get(data.sessionID, function (err, session) {
+                if (err) {
+                    accept(err.message, false);
+                } else {
+                    // create a session object, passing data as request and our
+                    // just acquired session data
+                    data.session = new Session(data, session);
+                    accept(null, true);
+                }
+            });
+        } else {
+            return accept('No cookie transmitted.', false);
+        }
+    });
 });
 
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
     
-    console.log(hs);
-    
     socket.on('checksession', function () {
-        //if (hs.loggedIn)
+        if (hs.session.loggedIn) {
+            socket.emit('loggedIn', {
+                loggedIn: true
+            });
+        } else {
+            socket.emit('loggedIn', {
+                loggedIn: false
+            });
+        }
+    });
+    
+    socket.on('login', function (data) {
+        if (data.username == config.app.username && data.password == config.app.password) {
+            hs.session.loggedIn = true;
+            emit('login.done', {succesful: true});
+        } else {
+            emit('login.done', {succesful: false});
+        }
     });
     
     socket.on('disconnect', function () {

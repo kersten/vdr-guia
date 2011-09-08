@@ -25,7 +25,7 @@ function bootApplication (app, io) {
     app.use(express.session({
         secret: config.redis.secret,
         store: store,
-        key: 'VDRManager.id'
+        key: 'vdrmanager.id'
     }));
 
     //app.use(express.logger());
@@ -77,7 +77,7 @@ function bootApplication (app, io) {
         plugins: {}
     };
     global.io = io;
-    global.redis = store;
+    global.sessionStore = store;
 
     rest.get(restfulUrl + '/info.json').on('complete', function(data) {
         for (var i in data.vdr.plugins) {
