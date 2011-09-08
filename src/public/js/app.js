@@ -67,4 +67,8 @@ $(document).ready(function () {
             });
         }
     });
+    
+    $(window).bind('hashchange', function (e) {
+        console.log(location.hash);
+    });
 });

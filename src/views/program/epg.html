@@ -1,5 +1,4 @@
 <script type="text/javascript">
-    alert('TATDA');
     $(document).ready(function () {
         $('#program_header_div').html('<div class="span10"><h1 id="program_header"><%= __("Program") %> <small><%= __("What\'s running on") %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __("Switch to this channel") %>" /></small></h1></div><div class="span1 offset4" style="text-align: right;"><% if (channel.image) {%><img style="height: 36px;" src="<%= restfulUrl %>/channels/images/<%= channel.channel_id %>" /><% } %></div>');
 
@@ -35,7 +34,7 @@
                 $('.modal').hide();
             });
         });
-
+        
         $('.btn_timer').click(function () {
             if ($(this).attr('active') == "true") {
                 $(this).attr('src', '/img/devine/black/Circle.png');
@@ -47,36 +46,52 @@
 
             console.log($(this).attr('eventid'));
         });
-    });
+        
+        $('.show_details').click(function () {
+            $.ajax({
+                url: '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid'),
+                type: 'POST',
+                success: function (res) {
+                    $('#body').html(res);
+                },
+                statusCode: {
+                    403: function () {
 
-    $('a.paginatorlinks').click(function () {
-        if ($(this).parent().hasClass('disabled')) {
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('load'),
-            beforeSend: function () {
-                overlay.show();
-            },
-            success: function (res) {
-                $('#programlist').html(res);
-                overlay.hide();
-            },
-            statusCode: {
-                403: function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/authenticate',
-                        success: function (res) {
-                            $('#topmenu').remove();
-                            $('#body').html(res);
-                            overlay.hide();
-                        }
-                    });
+                    }
                 }
+            });
+        });
+
+
+        $('a.paginatorlinks').click(function () {
+            if ($(this).parent().hasClass('disabled')) {
+                return;
             }
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('load'),
+                beforeSend: function () {
+                    overlay.show();
+                },
+                success: function (res) {
+                    $('#programlist').html(res);
+                    overlay.hide();
+                },
+                statusCode: {
+                    403: function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/authenticate',
+                            success: function (res) {
+                                $('#topmenu').remove();
+                                $('#body').html(res);
+                                overlay.hide();
+                            }
+                        });
+                    }
+                }
+            });
         });
     });
 </script>
@@ -142,7 +157,7 @@
         <tr>
             <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/<% if (epg.timer_exists == true && epg.timer_active == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
             <td><%= start %> - <%= end %></td>
-            <td><a href="/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
+            <td><a class="show_details" href="#/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
         </tr>
         <% })
         }%>

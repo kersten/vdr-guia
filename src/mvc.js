@@ -52,7 +52,7 @@ function bootApplication (app, io) {
     app.use(app.router);
 
     app.configure('development', function(){
-        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+        app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
     });
 
     app.error(function(err, req, res, next){
@@ -134,8 +134,6 @@ function bootController (app, file) {
     if (name == 'app') prefix = '/';
 
     app.all('*', function (req, res, next) {
-        req.session.regenerate;
-
         if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
             global.isMobileDevice = true;
         }
