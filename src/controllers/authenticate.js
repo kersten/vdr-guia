@@ -1,4 +1,4 @@
-var parseCookie = require('connect').utils.parseCookie;
+var parseCookie = require('express/node_modules/connect').utils.parseCookie;
 
 io.set('authorization', function (data, accept) {
     if (data.headers.cookie) {
