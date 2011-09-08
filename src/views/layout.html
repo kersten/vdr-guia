@@ -7,6 +7,7 @@
 	<meta http-equiv="content-type"
 		content="text/html;charset=utf-8" />
 
+        <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
 
@@ -16,43 +17,6 @@
 </head>
 
 <body>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var loggedIn = '<%= global.loggedIn %>';
-
-            if (loggedIn === 'false') {
-                $.ajax({
-                    type: 'POST',
-                    url: '/authenticate',
-                    success: function (res) {
-                        $('#body').html(res);
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: 'POST',
-                    url: '/menu',
-                    success: function (res) {
-                        $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
-                        $('#menu').append(res);
-                    }
-                });
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/app/frontsite',
-                    beforeSend: function () {
-                        overlay.show();
-                    },
-                    success: function (res) {
-                        $('#body').html(res);
-                        overlay.hide();
-                    }
-                });
-            }
-        });
-    </script>
-
     <div class="topbar">
         <div class="fill">
             <div class="container" id="menu">

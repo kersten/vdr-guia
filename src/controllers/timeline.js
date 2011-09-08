@@ -8,7 +8,7 @@ module.exports = {
 
                 channels = ksort(channels);
 
-                res.render((isMobileDevice) ? 'mob/timeline': 'timeline', {
+                res.render('timeline', {
                     layout: false,
                     global: {
                         title: 'Timeline',

@@ -1,3 +1,33 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.channellinks').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('load'),
+                success: function (res) {
+                    overlay.hide();
+                    $('#programlist').html(res);
+                },
+                beforeSend: function () {
+                    overlay.show();
+                },
+                statusCode: {
+                    403: function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/authenticate',
+                            success: function (res) {
+                                $('#topmenu').remove();
+                                $('#body').html(res);
+                                overlay.hide();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
 <table class="zebra-striped">
     <thead>
         <tr>
@@ -10,7 +40,7 @@
         channels.forEach(function (broadcast, i) { %>
         <tr>
             <td><%= ++i %></td>
-            <td><a class="channellinks" href="#program/<%= broadcast.channel_id %>" load="/program/<%= broadcast.channel_id %>"><%= broadcast.name %></a></td>
+            <td><a class="channellinks" href="#program" load="/program/view/<%= broadcast.channel_id %>"><%= broadcast.name %></a></td>
         </tr>
         <% })
         }%>

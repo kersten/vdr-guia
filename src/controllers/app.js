@@ -10,6 +10,13 @@ module.exports = {
         });
     },
     frontsite: function (req, res) {
-        
+        res.render('app/frontsite', {
+            layout: false,
+            global: {
+                title: 'Homepage',
+                loggedIn: req.session.loggedIn,
+                page: 'layout'
+            }
+        });
     }
 };

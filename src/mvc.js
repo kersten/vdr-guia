@@ -10,19 +10,23 @@ var fs = require('fs'),
     monomi = require("monomi"),
     rest = require('restler');
 
-exports.boot = function (app){
-  bootApplication(app);
+exports.boot = function (app, io){
+  bootApplication(app, io);
   bootControllers(app);
 };
 
 // App settings and middleware
-function bootApplication (app) {
+function bootApplication (app, io) {
     var RedisStore = require('connect-redis')(express);
+    var store = new RedisStore;
     app.use(express.bodyParser());
     app.use(monomi.detectBrowserType());
     app.use(express.cookieParser());
-    app.use(express.session({secret: config.redis.secret, store: new RedisStore}));
-    
+    app.use(express.session({
+        secret: config.redis.secret,
+        store: store
+    }));
+
     //app.use(express.logger());
 
     syslog.init("VDRManager", syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0);
@@ -37,19 +41,19 @@ function bootApplication (app) {
         // where to register __() and __n() to, might be "global" if you know what you are doing
         register: global
     });
-    
+
     app.register('.html', require('ejs'));
 
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
-    
+
     app.use(express.static(__dirname + '/public'));
     app.use(app.router);
-    
+
     app.configure('development', function(){
         app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     });
-    
+
     app.error(function(err, req, res, next){
         if (err instanceof NotFound) {
             res.render('404', {
@@ -63,7 +67,7 @@ function bootApplication (app) {
             next(err);
         }
     });
-    
+
     global.ksort = require('./lib/ksort');
     global.rest = rest;
     global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
@@ -71,7 +75,9 @@ function bootApplication (app) {
     global.vdr = {
         plugins: {}
     };
-    
+    global.io = io;
+    global.redis = store;
+
     rest.get(restfulUrl + '/info.json').on('complete', function(data) {
         for (var i in data.vdr.plugins) {
             if (data.vdr.plugins[i].name == 'epgsearch') {
@@ -85,7 +91,9 @@ function bootApplication (app) {
         request: function(req){
             return req;
         },
-
+        current_user: function(req) {
+            return req.session;
+        },
         hasMessages: function(req){
             if (!req.session) return false;
             return Object.keys(req.session.flash || {}).length;
@@ -125,6 +133,8 @@ function bootController (app, file) {
     if (name == 'app') prefix = '/';
 
     app.all('*', function (req, res, next) {
+        req.session.regenerate;
+
         if (req.monomi.browserType in {'tablet': '', 'touch': '', 'mobile': ''}) {
             global.isMobileDevice = true;
         }
@@ -138,22 +148,20 @@ function bootController (app, file) {
                 return;
             }
         }
-        
-        console.log(req.url);
 
         next();
     });
-    
+
     Object.keys(actions).map(function (action) {
         var fn = controllerAction(name, action, actions[action]);
+
+        if (prefix == '/' && action != 'index') prefix = '/app';
 
         switch(action) {
         case 'index':
             if (prefix != '/') {
-                console.log('Register POST: ' + prefix);
                 app.post(prefix, fn);
             } else {
-                console.log('Register GET: ' + prefix);
                 app.get(prefix, fn);
             }
 
@@ -162,10 +170,9 @@ function bootController (app, file) {
             if (prefix == '/program' && action == 'view') {
                 action = action + '/:channelid';
             }
-            
-            console.log('Register POST: ' + prefix + '/' + action);
-            app.post(prefix, fn);
-            
+            console.log('Registering POST: ' + prefix + '/' + action);
+            app.post(prefix + '/' + action, fn);
+
             break;
         }
     });
@@ -178,7 +185,7 @@ function controllerAction (name, action, fn) {
         var render = res.render,
         format = req.params.format,
         path = __dirname + '/views/' + name + '/' + action + '.html';
-    
+
         res.render = function(obj, options, fn){
             res.render = render;
             // Template path

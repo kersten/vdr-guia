@@ -5,7 +5,7 @@
         $('#login').click(function () {
             $.ajax({
                 type: 'POST',
-                url: '/authenticate',
+                url: '/authenticate/login',
                 data: {
                     username: $('#username').val(),
                     password: $('#password').val()
@@ -18,14 +18,14 @@
                         if ($('#login_failed').length != 0) {
                             $('#login_failed').remove();
                         }
-                        
+
                         $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
                     },
                     404: function () {
                         if ($('#login_failed').length != 0) {
                             $('#login_failed').remove();
                         }
-                        
+
                         $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Login connection not found") %></p></div>');
                     }
                 }

@@ -6,45 +6,9 @@
             type: 'POST',
             url: '/program/channellist',
             success: function (channels) {
-                $('#channellist').css('height', $(window).height() - $('#channellist').offset().top);
-
-                $(window).unbind('scroll');
-
-                $(window).scroll(function (e) {
-                    if ($('#channellist').offset().top <= $(window).scrollTop()) {
-                        $('#channellist').css('top', $(window).scrollTop());
-                        console.log($('#channellist').offset().top + ' :: ' + $(window).scrollTop());
-                    }
-                })
+                $('#channellist').css('height', $(document).height() - $('#channellist').offset().top);
 
                 $('#channellist').html(channels);
-
-                $('a.channellinks').click(function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: $(this).attr('load'),
-                        success: function (res) {
-                            $('#programlist').html(res);
-                            overlay.hide();
-                        },
-                        beforeSend: function () {
-                            overlay.show();
-                        },
-                        statusCode: {
-                            403: function () {
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/authenticate',
-                                    success: function (res) {
-                                        $('#topmenu').remove();
-                                        $('#body').html(res);
-                                        overlay.hide();
-                                    }
-                                });
-                            }
-                        }
-                    });
-                });
             }
         });
     });
@@ -63,7 +27,7 @@
     <div class="span10 columns" id="programlist">
         &nbsp;
     </div>
-    <div class="span6" id="channellist" style="overflow: auto;">
+    <div class="span6" id="channellist" style="overflow: auto; position: fixed;">
 
     </div>
 </div>

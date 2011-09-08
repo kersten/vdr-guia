@@ -1,3 +1,33 @@
+var parseCookie = require('connect').utils.parseCookie;
+
+io.set('authorization', function (data, accept) {
+    if (data.headers.cookie) {
+        data.cookie = parseCookie(data.headers.cookie);
+        data.sessionID = data.cookie['connect.sid'];
+        // save the session store to the data object
+        // (as required by the Session constructor)
+        sessionStore = redis;
+        sessionStore.get(data.sessionID, function (err, session) {
+            console.log("session:");
+            console.log(session);
+            if (err) {
+                
+            } else {
+                // create a session object, passing data as request and our
+                // just acquired session data
+                data.session = new Session(data, session);
+            }
+        });
+    } else {
+        console.log('No cookie transmitted.');
+        return;
+    }
+});
+
+io.sockets.on('connection', function (socket) {
+
+});
+
 module.exports = {
     index: function (req, res) {
         if (typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
@@ -18,8 +48,8 @@ module.exports = {
     login: function (req, res) {
         var username = req.param("username");
         var password = req.param("password");
-        
-        console.log(this);
+
+        console.log('endlich');
 
         if (username == config.app.username && password == config.app.password) {
             req.session.loggedIn = true;

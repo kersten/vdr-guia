@@ -8,10 +8,10 @@ jQuery.fn.center = function () {
 var overlay = {
     el: null,
     show: function () {
-        this.el = $('<div></div>').css({
+        var el = this.el = $('<div></div>').css({
             opacity: 0.5,
             backgroundColor: '#CCCCCC',
-            position: 'absolute',
+            position: 'fixed',
             top: '0px',
             width: $(window).width(),
             height: $(window).height(),
@@ -19,10 +19,59 @@ var overlay = {
         });
 
         $(this.el).append($('<div></div>').center().css('left', '-=100').html('<img src="/img/loading.gif" />'));
-
+        $(window).scroll(function (e) {
+            $(el).css('top', $(window).scrollTop());
+        });
         $('body').append(this.el);
     },
     hide: function () {
+        $(window).unbind('scroll');
         $(this.el).remove();
     }
 };
+
+$(document).ready(function () {
+    overlay.show();
+    var socket = io.connect();
+
+    socket.on('connection', function (data) {
+        console.log(data);
+    });
+
+    socket.emit('loggedIn');
+
+    socket.on('loggedIn', function (data) {
+        console.log(data);
+        if (loggedIn === data.loggedIn) {
+            $.ajax({
+                type: 'POST',
+                url: '/authenticate',
+                success: function (res) {
+                    $('#body').html(res);
+                    overlay.hide();
+                }
+            });
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/menu',
+                success: function (res) {
+                    $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
+                    $('#menu').append(res);
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/app/frontsite',
+                beforeSend: function () {
+                    overlay.show();
+                },
+                success: function (res) {
+                    $('#body').html(res);
+                    overlay.hide();
+                }
+            });
+        }
+    });
+});
