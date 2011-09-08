@@ -38,7 +38,7 @@ $(document).ready(function () {
         console.log(data);
     });
 
-    socket.emit('loggedIn');
+    socket.emit('checksession');
 
     socket.on('loggedIn', function (data) {
         console.log(data);

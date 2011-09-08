@@ -24,7 +24,8 @@ function bootApplication (app, io) {
     app.use(express.cookieParser());
     app.use(express.session({
         secret: config.redis.secret,
-        store: store
+        store: store,
+        key: 'VDRManager.id'
     }));
 
     //app.use(express.logger());
