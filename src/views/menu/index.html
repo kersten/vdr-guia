@@ -1,96 +1,43 @@
-<script type="text/javascript">
-$(document).ready(function(){
-    $("body").bind("click", function (e) {
-        $('a.menu').parent("li").removeClass("open");
-    });
-
-    $("a.menu").click(function (e) {
-        var $li = $(this).parent("li").toggleClass('open');
-        return false;
-    });
-
-    $('a.toplinks').click(function () {
-        if ($(this).parent().hasClass('active')) {
-            return;
-        }
-
-        var el = this;
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('load'),
-            success: function (res) {
-                if ($(el).attr('load') == '/logout') {
-                    $('#topmenu').remove();
-                }
-
-                $('#topmenu > li.active').removeClass('active');
-                $(el).parent().addClass('active');
-                $('#body').html(res);
-                overlay.hide();
-            },
-            beforeSend: function () {
-                $('#body').html('&nbsp;');
-                overlay.show();
-            },
-            statusCode: {
-                403: function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/authenticate',
-                        success: function (res) {
-                            $('#topmenu').remove();
-                            $('#body').html(res);
-                            overlay.hide();
-                        }
-                    });
-                }
-            }
-        });
-    });
-});
-</script>
-
 <ul id='topmenu'>
     <li>
-        <a class="toplinks" href="#timeline" load="/timeline"><%= __('Timeline') %></a>
+        <a class="toplinks" href="#timeline"><%= __('Timeline') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#tvguide" load="/tvguide"><%= __('TV Guide') %></a>
+        <a class="toplinks" href="#tvguide"><%= __('TV Guide') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#program" load="/program"><%= __('Program') %></a>
+        <a class="toplinks" href="#program"><%= __('Program') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#timer" load="/timer"><%= __('Timer') %></a>
+        <a class="toplinks" href="#timer"><%= __('Timer') %></a>
     </li>
 
     <% if (typeof(vdr.plugins.epgsearch) != 'undefined' && vdr.plugins.epgsearch == true) { %>
     <li>
-        <a class="toplinks" href="#search" load="/search"><%= __('Search') %></a>
+        <a class="toplinks" href="#search"><%= __('Search') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#searchtimer" load="/searchtimer"><%= __('Searchtimer') %></a>
+        <a class="toplinks" href="#searchtimer"><%= __('Searchtimer') %></a>
     </li>
     <% } %>
 
     <li>
-        <a class="toplinks" href="#records" load="/records"><%= __('Records') %></a>
+        <a class="toplinks" href="#records"><%= __('Records') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#settings" load="/settings"><%= __('Settings') %></a>
+        <a class="toplinks" href="#settings"><%= __('Settings') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#about" load="/about"><%= __('About') %></a>
+        <a class="toplinks" href="#about"><%= __('About') %></a>
     </li>
 
     <li>
-        <a class="toplinks" href="#logout" load="/logout"><%= __('Logout') %></a>
+        <a class="toplinks" href="#logout"><%= __('Logout') %></a>
     </li>
 </ul>

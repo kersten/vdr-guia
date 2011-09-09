@@ -1,63 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        $(this).attr('title', 'VDRManager // <%= __("Login") %>');
-
-        $('#login').click(function () {
-            overlay.show();
-            
-            socket.emit('login', {
-                username: $('#username').val(),
-                password: $('#password').val()
-            });
-            
-            socket.on('login.done', function (data){
-                if (data.successful) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/app/frontsite',
-                        success: function (res) {
-                            $('#body').html(res);
-                            overlay.hide();
-                        }
-                    });
-                } else {
-                    if ($('#login_failed').length != 0) {
-                        $('#login_failed').remove();
-                    }
-
-                    $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
-                }
-            });
-            
-            /*$.ajax({
-                type: 'POST',
-                url: '/authenticate/login',
-                data: {
-                    username: $('#username').val(),
-                    password: $('#password').val()
-                },
-                success: function (res) {
-                    $('#body').html(res);
-                },
-                statusCode: {
-                    403: function () {
-                        if ($('#login_failed').length != 0) {
-                            $('#login_failed').remove();
-                        }
-
-                        $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
-                    },
-                    404: function () {
-                        if ($('#login_failed').length != 0) {
-                            $('#login_failed').remove();
-                        }
-
-                        $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Login connection not found") %></p></div>');
-                    }
-                }
-            });
-            return false;*/
-        });
+        
     });
 </script>
 
@@ -87,7 +30,7 @@
         </div>
 
         <div class="actions" id="login_actions">
-            <button id="login" class="btn primary large" type="submit"><%= __('Login') %></button>
+            <button id="login" class="btn primary large" onclick="return false;"><%= __('Login') %></button>
         </div>
     </fieldset>
 </form>

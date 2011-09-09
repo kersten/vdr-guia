@@ -1,107 +1,9 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#program_header_div').html('<div class="span10"><h1 id="program_header"><%= __("Program") %> <small><%= __("What\'s running on") %> <strong><%= channel.name %></strong> <img id="switch" channel="<%= channel.channel_id %>" style="cursor: pointer;" src="/img/devine/black/TV.png" width="20px" height="20px" title="<%= __("Switch to this channel") %>" /></small></h1></div><div class="span1 offset4" style="text-align: right;"><% if (channel.image) {%><img style="height: 36px;" src="<%= restfulUrl %>/channels/images/<%= channel.channel_id %>" /><% } %></div>');
-
-        $('#switch').click(function () {
-            console.log("Switching vdr to channel: "+ $(this).attr('channel'));
-
-            $.post('<%= switchUrl %>/' + $(this).attr('channel'), function () {
-                $('#overlay').css({
-                    opacity: 0.5,
-                    width: $(document).width(),
-                    height: $(document).height()
-                }).show();
-
-                $('#dialog').css({
-                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
-                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
-                }).show();
-            }).error(function () {
-                $('#overlay').css({
-                    opacity: 0.5,
-                    width: $(document).width(),
-                    height: $(document).height()
-                }).show();
-
-                $('#errordialog').css({
-                    top: (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop() + "px",
-                    left: (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft() + "px"
-                }).show();
-            });
-
-            $('.btn_ok').click(function () {
-                $('#overlay').hide();
-                $('.modal').hide();
-            });
-        });
-        
-        $('.btn_timer').click(function () {
-            if ($(this).attr('active') == "true") {
-                $(this).attr('src', '/img/devine/black/Circle.png');
-                $(this).attr('active', "false");
-            } else {
-                $(this).attr('src', '/img/devine/black/Circle-2.png');
-                $(this).attr('active', "true");
-            }
-
-            console.log($(this).attr('eventid'));
-        });
-        
-        $('.show_details').click(function () {
-            $.ajax({
-                url: '/details?channelid=' + $(this).attr('channelid') + '&eventid=' + $(this).attr('eventid'),
-                type: 'POST',
-                success: function (res) {
-                    $('#body').html(res);
-                },
-                statusCode: {
-                    403: function () {
-
-                    }
-                }
-            });
-        });
-
-
-        $('a.paginatorlinks').click(function () {
-            if ($(this).parent().hasClass('disabled')) {
-                return;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('load'),
-                beforeSend: function () {
-                    overlay.show();
-                },
-                success: function (res) {
-                    $('#programlist').html(res);
-                    overlay.hide();
-                },
-                statusCode: {
-                    403: function () {
-                        $.ajax({
-                            type: 'POST',
-                            url: '/authenticate',
-                            success: function (res) {
-                                $('#topmenu').remove();
-                                $('#body').html(res);
-                                overlay.hide();
-                            }
-                        });
-                    }
-                }
-            });
-        });
-    });
-</script>
-
 <% if (paginator.total > global.maxEntries) {
 %>
 <div class="pagination" style="padding-left: 10%;">
     <ul>
         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
+            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
         </li>
         <% var cnt = paginator.cur + 3;
         var start = paginator.cur;
@@ -120,16 +22,16 @@
             }
         } %>
         <% for (i = start; i < cnt; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% if (paginator.sites > 8) { %>
         <li class="disabled"><a href="#">…</a></li>
         <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% } %>
         <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
+            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
         </li>
     </ul>
 </div>
@@ -168,7 +70,7 @@
 <div class="pagination" style="padding-left: 10%;">
     <ul>
         <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
+            <a class="paginatorlinks"<% if (paginator.cur != 1) {%> href="#program/view/<%= channel.channel_id %>?site=<%= paginator.previous %>"<% } %>>← <%= __('Previous') %></a>
         </li>
         <% var cnt = paginator.cur + 3;
         var start = paginator.cur;
@@ -187,16 +89,16 @@
             }
         } %>
         <% for (i = start; i < cnt; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% if (paginator.sites > 8) { %>
         <li class="disabled"><a href="#">…</a></li>
         <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
+        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a class="paginatorlinks"<% if (paginator.cur != i) {%> href="#program/view/<%= channel.channel_id %>?site=<%= i %>"<% } %>><%= i %></a></li>
         <% } %>
         <% } %>
         <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#/program" load="/program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
+            <a class="paginatorlinks"<% if (paginator.cur != paginator.sites) {%> href="#program/view/<%= channel.channel_id %>?site=<%= paginator.next %>"<% } %>><%= __('Next') %> →</a>
         </li>
     </ul>
 </div>

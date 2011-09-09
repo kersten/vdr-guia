@@ -1,41 +1,18 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(this).attr('title', 'VDRManager // <%= __("Settings") %>');
+<div class="row" id="settings">
+    <div class="page-header">
+        <h1>
+            <%= __('Settings') %>
+            <small><%= __('Change your defaults') %></small>
+        </h1>
+    </div>
 
-        $.ajax({
-            type: 'POST',
-            url: $('.tabs > .active').attr('href'),
-            success: function (res) {
-                $('#tab_content').html(res);
-            }
-        });
+    <ul class="tabs">
+        <li class="active"><a href="#settings/vdrmanager">VDRManager</a></li>
+        <li><a href="#settings/timeline"><%= __('Timeline') %></a></li>
+        <li><a href="#settings/tvguide"><%= __('TV Guide') %></a></li>
+    </ul>
 
-        $('.tabs > li').click(function () {
-            var el = this;
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('href'),
-                success: function (res) {
-                    $('.tabs > .active').removeClass('active');
-                    $(el).addClass('active');
-                    $('#tab_content').html(res);
-                }
-            });
-        });
-    });
-</script>
-
-<div class="page-header">
-    <h1>
-        <%= __('Settings') %>
-        <small><%= __('Change your defaults') %></small>
-    </h1>
-</div>
-<ul class="tabs">
-    <li class="active" href="/settings/vdrmanager"><a href="#">VDRManager</a></li>
-    <li href="/settings/timeline"><a href="#"><%= __('Timeline') %></a></li>
-    <li href="/settings/tvguide"><a href="#"><%= __('TV Guide') %></a></li>
-</ul>
-
-<div id="tab_content">
+    <div id="tab_content">
+        <%- partial('settings/vdrmanager') %>
+    </div>
 </div>

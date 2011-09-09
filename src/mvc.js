@@ -44,6 +44,7 @@ function bootApplication (app, io) {
     });
 
     app.register('.html', require('ejs'));
+    app.register('.js', require('ejs'));
 
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
@@ -141,7 +142,7 @@ function bootController (app, file) {
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            if (req.url != '/' && req.url != '/authenticate' && req.url != '/authenticate/login' && req.url != '/authenticate/logout') {
+            if (!req.url.match(/^\/js.*/) && req.url != '/' && !req.url.match(/\/authenticate.*/) && req.url != '/about') {
                 res.writeHead(403);
                 res.end();
                 return;
@@ -169,6 +170,13 @@ function bootController (app, file) {
             if (prefix == '/program' && action == 'view') {
                 action = action + '/:channelid';
             }
+
+            if (prefix == '/js') {
+                console.log('Registering GET: ' + prefix + '/' + action);
+                app.get(prefix + '/' + action, fn);
+                break;
+            }
+
             console.log('Registering POST: ' + prefix + '/' + action);
             app.post(prefix + '/' + action, fn);
 

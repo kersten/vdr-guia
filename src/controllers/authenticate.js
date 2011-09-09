@@ -10,14 +10,14 @@ io.configure(function (){
             // (as required by the Session constructor)
 
             data.sessionStore = sessionStore;
-            sessionStore.get(data.sessionID, function (err, session) {
+            return sessionStore.get(data.sessionID, function (err, session) {
                 if (err) {
-                    accept(err.message, false);
+                    return accept(err.message, false);
                 } else {
                     // create a session object, passing data as request and our
                     // just acquired session data
                     data.session = new Session(data, session);
-                    accept(null, true);
+                    return accept(null, true);
                 }
             });
         } else {
@@ -28,8 +28,23 @@ io.configure(function (){
 
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
-    
+
+     var intervalID = setInterval(function () {
+        // reload the session (just in case something changed,
+        // we don't want to override anything, but the age)
+        // reloading will also ensure we keep an up2date copy
+        // of the session with our connection.
+        hs.session.reload( function () {
+            console.log(hs.session);
+            // "touch" it (resetting maxAge and lastAccess)
+            // and save it back again.
+            hs.session.touch().save();
+        });
+    }, 60 * 1000);
+
     socket.on('checksession', function () {
+        console.log('Check loggedIn');
+
         if (hs.session.loggedIn) {
             socket.emit('loggedIn', {
                 loggedIn: true
@@ -40,20 +55,25 @@ io.sockets.on('connection', function (socket) {
             });
         }
     });
-    
+
     socket.on('login', function (data) {
+        console.log('Login');
+
         if (data.username == config.app.username && data.password == config.app.password) {
             hs.session.loggedIn = true;
-            emit('login.done', {succesful: true});
+            hs.session.touch().save();
+            console.log(hs.session);
+            socket.emit('login.done', {successful: true});
         } else {
-            emit('login.done', {succesful: false});
+            socket.emit('login.done', {successful: false});
         }
     });
-    
+
     socket.on('disconnect', function () {
-        console.log('A socket with sessionID ' + hs.sessionID 
+        console.log('A socket with sessionID ' + hs.sessionID
             + ' disconnected!');
         // clear the socket interval to stop refreshing the session
+        clearInterval(intervalID);
     });
 });
 
