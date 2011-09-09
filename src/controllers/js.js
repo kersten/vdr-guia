@@ -13,5 +13,10 @@ module.exports = {
         res.render('js/plugins/jquery.overlay.js', {
             layout: false
         });
+    },
+    "plugins/jquery.dialog.js": function (req, res) {
+        res.render('js/plugins/jquery.dialog.js', {
+            layout: false
+        });
     }
 };

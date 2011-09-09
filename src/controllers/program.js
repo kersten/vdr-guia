@@ -1,17 +1,20 @@
 module.exports = {
     index: function (req, res) {
-        res.render('program', {
-            layout: false,
-            global: {
-                title: 'Program',
-                loggedIn: req.session.loggedIn,
-                maxEntries: config.app.entries
-            },
-            paginator: {
-                total: 0
-            },
-            switchUrl: restfulUrl + '/remote/switch',
-            restfulUrl: restfulUrl
+        rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+            res.render('program', {
+                layout: false,
+                global: {
+                    title: 'Program',
+                    loggedIn: req.session.loggedIn,
+                    maxEntries: config.app.entries
+                },
+                channels: data.channels,
+                paginator: {
+                    total: 0
+                },
+                switchUrl: restfulUrl + '/remote/switch',
+                restfulUrl: restfulUrl
+            });
         });
     },
     channellist: function (req, res) {

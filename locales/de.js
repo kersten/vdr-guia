@@ -65,5 +65,6 @@
 	"Show results for this searchtimer": "Show results for this searchtimer",
 	"Details on %s": "Details on %s",
 	"Details": "Details",
-	"on %s": "on %s"
+	"on %s": "on %s",
+	"Create searchtimer": "Create searchtimer"
 }

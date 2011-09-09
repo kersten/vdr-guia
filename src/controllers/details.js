@@ -1,3 +1,12 @@
+io.sockets.on('connection', function (socket) {
+    socket.on('getDetails', function (data) {
+        rest.get(restfulUrl + '/events/' + data.channelid + '/' + data.eventid + '.json').on('complete', function(data) {
+            console.log(data);
+            socket.emit('getDetails', data);
+        });
+    });
+});
+
 module.exports = {
     index: function (req, res) {
         var eventId = req.param("eventid", false);

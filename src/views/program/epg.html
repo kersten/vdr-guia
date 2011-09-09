@@ -59,7 +59,7 @@
         <tr>
             <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= epg.id %>" style="cursor: pointer;" src="/img/devine/black/<% if (epg.timer_exists == true && epg.timer_active == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
             <td><%= start %> - <%= end %></td>
-            <td><a class="show_details" href="#/details?channelid=<%= channel.channel_id %>&eventid=<%= epg.id %>"><%= epg.title %></a></td>
+            <td><a class="show_details" onclick="showDetails({channelid: '<%= channel.channel_id %>', eventid: '<%= epg.id %>'})"><%= epg.title %></a></td>
         </tr>
         <% })
         }%>

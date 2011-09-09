@@ -1,5 +1,80 @@
 var socket = io.connect();
 
+var createSearchtimer = function () {
+    $().dialog({
+        title: 'Create a new searchtimer',
+        body: '<h3>Test</h3>',
+        close: true,
+        buttons: [{
+            text: 'Create',
+            action: function () {
+                console.log('Create timer')
+            }
+        }, {
+            text: 'Cancel',
+            action: 'close'
+        }]
+    });
+    
+    $().dialog('show');
+};
+
+var showDetails = function (details) {
+    socket.emit('getDetails', details);
+    
+    var cb = function (data) {
+        var data = data.events[0];
+        var components = {
+            video: null,
+            audio: [],
+            subtitles: []
+        }
+        
+        for (var i in data.components) {
+            switch (data.components[i].description) {
+            case 'stereo':
+                components.audio.push({
+                    language: data.components[i].lang,
+                    type: 'stereo'
+                });
+                break;
+            
+            case 'Dolby Digital 2.0':
+                components.audio.push('dd2');
+                break;
+                
+            case 'DVB-Untertitel':
+                components.subtitles.push(data.components[i].lang);
+                break;
+            
+            case 'HD-Video':
+                components.video = 'hd';
+                break;
+            }
+        }
+        
+        $().dialog({
+            title: data.title,
+            subtitle: data.short_text,
+            components: components,
+            body: '<p>' + data.description + '</p>',
+            close: true,
+            buttons: [{
+                text: 'Ok',
+                action: 'close'
+            }]
+        });
+
+        $().dialog('show');
+        
+        console.log(data);
+        
+        socket.removeListener('getDetails', cb);
+    };
+    
+    socket.on('getDetails', cb);
+};
+
 var load = function () {
     $('body').overlay('show');
 
@@ -15,6 +90,8 @@ var load = function () {
 
             if (loadSite.match(/^\/program\/view\/.*/)) {
                 el = 'programlist';
+            } else if (loadSite.match(/^\/program$/)) {
+                $(document).attr('title', 'VDRManager // <%= __("Program") %>');
             } else if (loadSite.match(/^\/settings\/.*/)) {
                 el = 'tab_content';
             }
@@ -26,6 +103,8 @@ var load = function () {
                     $('#settings > .tabs li').removeClass('active');
                     $(this).addClass('active');
                 });
+            } else if (loadSite.match(/^\/program$/)) {
+                $('#channellist').css('height', $(document).height() - $('#channellist').offset().top);
             }
         }
     });
