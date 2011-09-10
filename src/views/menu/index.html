@@ -1,52 +1,5 @@
 <script id="MainMenuTemplate" type="text/x-jquery-tmpl">
-    <ul id='topmenu'>
-        <li>
-            <a class="toplinks" href="#${link}">${tile}</a>
-        </li>
-    </ul>
+    <li>
+        <a class="toplinks" href="${link}">${title}</a>
+    </li>
 </script>
-
-
-<ul id='topmenu'>
-    <li>
-        <a class="toplinks" href="#timeline"><%= __('Timeline') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#tvguide"><%= __('TV Guide') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#program"><%= __('Program') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#timer"><%= __('Timer') %></a>
-    </li>
-
-    <% if (typeof(vdr.plugins.epgsearch) != 'undefined' && vdr.plugins.epgsearch == true) { %>
-    <li>
-        <a class="toplinks" href="#search"><%= __('Search') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#searchtimer"><%= __('Searchtimer') %></a>
-    </li>
-    <% } %>
-
-    <li>
-        <a class="toplinks" href="#records"><%= __('Recordings') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#settings"><%= __('Settings') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#about"><%= __('About') %></a>
-    </li>
-
-    <li>
-        <a class="toplinks" href="#logout"><%= __('Logout') %></a>
-    </li>
-</ul>

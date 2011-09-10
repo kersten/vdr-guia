@@ -8,5 +8,6 @@
 	"Records": "Records",
 	"Settings": "Settings",
 	"About": "About",
-	"Logout": "Logout"
+	"Logout": "Logout",
+	"Recordings": "Recordings"
 }

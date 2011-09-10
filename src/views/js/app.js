@@ -5,6 +5,17 @@ $(document).ready(function () {
     
     checkLogin();
     
+    $(window).bind('hashchange', function (e) {
+        $('body').overlay('show');
+        
+        var view = (location.hash == "") ? 'about' : location.hash.substring(1);
+        view = view.charAt(0).toUpperCase() + view.substring(1);
+        
+        console.log('Call get' + view + '();');
+        
+        eval('get' + view + '()');
+    });
+    
     function checkLogin () {
         socket.emit('checksession');
         
@@ -27,7 +38,10 @@ $(document).ready(function () {
                 
                 $('body').overlay('hide');
             } else {
-                $('#MenuTemplate').tmpl().appendTo('#body');
+                getMenu();
+                getAbout();
+                
+                $('body').overlay('hide');
             }
             
             socket.removeListener('loggedIn', cb);
@@ -35,9 +49,14 @@ $(document).ready(function () {
         
         socket.on('loggedIn', cb);
 
-        socket.on('login.done', function (data){
+        socket.on('login.done', function (data) {
             if (data.successful) {
-                $.ajax({
+                getMenu();
+                getAbout();
+                
+                $('body').overlay('hide');
+                
+                /*$.ajax({
                     type: 'POST',
                     url: '/menu',
                     success: function (res) {
@@ -46,7 +65,7 @@ $(document).ready(function () {
                     }
                 });
 
-                load();
+                load();*/
             } else {
                 $('body').overlay('hide');
 
@@ -60,48 +79,90 @@ $(document).ready(function () {
     }
     
     function getMenu () {
-        removeContext($('#body'));
+        socket.emit('menu');
         
+        var menu = function (data) {
+            $('div#menu > ul > li').remove();
+            $('#MainMenuTemplate').tmpl(data).appendTo('div#menu > ul');
+            
+            socket.removeListener('menu', menu);
+        };
+        
+        socket.on('menu', menu);
     }
     
     function getTimeline () {
         removeContext($('#body'));
         
+        $('body').overlay('hide');
     }
     
-    function getTVGuide () {
+    function getTvguide () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("TV Guide") %>');
+        
+        $('#TvguideTemplate').tmpl().appendTo('#body');
+        
+        $('body').overlay('hide');
     }
     
     function getProgram () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Program") %>');
+        
+        $('body').overlay('hide');
     }
     
     function getTimer () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Timer") %>');
+        
+        $('body').overlay('hide');
     }
     
     function getSearch () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Search") %>');
+        
+        $('body').overlay('hide');
     }
     
     function getSearchtimer () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Searchtimer") %>');
+        
+        $('body').overlay('hide');
     }
     
     function getRecordings () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
+        
+        $('body').overlay('hide');
     }
     
     function getSettings () {
         removeContext($('#body'));
         
+        $(document).attr('title', 'VDRManager // <%= __("Settings") %>');
+        
+        $('body').overlay('hide');
+    }
+    
+    function getAbout () {
+        removeContext($('#body'));
+        
+        $(document).attr('title', 'VDRManager // <%= __("About") %>');
+        
+        $('#AboutTemplate').tmpl().appendTo('#body');
+        
+        $('body').overlay('hide');
     }
     
     function getLogout () {
@@ -110,7 +171,7 @@ $(document).ready(function () {
     }
     
     function removeContext( item ) {
-        $(item.nodes).remove();
+        item.children().remove();
     }
 });
 

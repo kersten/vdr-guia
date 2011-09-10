@@ -1,45 +1,42 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(this).attr('title', 'VDRManager // <%= __("About") %>');
-    });
+<script id="AboutTemplate" type="text/x-jquery-tmpl">
+    <div class="page-header">
+        <h1>
+            <%= __('About') %>
+            <small><%= __('Why this?') %></small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span16 columns">
+            <h3><%= __('Readme') %></h3>
+
+            <p><%= __('VDRManger aims to be the replacement for old VDRLive.') %></p>
+        </div>
+
+        <div class="span16 columns">
+            <h3><%= __('Developers') %></h3>
+            <h5>Kersten Burkhardt</h5>
+
+            <p>
+                <%= __('Contact') %>: <a href="mailto:kerstenk@gmail.com">kerstenk@gmail.com</a><br />
+                <%= __('Website') %>: <a href="https://github.com/kersten">https://github.com/kersten/</a>
+            </p>
+        </div>
+
+        <div class="span16 columns">
+            <h3><%= __('Thanks to ..') %></h3>
+
+            <p><%= __('aelo and gda for their wonderful restful api') %></p>
+            <p><%= __('the complete yavdr team for their fast help') %></p>
+        </div>
+
+        <div class="span16 columns">
+            <h3><%= __('Features') %></h3>
+            <p><%= __('content') %></p>
+        </div>
+
+        <div class="span16 columns">
+            <h3><%= __('Known bugs') %></h3>
+            <p><%= __('Crash if epgsearch plugin missing and click on search or searchtimers') %></p>
+        </div>
+    </div>
 </script>
-<div class="page-header">
-    <h1>
-        <%= __('About') %>
-        <small><%= __('Why this?') %></small>
-    </h1>
-</div>
-<div class="row">
-    <div class="span16 columns">
-        <h3><%= __('Readme') %></h3>
-
-        <p><%= __('VDRManger aims to be the replacement for old VDRLive.') %></p>
-    </div>
-
-    <div class="span16 columns">
-        <h3><%= __('Developers') %></h3>
-        <h5>Kersten Burkhardt</h5>
-
-        <p>
-            <%= __('Contact') %>: <a href="mailto:kerstenk@gmail.com">kerstenk@gmail.com</a><br />
-            <%= __('Website') %>: <a href="https://github.com/kersten">https://github.com/kersten/</a>
-        </p>
-    </div>
-
-    <div class="span16 columns">
-        <h3><%= __('Thanks to ..') %></h3>
-
-        <p><%= __('aelo and gda for their wonderful restful api') %></p>
-        <p><%= __('the complete yavdr team for their fast help') %></p>
-    </div>
-
-    <div class="span16 columns">
-        <h3><%= __('Features') %></h3>
-        <p><%= __('content') %></p>
-    </div>
-
-    <div class="span16 columns">
-        <h3><%= __('Known bugs') %></h3>
-        <p><%= __('Crash if epgsearch plugin missing and click on search or searchtimers') %></p>
-    </div>
-</div>
