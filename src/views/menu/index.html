@@ -1,3 +1,12 @@
+<script id="MainMenuTemplate" type="text/x-jquery-tmpl">
+    <ul id='topmenu'>
+        <li>
+            <a class="toplinks" href="#${link}">${tile}</a>
+        </li>
+    </ul>
+</script>
+
+
 <ul id='topmenu'>
     <li>
         <a class="toplinks" href="#timeline"><%= __('Timeline') %></a>
@@ -26,7 +35,7 @@
     <% } %>
 
     <li>
-        <a class="toplinks" href="#records"><%= __('Records') %></a>
+        <a class="toplinks" href="#records"><%= __('Recordings') %></a>
     </li>
 
     <li>

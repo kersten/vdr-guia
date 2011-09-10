@@ -1,5 +1,120 @@
 var socket = io.connect();
 
+$(document).ready(function () {
+    $('body').overlay('show');
+    
+    checkLogin();
+    
+    function checkLogin () {
+        socket.emit('checksession');
+        
+        removeContext($('#body'));
+        
+        var cb = function (data) {
+            if (data.loggedIn === false) {
+                $('#LoginTemplate').tmpl().appendTo('#body');
+                
+                $('#login_btn').click(function () {
+                    $('body').overlay('show');
+
+                    socket.emit('login', {
+                        username: $('#username').val(),
+                        password: $('#password').val()
+                    });
+
+                    return false;
+                });
+                
+                $('body').overlay('hide');
+            } else {
+                $('#MenuTemplate').tmpl().appendTo('#body');
+            }
+            
+            socket.removeListener('loggedIn', cb);
+        };
+        
+        socket.on('loggedIn', cb);
+
+        socket.on('login.done', function (data){
+            if (data.successful) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/menu',
+                    success: function (res) {
+                        $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
+                        $('#menu').append(res);
+                    }
+                });
+
+                load();
+            } else {
+                $('body').overlay('hide');
+
+                if ($('#login_failed').length != 0) {
+                    $('#login_failed').remove();
+                }
+
+                $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
+            }
+        });
+    }
+    
+    function getMenu () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getTimeline () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getTVGuide () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getProgram () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getTimer () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getSearch () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getSearchtimer () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getRecordings () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getSettings () {
+        removeContext($('#body'));
+        
+    }
+    
+    function getLogout () {
+        removeContext($('#body'));
+        
+    }
+    
+    function removeContext( item ) {
+        $(item.nodes).remove();
+    }
+});
+
+/*
 var createSearchtimer = function () {
     $().dialog({
         title: 'Create a new searchtimer',
@@ -26,6 +141,7 @@ var showDetails = function (details) {
         var data = data.events[0];
         var components = {
             video: null,
+            format: null,
             audio: [],
             subtitles: []
         }
@@ -33,6 +149,8 @@ var showDetails = function (details) {
         for (var i in data.components) {
             switch (data.components[i].description) {
             case 'stereo':
+            case 'stereo deutsch':
+            case 'stereo englisch':
                 components.audio.push({
                     language: data.components[i].lang,
                     type: 'stereo'
@@ -40,7 +158,10 @@ var showDetails = function (details) {
                 break;
             
             case 'Dolby Digital 2.0':
-                components.audio.push('dd2');
+                components.audio.push({
+                    language: data.components[i].lang,
+                    type: 'dd2'
+                });
                 break;
                 
             case 'DVB-Untertitel':
@@ -50,6 +171,9 @@ var showDetails = function (details) {
             case 'HD-Video':
                 components.video = 'hd';
                 break;
+                
+            case '16:9':
+                components.format = '16:9';
             }
         }
         
@@ -88,11 +212,11 @@ var load = function () {
 
             var el = 'body';
 
-            if (loadSite.match(/^\/program\/view\/.*/)) {
+            if (loadSite.match(/^\/program\/view\/.*//*)) {
                 el = 'programlist';
             } else if (loadSite.match(/^\/program$/)) {
                 $(document).attr('title', 'VDRManager // <%= __("Program") %>');
-            } else if (loadSite.match(/^\/settings\/.*/)) {
+            } else if (loadSite.match(/^\/settings\/.*//*)) {
                 el = 'tab_content';
             }
 
@@ -206,4 +330,4 @@ $(document).ready(function () {
             $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
         }
     });
-});
+}); */

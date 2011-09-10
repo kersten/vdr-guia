@@ -66,5 +66,8 @@
 	"Details on %s": "Details on %s",
 	"Details": "Details",
 	"on %s": "on %s",
-	"Create searchtimer": "Create searchtimer"
+	"Create searchtimer": "Create searchtimer",
+	"Recordings": "Recordings",
+	"VDRManager": "VDRManager",
+	"Record, Edit, Play": "Record, Edit, Play"
 }

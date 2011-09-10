@@ -9,6 +9,7 @@
 
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 
         <script type="text/javascript" src="/js/plugins/jquery.dialog.js"></script>
         <script type="text/javascript" src="/js/plugins/jquery.overlay.js"></script>
@@ -39,5 +40,11 @@
     <div class="container" style="margin-top: 50px;" id="body">
 
     </div>
+    
+    <%- partial('header') %>
+    <%- partial('authenticate') %>
+    <%- partial('menu') %>
+    <%- partial('recordings') %>
+
 </body>
 </html>
