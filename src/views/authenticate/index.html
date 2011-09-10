@@ -1,5 +1,12 @@
 <script id="LoginTemplate" type="text/x-jquery-tmpl">
-    {{tmpl(null, {title: '<%= __('VDRManager') %>', subtitle: '<%= __('Record, Edit, Play') %>'}) "#HeaderTemplate"}}
+    <div class="row" id="program_header_div">
+        <div class="span10">
+            <h1>
+                <%= __('VDRManager') %>
+                <small><%= __('Record, Edit, Play') %></small>
+            </h1>
+        </div>
+    </div>
     
     <form>
         <fieldset>

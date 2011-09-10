@@ -3,23 +3,27 @@ var socket = io.connect();
 $(document).ready(function () {
     $('body').overlay('show');
     
+    var loadHash = function () {
+        $('body').overlay('show');
+
+        var view = (location.hash == "") ? 'about' : location.hash.substring(1);
+        view = view.charAt(0).toUpperCase() + view.substring(1);
+
+        console.log('Call get' + view + '();');
+
+        eval('get' + view + '()');
+    };
+    
     checkLogin();
     
     $(window).bind('hashchange', function (e) {
-        $('body').overlay('show');
-        
-        var view = (location.hash == "") ? 'about' : location.hash.substring(1);
-        view = view.charAt(0).toUpperCase() + view.substring(1);
-        
-        console.log('Call get' + view + '();');
-        
-        eval('get' + view + '()');
+        loadHash();
     });
     
     function checkLogin () {
-        socket.emit('checksession');
-        
         removeContext($('#body'));
+        
+        socket.emit('checksession');
         
         var cb = function (data) {
             if (data.loggedIn === false) {
@@ -39,9 +43,7 @@ $(document).ready(function () {
                 $('body').overlay('hide');
             } else {
                 getMenu();
-                getAbout();
-                
-                $('body').overlay('hide');
+                loadHash();
             }
             
             socket.removeListener('loggedIn', cb);
@@ -53,8 +55,6 @@ $(document).ready(function () {
             if (data.successful) {
                 getMenu();
                 getAbout();
-                
-                $('body').overlay('hide');
                 
                 /*$.ajax({
                     type: 'POST',
@@ -112,7 +112,97 @@ $(document).ready(function () {
         
         $(document).attr('title', 'VDRManager // <%= __("Program") %>');
         
-        $('body').overlay('hide');
+        var getChannels = function (channels) {
+            $('#ProgramTemplate').tmpl({
+                channels: channels
+            }).appendTo('#body');
+            
+            $('#channellist').css('height', $(window).height() - $('#channellist').offset().top);
+            
+            $('div#channellist > table > tbody > tr').click(function () {
+                $('body').overlay('show');
+                getEpg($(this).attr('channelid'));
+            });
+            
+            $('body').overlay('hide');
+            
+            socket.removeListener('getChannels', getChannels);
+        };
+        
+        socket.on('getChannels', getChannels);
+        
+        socket.emit('getChannels');
+    }
+    
+    function getEpg (channelId) {
+        removeContext($('#epglist'));
+        
+        var getEpg = function (epg) {
+            $('#EpgTableTemplate').tmpl().appendTo('#epglist');
+            $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
+            
+            $('div#epglist > table > tbody > tr > td:nth-child(1)').click(function () {
+                console.log('Create timer');
+            });
+            
+            $('div#epglist > table > tbody > tr > td:nth-child(4)').click(function () {
+                console.log('Show details');
+            });
+            
+            //$('#epglist').css('height', $(window).height() - $('#epglist').offset().top);
+            
+            $(document).endlessScroll({
+                callback: function (p) {
+                    $('body').overlay('show');
+                    
+                    var getEpgNext = function (epg) {
+                        $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
+                        
+                        $('body').overlay('hide');
+                        
+                        socket.removeListener('getEpg', getEpgNext);
+                    };
+                    
+                    socket.on('getEpg', getEpgNext);
+                    
+                    socket.emit('getEpg', {
+                        site: p,
+                        channelid: channelId
+                    });
+                }
+            });
+            
+            var message = $( "#channellist" );
+            var originalMessageTop = message.offset().top;
+            var view = $( window );
+            
+            view.bind("scroll resize", function () {
+                var viewTop = view.scrollTop();
+                
+                if ((viewTop + 40 > originalMessageTop) && message.css('position') != 'fixed') {
+                    // Toggle the message classes.
+                    message.css({position: 'fixed', top: 40});
+
+                    // Check to see if the view has scroll back up
+                    // above the message AND that the message is
+                    // currently fixed.
+                } else if ((viewTop + 40 <= originalMessageTop) && message.css('position') == 'fixed') {
+                    // Toggle the message classes.
+                    message.css({position: 'absolute', top: originalMessageTop});
+                }
+            });
+        
+            $('body').overlay('hide');
+            
+            socket.removeListener('getEpg', getEpg);
+        };
+        
+        socket.on('getEpg', getEpg);
+        
+        socket.emit('getEpg', {
+            site: 1,
+            channelid: channelId
+        });
     }
     
     function getTimer () {
@@ -144,6 +234,8 @@ $(document).ready(function () {
         
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
         
+        $('#RecordingsTemplate').tmpl().appendTo('#body');
+        
         $('body').overlay('hide');
     }
     
@@ -168,9 +260,14 @@ $(document).ready(function () {
     function getLogout () {
         removeContext($('#body'));
         
+        $('body').overlay('hide');
     }
     
     function removeContext( item ) {
+        item.unbind();
+        $(window).unbind('scroll resize');
+        $(document).unbind('scroll resize');
+        
         item.children().remove();
     }
 });

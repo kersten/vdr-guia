@@ -1,18 +1,35 @@
-<div class="page-header">
-    <div class="row" id="program_header_div">
-        <div class="span10">
-            <h1>
-                <%= __('Program') %>
-            </h1>
+<script id="ProgramTemplate" type="text/x-jquery-tmpl">
+    <div class="page-header">
+        <div class="row" id="program_header_div">
+            <div class="span10">
+                <h1>
+                    <%= __('Program') %>
+                </h1>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="span10 columns" id="programlist">
-        &nbsp;
+    <div class="row">
+        <div class="span10 columns" id="epglist">
+            &nbsp;
+        </div>
+        <div class="span6 columns" id="channellist" style="overflow: auto; position: absolute;">
+            <table class="zebra-striped"> 
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><%= __('Channels') %></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{each channels}}
+                    <tr channelid="${channel_id}">
+                        <td>${number}</td>
+                        <td><a>${name}</a></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="span6" id="channellist" style="overflow: auto; position: fixed;">
-        <%- partial('program/channels') %>
-    </div>
-</div>
+</script>

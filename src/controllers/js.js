@@ -18,5 +18,10 @@ module.exports = {
         res.render('js/plugins/jquery.dialog.js', {
             layout: false
         });
+    },
+    "plugins/jquery.endless-scroll.js": function (req, res) {
+        res.render('js/plugins/jquery.endless-scroll.js', {
+            layout: false
+        });
     }
 };

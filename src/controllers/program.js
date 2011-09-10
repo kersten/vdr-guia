@@ -1,3 +1,33 @@
+io.sockets.on('connection', function (socket) {
+    socket.on('getChannels', function () {
+        rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+            socket.emit('getChannels', data.channels);
+        });
+    });
+    
+    socket.on('getEpg', function (data) {
+        var start = (data.site - 1) * config.app.entries;
+        
+        rest.get(restfulUrl + '/events/' + data.channelid + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+            socket.emit('getEpg', {
+                channelEpg: epg.events,
+                paginator: {
+                    total: epg.total,
+                    cur: data.site,
+                    sites: Math.floor(epg.total / config.app.entries),
+                    next: data.site + 1,
+                    previous: data.site -1
+                },
+                maxEntries: config.app.entries,
+                switchUrl: restfulUrl + '/remote/switch',
+                restfulUrl: restfulUrl
+            });
+        }).on('error', function () {
+            //syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + chan);
+        });
+    });
+});
+
 module.exports = {
     index: function (req, res) {
         rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {

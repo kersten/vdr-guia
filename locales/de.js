@@ -69,5 +69,9 @@
 	"Create searchtimer": "Create searchtimer",
 	"Recordings": "Recordings",
 	"VDRManager": "VDRManager",
-	"Record, Edit, Play": "Record, Edit, Play"
+	"Record, Edit, Play": "Record, Edit, Play",
+	"Plug it, play it, burn it, rip it, zip ..": "Plug it, play it, burn it, rip it, zip ..",
+	"Airdate": "Airdate",
+	"Record this show": "Record this show",
+	"Plug it, play it, burn it, rip it, zip it ..": "Plug it, play it, burn it, rip it, zip it .."
 }
