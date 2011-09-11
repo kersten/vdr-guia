@@ -9,8 +9,6 @@ $(document).ready(function () {
         var view = (location.hash == "") ? 'about' : location.hash.substring(1);
         view = view.charAt(0).toUpperCase() + view.substring(1);
 
-        console.log('Call get' + view + '();');
-
         eval('get' + view + '()');
     };
     
@@ -91,6 +89,16 @@ $(document).ready(function () {
         socket.on('menu', menu);
     }
     
+    function getHighlights () {
+        removeContext($('#body'));
+        
+        $(document).attr('title', 'VDRManager // <%= __("Highlights") %>');
+        
+        $('#HighlightsTemplate').tmpl().appendTo('#body');
+        
+        $('body').overlay('hide');
+    }
+    
     function getTimeline () {
         removeContext($('#body'));
         
@@ -146,7 +154,7 @@ $(document).ready(function () {
             });
             
             $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
-                console.log('Show details');
+                showDetails(channelId, $(this).attr('eventid'));
             });
             
             //$('#epglist').css('height', $(window).height() - $('#epglist').offset().top);
@@ -243,6 +251,114 @@ $(document).ready(function () {
         $('#RecordingsTemplate').tmpl().appendTo('#body');
         
         $('body').overlay('hide');
+    }
+    
+    function showDetails (channelid, eventid) {
+        socket.emit('getDetails', {
+            channelid: channelid,
+            eventid: eventid
+        });
+    
+        var cb = function (data) {
+            var data = data.events[0];
+            var components = {
+                video: null,
+                format: null,
+                audio: [],
+                subtitles: []
+            }
+
+            for (var i in data.components) {
+                switch (data.components[i].description) {
+                case 'stereo':
+                case 'stereo deutsch':
+                case 'stereo englisch':
+                    components.audio.push({
+                        language: data.components[i].lang,
+                        type: 'stereo'
+                    });
+                    break;
+
+                case 'Dolby Digital 2.0':
+                    components.audio.push({
+                        language: data.components[i].lang,
+                        type: 'dd2'
+                    });
+                    break;
+
+                case 'DVB-Untertitel':
+                    components.subtitles.push(data.components[i].lang);
+                    break;
+
+                case 'HD-Video':
+                    components.video = 'hd';
+                    break;
+
+                case '16:9':
+                    components.format = '16:9';
+                }
+            }
+
+            $().dialog({
+                title: data.title,
+                subtitle: data.short_text,
+                components: components,
+                body: '<p>' + data.description + '</p>',
+                close: true,
+                buttons: [{
+                    text: 'Ok',
+                    action: 'close'
+                }, {
+                    text: 'Record',
+                    action: function () {
+                        createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, data.start_time + data.duration);
+                    },
+                    layout: 'danger'
+                }]
+            });
+
+            $().dialog('show');
+
+            socket.removeListener('getDetails', cb);
+        };
+
+        socket.on('getDetails', cb);
+    }
+    
+    function createTimer (filename, channelid, start, stop) {
+        var date = new Date(start * 1000);
+        
+        var startTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
+        var startDate = date.getFullYear() + '-' + (((date.getMonth() + 1 < 10) ? '0' : '') + (date.getMonth() + 1)) + '-' + ((date.getDate() < 10) ? 0 : '') + date.getDate();
+        
+        date = new Date(stop * 1000);
+        
+        var endTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
+        
+        $.ajax({
+            type: 'POST',
+            url: '<%= restfulUrl %>/timers',
+            data: {
+                flags: 1,
+                file: filename,
+                start: startTime,
+                stop: endTime,
+                day: startDate,
+                channel: channelid,
+                weekdays: '-------'
+            },
+            success: function () {
+                $().dialog({
+                    title: '<%= __("Timer created") %>',
+                    body: '<p><%= __("The timer for %s was successfully created") %></p>',
+                    close: true,
+                    buttons: [{
+                        text: 'Ok',
+                        action: 'close'
+                    }]
+                });
+            }
+        });
     }
     
     function getSettings () {

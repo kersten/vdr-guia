@@ -9,5 +9,6 @@
 	"Settings": "Settings",
 	"About": "About",
 	"Logout": "Logout",
-	"Recordings": "Recordings"
+	"Recordings": "Recordings",
+	"Highlights": "Highlights"
 }

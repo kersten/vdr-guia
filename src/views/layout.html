@@ -17,6 +17,16 @@
         <script type="text/javascript" src="/js/app.js"></script>
 
         <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
+        
+        <%- partial('authenticate') %>
+        <%- partial('menu') %>
+
+        <%- partial('highlights') %>
+        <%- partial('tvguide') %>
+        <%- partial('program') %>
+            <%- partial('program/epg') %>
+        <%- partial('recordings') %>
+        <%- partial('about') %>
 </head>
 
 <body>
@@ -39,14 +49,5 @@
     <div class="container" style="margin-top: 50px;" id="body">
 
     </div>
-    
-    <%- partial('authenticate') %>
-    <%- partial('menu') %>
-    
-    <%- partial('tvguide') %>
-    <%- partial('program') %>
-        <%- partial('program/epg') %>
-    <%- partial('recordings') %>
-    <%- partial('about') %>
 </body>
 </html>

@@ -1,7 +1,8 @@
 module.exports = {
     "app.js": function (req, res) {
         res.render('js/app.js', {
-            layout: false
+            layout: false,
+            restfulUrl: restfulUrl
         });
     },
     "jquery-1.6.2.min.js": function (req, res) {

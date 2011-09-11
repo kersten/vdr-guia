@@ -73,5 +73,10 @@
 	"Plug it, play it, burn it, rip it, zip ..": "Plug it, play it, burn it, rip it, zip ..",
 	"Airdate": "Airdate",
 	"Record this show": "Record this show",
-	"Plug it, play it, burn it, rip it, zip it ..": "Plug it, play it, burn it, rip it, zip it .."
+	"Plug it, play it, burn it, rip it, zip it ..": "Plug it, play it, burn it, rip it, zip it ..",
+	"Timer created": "Timer created",
+	"The timer for %s was successfully created": "The timer for %s was successfully created",
+	"Error creating timer": "Error creating timer",
+	"Highlights": "Highlights",
+	"What's up today ..": "What's up today .."
 }

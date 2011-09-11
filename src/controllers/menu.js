@@ -1,6 +1,6 @@
 var menu = [{
-    title: __('Timeline'),
-    link: '#timeline'
+    title: __('Highlights'),
+    link: '#Highlights'
 }, {
     title: __('TV Guide'),
     link: '#tvguide'

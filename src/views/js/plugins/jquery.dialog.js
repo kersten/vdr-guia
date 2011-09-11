@@ -1,15 +1,52 @@
+(function(){
+    jQuery.fn.fixedCenter = function(){
+        return this.each(function(){
+            var element = jQuery(this), win = jQuery(window);
+            centerElement();
+
+            jQuery(window).bind('resize',function(){
+                centerElement();
+            });
+
+            function centerElement(){
+                var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
+                elementWidth = element.outerWidth();
+                elementHeight = element.outerHeight();
+                windowWidth = win.width();
+                windowHeight = win.height();	
+                X2 = (windowWidth/2 - elementWidth/2) + "px";
+                Y2 = (windowHeight/2 - elementHeight/2) + "px";
+                jQuery(element).css({
+                    'left':X2,
+                    'top':Y2,
+                    'position':'fixed'
+                });						
+            } //centerElement function
+        });
+    }
+})();
+
 (function( $ ){
     var el = null;
+    var overlay = null;
     
     var methods = {
         init : function ( options ) {
+            overlay = $('<div></div>').css({
+                position: 'fixed',
+                top: 0,
+                width: $(window).width(),
+                height: $(window).height(),
+                zIndex: 100000
+            });
+            
             el = $('<div></div>').css({
                 position: 'fixed',
-                top: 'auto',
+                top: '50%',
                 left: 'auto',
                 margin: '0 auto',
                 zIndex: 1000000,
-                display: 'none'
+                visibility: 'hidden'
             }).addClass('modal');
             
             var header = $('<div></div>').addClass('modal-header');
@@ -95,6 +132,10 @@
                     cls = 'primary';
                 }
                 
+                if (typeof(options.buttons[i].layout) != 'undefined') {
+                    cls = options.buttons[i].layout;
+                }
+                
                 var btn = $('<a></a>').addClass('btn ' + cls);
                 btn.html(options.buttons[i].text);
                 
@@ -116,21 +157,28 @@
             }
             
             el.append(body, footer);
-            
-            console.log(el.outerHeight() / 2);
         },
         show : function ( ) {
+            $('body').append(overlay);
             $('body').append(el);
             
-            el.center().css({
-                'position': 'fixed'
-            });
+            if (el.outerHeight(true) > $(window).height() - 50) {
+                el.children('.modal-body').css({
+                    maxHeight: $(window).height() - 150 - el.children().outerHeight(true),
+                    overflow: 'auto'
+                });
+            }
+            
+            el.css({display: 'none', visibility: 'visible'});
+            
+            el.fixedCenter();
             
             el.fadeIn("fast");
         },
         hide : function ( ) {
             el.fadeOut("fast", function () {
                 el.remove();
+                overlay.remove();
             });
         }
     };

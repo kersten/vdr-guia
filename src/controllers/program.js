@@ -16,7 +16,7 @@ io.sockets.on('connection', function (socket) {
                 epg.events[i].start = ((start.getHours() < 10) ? '0' : '') + start.getHours() + ':' + ((start.getMinutes() < 10) ? '0' : '') + start.getMinutes();
                 epg.events[i].stop = ((stop.getHours() < 10) ? '0' : '') + stop.getHours() + ':' + ((stop.getMinutes() < 10) ? '0' : '') + stop.getMinutes();
                 
-                epg.events[i].day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + ((start.getMonth() < 10) ? '0' : '') + start.getMonth();
+                epg.events[i].day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + (((start.getMonth() + 1)  < 10) ? '0' : '') + (start.getMonth() + 1);
             }
             
             socket.emit('getEpg', {
