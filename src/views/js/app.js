@@ -141,11 +141,11 @@ $(document).ready(function () {
             $('#EpgTableTemplate').tmpl().appendTo('#epglist');
             $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
             
-            $('div#epglist > table > tbody > tr > td:nth-child(1)').click(function () {
+            $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
                 console.log('Create timer');
             });
             
-            $('div#epglist > table > tbody > tr > td:nth-child(4)').click(function () {
+            $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
                 console.log('Show details');
             });
             
@@ -156,6 +156,12 @@ $(document).ready(function () {
                     $('body').overlay('show');
                     
                     var getEpgNext = function (epg) {
+                        if (epg.channelEpg.length == 0) {
+                            $(document).unbind('scroll resize');
+                            $('body').overlay('hide');
+                            return;
+                        }
+                        
                         $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
                         
                         $('body').overlay('hide');

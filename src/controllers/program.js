@@ -9,18 +9,18 @@ io.sockets.on('connection', function (socket) {
         var start = (data.site - 1) * config.app.entries;
         
         rest.get(restfulUrl + '/events/' + data.channelid + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+            for (var i in epg.events) {
+                var start = new Date(epg.events[i].start_time * 1000);
+                var stop = new Date((epg.events[i].start_time + epg.events[i].duration) * 1000);
+                
+                epg.events[i].start = ((start.getHours() < 10) ? '0' : '') + start.getHours() + ':' + ((start.getMinutes() < 10) ? '0' : '') + start.getMinutes();
+                epg.events[i].stop = ((stop.getHours() < 10) ? '0' : '') + stop.getHours() + ':' + ((stop.getMinutes() < 10) ? '0' : '') + stop.getMinutes();
+                
+                epg.events[i].day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + ((start.getMonth() < 10) ? '0' : '') + start.getMonth();
+            }
+            
             socket.emit('getEpg', {
-                channelEpg: epg.events,
-                paginator: {
-                    total: epg.total,
-                    cur: data.site,
-                    sites: Math.floor(epg.total / config.app.entries),
-                    next: data.site + 1,
-                    previous: data.site -1
-                },
-                maxEntries: config.app.entries,
-                switchUrl: restfulUrl + '/remote/switch',
-                restfulUrl: restfulUrl
+                channelEpg: epg.events
             });
         }).on('error', function () {
             //syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + chan);
