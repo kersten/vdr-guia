@@ -2,7 +2,7 @@ var socket = io.connect();
 
 $(document).ready(function () {
     $('body').overlay('show');
-    
+
     var loadHash = function () {
         $('body').overlay('show');
 
@@ -11,22 +11,22 @@ $(document).ready(function () {
 
         eval('get' + view + '()');
     };
-    
+
     checkLogin();
-    
+
     $(window).bind('hashchange', function (e) {
         loadHash();
     });
-    
+
     function checkLogin () {
         removeContext($('#body'));
-        
+
         socket.emit('checksession');
-        
+
         var cb = function (data) {
             if (data.loggedIn === false) {
                 $('#LoginTemplate').tmpl().appendTo('#body');
-                
+
                 $('#login_btn').click(function () {
                     $('body').overlay('show');
 
@@ -37,23 +37,23 @@ $(document).ready(function () {
 
                     return false;
                 });
-                
+
                 $('body').overlay('hide');
             } else {
                 getMenu();
                 loadHash();
             }
-            
+
             socket.removeListener('loggedIn', cb);
         };
-        
+
         socket.on('loggedIn', cb);
 
         socket.on('login.done', function (data) {
             if (data.successful) {
                 getMenu();
                 getAbout();
-                
+
                 /*$.ajax({
                     type: 'POST',
                     url: '/menu',
@@ -75,124 +75,130 @@ $(document).ready(function () {
             }
         });
     }
-    
+
     function getMenu () {
         socket.emit('menu');
-        
+
         var menu = function (data) {
             $('div#menu > ul > li').remove();
             $('#MainMenuTemplate').tmpl(data).appendTo('div#menu > ul');
-            
+
             socket.removeListener('menu', menu);
         };
-        
+
         socket.on('menu', menu);
     }
-    
+
     function getHighlights () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Highlights") %>');
-        
+
         $('#HighlightsTemplate').tmpl().appendTo('#body');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getTimeline () {
         removeContext($('#body'));
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getTvguide () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("TV Guide") %>');
-        
+
         $('#TvguideTemplate').tmpl().appendTo('#body');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getProgram () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Program") %>');
-        
+
         var getChannels = function (channels) {
             $('#ProgramTemplate').tmpl({
                 channels: channels
             }).appendTo('#body');
-            
+
             $('#channellist').css('height', $(window).height() - $('#channellist').offset().top);
-            
+
             $('div#channellist > table > tbody > tr').click(function () {
                 $('body').overlay('show');
                 getEpg($(this).attr('channelid'));
             });
-            
+
             $('body').overlay('hide');
-            
+
             socket.removeListener('getChannels', getChannels);
         };
-        
+
         socket.on('getChannels', getChannels);
-        
+
         socket.emit('getChannels');
     }
-    
+
     function getEpg (channelId) {
         removeContext($('#epglist'));
-        
+
         var getEpg = function (epg) {
             $('#EpgTableTemplate').tmpl().appendTo('#epglist');
             $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
-            
+
+            // Clean evantually binded old events
+            $('div#epglist > table > tbody > tr > td:nth-child(4)').die('click');
+            $('div#epglist > table > tbody > tr > td:nth-child(1)').die('click');
+
+            // Bind ne events
             $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
-                console.log('Create timer');
+                showDetails();
+                createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelId, data.start_time, data.start_time + data.duration);
             });
-            
+
             $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
                 showDetails(channelId, $(this).attr('eventid'));
             });
-            
+
             //$('#epglist').css('height', $(window).height() - $('#epglist').offset().top);
-            
+
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
-                    
+
                     var getEpgNext = function (epg) {
                         if (epg.channelEpg.length == 0) {
                             $(document).unbind('scroll resize');
                             $('body').overlay('hide');
                             return;
                         }
-                        
+
                         $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
-                        
+
                         $('body').overlay('hide');
-                        
+
                         socket.removeListener('getEpg', getEpgNext);
                     };
-                    
+
                     socket.on('getEpg', getEpgNext);
-                    
+
                     socket.emit('getEpg', {
                         site: p,
                         channelid: channelId
                     });
                 }
             });
-            
+
             var message = $( "#channellist" );
             var originalMessageTop = message.offset().top;
             var view = $( window );
-            
+
             view.bind("scroll resize", function () {
                 var viewTop = view.scrollTop();
-                
+
                 if ((viewTop + 40 > originalMessageTop) && message.css('position') != 'fixed') {
                     // Toggle the message classes.
                     message.css({position: 'fixed', top: 40});
@@ -205,62 +211,144 @@ $(document).ready(function () {
                     message.css({position: 'absolute', top: originalMessageTop});
                 }
             });
-        
+
             $('body').overlay('hide');
-            
+
             socket.removeListener('getEpg', getEpg);
         };
-        
+
         socket.on('getEpg', getEpg);
-        
+
         socket.emit('getEpg', {
             site: 1,
             channelid: channelId
         });
     }
-    
+
     function getTimer () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Timer") %>');
-        
-        $('body').overlay('hide');
+
+        var getTimers = function (timer) {
+            $('#TimerTemplate').tmpl().appendTo('#body');
+            $('#TimerEntryTemplate').tmpl({timer: timer.timers}).appendTo('#timerlist > tbody');
+
+            console.log(timer);
+
+            $(document).endlessScroll({
+                callback: function (p) {
+                    $('body').overlay('show');
+
+                    var getTimersNext = function (timer) {
+                        if (timer.timers.length == 0) {
+                            $(document).unbind('scroll resize');
+                            $('body').overlay('hide');
+                            return;
+                        }
+
+                        $('#TimerEntryTemplate').tmpl({timer: timer.timers}).appendTo('#timerlist > table > tbody');
+
+                        $('body').overlay('hide');
+
+                        socket.removeListener('getTimers', getTimersNext);
+                    };
+
+                    socket.on('getTimers', getTimersNext);
+
+                    socket.emit('getTimers', {
+                        site: p
+                    });
+                }
+            });
+
+            $('body').overlay('hide');
+
+            socket.removeListener('getTimers', getTimers);
+        };
+
+        socket.on('getTimers', getTimers);
+
+        socket.emit('getTimers', {site: 1});
     }
-    
+
+    function createTimer (filename, channelid, start, stop) {
+        var date = new Date(start * 1000);
+
+        var startTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
+        var startDate = date.getFullYear() + '-' + (((date.getMonth() + 1 < 10) ? '0' : '') + (date.getMonth() + 1)) + '-' + ((date.getDate() < 10) ? 0 : '') + date.getDate();
+
+        date = new Date(stop * 1000);
+
+        var endTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
+
+        var createCb = function () {
+            socket.removeListener('timerCreated', createCb);
+
+            $().dialog({
+                title: "<%= __('Timer created') %>",
+                body: '<p>test</p>',
+                close: true,
+                buttons: [{
+                    text: 'Ok',
+                    action: 'close'
+                }]
+            });
+
+            $().dialog('show');
+        };
+
+        socket.on('timerCreated', createCb);
+
+        socket.emit('createTimer', {
+            flags: 1,
+            file: filename,
+            start: startTime,
+            stop: endTime,
+            day: startDate,
+            channel: channelid,
+            weekdays: '-------'
+        });
+    }
+
+    function editTimer () {
+
+    }
+
     function getSearch () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Search") %>');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getSearchtimer () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Searchtimer") %>');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getRecordings () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
-        
+
         $('#RecordingsTemplate').tmpl().appendTo('#body');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function showDetails (channelid, eventid) {
         socket.emit('getDetails', {
             channelid: channelid,
             eventid: eventid
         });
-    
+
         var cb = function (data) {
-            var data = data.events[0];
+            data = data.events[0];
             var components = {
                 video: null,
                 format: null,
@@ -299,6 +387,8 @@ $(document).ready(function () {
                 }
             }
 
+            console.log(data);
+
             $().dialog({
                 title: data.title,
                 subtitle: data.short_text,
@@ -314,7 +404,10 @@ $(document).ready(function () {
                         createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, data.start_time + data.duration);
                     },
                     layout: 'danger'
-                }]
+                }],
+                onClose: function () {
+
+                }
             });
 
             $().dialog('show');
@@ -324,72 +417,36 @@ $(document).ready(function () {
 
         socket.on('getDetails', cb);
     }
-    
-    function createTimer (filename, channelid, start, stop) {
-        var date = new Date(start * 1000);
-        
-        var startTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
-        var startDate = date.getFullYear() + '-' + (((date.getMonth() + 1 < 10) ? '0' : '') + (date.getMonth() + 1)) + '-' + ((date.getDate() < 10) ? 0 : '') + date.getDate();
-        
-        date = new Date(stop * 1000);
-        
-        var endTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
-        
-        $.ajax({
-            type: 'POST',
-            url: '<%= restfulUrl %>/timers',
-            data: {
-                flags: 1,
-                file: filename,
-                start: startTime,
-                stop: endTime,
-                day: startDate,
-                channel: channelid,
-                weekdays: '-------'
-            },
-            success: function () {
-                $().dialog({
-                    title: '<%= __("Timer created") %>',
-                    body: '<p><%= __("The timer for %s was successfully created") %></p>',
-                    close: true,
-                    buttons: [{
-                        text: 'Ok',
-                        action: 'close'
-                    }]
-                });
-            }
-        });
-    }
-    
+
     function getSettings () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("Settings") %>');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getAbout () {
         removeContext($('#body'));
-        
+
         $(document).attr('title', 'VDRManager // <%= __("About") %>');
-        
+
         $('#AboutTemplate').tmpl().appendTo('#body');
-        
+
         $('body').overlay('hide');
     }
-    
+
     function getLogout () {
         removeContext($('#body'));
-        
+
         $('body').overlay('hide');
     }
-    
+
     function removeContext( item ) {
         item.unbind();
         $(window).unbind('scroll resize');
         $(document).unbind('scroll resize');
-        
+
         item.children().remove();
     }
 });
@@ -410,13 +467,13 @@ var createSearchtimer = function () {
             action: 'close'
         }]
     });
-    
+
     $().dialog('show');
 };
 
 var showDetails = function (details) {
     socket.emit('getDetails', details);
-    
+
     var cb = function (data) {
         var data = data.events[0];
         var components = {
@@ -425,7 +482,7 @@ var showDetails = function (details) {
             audio: [],
             subtitles: []
         }
-        
+
         for (var i in data.components) {
             switch (data.components[i].description) {
             case 'stereo':
@@ -436,27 +493,27 @@ var showDetails = function (details) {
                     type: 'stereo'
                 });
                 break;
-            
+
             case 'Dolby Digital 2.0':
                 components.audio.push({
                     language: data.components[i].lang,
                     type: 'dd2'
                 });
                 break;
-                
+
             case 'DVB-Untertitel':
                 components.subtitles.push(data.components[i].lang);
                 break;
-            
+
             case 'HD-Video':
                 components.video = 'hd';
                 break;
-                
+
             case '16:9':
                 components.format = '16:9';
             }
         }
-        
+
         $().dialog({
             title: data.title,
             subtitle: data.short_text,
@@ -470,12 +527,12 @@ var showDetails = function (details) {
         });
 
         $().dialog('show');
-        
+
         console.log(data);
-        
+
         socket.removeListener('getDetails', cb);
     };
-    
+
     socket.on('getDetails', cb);
 };
 

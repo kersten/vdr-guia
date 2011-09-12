@@ -12,7 +12,6 @@ var fs = require('fs'),
 
 exports.boot = function (app, io){
   bootApplication(app, io);
-  bootControllers(app);
 };
 
 // App settings and middleware
@@ -81,11 +80,15 @@ function bootApplication (app, io) {
     global.sessionStore = store;
 
     rest.get(restfulUrl + '/info.json').on('complete', function(data) {
+        vdr.plugins.epgsearch = false;
+
         for (var i in data.vdr.plugins) {
             if (data.vdr.plugins[i].name == 'epgsearch') {
                 vdr.plugins.epgsearch = true;
             }
         }
+
+        bootControllers(app);
     });
 
     // Some dynamic view helpers
@@ -126,6 +129,8 @@ function bootControllers (app) {
 // Example (simplistic) controller support
 
 function bootController (app, file) {
+    console.log('Boot ' + file);
+
     var name = file.replace('.js', ''),
         actions = require('./controllers/' + name),
         //plural = name + 's', // realistically we would use an inflection lib
