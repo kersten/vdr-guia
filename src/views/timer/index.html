@@ -11,7 +11,7 @@
             <table class="zebra-striped" id="timerlist">
                 <thead>
                     <tr>
-                        <th style="width: 20px;"><%= __('Channel') %></th>
+                        <th style="width: 100px;"><%= __('Channel') %></th>
                         <th style="width: 40px;"><%= __('Airdate') %></th>
                         <th style="width: 100px;"><%= __('Airtime') %></th>
                         <th><%= __('Title') %></th>
@@ -28,7 +28,7 @@
 <script id="TimerEntryTemplate" type="text/x-jquery-tmpl">
     {{each timer}}
     <tr>
-        <td>${channel}</td>
+        <td>${channel_name}</td>
         <td>${day}</td>
         <td>${start} - ${stop}</td>
         <td style="cursor: pointer;" channelid="${channel_id}" eventid="${id}"><a>${filename}</a></td>

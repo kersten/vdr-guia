@@ -40,10 +40,10 @@
                 top: 0,
                 width: $(window).width(),
                 height: $(window).height(),
-                zIndex: 100000
+                zIndex: 1000000
             });
 
-            el = $('<div></div>').css({
+            el = $(this).css({
                 position: 'fixed',
                 top: '50%',
                 left: 'auto',
@@ -160,27 +160,29 @@
             }
 
             el.append(body, footer);
+            
+            return this;
         },
         show : function ( ) {
             $('body').append(overlay);
             $('body').append(el);
 
-            if (el.outerHeight(true) > $(window).height() - 50) {
-                el.children('.modal-body').css({
+            if ($(this).outerHeight(true) > $(window).height() - 50) {
+                $(this).children('.modal-body').css({
                     maxHeight: $(window).height() - 150 - el.children().outerHeight(true),
                     overflow: 'auto'
                 });
             }
 
-            el.css({display: 'none', visibility: 'visible'});
+            $(this).css({display: 'none', visibility: 'visible'});
 
-            el.fixedCenter();
+            $(this).fixedCenter();
 
-            el.fadeIn("fast");
+            $(this).fadeIn("fast");
         },
         hide : function ( ) {
-            el.fadeOut("fast", function () {
-                el.remove();
+            $(this).fadeOut("fast", function () {
+                $(this).remove();
                 overlay.remove();
 
                 if (typeof(dialogOptions.onClose) != 'undefined') {

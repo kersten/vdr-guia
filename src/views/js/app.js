@@ -285,7 +285,7 @@ $(document).ready(function () {
         var createCb = function () {
             socket.removeListener('timerCreated', createCb);
 
-            $().dialog({
+            var dialog = $('<div></div>').dialog({
                 title: "<%= __('Timer created') %>",
                 body: '<p>test</p>',
                 close: true,
@@ -295,7 +295,7 @@ $(document).ready(function () {
                 }]
             });
 
-            $().dialog('show');
+            dialog.dialog('show');
         };
 
         socket.on('timerCreated', createCb);
@@ -389,7 +389,7 @@ $(document).ready(function () {
 
             console.log(data);
 
-            $().dialog({
+            var dialog = $('<div></div>').dialog({
                 title: data.title,
                 subtitle: data.short_text,
                 components: components,
@@ -410,7 +410,7 @@ $(document).ready(function () {
                 }
             });
 
-            $().dialog('show');
+            dialog.dialog('show');
 
             socket.removeListener('getDetails', cb);
         };
