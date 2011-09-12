@@ -6,11 +6,13 @@ io.sockets.on('connection', function (socket) {
             console.log(data);
 
             for (var i in data.timers) {
-                data.timers[i].start = data.timers[i].start.toString().substring(0, 2) + ':' + data.timers[i].start.toString().substring(2, 4);
-                data.timers[i].stop = data.timers[i].stop.toString().substring(0, 2) + ':' + data.timers[i].stop.toString().substring(2, 4);
+                var start = new Date(data.timers[i].start_timestamp);
+                var stop = new Date(data.timers[i].stop_timestamp);
 
-                // 2011-09-11
-                data.timers[i].day = data.timers[i].day.substring(8, 10) + '.' + data.timers[i].day.substring(5, 7);
+                data.timers[i].start = ((start.getHours() < 10) ? '0' : '') + start.getHours() + ':' + ((start.getMinutes() < 10) ? '0' : '') + start.getMinutes();
+                data.timers[i].stop = ((stop.getHours() < 10) ? '0' : '') + stop.getHours() + ':' + ((stop.getMinutes() < 10) ? '0' : '') + stop.getMinutes();
+
+                data.timers[i].day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + (((start.getMonth() + 1)  < 10) ? '0' : '') + (start.getMonth() + 1);
             }
 
             socket.emit('getTimers', {
@@ -23,12 +25,12 @@ io.sockets.on('connection', function (socket) {
         console.log('Create Timer');
         console.log(data);
 
-        rest.post(restfulUrl + '/timers', data).on('complete', function () {
+        rest.post(restfulUrl + '/timers.json', data).on('complete', function () {
             socket.emit('timerCreated');
 
             rest.get(restfulUrl + '/timers.json').on('complete', function (data) {
                 console.log(data);
-            })
+            });
         }).on('error', function (e) {
             console.log(e);
         }).on('403', function (e) {

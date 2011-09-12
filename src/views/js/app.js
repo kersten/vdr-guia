@@ -155,8 +155,13 @@ $(document).ready(function () {
 
             // Bind ne events
             $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
-                showDetails();
-                createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelId, data.start_time, data.start_time + data.duration);
+                createTimer(this,
+                    $(this).attr('title') +
+                    (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
+                    channelId,
+                    $(this).attr('start_time'),
+                    $(this).attr('start_time') + $(this).attr('duration')
+                );
             });
 
             $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
@@ -272,7 +277,7 @@ $(document).ready(function () {
         socket.emit('getTimers', {site: 1});
     }
 
-    function createTimer (filename, channelid, start, stop) {
+    function createTimer (element, filename, channelid, start, stop) {
         var date = new Date(start * 1000);
 
         var startTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
@@ -296,6 +301,8 @@ $(document).ready(function () {
             });
 
             dialog.dialog('show');
+            
+            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
         };
 
         socket.on('timerCreated', createCb);
@@ -319,6 +326,8 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Search") %>');
+        
+        $('#SearchTemplate').tmpl().appendTo('#body')
 
         $('body').overlay('hide');
     }

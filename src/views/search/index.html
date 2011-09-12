@@ -1,132 +1,65 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(this).attr('title', 'VDRManager // <%= __("Search") %>');
-    });
-</script>
-<div class="page-header">
+<script id="SearchTemplate" type="text/x-jquery-tmpl">
+    <div class="page-header">
     <h1>
         <%= __('Search') %>
         <small><%= __('Looking for some show?') %></small>
     </h1>
-</div>
-<div class="well">
-    <form method="GET" action="/search">
-        <div class="clearfix">
-            <div class="input">
-                <input id="q" class="xlarge" type="text" size="30" name="q" <% if (q != '') { %>value="<%= q %>"<% } %>/>
-                <button class="btn small primary" type="submit"><%= __('Search') %></button>
+    </div>
+    <div class="row">
+        <div class="span16 columns" id="searchresultlist">
+            <div class="well">
+                <form>
+                    <div class="clearfix">
+                        <div class="input">
+                            <input id="q" class="xlarge" type="text" size="30" name="q"/>
+                            <button class="btn small primary"><%= __('Search') %></button>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="input">
+                        <label style="white-space: nowrap; width: 140px; text-align: left;">
+                            <input type="checkbox" id="s" value="s" name="s"/>
+                            <span><%= __('Search in short text') %></span>
+                        </label>
+                        <label style="white-space: nowrap; width: 140px; text-align: left;">
+                            <input type="checkbox" id="d" value="d" name="d"/>
+                            <span><%= __('Search in description') %></span>
+                        </label>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="clearfix">
-            <div class="input">
-            <label style="white-space: nowrap; width: 140px; text-align: left;">
-                <input type="checkbox" id="s" value="s" name="s" <% if (s != '') { %>checked="checked"<% } %>/>
-                <span><%= __('Search in short text') %></span>
-            </label>
-            <label style="white-space: nowrap; width: 140px; text-align: left;">
-                <input type="checkbox" id="d" value="d" name="d" <% if (d != '') { %>checked="checked"<% } %>/>
-                <span><%= __('Search in description') %></span>
-            </label>
-            </div>
-        </div>
-</form>
-</div>
-<% if (typeof(results) != 'undefined') {
-    if (results.length == 0) { %>
-        <div class="page-header">
-            <h1>
-                <%= __('Results') %>
-            </h1>
-        </div>
-        <div class="row">
-            <div class="span16 columns">
-                <p><%= __('Your search term did not match anything ..') %></p>
-            </div>
-        </div>
-    <% } else { %>
-        <div class="page-header">
-            <h1>
-                <%= __('Results') %>
-            </h1>
-        </div>
-        <div class="row">
-            <div class="span16 columns">
-                <table class="zebra-striped">
-                    <thead>
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th style="width: 120px;"><%= __('Airdate') %></th>
-                            <th style="width: 100px;"><%= __('Airtime') %></th>
-                            <th>Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
-                        results.forEach(function (result) {
-                            var weekday = new Array(__('Sunday'), __('Monday'), __('Tuesday'), __('Wednesday'), __('Thursday'), __('Friday'), __('Saturday'));
+    </div>
+</script>
 
-                            var date = new Date();
-                            date.setTime(result.start_time * 1000);
+<script id="SearchTableTemplate" type="text/x-jquery-tmpl">
+    <div class="row">
+        <div class="span16 columns" id="searchresultlist">
+            <table class="zebra-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 20px;">&nbsp;</th>
+                        <th style="width: 40px;"><%= __('Airdate') %></th>
+                        <th style="width: 100px;"><%= __('Airtime') %></th>
+                        <th><%= __('Title') %></th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                            var start = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
-
-                            var day = ((date.getDate() < 10) ? 0 : '') + '' + date.getDate();
-                            var month = (((date.getMonth() + 1) < 10) ? 0 : '') + '' + (date.getMonth() + 1);
-
-                            date.setTime((result.start_time + result.duration) * 1000);
-                            var end = ((date.getHours() < 10) ? 0 : '') + '' + date.getHours() + ':' + ((date.getMinutes() < 10) ? 0 : '') + '' + date.getMinutes();
-                            %>
-                            <tr>
-                                <td style="width: 20px; text-align: center;"><img src="/img/devine/black/<% if (result.timer_exists == true) { %>Circle-2.png<% } else {%>Circle.png<% } %>" width="16px" height="16px" title="Record this show" /></td>
-                                <td><%= day %>.<%= month %> <%= weekday[date.getDay()] %></td>
-                                <td><%= start %> - <%= end %></td>
-                                <td><a href="/details?channelid=<%= result.channel %>&eventid=<%= result.id %>"><%= result.title %></a></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-            <% if (paginator.total > global.maxEntries) {
-                var query = new Array((q != "") ? 'q=' + q : '', (s != "") ? 's=' + s : '', (d != "") ? 'd=' + d : '');
-                query = '&' + query.join('&');
-            %>
-            <div class="span16 columns">
-                <div class="pagination" style="padding-left: 25%;">
-                    <ul>
-                        <li class="prev <% if (paginator.cur == 1) {%>disabled<% } %>">
-                            <a<% if (paginator.cur != 1) {%> href="/search?site=<%= paginator.previous %><%= query %>"<% } %>>← <%= __('Previous') %></a>
-                        </li>
-                        <% var cnt = paginator.cur + 3;
-                        var start = paginator.cur;
-                        if (paginator.sites < 9) {
-                            cnt = paginator.sites + 1;
-                            start = 1;
-                        } else {
-                            if (paginator.cur != 1) {
-                                start = paginator.cur -1;
-                                cnt = paginator.cur + 2;
-                            }
-
-                            if (paginator.cur > paginator.sites - 3) {
-                                start = 1;
-                                cnt = 4;
-                            }
-                        } %>
-                        <% for (i = start; i < cnt; i++) { %>
-                        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/search?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
-                        <% } %>
-                        <% if (paginator.sites > 8) { %>
-                        <li class="disabled"><a href="#">…</a></li>
-                        <% for (i = paginator.sites - 2; i <= paginator.sites; i++) { %>
-                        <li<% if (paginator.cur == i) {%> class="active"<% } %>><a<% if (paginator.cur != i) {%> href="/search?site=<%= i %><%= query %>"<% } %>><%= i %></a></li>
-                        <% } %>
-                        <% } %>
-                        <li class="prev <% if (paginator.cur == paginator.sites) {%>disabled<% } %>">
-                            <a<% if (paginator.cur != paginator.sites) {%> href="/search?site=<%= paginator.next %><%= query %>"<% } %>><%= __('Next') %> →</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <% } %>
+                </tbody>
+            </table>
         </div>
-<% }} %>
+    </div>
+</script>
+
+<script id="SearchEntryTemplate" type="text/x-jquery-tmpl">
+    {{each epg}}
+    <tr>
+        <td style="width: 20px; text-align: center;" channelid="${channel_id}" eventid="${id}" title="${title}" short_text="${short_text}" start_time="${start_time}" duration="${duration}"><img class="btn_timer" style="cursor: pointer;" src="/img/devine/black/{{if timer_exists && timer_active == true}}Circle-2.png{{else}}Circle.png{{/if}}" width="16px" height="16px" title="<%= __('Record this show') %>" /></td>
+        <td>${day}</td>
+        <td>${start} - ${stop}</td>
+        <td style="cursor: pointer;" channelid="${channel_id}" eventid="${id}"><a>${title}</a></td>
+    </tr>
+    {{/each}}
+</script>
