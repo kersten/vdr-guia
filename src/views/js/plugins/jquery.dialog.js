@@ -124,9 +124,39 @@
                             components.append($('<img></img>').attr('src', '/img/logos/' + img).css({height: 20, marginRight: 5}));
                     }
                 }
+
+                if (options.components.subtitles.length != 0) {
+                    var img = null;
+
+                    for (var i in options.components.subtitles) {
+                        switch (options.components.subtitles[i].type) {
+                        case 'de':
+                            img = 'Gehoerlos.jpg';
+                            break;
+
+                        case 'en':
+                            img = 'Gehoerlos.jpg';
+                            break;
+                        }
+
+                        if (img != null)
+                            components.append($('<img></img>').attr('src', '/img/logos/' + img).css({height: 20, marginRight: 5}));
+                    }
+                }
             }
 
             var footer = $('<div></div>').addClass('modal-footer');
+
+            if (options.components.ageRating != null) {
+                var img = 'FSK-' + options.components.ageRating + 'J-KNZ-Print-1200-4c.jpg';
+                components.append($('<img></img>').attr('src', '/img/logos/' + img).css({
+                    height: 80,
+                    marginRight: 5,
+                    position: 'absolute',
+                    left: 5,
+                    bottom: 5
+                }));
+            }
 
             for (var i in options.buttons) {
                 var cls = 'secondary';

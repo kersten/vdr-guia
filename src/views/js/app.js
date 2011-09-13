@@ -239,8 +239,6 @@ $(document).ready(function () {
             $('#TimerTemplate').tmpl().appendTo('#body');
             $('#TimerEntryTemplate').tmpl({timer: timer.timers}).appendTo('#timerlist > tbody');
 
-            console.log(timer);
-
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
@@ -301,7 +299,7 @@ $(document).ready(function () {
             });
 
             dialog.dialog('show');
-            
+
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
         };
 
@@ -326,7 +324,7 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Search") %>');
-        
+
         $('#SearchTemplate').tmpl().appendTo('#body')
 
         $('body').overlay('hide');
@@ -362,8 +360,20 @@ $(document).ready(function () {
                 video: null,
                 format: null,
                 audio: [],
-                subtitles: []
+                subtitles: [],
+                rating: null,
+                ageRating: null,
+                actors: [],
+                directors: [],
+                countries: []
             }
+
+            // Extract age rating
+            var ageRegExp = /\nFSK:\s(.*?)\n/.exec(data.description);
+            if (ageRegExp != null) {
+                components.ageRating = ageRegExp[1];
+            }
+
 
             for (var i in data.components) {
                 switch (data.components[i].description) {
@@ -395,8 +405,6 @@ $(document).ready(function () {
                     components.format = '16:9';
                 }
             }
-
-            console.log(data);
 
             var dialog = $('<div></div>').dialog({
                 title: data.title,
