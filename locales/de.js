@@ -79,5 +79,9 @@
 	"Highlights": "Highlights",
 	"What's up today ..": "What's up today ..",
 	"Channel": "Channel",
-	"Timer deleted": "Timer deleted"
+	"Timer deleted": "Timer deleted",
+	"Delete this recording": "Delete this recording",
+	"Delete this recording?": "Delete this recording?",
+	"Recording deleted": "Recording deleted",
+	"Steffen B. for his patience with me and my question to epg and it's data": "Steffen B. for his patience with me and my question to epg and it's data"
 }

@@ -4,7 +4,8 @@ var highlights = {
     tipofday: {}
 };
 
-rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+rest.get(restfulUrl + '/channels.json?start=0&limit=20').on('complete', function(data) {
+    return;
     for (var i in data.channels) {
         rest.get(restfulUrl + '/events/' + data.channels[i].channel_id + '.json?timespan=0&start=0').on('complete',  function (epg) {
             for (var i in epg.events) {
@@ -38,10 +39,14 @@ rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
                     continue;
                 }
             }
+            
+            for (var i in highlights) {
+                console.log(highlights[i]);
+            } 
         }).on('error', function () {
             //syslog.log(syslog.LOG_ERR, 'Error getting epg for channel ' + chan);
         });
-
-        console.log(highlights);
     }
-});
+}).on('error', function (err) {
+    syslog.log(syslog.LOG_ERR, 'Error getting channels');
+});;

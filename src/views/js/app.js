@@ -373,8 +373,97 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
+        
+        var getRecordings = function (recordings) {
+            $('#RecordingsTemplate').tmpl().appendTo('#body');
+            $('#RecordingEntryTemplate').tmpl({recordings: recordings.recordings}).appendTo('#recordingslist > tbody');
+            
+            // Clean evantually binded old events
+            $('table#recordingslist > tbody > tr > td:nth-child(1)').die('click');
+            $('table#recordingslist > tbody > tr > td:nth-child(4)').die('click');
 
-        $('#RecordingsTemplate').tmpl().appendTo('#body');
+            // Bind ne events
+            $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
+                var recordNumber = $(this).attr('number');
+                
+                var dialog = $('<div></div>').dialog({
+                    title: "<%= __('Delete this recording?') %>",
+                    body: '<p>test</p>',
+                    close: true,
+                    buttons: [{
+                        text: 'Yes, I know what I do',
+                        action: function () {
+                            $(this).parent().parent().parent().dialog('hide');
+                            
+                            var deleteCb = function (data) {
+                                var dialogOk = $('<div></div>').dialog({
+                                    title: "<%= __('Recording deleted') %>",
+                                    body: '<p>test</p>',
+                                    close: true,
+                                    buttons: [{
+                                        text: 'OK',
+                                        action: 'close'
+                                    }]
+                                });
+
+                                dialogOk.dialog('show');
+                                
+                                socket.removeListener('recordingDeleted', deleteCb);
+                            };
+                            
+                            socket.on('recordingDeleted', deleteCb);
+                            
+                            socket.emit('deleteRecording', {number: recordNumber});
+                        },
+                        layout: 'danger'
+                    }, {
+                        text: 'No',
+                        action: 'close',
+                        layout: 'primary'
+                    }]
+                });
+                
+                dialog.dialog('show');
+            });
+            
+            $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
+                console.log($(this).attr('number'));
+            });
+
+            $(document).endlessScroll({
+                callback: function (p) {
+                    $('body').overlay('show');
+
+                    var getRecordingsNext = function (recordings) {
+                        if (recordings.recordings.length == 0) {
+                            $(document).unbind('scroll resize');
+                            $('body').overlay('hide');
+                            return;
+                        }
+
+                        $('#RecordingEntryTemplate').tmpl({recordings: recordings.recordings}).appendTo('#recordingslist > tbody');
+
+                        $('body').overlay('hide');
+
+                        socket.removeListener('getRecordings', getRecordingsNext);
+                    };
+
+                    socket.on('getRecordings', getRecordingsNext);
+
+                    socket.emit('getRecordings', {
+                        site: p
+                    });
+                }
+            });
+
+            $('body').overlay('hide');
+
+            socket.removeListener('getRecordings', getRecordings);
+        };
+
+        socket.on('getRecordings', getRecordings);
+
+        socket.emit('getRecordings', {site: 1});
 
         $('body').overlay('hide');
     }
