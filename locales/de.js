@@ -78,5 +78,6 @@
 	"Error creating timer": "Error creating timer",
 	"Highlights": "Highlights",
 	"What's up today ..": "What's up today ..",
-	"Channel": "Channel"
+	"Channel": "Channel",
+	"Timer deleted": "Timer deleted"
 }

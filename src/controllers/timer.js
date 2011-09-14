@@ -22,15 +22,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('createTimer', function (data) {
-        console.log('Create Timer');
-        console.log(data);
+        data = JSON.stringify(data);
 
-        rest.post(restfulUrl + '/timers.json', data).on('complete', function () {
+        rest.post(restfulUrl + '/timers',{data: data}).on('complete', function () {
             socket.emit('timerCreated');
-
-            rest.get(restfulUrl + '/timers.json').on('complete', function (data) {
-                console.log(data);
-            });
+        }).on('error', function (e) {
+            console.log(e);
+        }).on('403', function (e) {
+            console.log(e);
+        });
+    });
+    
+    socket.on('deleteTimer', function (data) {
+        rest.del(restfulUrl + '/timers/' + data.timerId).on('complete', function () {
+            socket.emit('timerDeleted');
         }).on('error', function (e) {
             console.log(e);
         }).on('403', function (e) {

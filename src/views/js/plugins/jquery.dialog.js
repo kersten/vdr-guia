@@ -145,8 +145,9 @@
                     var img = null;
 
                     for (var i in options.components.subtitles) {
-                        switch (options.components.subtitles[i].type) {
+                        switch (options.components.subtitles[i]) {
                         case 'de':
+                        case 'deu':
                             img = 'Gehoerlos.jpg';
                             break;
 
@@ -163,8 +164,9 @@
 
             var footer = $('<div></div>').addClass('modal-footer');
 
-            if (options.components.parentalRating != null) {
-                var img = 'FSK-' + options.components.parentalRating + 'J-KNZ-Print-1200-4c.jpg';
+            if (typeof(options.components) != 'undefined' && options.components.ageRating != null) {
+                var img = 'FSK-' + options.components.ageRating + 'J-KNZ-Print-1200-4c.jpg';
+
                 components.append($('<img></img>').attr('src', '/img/logos/' + img).css({
                     height: 80,
                     marginRight: 5,

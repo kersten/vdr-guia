@@ -155,12 +155,17 @@ $(document).ready(function () {
 
             // Bind ne events
             $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
+                if ($(this).attr('has_timer') == "true") {
+                    deleteTimer(this, $(this).attr('timer_id'));
+                    return;
+                }
+                
                 createTimer(this,
                     $(this).attr('title') +
                     (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
                     channelId,
                     $(this).attr('start_time'),
-                    $(this).attr('start_time') + $(this).attr('duration')
+                    parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration'))
                 );
             });
 
@@ -315,6 +320,32 @@ $(document).ready(function () {
             weekdays: '-------'
         });
     }
+    
+    function deleteTimer (element, timerId) {
+        var deleteCb = function () {
+            socket.removeListener('timerDeleted', deleteCb);
+
+            var dialog = $('<div></div>').dialog({
+                title: "<%= __('Timer deleted') %>",
+                body: '<p>test</p>',
+                close: true,
+                buttons: [{
+                    text: 'Ok',
+                    action: 'close'
+                }]
+            });
+
+            dialog.dialog('show');
+
+            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+        };
+    
+        socket.on('timerDeleted', deleteCb);
+
+        socket.emit('deleteTimer', {
+            timerId: timerId
+        });
+    }
 
     function editTimer () {
 
@@ -400,7 +431,7 @@ $(document).ready(function () {
                     break;
 
                 case 'DVB-Untertitel':
-                    components.subtitles.push(data.components[i].lang);
+                    components.subtitles.push(data.components[i].language);
                     break;
 
                 case 'HD-Video':
@@ -424,7 +455,7 @@ $(document).ready(function () {
                 }, {
                     text: 'Record',
                     action: function () {
-                        createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, data.start_time + data.duration);
+                        createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, parseFloat(data.start_time) + parseFloat(data.duration));
                     },
                     layout: 'danger'
                 }],
@@ -472,6 +503,13 @@ $(document).ready(function () {
 
         item.children().remove();
     }
+    
+    socket.on('disconnect', function() {
+        connected = false;
+        console.log('disconnected');
+        
+        console.log('Server disconnected');
+    });
 });
 
 /*
