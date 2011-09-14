@@ -62,6 +62,22 @@
                 header.append(subtitle);
             }
 
+            if (typeof(options.components) != 'undefined' && options.components.rating != null) {
+                var stars = options.components.rating.split('*').length - 1;
+
+                var starRating = $('<div></div>');
+
+                for (var i = 1; i < 6; i++) {
+                    if (i <= stars) {
+                        starRating.append($('<img></img>').attr('src', '/img/stars/rating_05.gif').css({height: 16, marginRight: 5}));
+                    } else {
+                        starRating.append($('<img></img>').attr('src', '/img/stars/rating_14.gif').css({height: 16, marginRight: 5}));
+                    }
+                }
+
+                header.append(starRating);
+            }
+
             if (typeof(options.close) != 'undefined' && options.close === true) {
                 header.append($('<a></a>').addClass("close").html('×').click(
                     function () {
@@ -147,8 +163,8 @@
 
             var footer = $('<div></div>').addClass('modal-footer');
 
-            if (options.components.ageRating != null) {
-                var img = 'FSK-' + options.components.ageRating + 'J-KNZ-Print-1200-4c.jpg';
+            if (options.components.parentalRating != null) {
+                var img = 'FSK-' + options.components.parentalRating + 'J-KNZ-Print-1200-4c.jpg';
                 components.append($('<img></img>').attr('src', '/img/logos/' + img).css({
                     height: 80,
                     marginRight: 5,

@@ -362,16 +362,22 @@ $(document).ready(function () {
                 audio: [],
                 subtitles: [],
                 rating: null,
-                ageRating: null,
+                parentalRating: null,
                 actors: [],
                 directors: [],
                 countries: []
             }
 
+            // Extract rating
+            var ratingRegExp = /\[(.*)[-\*]{0,5}\]/.exec(data.description);
+            if (ratingRegExp != null) {
+                components.rating = ratingRegExp[1];
+            }
+
             // Extract age rating
-            var ageRegExp = /\nFSK:\s(.*?)\n/.exec(data.description);
-            if (ageRegExp != null) {
-                components.ageRating = ageRegExp[1];
+            var parentalRatingRegExp = /\nFSK:\s(.*?)\n/.exec(data.description);
+            if (parentalRatingRegExp != null) {
+                components.parentalRating = parentalRatingRegExp[1];
             }
 
 
