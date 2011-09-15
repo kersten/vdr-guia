@@ -11,6 +11,7 @@
             <table class="zebra-striped" id="timerlist">
                 <thead>
                     <tr>
+                        <th style="width: 20px;">&nbsp;</th>
                         <th style="width: 100px;"><%= __('Channel') %></th>
                         <th style="width: 40px;"><%= __('Airdate') %></th>
                         <th style="width: 100px;"><%= __('Airtime') %></th>
@@ -28,6 +29,7 @@
 <script id="TimerEntryTemplate" type="text/x-jquery-tmpl">
     {{each timer}}
     <tr>
+        <td style="cursor: pointer;" timerid="${id}" onmouseout="$(this).children('img').attr('src', '/img/devine/black/Recycle-Closed.png')" onmouseover="$(this).children('img').attr('src', '/img/devine/black/Recycle-Open.png')"><img name="deleteRecord" src="/img/devine/black/Recycle-Closed.png" width="16px" height="16px" title="<%= __('Delete this timer') %>" /></td>
         <td>${channel_name}</td>
         <td>${day}</td>
         <td>${start} - ${stop}</td>

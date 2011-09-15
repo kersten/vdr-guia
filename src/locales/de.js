@@ -83,5 +83,6 @@
 	"<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.": "<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.",
 	"<strong>Timer deleted!</strong> This timer has been successfully deleted.": "<strong>Timer deleted!</strong> This timer has been successfully deleted.",
 	"<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!": "<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!",
-	"Recording deleted": "Recording deleted"
+	"Recording deleted": "Recording deleted",
+	"Delete this timer": "Delete this timer"
 }
