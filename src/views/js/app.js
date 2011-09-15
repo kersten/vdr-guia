@@ -241,6 +241,20 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Timer") %>');
+        
+        // Clean evantually binded old events
+        $('#timerlist > tbody > tr > td:nth-child(1)').die('click');
+        $('#timerlist > tbody > tr > td:nth-child(5)').die('click');
+
+        // Bind ne events
+        $('#timerlist > tbody > tr > td:nth-child(1)').live('click', function () {
+            deleteTimer(this, $(this).attr('timerid'), true);
+            return;
+        });
+
+        $('#timerlist > tbody > tr > td:nth-child(5)').live('click', function () {
+            showDetails($(this).attr('channelid'), $(this).attr('eventid'));
+        });
 
         var getTimers = function (timer) {
             $('#TimerTemplate').tmpl().appendTo('#body');
@@ -323,7 +337,7 @@ $(document).ready(function () {
         });
     }
 
-    function deleteTimer (element, timerId) {
+    function deleteTimer (element, timerId, removeEl) {
         var deleteCb = function () {
             socket.removeListener('timerDeleted', deleteCb);
 
@@ -337,6 +351,11 @@ $(document).ready(function () {
             });
 
             message.alertmessage('show');
+            
+            if (typeof(removeEl) != 'undefined' && removeEl === true) {
+                $(element).parent().fadeOut();
+                $(element).parent().remove();
+            }
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
             $(element).attr('has_timer', false);
