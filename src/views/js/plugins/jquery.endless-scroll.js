@@ -77,7 +77,7 @@
 
     if (firing === true)
     {
-      $(this).scroll(function() {
+      $(this).bind('scroll endless.scroll', function() {
         if (this == document) {
           var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
         } else {

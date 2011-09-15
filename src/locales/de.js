@@ -87,5 +87,7 @@
 	"Delete this timer": "Delete this timer",
 	"VDRManager Server has disconnected": "VDRManager Server has disconnected",
 	"The App lost the connection to the server, please try to reconnect or leave this site!": "The App lost the connection to the server, please try to reconnect or leave this site!",
-	"Reconnect": "Reconnect"
+	"Reconnect": "Reconnect",
+	"Delete this recording?": "Delete this recording?",
+	"Are you sure that you want to delete this recording? This action cannot be undone!": "Are you sure that you want to delete this recording? This action cannot be undone!"
 }

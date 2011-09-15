@@ -353,8 +353,9 @@ $(document).ready(function () {
             message.alertmessage('show');
             
             if (typeof(removeEl) != 'undefined' && removeEl === true) {
-                $(element).parent().fadeOut();
-                $(element).parent().remove();
+                $(element).parent().fadeOut(function () {
+                    $(element).parent().remove();
+                });
             }
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
@@ -425,6 +426,11 @@ $(document).ready(function () {
             };
 
             socket.on('searchResult', searchCb);
+            
+            if ($("body").height() > $(window).height()) {
+                alert("Vertical Scrollbar! D:");
+            }
+
             
             $(document).endlessScroll({
                 callback: function (p) {
@@ -537,16 +543,17 @@ $(document).ready(function () {
     }
     
     function deleteRecording (element, recordNumber) {
-        var message = $('<div></div>').alertmessage({
-            text: "<%- __('<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!') %>",
+        var message = $('<div></div>').dialog({
+            title: "<%- __('Delete this recording?') %>",
+            body: "<%- __('Are you sure that you want to delete this recording? This action cannot be undone!') %>",
             close: true,
             buttons: [{
                 text: 'Yes, I know what I do',
                 type: 'error',
                 action: function () {
-                    $(this).parent().parent().dialog('hide');
+                    $(this).parent().parent().parent().dialog('hide');
 
-                    var deleteCb = function (data) {
+                    var deleteCb = function () {
                         var dialogOk = $('<div></div>').dialog({
                             title: "<%= __('Recording deleted') %>",
                             body: '<p>test</p>',
@@ -559,8 +566,10 @@ $(document).ready(function () {
 
                         dialogOk.dialog('show');
                         
-                        $(element).fadeOut();
-                        $(element).remove();
+                        $(element).fadeOut(function () {
+                            $(element).remove();
+                        });
+                        
 
                         socket.removeListener('recordingDeleted', deleteCb);
                     };
@@ -699,7 +708,7 @@ $(document).ready(function () {
     function removeContext( item ) {
         item.unbind();
         $(window).unbind('scroll resize');
-        $(document).unbind('scroll resize');
+        $(document).unbind('scroll resize endless.scroll');
 
         item.children().remove();
     }
