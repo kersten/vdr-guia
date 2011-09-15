@@ -52,18 +52,7 @@ $(document).ready(function () {
         socket.on('login.done', function (data) {
             if (data.successful) {
                 getMenu();
-                getAbout();
-
-                /*$.ajax({
-                    type: 'POST',
-                    url: '/menu',
-                    success: function (res) {
-                        $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
-                        $('#menu').append(res);
-                    }
-                });
-
-                load();*/
+                loadHash();
             } else {
                 $('body').overlay('hide');
 
@@ -305,18 +294,17 @@ $(document).ready(function () {
 
         var createCb = function () {
             socket.removeListener('timerCreated', createCb);
-
-            var dialog = $('<div></div>').dialog({
-                title: "<%= __('Timer created') %>",
-                body: '<p>test</p>',
+            
+            var message = $('<div></div>').alertmessage({
                 close: true,
+                text: "<%- __('<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.') %>",
                 buttons: [{
-                    text: 'Ok',
+                    text: 'OK',
                     action: 'close'
                 }]
             });
 
-            dialog.dialog('show');
+            message.alertmessage('show');
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
             $(element).attr('has_timer', true);
@@ -336,14 +324,11 @@ $(document).ready(function () {
     }
 
     function deleteTimer (element, timerId) {
-        console.log('delete timer: ' + timerId);
-
         var deleteCb = function () {
             socket.removeListener('timerDeleted', deleteCb);
 
-            var dialog = $('<div></div>').dialog({
-                title: "<%= __('Timer deleted') %>",
-                body: '<p>test</p>',
+            var message = $('<div></div>').alertmessage({
+                text: "<%- __('<strong>Timer deleted!</strong> This timer has been successfully deleted.') %>",
                 close: true,
                 buttons: [{
                     text: 'Ok',
@@ -351,7 +336,7 @@ $(document).ready(function () {
                 }]
             });
 
-            dialog.dialog('show');
+            message.alertmessage('show');
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
             $(element).attr('has_timer', false);
@@ -373,7 +358,93 @@ $(document).ready(function () {
 
         $(document).attr('title', 'VDRManager // <%= __("Search") %>');
 
-        $('#SearchTemplate').tmpl().appendTo('#body')
+        $('#SearchTemplate').tmpl().appendTo('#body');
+        
+        // Clean evantually binded old events
+        $('div#searchresultlist > table > tbody > tr > td:nth-child(4)').die('click');
+        $('div#searchresultlist > table > tbody > tr > td:nth-child(1)').die('click');
+
+        // Bind ne events
+        $('div#searchresultlist > table > tbody > tr > td:nth-child(1)').live('click', function () {
+            if ($(this).attr('has_timer') == "true") {
+                deleteTimer(this, $(this).attr('timer_id'));
+                return;
+            }
+
+            createTimer(this,
+                $(this).attr('title') +
+                (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
+                $(this).attr('channelid'),
+                $(this).attr('start_time'),
+                parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration'))
+            );
+        });
+
+        $('div#searchresultlist > table > tbody > tr > td:nth-child(4)').live('click', function () {
+            showDetails($(this).attr('channelid'), $(this).attr('eventid'));
+        });
+
+        // Unbind click
+        $('#submitSearch').unbind('click');
+
+        $('#submitSearch').click(function () {
+            $('body').overlay('show');
+            $('#searchresultlist > table > tbody').empty();
+
+            var searchCb = function (data) {
+                if (data.events.length == 0) {
+                    $('#SearchResultEmptyTemplate').tmpl().appendTo('#body');
+                } else {
+                    $('#SearchTableTemplate').tmpl().appendTo('#body');
+
+                    $('#SearchEntryTemplate').tmpl(data).appendTo('#searchresultlist > table > tbody');
+                }
+                
+                $('body').overlay('hide');
+
+                socket.removeListener('searchResult', searchCb);
+            };
+
+            socket.on('searchResult', searchCb);
+            
+            $(document).endlessScroll({
+                callback: function (p) {
+                    $('body').overlay('show');
+
+                    var searchCbNext = function (data) {
+                        if (data.events.length == 0) {
+                            $(document).unbind('scroll resize');
+                            $('body').overlay('hide');
+                            return;
+                        }
+
+                        $('#SearchEntryTemplate').tmpl(data).appendTo('#searchresultlist > table > tbody');
+
+                        $('body').overlay('hide');
+
+                        socket.removeListener('searchResult', searchCbNext);
+                    };
+
+                    socket.on('searchResult', searchCbNext);
+
+                    socket.emit('search', {
+                        site: p,
+                        term: $('#searchterm').val(),
+                        subtitle: ($('#searchSubtitle').attr('checked') != 'undefined' && $('#searchSubtitle').attr('checked') == 'checked') ? true : false,
+                        description: ($('#searchDescription').attr('checked') != 'undefined' && $('#searchDescription').attr('checked') == 'checked') ? true : false
+                    });
+                }
+            });
+
+            socket.emit('search', {
+                site: 1,
+                term: $('#searchterm').val(),
+                subtitle: ($('#searchSubtitle').attr('checked') != 'undefined' && $('#searchSubtitle').attr('checked') == 'checked') ? true : false,
+                description: ($('#searchDescription').attr('checked') != 'undefined' && $('#searchDescription').attr('checked') == 'checked') ? true : false
+            });
+
+            return false;
+        });
 
         $('body').overlay('hide');
     }
@@ -401,46 +472,7 @@ $(document).ready(function () {
 
             // Bind ne events
             $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
-                var recordNumber = $(this).attr('number');
-
-                var dialog = $('<div></div>').dialog({
-                    title: "<%= __('Delete this recording?') %>",
-                    body: '<p>test</p>',
-                    close: true,
-                    buttons: [{
-                        text: 'Yes, I know what I do',
-                        action: function () {
-                            $(this).parent().parent().parent().dialog('hide');
-
-                            var deleteCb = function (data) {
-                                var dialogOk = $('<div></div>').dialog({
-                                    title: "<%= __('Recording deleted') %>",
-                                    body: '<p>test</p>',
-                                    close: true,
-                                    buttons: [{
-                                        text: 'OK',
-                                        action: 'close'
-                                    }]
-                                });
-
-                                dialogOk.dialog('show');
-
-                                socket.removeListener('recordingDeleted', deleteCb);
-                            };
-
-                            socket.on('recordingDeleted', deleteCb);
-
-                            socket.emit('deleteRecording', {number: recordNumber});
-                        },
-                        layout: 'danger'
-                    }, {
-                        text: 'No',
-                        action: 'close',
-                        layout: 'primary'
-                    }]
-                });
-
-                dialog.dialog('show');
+                deleteRecording($(this).parent(), $(this).attr('number'));
             });
 
             $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
@@ -483,6 +515,49 @@ $(document).ready(function () {
         socket.emit('getRecordings', {site: 1});
 
         $('body').overlay('hide');
+    }
+    
+    function deleteRecording (element, recordNumber) {
+        var message = $('<div></div>').alertmessage({
+            text: "<%- __('<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!') %>",
+            close: true,
+            buttons: [{
+                text: 'Yes, I know what I do',
+                type: 'error',
+                action: function () {
+                    $(this).parent().parent().dialog('hide');
+
+                    var deleteCb = function (data) {
+                        var dialogOk = $('<div></div>').dialog({
+                            title: "<%= __('Recording deleted') %>",
+                            body: '<p>test</p>',
+                            close: true,
+                            buttons: [{
+                                text: 'OK',
+                                action: 'close'
+                            }]
+                        });
+
+                        dialogOk.dialog('show');
+                        
+                        $(element).fadeOut();
+                        $(element).remove();
+
+                        socket.removeListener('recordingDeleted', deleteCb);
+                    };
+
+                    socket.on('recordingDeleted', deleteCb);
+
+                    socket.emit('deleteRecording', {number: recordNumber});
+                },
+                layout: 'danger'
+            }, {
+                text: 'No',
+                action: 'close'
+            }]
+        });
+
+        message.dialog('show');
     }
 
     function showDetails (channelid, eventid) {

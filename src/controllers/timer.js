@@ -3,8 +3,6 @@ io.sockets.on('connection', function (socket) {
         var start = (data.site - 1) * config.app.entries;
 
         rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
-            console.log(data);
-
             for (var i in data.timers) {
                 var start = new Date(data.timers[i].start_timestamp);
                 var stop = new Date(data.timers[i].stop_timestamp);

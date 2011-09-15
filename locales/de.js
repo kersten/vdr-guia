@@ -83,5 +83,10 @@
 	"Delete this recording": "Delete this recording",
 	"Delete this recording?": "Delete this recording?",
 	"Recording deleted": "Recording deleted",
-	"Steffen B. for his patience with me and my question to epg and it's data": "Steffen B. for his patience with me and my question to epg and it's data"
+	"Steffen B. for his patience with me and my question to epg and it's data": "Steffen B. for his patience with me and my question to epg and it's data",
+	"Search in subtitle": "Search in subtitle",
+	"Your search did not match anything, please try again!": "Your search did not match anything, please try again!",
+	"<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.": "<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.",
+	"<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!": "<strong>Delete this recording?</strong> Are you sure that you want to delete this recording? This action cannot be undone!",
+	"<strong>Timer deleted!</strong> This timer has been successfully deleted.": "<strong>Timer deleted!</strong> This timer has been successfully deleted."
 }

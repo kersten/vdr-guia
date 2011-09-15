@@ -20,6 +20,16 @@ module.exports = {
             layout: false
         });
     },
+    "plugins/jquery.alertmessage.js": function (req, res) {
+        res.render('js/plugins/jquery.alertmessage.js', {
+            layout: false
+        });
+    },
+    "plugins/jquery.fixedcenter.js": function (req, res) {
+        res.render('js/plugins/jquery.fixedcenter.js', {
+            layout: false
+        });
+    },
     "plugins/jquery.endless-scroll.js": function (req, res) {
         res.render('js/plugins/jquery.endless-scroll.js', {
             layout: false

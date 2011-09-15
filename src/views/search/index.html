@@ -11,18 +11,18 @@
                 <form>
                     <div class="clearfix">
                         <div class="input">
-                            <input id="q" class="xlarge" type="text" size="30" name="q"/>
-                            <button class="btn small primary"><%= __('Search') %></button>
+                            <input id="searchterm" class="xlarge" type="text" size="30" name="term"/>
+                            <button id="submitSearch" class="btn small primary"><%= __('Search') %></button>
                         </div>
                     </div>
                     <div class="clearfix">
                         <div class="input">
                         <label style="white-space: nowrap; width: 140px; text-align: left;">
-                            <input type="checkbox" id="s" value="s" name="s"/>
-                            <span><%= __('Search in short text') %></span>
+                            <input id="searchSubtitle" type="checkbox" />
+                            <span><%= __('Search in subtitle') %></span>
                         </label>
                         <label style="white-space: nowrap; width: 140px; text-align: left;">
-                            <input type="checkbox" id="d" value="d" name="d"/>
+                            <input id="searchDescription" type="checkbox" />
                             <span><%= __('Search in description') %></span>
                         </label>
                         </div>
@@ -54,12 +54,22 @@
 </script>
 
 <script id="SearchEntryTemplate" type="text/x-jquery-tmpl">
-    {{each epg}}
+    {{each events}}
     <tr>
         <td style="width: 20px; text-align: center;" channelid="${channel_id}" eventid="${id}" title="${title}" short_text="${short_text}" start_time="${start_time}" duration="${duration}"><img class="btn_timer" style="cursor: pointer;" src="/img/devine/black/{{if timer_exists && timer_active == true}}Circle-2.png{{else}}Circle.png{{/if}}" width="16px" height="16px" title="<%= __('Record this show') %>" /></td>
         <td>${day}</td>
         <td>${start} - ${stop}</td>
-        <td style="cursor: pointer;" channelid="${channel_id}" eventid="${id}"><a>${title}</a></td>
+        <td style="cursor: pointer;" channelid="${channel}" eventid="${id}"><a>${title}</a></td>
     </tr>
     {{/each}}
+</script>
+
+<script id="SearchResultEmptyTemplate" type="text/x-jquery-tmpl">
+    <div class="row">
+        <div class="span16 columns" id="searchresultlist">
+            <p>
+                <strong><%= __('Your search did not match anything, please try again!') %></strong>
+            </p>
+        </div>
+    </div>
 </script>
