@@ -89,5 +89,9 @@
 	"The App lost the connection to the server, please try to reconnect or leave this site!": "The App lost the connection to the server, please try to reconnect or leave this site!",
 	"Reconnect": "Reconnect",
 	"Delete this recording?": "Delete this recording?",
-	"Are you sure that you want to delete this recording? This action cannot be undone!": "Are you sure that you want to delete this recording? This action cannot be undone!"
+	"Are you sure that you want to delete this recording? This action cannot be undone!": "Are you sure that you want to delete this recording? This action cannot be undone!",
+	"Timer created!": "Timer created!",
+	"Your timer was successfully created. This show will now be recorded.": "Your timer was successfully created. This show will now be recorded."
+}	"Timer deleted!": "Timer deleted!",
+	"This timer has been successfully deleted.": "This timer has been successfully deleted."
 }

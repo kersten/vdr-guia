@@ -13,7 +13,7 @@
         <div class="span10 columns" id="epglist">
             &nbsp;
         </div>
-        <div class="span6 columns" id="channellist" style="overflow: auto; position: absolute;">
+        <div class="span6 columns" id="channellist" style="overflow: auto;">
             <table class="zebra-striped"> 
                 <thead>
                     <tr>
@@ -32,4 +32,31 @@
             </table>
         </div>
     </div>
+</script>
+
+<script id="EpgTableTemplate" type="text/x-jquery-tmpl">
+    <table class="zebra-striped">
+        <thead>
+            <tr>
+                <th style="width: 20px;">&nbsp;</th>
+                <th style="width: 40px;"><%= __('Airdate') %></th>
+                <th style="width: 100px;"><%= __('Airtime') %></th>
+                <th><%= __('Title') %></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</script>
+
+<script id="EpgEntryTemplate" type="text/x-jquery-tmpl">
+    {{each epg}}
+    <tr>
+        <td style="width: 20px; text-align: center;" channelid="${channel_id}" eventid="${id}" title="${title}" short_text="${short_text}" start_time="${start_time}" duration="${duration}" {{if timer_exists && timer_active == true}}has_timer="true" timer_id="${timer_id}"{{else}}has_timer="false"{{/if}}><img class="btn_timer" style="cursor: pointer;" src="/img/devine/black/{{if timer_exists && timer_active == true}}Circle-2.png{{else}}Circle.png{{/if}}" width="16px" height="16px" title="<%= __('Record this show') %>" /></td>
+        <td>${day}</td>
+        <td>${start} - ${stop}</td>
+        <td style="cursor: pointer;" channelid="${channel_id}" eventid="${id}"><a>${title}</a></td>
+    </tr>
+    {{/each}}
 </script>

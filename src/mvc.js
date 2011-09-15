@@ -89,6 +89,8 @@ function bootApplication (app, io) {
         }
 
         bootControllers(app);
+    }).on('error', function () {
+        console.log('Something went wrong with restful api');
     });
 
     // Some dynamic view helpers

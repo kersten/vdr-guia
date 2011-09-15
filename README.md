@@ -9,6 +9,8 @@
     git clone git://github.com/kersten/vdr-manager.git ./vdr-manager
     cd vdr-manager
     npm install iconv
+    npm install socket.io
+    npm install node-syslog
 
 ## Configuration
 

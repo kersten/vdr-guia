@@ -6,7 +6,7 @@
     </h1>
     </div>
     <div class="row">
-        <div class="span16 columns" id="searchresultlist">
+        <div class="span16 columns">
             <div class="well">
                 <form>
                     <div class="clearfix">
@@ -31,32 +31,33 @@
             </div>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="span16 columns" id="searchresultlist">
+        </div>
+    </div>
 </script>
 
 <script id="SearchTableTemplate" type="text/x-jquery-tmpl">
-    <div class="row">
-        <div class="span16 columns" id="searchresultlist">
-            <table class="zebra-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 20px;">&nbsp;</th>
-                        <th style="width: 40px;"><%= __('Airdate') %></th>
-                        <th style="width: 100px;"><%= __('Airtime') %></th>
-                        <th><%= __('Title') %></th>
-                    </tr>
-                </thead>
-                <tbody>
+    <table class="zebra-striped">
+        <thead>
+            <tr>
+                <th style="width: 20px;">&nbsp;</th>
+                <th style="width: 40px;"><%= __('Airdate') %></th>
+                <th style="width: 100px;"><%= __('Airtime') %></th>
+                <th><%= __('Title') %></th>
+            </tr>
+        </thead>
+        <tbody>
 
-                </tbody>
-            </table>
-        </div>
-    </div>
+        </tbody>
+    </table>
 </script>
 
 <script id="SearchEntryTemplate" type="text/x-jquery-tmpl">
     {{each events}}
     <tr>
-        <td style="width: 20px; text-align: center;" channelid="${channel_id}" eventid="${id}" title="${title}" short_text="${short_text}" start_time="${start_time}" duration="${duration}"><img class="btn_timer" style="cursor: pointer;" src="/img/devine/black/{{if timer_exists && timer_active == true}}Circle-2.png{{else}}Circle.png{{/if}}" width="16px" height="16px" title="<%= __('Record this show') %>" /></td>
+        <td style="width: 20px; text-align: center;" channelid="${channel}" eventid="${id}" title="${title}" short_text="${short_text}" start_time="${start_time}" duration="${duration}" {{if timer_exists && timer_active == true}}has_timer="true" timer_id="${timer_id}"{{else}}has_timer="false"{{/if}}><img class="btn_timer" style="cursor: pointer;" src="/img/devine/black/{{if timer_exists && timer_active == true}}Circle-2.png{{else}}Circle.png{{/if}}" width="16px" height="16px" title="<%= __('Record this show') %>" /></td>
         <td>${day}</td>
         <td>${start} - ${stop}</td>
         <td style="cursor: pointer;" channelid="${channel}" eventid="${id}"><a>${title}</a></td>

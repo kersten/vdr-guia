@@ -193,8 +193,10 @@ $(document).ready(function () {
                     });
                 }
             });
+            
+            enableScrollbar();
 
-            var channelList = $( "#channellist" );
+            var channelList = $('#channellist');
 
             var view = $( window );
 
@@ -206,6 +208,7 @@ $(document).ready(function () {
                     channelList.css({
                         position: 'fixed',
                         top: 40,
+                        left: channelList.offset().left - 20,
                         height: $(window).height()
                     });
 
@@ -215,7 +218,7 @@ $(document).ready(function () {
                 } else if ((viewTop + 40 <= channelList.data('top')) && channelList.css('position') == 'fixed') {
                     // Toggle the message classes.
                     channelList.css({
-                        position: 'absolute',
+                        position: '',
                         top: channelList.data('top'),
                         height: channelList.data('height')
                     });
@@ -285,6 +288,8 @@ $(document).ready(function () {
                     });
                 }
             });
+            
+            enableScrollbar();
 
             $('body').overlay('hide');
 
@@ -309,16 +314,17 @@ $(document).ready(function () {
         var createCb = function () {
             socket.removeListener('timerCreated', createCb);
             
-            var message = $('<div></div>').alertmessage({
+            var message = $('<div></div>').dialog({
+                title: "<%- __('Timer created!') %>",
                 close: true,
-                text: "<%- __('<strong>Timer created!</strong> Your timer was successfully created. This show will now be recorded.') %>",
+                body: "<%- __('Your timer was successfully created. This show will now be recorded.') %>",
                 buttons: [{
                     text: 'OK',
                     action: 'close'
                 }]
             });
 
-            message.alertmessage('show');
+            message.dialog('show');
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
             $(element).attr('has_timer', true);
@@ -341,8 +347,9 @@ $(document).ready(function () {
         var deleteCb = function () {
             socket.removeListener('timerDeleted', deleteCb);
 
-            var message = $('<div></div>').alertmessage({
-                text: "<%- __('<strong>Timer deleted!</strong> This timer has been successfully deleted.') %>",
+            var message = $('<div></div>').dialog({
+                title: "<%- __('Timer deleted!') %>",
+                body: "<%- __('This timer has been successfully deleted.') %>",
                 close: true,
                 buttons: [{
                     text: 'Ok',
@@ -350,7 +357,7 @@ $(document).ready(function () {
                 }]
             });
 
-            message.alertmessage('show');
+            message.dialog('show');
             
             if (typeof(removeEl) != 'undefined' && removeEl === true) {
                 $(element).parent().fadeOut(function () {
@@ -401,6 +408,11 @@ $(document).ready(function () {
         });
 
         $('div#searchresultlist > table > tbody > tr > td:nth-child(4)').live('click', function () {
+            if ($(this).attr('has_timer') == "true") {
+                showDetails($(this).attr('channelid'), $(this).attr('eventid'), $(this).attr('timer_id'));
+                return;
+            }
+            
             showDetails($(this).attr('channelid'), $(this).attr('eventid'));
         });
 
@@ -409,13 +421,13 @@ $(document).ready(function () {
 
         $('#submitSearch').click(function () {
             $('body').overlay('show');
-            $('#searchresultlist > table > tbody').empty();
+            $('#searchresultlist').empty();
 
             var searchCb = function (data) {
                 if (data.events.length == 0) {
-                    $('#SearchResultEmptyTemplate').tmpl().appendTo('#body');
+                    $('#SearchResultEmptyTemplate').tmpl().appendTo('#searchresultlist');
                 } else {
-                    $('#SearchTableTemplate').tmpl().appendTo('#body');
+                    $('#SearchTableTemplate').tmpl().appendTo('#searchresultlist');
 
                     $('#SearchEntryTemplate').tmpl(data).appendTo('#searchresultlist > table > tbody');
                 }
@@ -426,11 +438,6 @@ $(document).ready(function () {
             };
 
             socket.on('searchResult', searchCb);
-            
-            if ($("body").height() > $(window).height()) {
-                alert("Vertical Scrollbar! D:");
-            }
-
             
             $(document).endlessScroll({
                 callback: function (p) {
@@ -460,6 +467,8 @@ $(document).ready(function () {
                     });
                 }
             });
+            
+            enableScrollbar();
 
             socket.emit('search', {
                 site: 1,
@@ -529,6 +538,8 @@ $(document).ready(function () {
                     });
                 }
             });
+            
+            enableScrollbar();
 
             $('body').overlay('hide');
 
@@ -588,7 +599,7 @@ $(document).ready(function () {
         message.dialog('show');
     }
 
-    function showDetails (channelid, eventid) {
+    function showDetails (channelid, eventid, timerId) {
         socket.emit('getDetails', {
             channelid: channelid,
             eventid: eventid
@@ -651,6 +662,24 @@ $(document).ready(function () {
                     components.format = '16:9';
                 }
             }
+            
+            if (!data.timer_exists) {
+                var recordButton = {
+                    text: 'Record',
+                    action: function () {
+                        createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, parseFloat(data.start_time) + parseFloat(data.duration));
+                    },
+                    layout: 'danger'
+                };
+            } else {
+                var recordButton = {
+                    text: 'Delete timer',
+                    action: function () {
+                        deleteTimer(dialog, timerId);
+                    },
+                    layout: 'danger'
+                };
+            }
 
             var dialog = $('<div></div>').dialog({
                 title: data.title,
@@ -661,13 +690,7 @@ $(document).ready(function () {
                 buttons: [{
                     text: 'Ok',
                     action: 'close'
-                }, {
-                    text: 'Record',
-                    action: function () {
-                        createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, parseFloat(data.start_time) + parseFloat(data.duration));
-                    },
-                    layout: 'danger'
-                }],
+                }, recordButton],
                 onClose: function () {
 
                 }
@@ -704,13 +727,25 @@ $(document).ready(function () {
 
         $('body').overlay('hide');
     }
+    
+    var checkScrollbar = null;
 
     function removeContext( item ) {
         item.unbind();
         $(window).unbind('scroll resize');
         $(document).unbind('scroll resize endless.scroll');
+        
+        clearTimeout(checkScrollbar);
 
         item.children().remove();
+    }
+    
+    function enableScrollbar () {
+        if ($("body").height() < $(window).height()) {
+            $(document).trigger('scroll');
+            
+            checkScrollbar = setTimeout(enableScrollbar, 1000);
+        }
     }
 
     socket.on('disconnect', function() {
