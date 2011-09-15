@@ -705,10 +705,17 @@ $(document).ready(function () {
     }
 
     socket.on('disconnect', function() {
-        connected = false;
-        console.log('disconnected');
+        var dialog = $('<div></div>').dialog({
+            title: "<%= __('VDRManager Server has disconnected') %>",
+            body: '<p><%= __("The App lost the connection to the server, please try to reconnect or leave this site!") %></p>',
+            close: true,
+            buttons: [{
+                text: '<%= __("Reconnect") %>',
+                action: 'close'
+            }]
+        });
 
-        console.log('Server disconnected');
+        dialog.dialog('show');
     });
 });
 
