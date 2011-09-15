@@ -24,15 +24,16 @@ io.sockets.on('connection', function (socket) {
     socket.on('createTimer', function (data) {
         data = JSON.stringify(data);
 
-        rest.post(restfulUrl + '/timers',{data: data}).on('complete', function () {
+        rest.post(restfulUrl + '/timers',{data: data}).on('complete', function (data) {
             socket.emit('timerCreated');
+            console.log(data);
         }).on('error', function (e) {
             console.log(e);
         }).on('403', function (e) {
             console.log(e);
         });
     });
-    
+
     socket.on('deleteTimer', function (data) {
         rest.del(restfulUrl + '/timers/' + data.timerId).on('complete', function () {
             socket.emit('timerDeleted');

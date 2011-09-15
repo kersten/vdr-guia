@@ -125,7 +125,10 @@ $(document).ready(function () {
                 channels: channels
             }).appendTo('#body');
 
-            $('#channellist').css('height', $(window).height() - $('#channellist').offset().top);
+            $('#channellist').css('height', $(window).height() - $('#channellist').offset().top).data({
+                height: $(window).height() - $('#channellist').offset().top,
+                top: $('#channellist').offset().top
+            });
 
             $('div#channellist > table > tbody > tr').click(function () {
                 $('body').overlay('show');
@@ -159,7 +162,7 @@ $(document).ready(function () {
                     deleteTimer(this, $(this).attr('timer_id'));
                     return;
                 }
-                
+
                 createTimer(this,
                     $(this).attr('title') +
                     (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
@@ -202,25 +205,35 @@ $(document).ready(function () {
                 }
             });
 
-            var message = $( "#channellist" );
-            var originalMessageTop = message.offset().top;
+            var channelList = $( "#channellist" );
+
             var view = $( window );
 
             view.bind("scroll resize", function () {
                 var viewTop = view.scrollTop();
 
-                if ((viewTop + 40 > originalMessageTop) && message.css('position') != 'fixed') {
+                if ((viewTop + 40 > channelList.data('top')) && channelList.css('position') != 'fixed') {
                     // Toggle the message classes.
-                    message.css({position: 'fixed', top: 40});
+                    channelList.css({
+                        position: 'fixed',
+                        top: 40,
+                        height: $(window).height()
+                    });
 
                     // Check to see if the view has scroll back up
                     // above the message AND that the message is
                     // currently fixed.
-                } else if ((viewTop + 40 <= originalMessageTop) && message.css('position') == 'fixed') {
+                } else if ((viewTop + 40 <= channelList.data('top')) && channelList.css('position') == 'fixed') {
                     // Toggle the message classes.
-                    message.css({position: 'absolute', top: originalMessageTop});
+                    channelList.css({
+                        position: 'absolute',
+                        top: channelList.data('top'),
+                        height: channelList.data('height')
+                    });
                 }
             });
+
+            $(window).trigger('scroll');
 
             $('body').overlay('hide');
 
@@ -306,6 +319,7 @@ $(document).ready(function () {
             dialog.dialog('show');
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
+            $(element).attr('has_timer', true);
         };
 
         socket.on('timerCreated', createCb);
@@ -320,8 +334,10 @@ $(document).ready(function () {
             weekdays: '-------'
         });
     }
-    
+
     function deleteTimer (element, timerId) {
+        console.log('delete timer: ' + timerId);
+
         var deleteCb = function () {
             socket.removeListener('timerDeleted', deleteCb);
 
@@ -338,8 +354,9 @@ $(document).ready(function () {
             dialog.dialog('show');
 
             $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+            $(element).attr('has_timer', false);
         };
-    
+
         socket.on('timerDeleted', deleteCb);
 
         socket.emit('deleteTimer', {
@@ -373,11 +390,11 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
-        
+
         var getRecordings = function (recordings) {
             $('#RecordingsTemplate').tmpl().appendTo('#body');
             $('#RecordingEntryTemplate').tmpl({recordings: recordings.recordings}).appendTo('#recordingslist > tbody');
-            
+
             // Clean evantually binded old events
             $('table#recordingslist > tbody > tr > td:nth-child(1)').die('click');
             $('table#recordingslist > tbody > tr > td:nth-child(4)').die('click');
@@ -385,7 +402,7 @@ $(document).ready(function () {
             // Bind ne events
             $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
                 var recordNumber = $(this).attr('number');
-                
+
                 var dialog = $('<div></div>').dialog({
                     title: "<%= __('Delete this recording?') %>",
                     body: '<p>test</p>',
@@ -394,7 +411,7 @@ $(document).ready(function () {
                         text: 'Yes, I know what I do',
                         action: function () {
                             $(this).parent().parent().parent().dialog('hide');
-                            
+
                             var deleteCb = function (data) {
                                 var dialogOk = $('<div></div>').dialog({
                                     title: "<%= __('Recording deleted') %>",
@@ -407,12 +424,12 @@ $(document).ready(function () {
                                 });
 
                                 dialogOk.dialog('show');
-                                
+
                                 socket.removeListener('recordingDeleted', deleteCb);
                             };
-                            
+
                             socket.on('recordingDeleted', deleteCb);
-                            
+
                             socket.emit('deleteRecording', {number: recordNumber});
                         },
                         layout: 'danger'
@@ -422,10 +439,10 @@ $(document).ready(function () {
                         layout: 'primary'
                     }]
                 });
-                
+
                 dialog.dialog('show');
             });
-            
+
             $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
                 console.log($(this).attr('number'));
             });
@@ -592,11 +609,11 @@ $(document).ready(function () {
 
         item.children().remove();
     }
-    
+
     socket.on('disconnect', function() {
         connected = false;
         console.log('disconnected');
-        
+
         console.log('Server disconnected');
     });
 });
