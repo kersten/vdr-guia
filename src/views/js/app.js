@@ -138,6 +138,7 @@ $(document).ready(function () {
         removeContext($('#epglist'));
 
         var getEpg = function (epg) {
+            $('#epglist').empty();
             $('#EpgTableTemplate').tmpl().appendTo('#epglist');
             $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
 
