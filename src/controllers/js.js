@@ -5,6 +5,11 @@ module.exports = {
             restfulUrl: restfulUrl
         });
     },
+    "vdr/manager/timer.js": function (req, res) {
+        res.render('js/vdr/manager/timer.js', {
+            layout: false
+        });
+    },
     "jquery-1.6.2.min.js": function (req, res) {
         res.render('js/jquery-1.6.2.min.js', {
             layout: false

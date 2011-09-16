@@ -148,18 +148,56 @@ $(document).ready(function () {
 
             // Bind ne events
             $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
+                var element = this;
+                
                 if ($(this).attr('has_timer') == "true") {
-                    deleteTimer(this, $(this).attr('timer_id'));
+                    $.vdrmanager.timer.remove(socket, {
+                        timerId: $(this).attr('timer_id'),
+                        success: function () {
+                            var message = $('<div></div>').dialog({
+                                title: "<%- __('Timer deleted!') %>",
+                                body: "<%- __('This timer has been successfully deleted.') %>",
+                                close: true,
+                                buttons: [{
+                                    text: 'Ok',
+                                    action: 'close'
+                                }]
+                            });
+
+                            message.dialog('show');
+
+                            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+                            $(element).attr('has_timer', false);
+                        }
+                    });
+                    
                     return;
                 }
+                
+                $.vdrmanager.timer.create(socket, {
+                    flags: 1,
+                    file: $(this).attr('title') + (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
+                    start: $(this).attr('start_time'),
+                    stop: parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration')),
+                    channel: channelId,
+                    weekdays: '-------',
+                    success: function () {
+                        var message = $('<div></div>').dialog({
+                            title: "<%- __('Timer created!') %>",
+                            close: true,
+                            body: "<%- __('Your timer was successfully created. This show will now be recorded.') %>",
+                            buttons: [{
+                                text: 'OK',
+                                action: 'close'
+                            }]
+                        });
 
-                createTimer(this,
-                    $(this).attr('title') +
-                    (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
-                    channelId,
-                    $(this).attr('start_time'),
-                    parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration'))
-                );
+                        message.dialog('show');
+
+                        $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
+                        $(element).attr('has_timer', true);
+                    }
+                });
             });
 
             $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
@@ -252,7 +290,33 @@ $(document).ready(function () {
 
         // Bind ne events
         $('#timerlist > tbody > tr > td:nth-child(1)').live('click', function () {
-            deleteTimer(this, $(this).attr('timerid'), true);
+            var element = this;
+            
+            $.vdrmanager.timer.remove(socket, {
+                timerId: $(this).attr('timerid'),
+                success: function () {
+                    var message = $('<div></div>').dialog({
+                        title: "<%- __('Timer deleted!') %>",
+                        body: "<%- __('This timer has been successfully deleted.') %>",
+                        close: true,
+                        buttons: [{
+                            text: 'Ok',
+                            action: 'close'
+                        }]
+                    });
+
+                    message.dialog('show');
+
+                    if (typeof(removeEl) != 'undefined' && removeEl === true) {
+                        $(element).parent().fadeOut(function () {
+                            $(element).parent().remove();
+                        });
+                    }
+
+                    $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+                    $(element).attr('has_timer', false);
+                }
+            });
             return;
         });
 
@@ -300,85 +364,6 @@ $(document).ready(function () {
         socket.on('getTimers', getTimers);
 
         socket.emit('getTimers', {site: 1});
-    }
-
-    function createTimer (element, filename, channelid, start, stop) {
-        var date = new Date(start * 1000);
-
-        var startTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
-        var startDate = date.getFullYear() + '-' + (((date.getMonth() + 1 < 10) ? '0' : '') + (date.getMonth() + 1)) + '-' + ((date.getDate() < 10) ? 0 : '') + date.getDate();
-
-        date = new Date(stop * 1000);
-
-        var endTime = ((date.getHours() < 10) ? '0' : '') + date.getHours() + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
-
-        var createCb = function () {
-            socket.removeListener('timerCreated', createCb);
-            
-            var message = $('<div></div>').dialog({
-                title: "<%- __('Timer created!') %>",
-                close: true,
-                body: "<%- __('Your timer was successfully created. This show will now be recorded.') %>",
-                buttons: [{
-                    text: 'OK',
-                    action: 'close'
-                }]
-            });
-
-            message.dialog('show');
-
-            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
-            $(element).attr('has_timer', true);
-        };
-
-        socket.on('timerCreated', createCb);
-
-        socket.emit('createTimer', {
-            flags: 1,
-            file: filename,
-            start: startTime,
-            stop: endTime,
-            day: startDate,
-            channel: channelid,
-            weekdays: '-------'
-        });
-    }
-
-    function deleteTimer (element, timerId, removeEl) {
-        var deleteCb = function () {
-            socket.removeListener('timerDeleted', deleteCb);
-
-            var message = $('<div></div>').dialog({
-                title: "<%- __('Timer deleted!') %>",
-                body: "<%- __('This timer has been successfully deleted.') %>",
-                close: true,
-                buttons: [{
-                    text: 'Ok',
-                    action: 'close'
-                }]
-            });
-
-            message.dialog('show');
-            
-            if (typeof(removeEl) != 'undefined' && removeEl === true) {
-                $(element).parent().fadeOut(function () {
-                    $(element).parent().remove();
-                });
-            }
-
-            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
-            $(element).attr('has_timer', false);
-        };
-
-        socket.on('timerDeleted', deleteCb);
-
-        socket.emit('deleteTimer', {
-            timerId: timerId
-        });
-    }
-
-    function editTimer () {
-
     }
 
     function getSearch () {
