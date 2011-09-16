@@ -51,7 +51,7 @@ jQuery.extend({
                     start: parseInt(startTime),
                     stop: parseInt(endTime),
                     day: startDate,
-                    channel: options.channelid,
+                    channel: options.channel,
                     weekdays: options.weekdays
                 });
             },

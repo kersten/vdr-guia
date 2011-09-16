@@ -166,7 +166,7 @@ $(document).ready(function () {
 
                             message.dialog('show');
 
-                            $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+                            $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle.png');
                             $(element).attr('has_timer', false);
                         }
                     });
@@ -194,7 +194,7 @@ $(document).ready(function () {
 
                         message.dialog('show');
 
-                        $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle-2.png');
+                        $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle-2.png');
                         $(element).attr('has_timer', true);
                     }
                 });
@@ -313,7 +313,7 @@ $(document).ready(function () {
                         });
                     }
 
-                    $(element).children('.btn_timer').attr('src', '/img/devine/black/Circle.png');
+                    $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle.png');
                     $(element).attr('has_timer', false);
                 }
             });

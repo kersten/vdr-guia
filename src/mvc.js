@@ -9,7 +9,8 @@ var fs = require('fs'),
     config = require('./etc/config'),
     monomi = require("monomi"),
     rest = require('restler'),
-    wol = require('wake_on_lan');
+    wol = require('wake_on_lan'),
+    thetvdb = require('./lib/thetvdb.org');
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -79,6 +80,10 @@ function bootApplication (app, io) {
     };
     global.io = io;
     global.sessionStore = store;
+    
+    global.thetvdb = thetvdb.createService({
+        apikey: '3258B04D58376067'
+    });
 
     function checkVDR () {
         rest.get(restfulUrl + '/info.json').on('complete', function(data) {
