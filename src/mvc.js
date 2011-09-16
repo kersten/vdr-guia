@@ -8,7 +8,8 @@ var fs = require('fs'),
     i18n = require("i18n"),
     config = require('./etc/config'),
     monomi = require("monomi"),
-    rest = require('restler');
+    rest = require('restler'),
+    wol = require('wake_on_lan');
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -79,19 +80,25 @@ function bootApplication (app, io) {
     global.io = io;
     global.sessionStore = store;
 
-    rest.get(restfulUrl + '/info.json').on('complete', function(data) {
-        vdr.plugins.epgsearch = false;
+    function checkVDR () {
+        rest.get(restfulUrl + '/info.json').on('complete', function(data) {
+            vdr.plugins.epgsearch = false;
 
-        for (var i in data.vdr.plugins) {
-            if (data.vdr.plugins[i].name == 'epgsearch') {
-                vdr.plugins.epgsearch = true;
+            for (var i in data.vdr.plugins) {
+                if (data.vdr.plugins[i].name == 'epgsearch') {
+                    vdr.plugins.epgsearch = true;
+                }
             }
-        }
 
-        bootControllers(app);
-    }).on('error', function () {
-        console.log('Something went wrong with restful api');
-    });
+            bootControllers(app);
+        }).on('error', function () {
+            console.log('Something went wrong with restful api. Try to wake up VDR');
+            wol.wake(config.vdr.mac);
+            setTimeout(checkVDR, 120000);
+        });
+    }
+    
+    checkVDR();
 
     // Some dynamic view helpers
     app.dynamicHelpers({
