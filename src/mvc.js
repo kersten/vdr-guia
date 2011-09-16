@@ -93,7 +93,15 @@ function bootApplication (app, io) {
             bootControllers(app);
         }).on('error', function () {
             console.log('Something went wrong with restful api. Try to wake up VDR');
-            wol.wake(config.vdr.mac);
+            
+            wol.wake(config.vdr.mac, function(error) {
+                if (error) {
+                    console.log('Some error occurred sending the WOL pakages!');
+                } else {
+                    console.log('Done sending WOL packages to VDR! Try again in 2 Minutes.');
+                }
+            });
+            
             setTimeout(checkVDR, 120000);
         });
     }
