@@ -209,6 +209,8 @@ $(document).ready(function () {
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
+                    
+                    console.log(p);
 
                     var getEpgNext = function (epg) {
                         if (epg.channelEpg.length == 0) {
@@ -418,6 +420,8 @@ $(document).ready(function () {
                     $('#SearchEntryTemplate').tmpl(data).appendTo('#searchresultlist > table > tbody');
                 }
                 
+                enableScrollbar();
+                
                 $('body').overlay('hide');
 
                 socket.removeListener('searchResult', searchCb);
@@ -428,6 +432,8 @@ $(document).ready(function () {
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
+                    
+                    console.log(p);
 
                     var searchCbNext = function (data) {
                         if (data.events.length == 0) {
@@ -453,8 +459,6 @@ $(document).ready(function () {
                     });
                 }
             });
-            
-            enableScrollbar();
 
             socket.emit('search', {
                 site: 1,
@@ -481,108 +485,80 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
+        
+        $('table#recordingslist > tbody > tr > td:nth-child(1)').die('click');
+        $('table#recordingslist > tbody > tr > td:nth-child(4)').die('click');
 
-        var getRecordings = function (recordings) {
+        // Bind ne events
+        $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
+            var element = $(this);
+
+            var message = $('<div></div>').dialog({
+                title: "<%- __('Delete this recording?') %>",
+                body: "<%- __('Are you sure that you want to delete this recording? This action cannot be undone!') %>",
+                close: true,
+                buttons: [{
+                    text: 'Yes, I know what I do',
+                    type: 'error',
+                    action: function () {
+                        $(this).parent().parent().parent().dialog('hide');
+
+                        $.vdrmanager.recording.remove($(element).attr('number'), function () {
+                            var dialogOk = $('<div></div>').dialog({
+                                title: "<%= __('Recording deleted') %>",
+                                body: '<p>test</p>',
+                                close: true,
+                                buttons: [{
+                                    text: 'OK',
+                                    action: 'close'
+                                }]
+                            });
+
+                            dialogOk.dialog('show');
+
+                            $(element).parent().fadeOut(function () {
+                                $(element).parent().remove();
+                            });
+                        });
+                    },
+                    layout: 'danger'
+                }, {
+                    text: 'No',
+                    action: 'close'
+                }]
+            });
+
+            message.dialog('show');
+        });
+
+        $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
+            console.log($(this).attr('number'));
+        });
+
+        // Clean evantually binded old events
+
+        $.vdrmanager.recording.list(1, function (data) {
             $('#RecordingsTemplate').tmpl().appendTo('#body');
-            $('#RecordingEntryTemplate').tmpl({recordings: recordings.recordings}).appendTo('#recordingslist > tbody');
-
-            // Clean evantually binded old events
-            $('table#recordingslist > tbody > tr > td:nth-child(1)').die('click');
-            $('table#recordingslist > tbody > tr > td:nth-child(4)').die('click');
-
-            // Bind ne events
-            $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
-                deleteRecording($(this).parent(), $(this).attr('number'));
-            });
-
-            $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
-                console.log($(this).attr('number'));
-            });
-
+            $('#RecordingEntryTemplate').tmpl({recordings: data.recordings}).appendTo('#recordingslist > tbody');
+            
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
 
-                    var getRecordingsNext = function (recordings) {
-                        if (recordings.recordings.length == 0) {
-                            $(document).unbind('scroll resize');
-                            $('body').overlay('hide');
-                            return;
-                        }
-
-                        $('#RecordingEntryTemplate').tmpl({recordings: recordings.recordings}).appendTo('#recordingslist > tbody');
+                    $.vdrmanager.recording.list(p, function (data) {
+                        $('#RecordingEntryTemplate').tmpl({recordings: data.recordings}).appendTo('#recordingslist > tbody');
 
                         $('body').overlay('hide');
-
-                        socket.removeListener('getRecordings', getRecordingsNext);
-                    };
-
-                    socket.on('getRecordings', getRecordingsNext);
-
-                    socket.emit('getRecordings', {
-                        site: p
                     });
                 }
             });
-            
-            enableScrollbar();
 
             $('body').overlay('hide');
 
-            socket.removeListener('getRecordings', getRecordings);
-        };
-
-        socket.on('getRecordings', getRecordings);
-
-        socket.emit('getRecordings', {site: 1});
-
-        $('body').overlay('hide');
-    }
-    
-    function deleteRecording (element, recordNumber) {
-        var message = $('<div></div>').dialog({
-            title: "<%- __('Delete this recording?') %>",
-            body: "<%- __('Are you sure that you want to delete this recording? This action cannot be undone!') %>",
-            close: true,
-            buttons: [{
-                text: 'Yes, I know what I do',
-                type: 'error',
-                action: function () {
-                    $(this).parent().parent().parent().dialog('hide');
-
-                    var deleteCb = function () {
-                        var dialogOk = $('<div></div>').dialog({
-                            title: "<%= __('Recording deleted') %>",
-                            body: '<p>test</p>',
-                            close: true,
-                            buttons: [{
-                                text: 'OK',
-                                action: 'close'
-                            }]
-                        });
-
-                        dialogOk.dialog('show');
-                        
-                        $(element).fadeOut(function () {
-                            $(element).remove();
-                        });
-                        
-
-                        socket.removeListener('recordingDeleted', deleteCb);
-                    };
-
-                    socket.on('recordingDeleted', deleteCb);
-
-                    socket.emit('deleteRecording', {number: recordNumber});
-                },
-                layout: 'danger'
-            }, {
-                text: 'No',
-                action: 'close'
-            }]
+            enableScrollbar();
         });
 
-        message.dialog('show');
+        $('body').overlay('hide');
     }
 
     function showDetails (channelid, eventid, timerId) {
