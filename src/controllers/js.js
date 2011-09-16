@@ -5,7 +5,28 @@ module.exports = {
             restfulUrl: restfulUrl
         });
     },
-    "vdr/manager/timer.js": function (req, res) {
+    "vdr/manager.js": function (req, res) {
+        res.render('js/vdr/manager.js', {
+            layout: false
+        });
+    },
+    "vdr/manager/program.js": function (req, res) {
+        res.render('js/vdr/manager/program.js', {
+            layout: false
+        });
+    },"vdr/manager/recording.js": function (req, res) {
+        res.render('js/vdr/manager/recording.js', {
+            layout: false
+        });
+    },"vdr/manager/search.js": function (req, res) {
+        res.render('js/vdr/manager/search.js', {
+            layout: false
+        });
+    },"vdr/manager/settings.js": function (req, res) {
+        res.render('js/vdr/manager/settings.js', {
+            layout: false
+        });
+    },"vdr/manager/timer.js": function (req, res) {
         res.render('js/vdr/manager/timer.js', {
             layout: false
         });

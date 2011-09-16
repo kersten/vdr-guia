@@ -68,7 +68,7 @@
 
     var firing       = true;
     var fired        = false;
-    var fireSequence = 0;
+    var fireSequence = 1;
 
     if (options.ceaseFire.apply(this) === true)
     {
