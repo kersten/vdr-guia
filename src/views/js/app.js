@@ -210,8 +210,6 @@ $(document).ready(function () {
                 callback: function (p) {
                     $('body').overlay('show');
                     
-                    console.log(p);
-
                     var getEpgNext = function (epg) {
                         if (epg.channelEpg.length == 0) {
                             $(document).unbind('scroll resize');
@@ -432,8 +430,6 @@ $(document).ready(function () {
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
-                    
-                    console.log(p);
 
                     var searchCbNext = function (data) {
                         if (data.events.length == 0) {
