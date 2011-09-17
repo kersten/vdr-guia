@@ -5,3 +5,4 @@ nbproject
 node_modules/node-syslog/build/
 node_modules/node-syslog/.lock-wscript
 /node_modules/xml/.idea/
+npm-debug.log
