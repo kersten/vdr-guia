@@ -66,5 +66,11 @@
 	"Delete timer": "Delete timer",
 	"Ok": "Ok",
 	"Watched": "Watched",
-	"This recording was allready watched": "This recording was allready watched"
+	"This recording was allready watched": "This recording was allready watched",
+	"Save Changes": "Save Changes",
+	"Cancel": "Cancel",
+	"Delete selected recordings": "Delete selected recordings",
+	"Delete selected recordings?": "Delete selected recordings?",
+	"Recordings not seletecd": "Recordings not seletecd",
+	"Seletced recordings deleted": "Seletced recordings deleted"
 }

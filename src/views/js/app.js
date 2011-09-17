@@ -456,6 +456,7 @@ $(document).ready(function () {
 
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
         
+        // Clean evantually binded old events
         $('table#recordingslist > tbody > tr > td:nth-child(2)').die('click');
         $('table#recordingslist > tbody > tr > td:nth-child(6)').die('click');
         $('#recordingsDeleteAll').die('change');
@@ -463,6 +464,15 @@ $(document).ready(function () {
         // Bind new events
         $('#recordingsDeleteAll').live('change', function () {
             $('table#recordingslist > tbody > tr > td:nth-child(1) > input').attr('checked', $('#recordingsDeleteAll').is(':checked'));
+            $('table#recordingslist > tbody > tr > td:nth-child(1) > input').trigger('change');
+        });
+        
+        $('table#recordingslist > tbody > tr > td:nth-child(1) > input').live('change', function () {
+            if ($('table#recordingslist > tbody > tr > td:nth-child(1) > input').is(':checked')) {
+                $('#deleteSelectedRecordings').removeClass('disabled');
+            } else {
+                $('#deleteSelectedRecordings').addClass('disabled');
+            }
         });
         
         $('table#recordingslist > tbody > tr > td:nth-child(2)').live('click', function () {
@@ -511,12 +521,80 @@ $(document).ready(function () {
 
             message.dialog('show');
         });
+        
+        $('#deleteSelectedRecordings').live('click', function () {
+            if ($(this).is('.disabled')) {
+                return;
+            }
+            
+            var toDelete = 0;
+            var toDeleteEl = new Array();
+            
+            function deleteRecords () {
+                $.vdrmanager.recording.remove($(toDeleteEl[0]).attr('number'), function () {
+                    toDeleteEl.shift();
+                    toDelete++;
+                    
+                    if ($('table#recordingslist > tbody > tr > td:nth-child(1) > input:checked').length != toDelete) {
+                        deleteRecords();
+                    }
+                });
+            }
+            
+            var checkDelete = setInterval(function () {
+                if ($('table#recordingslist > tbody > tr > td:nth-child(1) > input:checked').length == toDelete) {
+                    clearInterval(checkDelete);
+                    
+                    var dialogOk = $('<div></div>').dialog({
+                        title: "<%= __('Seletced recordings deleted') %>",
+                        body: '<p>test</p>',
+                        close: true,
+                        buttons: [{
+                            text: 'OK',
+                            action: 'close'
+                        }]
+                    });
+
+                    dialogOk.dialog('show');
+                }
+            }, 100);
+            
+            var message = $('<div></div>').dialog({
+                title: "<%- __('Delete selected recordings?') %>",
+                body: "<%- __('Are you sure that you want to delete this recording? This action cannot be undone!') %>",
+                close: true,
+                buttons: [{
+                    text: 'Yes, I know what I do',
+                    type: 'error',
+                    action: function () {
+                        $(this).parent().parent().parent().dialog('hide');
+
+                        $('table#recordingslist > tbody > tr > td:nth-child(1) > input:checked').each(function () {
+                            var self = this;
+                            $('table#recordingslist > tbody > tr > td:nth-child(1) > input').each(function () {
+                                if (parseInt($(this).attr('number')) > parseInt($(self).attr('number'))) {
+                                    $(this).attr('number', parseInt($(this).attr('number')) - 1);
+                                }
+                            });
+
+                            toDeleteEl.push(this);
+                        });
+
+                        deleteRecords();
+                    },
+                    layout: 'danger'
+                }, {
+                    text: 'No',
+                    action: 'close'
+                }]
+            });
+
+            message.dialog('show');
+        });
 
         $('table#recordingslist > tbody > tr > td:nth-child(6)').live('click', function () {
             console.log($(this).attr('number'));
         });
-
-        // Clean evantually binded old events
 
         $.vdrmanager.recording.list(1, function (data) {
             $('#RecordingsTemplate').tmpl().appendTo('#body');
@@ -528,6 +606,11 @@ $(document).ready(function () {
 
                     $.vdrmanager.recording.list(p, function (data) {
                         $('#RecordingEntryTemplate').tmpl({recordings: data.recordings}).appendTo('#recordingslist > tbody');
+                        $('table#recordingslist > tbody > tr > td:nth-child(1) > input').each(function () {
+                            if (!$(this).is(':checked')) {
+                                $(this).attr('checked', $('#recordingsDeleteAll').is(':checked'));
+                            } 
+                        });
 
                         $('body').overlay('hide');
                     });
