@@ -34,11 +34,11 @@ jQuery.extend($.vdrmanager, {
 
             var endTime = date.getHours() + '' + ((date.getMinutes() < 10) ? '0' : '') + date.getMinutes();
 
-            var createCb = function () {
+            var createCb = function (data) {
                 socket.removeListener('timerCreated', createCb);
 
                 if (typeof(options.success) != 'undefined') {
-                    options.success();
+                    options.success.apply(this, arguments);
                 }
             };
 

@@ -109,7 +109,7 @@ $(document).ready(function () {
 
         $(document).attr('title', 'VDRManager // <%= __("Program") %>');
 
-        var getChannels = function (channels) {
+        $.vdrmanager.channel.list(function (channels) {
             $('#ProgramTemplate').tmpl({
                 channels: channels
             }).appendTo('#body');
@@ -125,92 +125,86 @@ $(document).ready(function () {
             });
 
             $('body').overlay('hide');
-
-            socket.removeListener('getChannels', getChannels);
-        };
-
-        socket.on('getChannels', getChannels);
-
-        socket.emit('getChannels');
+        });
     }
 
     function getEpg (channelId) {
         removeContext($('#epglist'));
+        
+        $('#epglist').empty();
+        $('#EpgTableTemplate').tmpl().appendTo('#epglist');
+        
+        // Clean evantually binded old events
+        $('div#epglist > table > tbody > tr > td:nth-child(4)').die('click');
+        $('div#epglist > table > tbody > tr > td:nth-child(1)').die('click');
 
-        var getEpg = function (epg) {
-            $('#epglist').empty();
-            $('#EpgTableTemplate').tmpl().appendTo('#epglist');
-            $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
+        // Bind ne events
+        $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
+            var element = this;
 
-            // Clean evantually binded old events
-            $('div#epglist > table > tbody > tr > td:nth-child(4)').die('click');
-            $('div#epglist > table > tbody > tr > td:nth-child(1)').die('click');
-
-            // Bind ne events
-            $('div#epglist > table > tbody > tr > td:nth-child(1)').live('click', function () {
-                var element = this;
-                
-                if ($(this).attr('has_timer') == "true") {
-                    $.vdrmanager.timer.remove(socket, {
-                        timerId: $(this).attr('timer_id'),
-                        success: function () {
-                            var message = $('<div></div>').dialog({
-                                title: "<%- __('Timer deleted!') %>",
-                                body: "<%- __('This timer has been successfully deleted.') %>",
-                                close: true,
-                                buttons: [{
-                                    text: 'Ok',
-                                    action: 'close'
-                                }]
-                            });
-
-                            message.dialog('show');
-
-                            $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle.png');
-                            $(element).attr('has_timer', false);
-                        }
-                    });
-                    
-                    return;
-                }
-                
-                $.vdrmanager.timer.create(socket, {
-                    flags: 1,
-                    file: $(this).attr('title') + (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
-                    start: $(this).attr('start_time'),
-                    stop: parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration')),
-                    channel: channelId,
-                    weekdays: '-------',
+            if ($(this).attr('has_timer') == "true") {
+                $.vdrmanager.timer.remove(socket, {
+                    timerId: $(this).attr('timer_id'),
                     success: function () {
                         var message = $('<div></div>').dialog({
-                            title: "<%- __('Timer created!') %>",
+                            title: "<%- __('Timer deleted!') %>",
+                            body: "<%- __('This timer has been successfully deleted.') %>",
                             close: true,
-                            body: "<%- __('Your timer was successfully created. This show will now be recorded.') %>",
                             buttons: [{
-                                text: 'OK',
+                                text: 'Ok',
                                 action: 'close'
                             }]
                         });
 
                         message.dialog('show');
 
-                        $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle-2.png');
-                        $(element).attr('has_timer', true);
+                        $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle.png');
+                        $(element).attr('has_timer', false);
                     }
                 });
+
+                return;
+            }
+
+            $.vdrmanager.timer.create(socket, {
+                flags: 1,
+                file: $(this).attr('title') + (($(this).attr('short_text') != "") ? ' - ' + $(this).attr('short_text') : ''),
+                start: $(this).attr('start_time'),
+                stop: parseFloat($(this).attr('start_time')) + parseFloat($(this).attr('duration')),
+                channel: channelId,
+                weekdays: '-------',
+                success: function (data) {
+                    var message = $('<div></div>').dialog({
+                        title: "<%- __('Timer created!') %>",
+                        close: true,
+                        body: "<%- __('Your timer was successfully created. This show will now be recorded.') %>",
+                        buttons: [{
+                            text: 'OK',
+                            action: 'close'
+                        }]
+                    });
+
+                    message.dialog('show');
+
+                    $(element).children('.btn_timer').attr('src', '/img/devine/black/16x16/Circle-2.png');
+                    $(element).attr('has_timer', true);
+                    $(element).attr('timer_id', data.id);
+                }
             });
+        });
 
-            $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
-                showDetails(channelId, $(this).attr('eventid'));
-            });
-
-            //$('#epglist').css('height', $(window).height() - $('#epglist').offset().top);
-
+        $('div#epglist > table > tbody > tr > td:nth-child(4)').live('click', function () {
+            showDetails(channelId, $(this).attr('eventid'));
+        });
+        
+        $.vdrmanager.epg.list(channelId, 1, function (epg) {
+            $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
+            
             $(document).endlessScroll({
                 callback: function (p) {
                     $('body').overlay('show');
                     
-                    var getEpgNext = function (epg) {
+                    $.vdrmanager.epg.list(channelId, p, function (epg) {
                         if (epg.channelEpg.length == 0) {
                             $(document).unbind('scroll resize');
                             $('body').overlay('hide');
@@ -220,62 +214,42 @@ $(document).ready(function () {
                         $('#EpgEntryTemplate').tmpl({epg: epg.channelEpg}).appendTo('#epglist > table > tbody');
 
                         $('body').overlay('hide');
-
-                        socket.removeListener('getEpg', getEpgNext);
-                    };
-
-                    socket.on('getEpg', getEpgNext);
-
-                    socket.emit('getEpg', {
-                        site: p,
-                        channelid: channelId
                     });
                 }
             });
             
             enableScrollbar();
-
-            var channelList = $('#channellist');
-
-            var view = $( window );
-
-            view.bind("scroll resize", function () {
-                var viewTop = view.scrollTop();
-
-                if ((viewTop + 40 > channelList.data('top')) && channelList.css('position') != 'fixed') {
-                    // Toggle the message classes.
-                    channelList.css({
-                        position: 'fixed',
-                        top: 40,
-                        left: channelList.offset().left - 20,
-                        height: $(window).height()
-                    });
-
-                    // Check to see if the view has scroll back up
-                    // above the message AND that the message is
-                    // currently fixed.
-                } else if ((viewTop + 40 <= channelList.data('top')) && channelList.css('position') == 'fixed') {
-                    // Toggle the message classes.
-                    channelList.css({
-                        position: '',
-                        top: channelList.data('top'),
-                        height: channelList.data('height')
-                    });
-                }
-            });
-
-            $(window).trigger('scroll');
-
+            
             $('body').overlay('hide');
+        });
+        
+        var channelList = $('#channellist');
 
-            socket.removeListener('getEpg', getEpg);
-        };
+        var view = $(window);
 
-        socket.on('getEpg', getEpg);
+        view.bind("scroll resize", function () {
+            var viewTop = view.scrollTop();
 
-        socket.emit('getEpg', {
-            site: 1,
-            channelid: channelId
+            if ((viewTop + 40 > channelList.data('top')) && channelList.css('position') != 'fixed') {
+                // Toggle the message classes.
+                channelList.css({
+                    position: 'fixed',
+                    top: 40,
+                    left: channelList.offset().left - 20,
+                    height: $(window).height()
+                });
+
+                // Check to see if the view has scroll back up
+                // above the message AND that the message is
+                // currently fixed.
+            } else if ((viewTop + 40 <= channelList.data('top')) && channelList.css('position') == 'fixed') {
+                // Toggle the message classes.
+                channelList.css({
+                    position: '',
+                    top: channelList.data('top'),
+                    height: channelList.data('height')
+                });
+            }
         });
     }
 
@@ -720,221 +694,3 @@ $(document).ready(function () {
         dialog.dialog('show');
     });
 });
-
-/*
-var createSearchtimer = function () {
-    $().dialog({
-        title: 'Create a new searchtimer',
-        body: '<h3>Test</h3>',
-        close: true,
-        buttons: [{
-            text: 'Create',
-            action: function () {
-                console.log('Create timer')
-            }
-        }, {
-            text: 'Cancel',
-            action: 'close'
-        }]
-    });
-
-    $().dialog('show');
-};
-
-var showDetails = function (details) {
-    socket.emit('getDetails', details);
-
-    var cb = function (data) {
-        var data = data.events[0];
-        var components = {
-            video: null,
-            format: null,
-            audio: [],
-            subtitles: []
-        }
-
-        for (var i in data.components) {
-            switch (data.components[i].description) {
-            case 'stereo':
-            case 'stereo deutsch':
-            case 'stereo englisch':
-                components.audio.push({
-                    language: data.components[i].lang,
-                    type: 'stereo'
-                });
-                break;
-
-            case 'Dolby Digital 2.0':
-                components.audio.push({
-                    language: data.components[i].lang,
-                    type: 'dd2'
-                });
-                break;
-
-            case 'DVB-Untertitel':
-                components.subtitles.push(data.components[i].lang);
-                break;
-
-            case 'HD-Video':
-                components.video = 'hd';
-                break;
-
-            case '16:9':
-                components.format = '16:9';
-            }
-        }
-
-        $().dialog({
-            title: data.title,
-            subtitle: data.short_text,
-            components: components,
-            body: '<p>' + data.description + '</p>',
-            close: true,
-            buttons: [{
-                text: 'Ok',
-                action: 'close'
-            }]
-        });
-
-        $().dialog('show');
-
-        console.log(data);
-
-        socket.removeListener('getDetails', cb);
-    };
-
-    socket.on('getDetails', cb);
-};
-
-var load = function () {
-    $('body').overlay('show');
-
-    var loadSite = (location.hash == "") ? '/app/frontsite' : '/' + location.hash.substring(1);
-
-    $.ajax({
-        type: 'POST',
-        url: loadSite,
-        success: function (res) {
-            $('body').overlay('hide');
-
-            var el = 'body';
-
-            if (loadSite.match(/^\/program\/view\/.*//*)) {
-                el = 'programlist';
-            } else if (loadSite.match(/^\/program$/)) {
-                $(document).attr('title', 'VDRManager // <%= __("Program") %>');
-            } else if (loadSite.match(/^\/settings\/.*//*)) {
-                el = 'tab_content';
-            }
-
-            $('#' + el).html(res);
-
-            if (loadSite.match(/^\/settings/)) {
-                $('#settings > .tabs li').click(function () {
-                    $('#settings > .tabs li').removeClass('active');
-                    $(this).addClass('active');
-                });
-            } else if (loadSite.match(/^\/program$/)) {
-                $('#channellist').css('height', $(document).height() - $('#channellist').offset().top);
-            }
-        }
-    });
-};
-
-$(document).ready(function () {
-    $('body').overlay('show');
-
-    $(window).bind('hashchange', function (e) {
-        load();
-    });
-
-    socket.on('logout', function (data) {
-        $('body').overlay('show');
-
-        $.ajax({
-            type: 'POST',
-            url: '/authenticate',
-            success: function (res) {
-                $('#body').html(res);
-                $('body').overlay('hide');
-
-                $(this).attr('title', 'VDRManager // <%= __("Login") %>');
-
-                $('#login').click(function () {
-                    $('body').overlay('show');
-
-                    socket.emit('login', {
-                        username: $('#username').val(),
-                        password: $('#password').val()
-                    });
-
-                    return false;
-                });
-            }
-        });
-    });
-
-    socket.emit('checksession');
-
-    socket.on('loggedIn', function (data) {
-        if (data.loggedIn === false) {
-            $.ajax({
-                type: 'POST',
-                url: '/authenticate',
-                success: function (res) {
-                    $('#body').html(res);
-                    $('body').overlay('hide');
-
-                    $(this).attr('title', 'VDRManager // <%= __("Login") %>');
-
-                    $('#login').click(function () {
-                        $('body').overlay('show');
-
-                        socket.emit('login', {
-                            username: $('#username').val(),
-                            password: $('#password').val()
-                        });
-
-                        return false;
-                    });
-                }
-            });
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: '/menu',
-                success: function (res) {
-                    $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
-                    $('#menu').append(res);
-                }
-            });
-
-            load();
-        }
-    });
-
-    socket.on('login.done', function (data){
-        console.log(data);
-
-        if (data.successful) {
-            $.ajax({
-                type: 'POST',
-                url: '/menu',
-                success: function (res) {
-                    $('#menu').html('<h3><a href="#">VDRManager</a></h3>');
-                    $('#menu').append(res);
-                }
-            });
-
-            load();
-        } else {
-            $('body').overlay('hide');
-
-            if ($('#login_failed').length != 0) {
-                $('#login_failed').remove();
-            }
-
-            $('#login_actions').before('<div class="alert-message error" id="login_failed"><p><strong><%= __("An error occurred:") %></strong> <%= __("Username or password is wrong") %></p></div>');
-        }
-    });
-}); */

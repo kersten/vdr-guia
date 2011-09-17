@@ -10,8 +10,13 @@ module.exports = {
             layout: false
         });
     },
-    "vdr/manager/program.js": function (req, res) {
-        res.render('js/vdr/manager/program.js', {
+    "vdr/manager/epg.js": function (req, res) {
+        res.render('js/vdr/manager/epg.js', {
+            layout: false
+        });
+    },
+    "vdr/manager/channel.js": function (req, res) {
+        res.render('js/vdr/manager/channel.js', {
             layout: false
         });
     },"vdr/manager/recording.js": function (req, res) {

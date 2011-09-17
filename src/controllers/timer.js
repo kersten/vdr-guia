@@ -23,8 +23,7 @@ io.sockets.on('connection', function (socket) {
         data = JSON.stringify(data);
 
         rest.post(restfulUrl + '/timers',{data: data}).on('complete', function (data) {
-            socket.emit('timerCreated');
-            console.log(data);
+            socket.emit('timerCreated', data.timers[0]);
         }).on('error', function (e) {
             console.log(e);
         }).on('403', function (e) {
