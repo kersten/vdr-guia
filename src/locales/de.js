@@ -61,5 +61,10 @@
 	"The timer filename is not defined!": "The timer filename is not defined!",
 	"The timer weekdays are not defined!": "The timer weekdays are not defined!",
 	"Logout": "Logout",
-	"The timer id is not defined!": "The timer id is not defined!"
+	"The timer id is not defined!": "The timer id is not defined!",
+	"Record": "Record",
+	"Delete timer": "Delete timer",
+	"Ok": "Ok",
+	"Watched": "Watched",
+	"This recording was allready watched": "This recording was allready watched"
 }

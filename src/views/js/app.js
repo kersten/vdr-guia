@@ -456,11 +456,16 @@ $(document).ready(function () {
 
         $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
         
-        $('table#recordingslist > tbody > tr > td:nth-child(1)').die('click');
-        $('table#recordingslist > tbody > tr > td:nth-child(4)').die('click');
+        $('table#recordingslist > tbody > tr > td:nth-child(2)').die('click');
+        $('table#recordingslist > tbody > tr > td:nth-child(6)').die('click');
+        $('#recordingsDeleteAll').die('change');
 
-        // Bind ne events
-        $('table#recordingslist > tbody > tr > td:nth-child(1)').live('click', function () {
+        // Bind new events
+        $('#recordingsDeleteAll').live('change', function () {
+            $('table#recordingslist > tbody > tr > td:nth-child(1) > input').attr('checked', $('#recordingsDeleteAll').is(':checked'));
+        });
+        
+        $('table#recordingslist > tbody > tr > td:nth-child(2)').live('click', function () {
             var element = $(this);
 
             var message = $('<div></div>').dialog({
@@ -489,6 +494,10 @@ $(document).ready(function () {
                             $(element).parent().fadeOut(function () {
                                 $(element).parent().remove();
                             });
+                            
+                            $('table#recordingslist > tbody > tr > td:nth-child(2)').each(function () {
+                                $(this).attr('number', parseInt($(this).attr('number')) - 1);
+                            });
                         });
                     },
                     layout: 'danger'
@@ -501,7 +510,7 @@ $(document).ready(function () {
             message.dialog('show');
         });
 
-        $('table#recordingslist > tbody > tr > td:nth-child(4)').live('click', function () {
+        $('table#recordingslist > tbody > tr > td:nth-child(6)').live('click', function () {
             console.log($(this).attr('number'));
         });
 
@@ -532,72 +541,10 @@ $(document).ready(function () {
     }
 
     function showDetails (channelid, eventid, timerId) {
-        socket.emit('getDetails', {
-            channelid: channelid,
-            eventid: eventid
-        });
-
-        var cb = function (data) {
-            data = data.events[0];
-            var components = {
-                video: null,
-                format: null,
-                audio: [],
-                subtitles: [],
-                rating: null,
-                parentalRating: null,
-                actors: [],
-                directors: [],
-                countries: []
-            }
-
-            // Extract rating
-            var ratingRegExp = /\[(.*)[-\*]{0,5}\]/.exec(data.description);
-            if (ratingRegExp != null) {
-                components.rating = ratingRegExp[1];
-            }
-
-            // Extract age rating
-            var parentalRatingRegExp = /\nFSK:\s(.*?)\n/.exec(data.description);
-            if (parentalRatingRegExp != null) {
-                components.parentalRating = parentalRatingRegExp[1];
-            }
-
-
-            for (var i in data.components) {
-                switch (data.components[i].description) {
-                case 'stereo':
-                case 'stereo deutsch':
-                case 'stereo englisch':
-                    components.audio.push({
-                        language: data.components[i].lang,
-                        type: 'stereo'
-                    });
-                    break;
-
-                case 'Dolby Digital 2.0':
-                    components.audio.push({
-                        language: data.components[i].lang,
-                        type: 'dd2'
-                    });
-                    break;
-
-                case 'DVB-Untertitel':
-                    components.subtitles.push(data.components[i].language);
-                    break;
-
-                case 'HD-Video':
-                    components.video = 'hd';
-                    break;
-
-                case '16:9':
-                    components.format = '16:9';
-                }
-            }
-            
+        $.vdrmanager.epg.details(eventid, channelid, function (data, components) {
             if (!data.timer_exists) {
                 var recordButton = {
-                    text: 'Record',
+                    text: "<%= __('Record') %>",
                     action: function () {
                         createTimer(data.title + ((data.short_text != "") ? ' - ' + data.short_text : ''), channelid, data.start_time, parseFloat(data.start_time) + parseFloat(data.duration));
                     },
@@ -605,7 +552,7 @@ $(document).ready(function () {
                 };
             } else {
                 var recordButton = {
-                    text: 'Delete timer',
+                    text: "<%= __('Delete timer') %>",
                     action: function () {
                         deleteTimer(dialog, timerId);
                     },
@@ -620,7 +567,7 @@ $(document).ready(function () {
                 body: '<p>' + data.description + '</p>',
                 close: true,
                 buttons: [{
-                    text: 'Ok',
+                    text: "<%= __('Ok') %>",
                     action: 'close'
                 }, recordButton],
                 onClose: function () {
@@ -629,11 +576,7 @@ $(document).ready(function () {
             });
 
             dialog.dialog('show');
-
-            socket.removeListener('getDetails', cb);
-        };
-
-        socket.on('getDetails', cb);
+        });
     }
 
     function getSettings () {
@@ -680,17 +623,23 @@ $(document).ready(function () {
         }
     }
 
-    socket.on('disconnect', function() {
-        var dialog = $('<div></div>').dialog({
-            title: "<%= __('VDRManager Server has disconnected') %>",
-            body: '<p><%= __("The App lost the connection to the server, please try to reconnect or leave this site!") %></p>',
-            close: true,
-            buttons: [{
-                text: '<%= __("Reconnect") %>',
-                action: 'close'
-            }]
-        });
+    var disconnected = false;
 
-        dialog.dialog('show');
+    socket.on('disconnect', function() {
+        if (!disconnected) {
+            var dialog = $('<div></div>').dialog({
+                title: "<%= __('VDRManager Server has disconnected') %>",
+                body: '<p><%= __("The App lost the connection to the server, please try to reconnect or leave this site!") %></p>',
+                close: true,
+                buttons: [{
+                    text: '<%= __("Reconnect") %>',
+                    action: 'close'
+                }]
+            });
+
+            dialog.dialog('show');
+        }
+        
+        disconnected = true;
     });
 });
