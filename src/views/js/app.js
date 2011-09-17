@@ -496,7 +496,9 @@ $(document).ready(function () {
                             });
                             
                             $('table#recordingslist > tbody > tr > td:nth-child(2)').each(function () {
-                                $(this).attr('number', parseInt($(this).attr('number')) - 1);
+                                if (parseInt($(this).attr('number')) > $(element).attr('number')) {
+                                    $(this).attr('number', parseInt($(this).attr('number')) - 1);
+                                }
                             });
                         });
                     },
