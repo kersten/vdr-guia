@@ -11,10 +11,10 @@ var fs = require('fs'),
     rest = require('restler'),
     wol = require('wake_on_lan')
     mqtt = require('MQTTClient'),
-    mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
+//    mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
     thetvdb = require('./lib/thetvdb.org');
 
-mqttClient.addListener('sessionOpened', function () {
+/*mqttClient.addListener('sessionOpened', function () {
     console.log('Connected to mosquitto');
     mqttClient.subscribe('/application/vdr/status/ChannelSwitch');
     mqttClient.subscribe('application/vdr/status/+');
@@ -25,7 +25,7 @@ mqttClient.addListener('sessionOpened', function () {
 
 mqttClient.addListener('mqttData', function(topic, payload){
     console.log(topic + ':' + payload);
-});
+})*/;
 
 exports.boot = function (app, io){
   bootApplication(app, io);

@@ -532,7 +532,12 @@ $(document).ready(function () {
             
             function deleteRecords () {
                 $.vdrmanager.recording.remove($(toDeleteEl[0]).attr('number'), function () {
-                    toDeleteEl.shift();
+                    var element = toDeleteEl.shift();
+                    
+                    $(element).parent().parent().fadeOut(function () {
+                        $(element).parent().parent().remove();
+                    });
+                    
                     toDelete++;
                     
                     if ($('table#recordingslist > tbody > tr > td:nth-child(1) > input:checked').length != toDelete) {
@@ -555,6 +560,7 @@ $(document).ready(function () {
                         }]
                     });
 
+                    $('body').overlay('hide');
                     dialogOk.dialog('show');
                 }
             }, 100);
@@ -567,6 +573,7 @@ $(document).ready(function () {
                     text: 'Yes, I know what I do',
                     type: 'error',
                     action: function () {
+                        $('body').overlay('show');
                         $(this).parent().parent().parent().dialog('hide');
 
                         $('table#recordingslist > tbody > tr > td:nth-child(1) > input:checked').each(function () {
