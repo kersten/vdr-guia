@@ -23,6 +23,17 @@
                 zIndex: 1000000,
                 visibility: 'hidden'
             }).addClass('modal');
+            
+            if (typeof(options.position) != 'undefined') {
+                switch (options.position) {
+                case 'rightbottom':
+                    el.css({
+                        right: 5,
+                        bottom: 5
+                    });
+                    break;
+                }
+            }  
 
             var header = $('<div></div>').addClass('modal-header');
             var title = $('<h3></h3>').html(options.title);
