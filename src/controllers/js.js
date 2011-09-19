@@ -65,5 +65,10 @@ module.exports = {
         res.render('js/plugins/jquery.endless-scroll.js', {
             layout: false
         });
+    },
+    "plugins/jquery.jgrowl.js": function (req, res) {
+        res.render('js/plugins/jquery.jgrowl.js', {
+            layout: false
+        });
     }
 };

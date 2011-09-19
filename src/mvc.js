@@ -3,6 +3,7 @@
  */
 
 var fs = require('fs'),
+    net = require('net'),
     express = require('express'),
     syslog = require('node-syslog'),
     i18n = require("i18n"),
@@ -11,18 +12,8 @@ var fs = require('fs'),
     rest = require('restler'),
     wol = require('wake_on_lan')
     mqtt = require('MQTTClient'),
-    mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
     thetvdb = require('./lib/thetvdb.org');
-
-mqttClient.addListener('sessionOpened', function () {
-    console.log('Connected to mosquitto');
-    mqttClient.subscribe('application/vdr/status/+');
-});
-
-mqttClient.addListener('mqttData', function(topic, payload){
-    console.log(topic + ':' + payload);
-});
-
+    
 exports.boot = function (app, io){
   bootApplication(app, io);
 };
@@ -96,23 +87,16 @@ function bootApplication (app, io) {
         apikey: '3258B04D58376067'
     });
 
-    function checkVDR () {
-        rest.get(restfulUrl + '/info.json').on('complete', function(data) {
-            vdr.plugins.epgsearch = false;
-
-            for (var i in data.vdr.plugins) {
-                if (data.vdr.plugins[i].name == 'epgsearch') {
-                    vdr.plugins.epgsearch = true;
-                }
-                
-                if (data.vdr.plugins[i].name == 'mqtt') {
-                    vdr.plugins.mqtt = true;
-                }
-            }
-
-            bootControllers(app);
-        }).on('error', function () {
-            console.log('Something went wrong with restful api. Try to wake up VDR');
+    function checkVDRRunning () {
+        var running = false;
+        
+        net.createConnection('80', config.vdr.host).on("connect", function(e) {
+            clearTimeout(running);
+            checkVDRPlugins();
+        });
+        
+        running = setTimeout(function() {
+            console.log('VDR is not alive. Try to wake up VDR');
             
             wol.wake(config.vdr.mac, function(error) {
                 if (error) {
@@ -121,12 +105,24 @@ function bootApplication (app, io) {
                     console.log('Done sending WOL packages to VDR! Try again in 2 Minutes.');
                 }
             });
-            
-            setTimeout(checkVDR, 120000);
+        }, 5000);
+    }
+
+    function checkVDRPlugins () {
+        console.log('VDR check for plugins');
+        
+        rest.get(restfulUrl + '/info.json').on('complete', function(data) {
+            vdr.plugins.epgsearch = false;
+
+            for (var i in data.vdr.plugins) {
+                vdr.plugins[data.vdr.plugins[i].name] = true;
+            }
+
+            bootControllers(app);
         });
     }
     
-    checkVDR();
+    checkVDRRunning();
 
     // Some dynamic view helpers
     app.dynamicHelpers({
