@@ -104,6 +104,10 @@ function bootApplication (app, io) {
                 if (data.vdr.plugins[i].name == 'epgsearch') {
                     vdr.plugins.epgsearch = true;
                 }
+                
+                if (data.vdr.plugins[i].name == 'mqtt') {
+                    vdr.plugins.mqtt = true;
+                }
             }
 
             bootControllers(app);
