@@ -15,7 +15,7 @@ var fs = require('fs'),
     sys = require('sys'),
     exec = require('child_process').exec;
 
-var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
+//var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
 
 /*var test = new mosquitto.Connection(config.vdr.host, 1883);
 console.log(test);*/
