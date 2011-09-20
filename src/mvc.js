@@ -3,7 +3,6 @@
  */
 
 var fs = require('fs'),
-    net = require('net'),
     express = require('express'),
     syslog = require('node-syslog'),
     i18n = require("i18n"),
@@ -12,8 +11,21 @@ var fs = require('fs'),
     rest = require('restler'),
     wol = require('wake_on_lan')
     mqtt = require('MQTTClient'),
-    thetvdb = require('./lib/thetvdb.org');
-    
+    thetvdb = require('./lib/thetvdb.org'),
+    sys = require('sys'),
+    exec = require('child_process').exec;
+
+var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
+
+/*var test = new mosquitto.Connection(config.vdr.host, 1883);
+console.log(test);*/
+
+/*test.on('connected', function () {
+    console.log('arguments');
+});
+
+test.connect();*/
+
 exports.boot = function (app, io){
   bootApplication(app, io);
 };
@@ -90,10 +102,12 @@ function bootApplication (app, io) {
     function checkVDRRunning () {
         var running = false;
         
-        net.createConnection('80', config.vdr.host).on("connect", function(e) {
+        function puts () {
             clearTimeout(running);
             checkVDRPlugins();
-        });
+        }
+
+        exec("ping -c 3 " +  config.vdr.host, puts);
         
         running = setTimeout(function() {
             console.log('VDR is not alive. Try to wake up VDR');
@@ -105,7 +119,7 @@ function bootApplication (app, io) {
                     console.log('Done sending WOL packages to VDR! Try again in 2 Minutes.');
                 }
             });
-        }, 5000);
+        }, 10000);
     }
 
     function checkVDRPlugins () {
