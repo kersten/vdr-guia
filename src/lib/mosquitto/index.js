@@ -95,9 +95,6 @@ connect.prototype.processData = function (data) {
         
         var header = data[0];
         
-        var topicLength = data[4];
-        var topic = new Buffer(topicLength);
-        
         var multiplier = 1;
         var value = 0;
         
@@ -108,9 +105,6 @@ connect.prototype.processData = function (data) {
         do {
             remaining++;
             
-            console.log(cnt + ' :: ' + data[cnt]);
-            console.log(data[cnt]>>7);
-            
             if (remaining > 4) {
                 throw "Protocol Error"
             }
@@ -118,18 +112,24 @@ connect.prototype.processData = function (data) {
             digit = data[cnt];
             value += (digit & 127) * multiplier;
             multiplier *= 128;
-            console.log(value);
             cnt++;
         } while ((digit & 128) != 0);
             
-        console.log(data);
+        console.log('remaining length: ' + value);
+        console.log('next byte: ' + cnt);
+        
+        var topicLength = data[cnt++] + data[cnt++];
+        var topic = new Buffer(topicLength);
+        
         console.log('Topic length: ' + topicLength);
         
         for (var i = 0; i < topicLength; i++) {
-            topic[i] = data[i + 5];
+            topic[i] = data[i + cnt];
         }
         
-        var variableHeaderLength = topicLength + 7;
+        cnt++;
+        
+        var variableHeaderLength = topicLength + cnt++;
         
         var messageLength = data[1] - variableHeaderLength - 2;
         var message = new Buffer(messageLength);
