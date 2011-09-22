@@ -1,5 +1,6 @@
 var sys = require('sys'),
     net = require('net'),
+    inspect = require("util").inspect,
     EventEmitter = require('events').EventEmitter;
 
 MQTT_PUBLISH = 3;
@@ -14,8 +15,10 @@ var connect = function (host, port, id) {
     this.sessionOpened = false;
     this.id = id;
     
-    this.conn = net.createConnection(port, host);
-    this.conn.setEncoding('utf8');
+    //this.conn = net.createConnection(port, host);
+    this.conn = new net.Socket();
+    this.conn.connect(port, host);
+    this.conn.setEncoding('binary');
     
     var self = this;
     
@@ -40,7 +43,8 @@ var connect = function (host, port, id) {
             }
         } else {
             if(data.length > 2){
-                var buf = new Buffer(data);
+                sys.log(inspect(data));
+                var buf = new Buffer(data, 'binary');
                 self.processData(buf);
             }
         }
@@ -80,7 +84,7 @@ connect.prototype.openSession = function () {
         buffer[i++] = this.id.charCodeAt(n); // Convert string to utf8
     }
     
-    this.conn.write(buffer, encoding="utf8");
+    this.conn.write(buffer, "utf8");
 };
 
 connect.prototype.processData = function (data) {
@@ -91,29 +95,41 @@ connect.prototype.processData = function (data) {
         
         var header = data[0];
         
-        var topicLength = data[3];
+        var topicLength = data[4];
         var topic = new Buffer(topicLength);
         
         var multiplier = 1;
         var value = 0;
         
-        var shift = 1;
+        var remaining = 0;
+        
+        var cnt = 1;
         
         do {
-            digit = data[1] & shift++;
+            remaining++;
+            
+            console.log(cnt + ' :: ' + data[cnt]);
+            console.log(data[cnt]>>7);
+            
+            if (remaining > 4) {
+                throw "Protocol Error"
+            }
+            
+            digit = data[cnt];
             value += (digit & 127) * multiplier;
             multiplier *= 128;
+            console.log(value);
+            cnt++;
+        } while ((digit & 128) != 0);
             
-            console.log(digit);
-        } while ((digit & 128) != 0)
-        
+        console.log(data);
         console.log('Topic length: ' + topicLength);
         
         for (var i = 0; i < topicLength; i++) {
-            topic[i] = data[i + 4];
+            topic[i] = data[i + 5];
         }
         
-        var variableHeaderLength = topicLength + 6;
+        var variableHeaderLength = topicLength + 7;
         
         var messageLength = data[1] - variableHeaderLength - 2;
         var message = new Buffer(messageLength);
@@ -134,7 +150,7 @@ connect.prototype.processData = function (data) {
         buffer[0] = 0xd0;
         buffer[1] = 0x00;
         
-        this.conn.write(buffer, encoding="utf8");
+        this.conn.write(buffer, "utf8");
         
         var cc = this;
         clearTimeout(this.timeout);
@@ -169,7 +185,7 @@ connect.prototype.subscribe = function (topic, cb) {
     
     console.log('Subcribe to: ' + topic);
     
-    this.conn.write(buffer, encoding="utf8");
+    this.conn.write(buffer, "utf8");
 };
 
 connect.prototype.timeUp = function () {
@@ -189,7 +205,7 @@ connect.prototype.live = function () {
     var packet192 = new Buffer(2);
     packet192[0] = 0xc0;
     packet192[1] = 0x00;
-    this.conn.write(packet192, encoding="utf8");
+    this.conn.write(packet192, "utf8");
     
     //reset timer
     var cc = this;
