@@ -14,6 +14,16 @@ var fs = require('fs'),
     thetvdb = require('./lib/thetvdb.org'),
     sys = require('sys'),
     exec = require('child_process').exec;
+    mosquitto = require('./lib/mosquitto');
+
+
+var mqClient = new mosquitto.connect(config.vdr.host, 1883, 'vdrmanager');
+
+mqClient.on('sessionOpened', function () {
+    mqClient.subscribe('application/vdr/status/+', function (topic, message) {
+        console.log();
+    });
+});
 
 //var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
 

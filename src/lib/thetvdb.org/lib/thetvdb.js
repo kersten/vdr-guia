@@ -28,10 +28,10 @@ exports.createService = function (options) {
     console.log('thedvdb.org service created');
 
     request({uri: 'http://thetvdb.com/api/' + options.apikey + '/mirrors.xml'}, function (error, response, body) {
-        console.log(JSON.parse(parser.toJson(body)));
+        //console.log(JSON.parse(parser.toJson(body)));
         mirror = JSON.parse(parser.toJson(body)).Mirrors.Mirror.mirrorpath + '/api/' + options.apikey;
         getLanguages();
     });
     
-    getSeries('Eureka');
+    //getSeries('Eureka');
 };

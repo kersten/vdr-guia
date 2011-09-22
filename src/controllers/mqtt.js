@@ -1,5 +1,5 @@
 if (vdr.plugins.mqtt === true) {
-    mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
+    /*mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
     
     mqttClient.addListener('sessionOpened', function () {
         console.log('Connected to mosquitto daemon on vdr.');
@@ -12,5 +12,5 @@ if (vdr.plugins.mqtt === true) {
         console.log("\n\n\n\n\n\n");
         console.log(topic.toString());
         console.log("\n\n\n\n\n\n");
-    });
+    });*/
 }
