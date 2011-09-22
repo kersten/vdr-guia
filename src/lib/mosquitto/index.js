@@ -3,8 +3,10 @@ var sys = require('sys'),
     inspect = require("util").inspect,
     EventEmitter = require('events').EventEmitter;
 
-MQTT_PUBLISH = 3;
-MQTT_PINGREG = 12;
+var MQTT_CONNECT = 0x10;
+var MQTT_PUBLISH = 3;
+var MQTT_SUBSCRIBE = 0x80;
+var MQTT_PINGREG = 12;
 
 var connect = function (host, port, id) {
     this.host = host;
@@ -127,18 +129,19 @@ connect.prototype.processData = function (data) {
             topic[i] = data[i + cnt];
         }
         
-        cnt++;
+        var variableHeaderLength = topicLength + cnt;
         
-        var variableHeaderLength = topicLength + cnt++;
-        
-        var messageLength = data[1] - variableHeaderLength - 2;
+        var messageLength = value - variableHeaderLength;
         var message = new Buffer(messageLength);
         
         console.log("Topic: " + topic);
+        console.log("Message length: " + messageLength);
         
-        var payload = data.slice(variableHeaderLength + 2, data.length);
+        for (var i = 0; i < messageLength; i++) {
+            message[i] = data[i + variableHeaderLength];
+        }
         
-        console.log("Message: " + payload);
+        console.log("Message: " + message);
         
         break;
     
@@ -150,7 +153,7 @@ connect.prototype.processData = function (data) {
         buffer[0] = 0xd0;
         buffer[1] = 0x00;
         
-        this.conn.write(buffer, "utf8");
+        this.conn.write(buffer, "binary");
         
         var cc = this;
         clearTimeout(this.timeout);
@@ -185,7 +188,7 @@ connect.prototype.subscribe = function (topic, cb) {
     
     console.log('Subcribe to: ' + topic);
     
-    this.conn.write(buffer, "utf8");
+    this.conn.write(buffer, "binary");
 };
 
 connect.prototype.timeUp = function () {
@@ -201,11 +204,11 @@ connect.prototype.timeUp = function () {
 };
 
 connect.prototype.live = function () {
-	//Send [192, 0] to server
+    //Send [192, 0] to server
     var packet192 = new Buffer(2);
     packet192[0] = 0xc0;
     packet192[1] = 0x00;
-    this.conn.write(packet192, "utf8");
+    //this.conn.write(packet192, "utf8");
     
     //reset timer
     var cc = this;

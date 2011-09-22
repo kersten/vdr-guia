@@ -17,13 +17,13 @@ var fs = require('fs'),
     mosquitto = require('./lib/mosquitto');
 
 
-var mqClient = new mosquitto.connect(config.vdr.host, 1883, 'vdrmanager');
+//var mqClient = new mosquitto.connect(config.vdr.host, 1883, 'vdrmanager');
 
-mqClient.on('sessionOpened', function () {
+/*mqClient.on('sessionOpened', function () {
     mqClient.subscribe('application/vdr/status/+', function (topic, message) {
         console.log();
     });
-});
+});*/
 
 //var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
 

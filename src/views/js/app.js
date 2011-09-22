@@ -474,7 +474,7 @@ $(document).ready(function () {
                 $('#deleteSelectedRecordings').addClass('disabled');
             }
         });
-        
+
         $('table#recordingslist > tbody > tr > td:nth-child(2)').live('click', function () {
             var element = $(this);
 
@@ -620,6 +620,41 @@ $(document).ready(function () {
                         });
 
                         $('body').overlay('hide');
+                    });
+                }
+            });
+            
+            var header = $('#deleteSelectedRecordings').parent().data({
+                height: $('#deleteSelectedRecordings').parent().height(),
+                width: $('#deleteSelectedRecordings').parent().width(),
+                top: $('#deleteSelectedRecordings').parent().offset().top
+            });
+            var view = $(window);
+
+            view.bind("scroll resize", function () {
+                var viewTop = view.scrollTop();
+
+                if ((viewTop + 40 > header.data('top')) && header.css('position') != 'fixed') {
+                    console.log(header);
+                    // Toggle the message classes.
+                    header.css({
+                        position: 'fixed',
+                        top: 20,
+                        left: header.offset().left,
+                        height: header.data('height'),
+                        width: header.data('width')
+                    });
+
+                    // Check to see if the view has scroll back up
+                    // above the message AND that the message is
+                    // currently fixed.
+                } else if ((viewTop + 40 <= header.data('top')) && header.css('position') == 'fixed') {
+                    // Toggle the message classes.
+                    header.css({
+                        position: '',
+                        top: header.data('top'),
+                        height: header.data('height'),
+                        width: header.data('width')
                     });
                 }
             });
