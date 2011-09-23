@@ -129,11 +129,15 @@ function bootApplication (app, io) {
     }
     
     function setupBasics () {
-        var channelUpdateInterval = setInterval(function () {
+        function getChannelList () {
             rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
                 vdr.channelList = data.channels;
             });
-        }, 60*1000*30);
+        }
+        
+        getChannelList();
+        
+        var channelUpdateInterval = setInterval(getChannelList, 60*1000*30);
         
         bootControllers(app);
     }

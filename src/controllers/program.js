@@ -1,5 +1,6 @@
 io.sockets.on('connection', function (socket) {
     socket.on('getChannels', function () {
+        console.log(vdr);
         socket.emit('getChannels', vdr.channelList);
     });
 

@@ -1,36 +1,48 @@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(this).attr('title', 'VDRManager // <%= __("Searchtimer") %>');
-    });
-</script>
-<div class="page-header">
-    <h1>
-        <%= __('Searchtimers') %>
-        <small><%= __('Don\'t worry about changing airtimes anymore ..') %></small>
-    </h1>
-    <button type="button" style="float: right;" class="btn primary" onclick="createSearchtimer()"><%= __('Create searchtimer') %></button>
-</div>
-<div class="row">
-    <div class="span16 columns">
-        <table class="zebra-striped">
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th><%= __('Title') %></th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (searchtimers.length) {
-                searchtimers.forEach(function (searchtimer, i) { %>
-                <tr>
-                    <td style="width: 20px; text-align: center;"><img class="btn_timer" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/16x16/Circle-2.png" width="16px" height="16px" title="<%= __('Deactivate searchtimer') %>" /></td>
-                    <td style="width: 20px; text-align: center;"><img class="btn_show" eventid="<%= searchtimer.id %>" style="cursor: pointer;" src="/img/devine/black/16x16/List.png" width="16px" height="16px" title="<%= __('Show results for this searchtimer') %>" /></td>
-                    <td><%= searchtimer.search %></td>
-                </tr>
-                <% })
-                }%>
-            </tbody>
-        </table>
+<script id="SearchtimerTemplate" type="text/x-jquery-tmpl">
+    <div class="row">
+        <div class="span16">
+            <h1>
+                <%= __('Searchtimers') %>
+                <small><%= __('Don\'t worry about changing airtimes anymore ..') %></small>
+            </h1>
+        </div>
     </div>
-</div>
+    
+    <div class="row">
+        <div class="span16">
+            <div class="actions" style="text-align: right">
+                <button id="deleteSelectedSearchtimer" class="btn danger"><%= __('Delete selected searchtimer') %></button>
+                <button id="createSearchTimer" class="btn success"><%= __('Create new searchtimer') %></button>
+            </div>
+            
+            <table class="zebra-striped" id="searchtimerlist">
+                <thead>
+                    <tr>
+                        <th style="width: 20px;"><input type="checkbox" id="searchtimerDeleteAll" /></th>
+                        <th style="width: 20px;">&nbsp;</th>
+                        <th style="width: 20px;">&nbsp;</th>
+                        <th style="width: 40px;"><%= __('Airdate') %></th>
+                        <th style="width: 100px;"><%= __('Airtime') %></th>
+                        <th><%= __('Title') %></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    &nbsp;
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script id="SearchtimerEntryTemplate" type="text/x-jquery-tmpl">
+    {{each searchtimers}}
+    <tr>
+        <td><input type="checkbox" number="${number}" /></td>
+        <td style="cursor: pointer;" number="${number}" onmouseout="$(this).children('img').attr('src', '/img/devine/black/16x16/Recycle-Closed.png')" onmouseover="$(this).children('img').attr('src', '/img/devine/black/16x16/Recycle-Open.png')"><img name="deleteRecord" src="/img/devine/black/16x16/Recycle-Closed.png" width="16px" height="16px" title="<%= __('Delete this recording') %>" /></td>
+        <td>${search}</td>
+        <td>${day}</td>
+        <td>${start} - ${stop}</td>
+        <td style="cursor: pointer;" number="${number}"><a>${name}</a></td>
+    </tr>
+    {{/each}}
+</script>

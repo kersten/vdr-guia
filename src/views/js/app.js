@@ -447,6 +447,93 @@ $(document).ready(function () {
         removeContext($('#body'));
 
         $(document).attr('title', 'GUIA // <%= __("Searchtimer") %>');
+        
+        $('#SearchtimerTemplate').tmpl().appendTo('#body');
+        
+        $('#createSearchTimer').live('click', function () {
+            var message = $('<div></div>').dialog({
+                title: "<%- __('Create a new searchtimer') %>",
+                body: "<%- __('Are you sure that you want to delete this recording? This action cannot be undone!') %>",
+                close: true,
+                buttons: [{
+                    text: 'Create',
+                    action: 'close'
+                }]
+            });
+
+            message.dialog('show');
+        });
+        
+        $.vdrmanager.search.timer(1, function (searchtimers) {
+            $('#SearchtimerEntryTemplate').tmpl({
+                searchtimers: searchtimers
+            }).appendTo('table#searchtimerlist > tbody');
+
+            $(document).endlessScroll({
+                callback: function (p) {
+                    $('body').overlay('show');
+
+                    $.vdrmanager.search.timer(p, function (data) {
+                        if (data.length == 0) {
+                            $(document).unbind('scroll resize');
+                            $('body').overlay('hide');
+                            return;
+                        }
+                        
+                        $('#SearchtimerEntryTemplate').tmpl({
+                            searchtimers: data
+                        }).appendTo('table#searchtimerlist > tbody');
+                        
+                        /*$('table#recordingslist > tbody > tr > td:nth-child(1) > input').each(function () {
+                            if (!$(this).is(':checked')) {
+                                $(this).attr('checked', $('#recordingsDeleteAll').is(':checked'));
+                            } 
+                        });*/
+
+                        $('body').overlay('hide');
+                    });
+                }
+            });
+            
+            var header = $('#deleteSelectedSearchtimer').parent().data({
+                height: $('#deleteSelectedSearchtimer').parent().height(),
+                width: $('#deleteSelectedSearchtimer').parent().width(),
+                top: $('#deleteSelectedSearchtimer').parent().offset().top
+            });
+            var view = $(window);
+
+            view.bind("scroll resize", function () {
+                var viewTop = view.scrollTop();
+
+                if ((viewTop + 40 > header.data('top')) && header.css('position') != 'fixed') {
+                    console.log(header);
+                    // Toggle the message classes.
+                    header.css({
+                        position: 'fixed',
+                        top: 20,
+                        left: header.offset().left,
+                        height: header.data('height'),
+                        width: header.data('width')
+                    });
+
+                    // Check to see if the view has scroll back up
+                    // above the message AND that the message is
+                    // currently fixed.
+                } else if ((viewTop + 40 <= header.data('top')) && header.css('position') == 'fixed') {
+                    // Toggle the message classes.
+                    header.css({
+                        position: '',
+                        top: header.data('top'),
+                        height: header.data('height'),
+                        width: header.data('width')
+                    });
+                }
+            });
+
+            $('body').overlay('hide');
+
+            enableScrollbar();
+        });
 
         $('body').overlay('hide');
     }

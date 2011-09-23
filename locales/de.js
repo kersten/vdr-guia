@@ -112,5 +112,9 @@
 	"The timer filename is not defined!": "The timer filename is not defined!",
 	"The timer weekdays are not defined!": "The timer weekdays are not defined!",
 	"The timer id is not defined!": "The timer id is not defined!",
-	"GUIA Server has disconnected": "GUIA Server has disconnected"
+	"GUIA Server has disconnected": "GUIA Server has disconnected",
+	"Create new searchtimer": "Create new searchtimer",
+	"Create a new searchtimer": "Create a new searchtimer",
+	"Delete selectes searchtimer": "Delete selectes searchtimer",
+	"Delete selected searchtimer": "Delete selected searchtimer"
 }
