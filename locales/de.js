@@ -111,5 +111,6 @@
 	"The timer stop is not defined!": "The timer stop is not defined!",
 	"The timer filename is not defined!": "The timer filename is not defined!",
 	"The timer weekdays are not defined!": "The timer weekdays are not defined!",
-	"The timer id is not defined!": "The timer id is not defined!"
+	"The timer id is not defined!": "The timer id is not defined!",
+	"GUIA Server has disconnected": "GUIA Server has disconnected"
 }

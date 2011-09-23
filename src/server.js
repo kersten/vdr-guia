@@ -5,7 +5,6 @@ var config = require('./etc/config');
 
 var privateKey = fs.readFileSync(__dirname + '/etc/cert/server.key').toString();
 var certificate = fs.readFileSync(__dirname + '/etc/cert/server.crt').toString();
-var credentials = crypto.createCredentials({key: privateKey, cert: certificate});
 
 var app = express.createServer({key: privateKey, cert: certificate});
 var io = require('socket.io').listen(app);

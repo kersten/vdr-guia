@@ -81,7 +81,7 @@ $(document).ready(function () {
     function getHighlights () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Highlights") %>');
+        $(document).attr('title', 'GUIA // <%= __("Highlights") %>');
 
         $('#HighlightsTemplate').tmpl().appendTo('#body');
 
@@ -97,7 +97,7 @@ $(document).ready(function () {
     function getTvguide () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("TV Guide") %>');
+        $(document).attr('title', 'GUIA // <%= __("TV Guide") %>');
 
         $('#TvguideTemplate').tmpl().appendTo('#body');
 
@@ -107,7 +107,7 @@ $(document).ready(function () {
     function getProgram () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Program") %>');
+        $(document).attr('title', 'GUIA // <%= __("Program") %>');
 
         $.vdrmanager.channel.list(function (channels) {
             $('#ProgramTemplate').tmpl({
@@ -256,7 +256,7 @@ $(document).ready(function () {
     function getTimer () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Timer") %>');
+        $(document).attr('title', 'GUIA // <%= __("Timer") %>');
         
         // Clean evantually binded old events
         $('#timerlist > tbody > tr > td:nth-child(1)').die('click');
@@ -343,7 +343,7 @@ $(document).ready(function () {
     function getSearch () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Search") %>');
+        $(document).attr('title', 'GUIA // <%= __("Search") %>');
 
         $('#SearchTemplate').tmpl().appendTo('#body');
         
@@ -446,7 +446,7 @@ $(document).ready(function () {
     function getSearchtimer () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Searchtimer") %>');
+        $(document).attr('title', 'GUIA // <%= __("Searchtimer") %>');
 
         $('body').overlay('hide');
     }
@@ -454,7 +454,7 @@ $(document).ready(function () {
     function getRecordings () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Recordings") %>');
+        $(document).attr('title', 'GUIA // <%= __("Recordings") %>');
         
         // Clean evantually binded old events
         $('table#recordingslist > tbody > tr > td:nth-child(2)').die('click');
@@ -709,7 +709,7 @@ $(document).ready(function () {
     function getSettings () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("Settings") %>');
+        $(document).attr('title', 'GUIA // <%= __("Settings") %>');
 
         $('body').overlay('hide');
     }
@@ -717,7 +717,7 @@ $(document).ready(function () {
     function getAbout () {
         removeContext($('#body'));
 
-        $(document).attr('title', 'VDRManager // <%= __("About") %>');
+        $(document).attr('title', 'GUIA // <%= __("About") %>');
 
         $('#AboutTemplate').tmpl().appendTo('#body');
 
@@ -755,7 +755,7 @@ $(document).ready(function () {
     socket.on('disconnect', function() {
         if (!disconnected) {
             var dialog = $('<div></div>').dialog({
-                title: "<%= __('VDRManager Server has disconnected') %>",
+                title: "<%= __('GUIA Server has disconnected') %>",
                 body: '<p><%= __("The App lost the connection to the server, please try to reconnect or leave this site!") %></p>',
                 close: true,
                 buttons: [{
