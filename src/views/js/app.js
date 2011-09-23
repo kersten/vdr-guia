@@ -749,6 +749,10 @@ $(document).ready(function () {
             checkScrollbar = setTimeout(enableScrollbar, 1000);
         }
     }
+    
+    socket.on('mosquittoChannelSwitch', function (message) {
+        console.log('Switched to channel ' + message.channelName);
+    });
 
     var disconnected = false;
 

@@ -1,8 +1,6 @@
 io.sockets.on('connection', function (socket) {
     socket.on('getChannels', function () {
-        rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
-            socket.emit('getChannels', data.channels);
-        });
+        socket.emit('getChannels', vdr.channelList);
     });
 
     socket.on('getEpg', function (data) {

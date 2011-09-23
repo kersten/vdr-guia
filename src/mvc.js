@@ -9,32 +9,10 @@ var fs = require('fs'),
     config = require('./etc/config'),
     monomi = require("monomi"),
     rest = require('restler'),
-    wol = require('wake_on_lan')
-    mqtt = require('MQTTClient'),
+    wol = require('wake_on_lan'),
     thetvdb = require('./lib/thetvdb.org'),
     sys = require('sys'),
     exec = require('child_process').exec;
-    mosquitto = require('./lib/mosquitto');
-
-
-//var mqClient = new mosquitto.connect(config.vdr.host, 1883, 'vdrmanager');
-
-/*mqClient.on('sessionOpened', function () {
-    mqClient.subscribe('application/vdr/status/+', function (topic, message) {
-        console.log();
-    });
-});*/
-
-//var mosquitto = require('./lib/mosquitto/build/default/mosquitto');
-
-/*var test = new mosquitto.Connection(config.vdr.host, 1883);
-console.log(test);*/
-
-/*test.on('connected', function () {
-    console.log('arguments');
-});
-
-test.connect();*/
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -99,9 +77,12 @@ function bootApplication (app, io) {
     global.rest = rest;
     global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
     global.config = config;
+    
     global.vdr = {
-        plugins: {}
+        plugins: {},
+        channelList: []
     };
+    
     global.io = io;
     global.sessionStore = store;
     
@@ -126,7 +107,8 @@ function bootApplication (app, io) {
                 if (error) {
                     console.log('Some error occurred sending the WOL pakages!');
                 } else {
-                    console.log('Done sending WOL packages to VDR! Try again in 2 Minutes.');
+                    console.log('Done sending WOL packages to VDR! Try again in 1 Minute.');
+                    setTimeout(checkVdrRunning, 60000);
                 }
             });
         }, 10000);
@@ -142,8 +124,16 @@ function bootApplication (app, io) {
                 vdr.plugins[data.vdr.plugins[i].name] = true;
             }
 
-            bootControllers(app);
+            setupBasics();
         });
+    }
+    
+    function setupBasics () {
+        rest.get(restfulUrl + '/channels.json?start=0').on('complete', function(data) {
+            vdr.channelList = data.channels;
+        });
+        
+        bootControllers(app);
     }
     
     checkVDRRunning();
