@@ -2,9 +2,13 @@ jQuery.extend($.vdrmanager, {
     search: {
         timer: function (site, cb) {
             var getSearchtimers = function (searchtimers) {
-                cb.apply(this, arguments);
+                if (searchtimers.length == 0) {
+                    $(document).unbind('scroll resize');
+                }
 
-                socket.removeListener('getSearchtimers', searchtimers);
+                socket.removeListener('getSearchtimers', getSearchtimers);
+                
+                cb.apply(this, arguments);
             };
 
             socket.on('getSearchtimers', getSearchtimers);

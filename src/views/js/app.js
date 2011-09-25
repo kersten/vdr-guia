@@ -1,4 +1,5 @@
 var socket = io.connect();
+var restfulUrl = "<%- restfulUrl %>";
 
 $(document).ready(function () {
     $('body').overlay('show');
@@ -121,6 +122,28 @@ $(document).ready(function () {
 
             $('div#channellist > table > tbody > tr').click(function () {
                 $('body').overlay('show');
+                
+                if ($(this).attr('hasimage') == "true") {
+                    $('#program_header_div').html(
+                        $('<div></div>').addClass('span16')
+                        .append(
+                            $('<h1></h1>').css('float', 'left')
+                            .text("<%= __('Program for channel ') %>" + $(this).attr('channel_name'))
+                        ).append(
+                            $('<img></img>').css({'float': 'right', height: 44})
+                            .attr('src', restfulUrl + '/channels/image/' + $(this).attr('channelid'))
+                        )
+                    );
+                } else {
+                    $('#program_header_div').html(
+                        $('<div></div>').addClass('span16')
+                        .append(
+                            $('<h1></h1>').css('float', 'left')
+                            .text("<%= __('Program for channel ') %>" + $(this).attr('channel_name'))
+                        )
+                    );
+                }
+                
                 getEpg($(this).attr('channelid'));
             });
 
@@ -465,6 +488,8 @@ $(document).ready(function () {
         });
         
         $.vdrmanager.search.timer(1, function (searchtimers) {
+            console.log(searchtimers);
+            
             $('#SearchtimerEntryTemplate').tmpl({
                 searchtimers: searchtimers
             }).appendTo('table#searchtimerlist > tbody');
@@ -474,12 +499,6 @@ $(document).ready(function () {
                     $('body').overlay('show');
 
                     $.vdrmanager.search.timer(p, function (data) {
-                        if (data.length == 0) {
-                            $(document).unbind('scroll resize');
-                            $('body').overlay('hide');
-                            return;
-                        }
-                        
                         $('#SearchtimerEntryTemplate').tmpl({
                             searchtimers: data
                         }).appendTo('table#searchtimerlist > tbody');
@@ -500,13 +519,19 @@ $(document).ready(function () {
                 width: $('#deleteSelectedSearchtimer').parent().width(),
                 top: $('#deleteSelectedSearchtimer').parent().offset().top
             });
+            
             var view = $(window);
+            var tmp = null;
 
             view.bind("scroll resize", function () {
                 var viewTop = view.scrollTop();
 
                 if ((viewTop + 40 > header.data('top')) && header.css('position') != 'fixed') {
-                    console.log(header);
+                    tmp = $('<div></div>').css({
+                        width: header.data('width'),
+                        height: header.data('height'),
+                        top: header.data('top')
+                    }).addClass('actions');
                     // Toggle the message classes.
                     header.css({
                         position: 'fixed',
@@ -515,6 +540,8 @@ $(document).ready(function () {
                         height: header.data('height'),
                         width: header.data('width')
                     });
+                    
+                    tmp.insertBefore(header);
 
                     // Check to see if the view has scroll back up
                     // above the message AND that the message is
@@ -527,6 +554,8 @@ $(document).ready(function () {
                         height: header.data('height'),
                         width: header.data('width')
                     });
+                    
+                    tmp.remove();
                 }
             });
 
@@ -717,12 +746,17 @@ $(document).ready(function () {
                 top: $('#deleteSelectedRecordings').parent().offset().top
             });
             var view = $(window);
+            var tmp = null;
 
             view.bind("scroll resize", function () {
                 var viewTop = view.scrollTop();
 
                 if ((viewTop + 40 > header.data('top')) && header.css('position') != 'fixed') {
-                    console.log(header);
+                    tmp = $('<div></div>').css({
+                        width: header.data('width'),
+                        height: header.data('height'),
+                        top: header.data('top')
+                    }).addClass('actions');
                     // Toggle the message classes.
                     header.css({
                         position: 'fixed',
@@ -731,6 +765,8 @@ $(document).ready(function () {
                         height: header.data('height'),
                         width: header.data('width')
                     });
+                    
+                    tmp.insertBefore(header);
 
                     // Check to see if the view has scroll back up
                     // above the message AND that the message is
@@ -743,6 +779,8 @@ $(document).ready(function () {
                         height: header.data('height'),
                         width: header.data('width')
                     });
+                    
+                    tmp.remove();
                 }
             });
 
@@ -819,7 +857,7 @@ $(document).ready(function () {
     
     var checkScrollbar = null;
 
-    function removeContext( item ) {
+    function removeContext(item) {
         item.unbind();
         $(window).unbind('scroll resize');
         $(document).unbind('scroll resize endless.scroll');
@@ -839,6 +877,7 @@ $(document).ready(function () {
     
     socket.on('mosquittoChannelSwitch', function (message) {
         console.log('Switched to channel ' + message.channelName);
+        $.jGrowl("<%= __('Switched to channel: ') %>" + message.channelName, {position: 'bottom-right'});
     });
 
     var disconnected = false;

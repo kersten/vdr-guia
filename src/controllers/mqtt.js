@@ -1,17 +1,24 @@
 if (vdr.plugins.mqtt === true) {
     var mqtt = require('MQTTClient');
     
+    console.log('Connecting to mqtt mosquitto server');
+    
+    mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
+
+    mqttClient.addListener('sessionOpened', function () {
+        console.log('Connected to mosquitto daemon on vdr.');
+        console.log('Subscribe to all events.');
+        mqttClient.subscribe('application/vdr/status/+');
+    });
+    
     io.sockets.on('connection', function (socket) {
-        mqttClient = new mqtt.MQTTClient(1883, config.vdr.host, 'vdrmanager'),
-
-        mqttClient.addListener('sessionOpened', function () {
-            console.log('Connected to mosquitto daemon on vdr.');
-            console.log('Subscribe to all events.');
-            mqttClient.subscribe('application/vdr/status/+');
-        });
-
         mqttClient.addListener('mqttData', function (topic, message) {
-            message = JSON.parse(message.toString());
+            try {
+                message = JSON.parse(message.toString());
+            } catch (e) {
+                return;
+            }
+            
             var data = message.data;
             
             switch (message.method) {

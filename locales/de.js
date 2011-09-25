@@ -116,5 +116,15 @@
 	"Create new searchtimer": "Create new searchtimer",
 	"Create a new searchtimer": "Create a new searchtimer",
 	"Delete selectes searchtimer": "Delete selectes searchtimer",
-	"Delete selected searchtimer": "Delete selected searchtimer"
+	"Delete selected searchtimer": "Delete selected searchtimer",
+	"Search for": "Search for",
+	"Time": "Time",
+	"Delete searchtimer": "Delete searchtimer",
+	"See results": "See results",
+	"Between": "Between",
+	"v_r for helping me with the MQTT protocol": "v_r for helping me with the MQTT protocol",
+	"GUIA aims to be the replacement for old VDRLive.": "GUIA aims to be the replacement for old VDRLive.",
+	"Switched to cahnnel ": "Switched to cahnnel ",
+	"Switched to channel: ": "Switched to channel: ",
+	"Program for channel ": "Program for channel "
 }
