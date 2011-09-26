@@ -94,6 +94,20 @@ var setup = function (db) {
     db.serialize(function() {
         db.run("CREATE TABLE category2event (eventId, categoryId INT)");
     });
+    
+    db.serialize(function() {
+        db.run("CREATE TABLE audio ("
+            +"id INTEGER PRIMARY KEY,"
+            +"stream INTEGER,"
+            +"type INTEGER,"
+            +"language TEXT,"
+            +"description"
+        +")");
+    });
+    
+    db.serialize(function() {
+        db.run("CREATE TABLE audio2event (eventId, audioId INT)");
+    });
 };
 
 exports.setup = setup;

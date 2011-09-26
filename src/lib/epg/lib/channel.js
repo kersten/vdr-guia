@@ -65,8 +65,7 @@ channel.prototype.addEvents = function (id, event, callback) {
                 event.rating,
                 event.year
             ], function (err, row) {
-                console.log(err + ' :: ' + this.lastID);
-                throw "ARGH";
+                console.log('Last inserted :: ' + this.lastID);
                 callback.call();
             });
         } else {

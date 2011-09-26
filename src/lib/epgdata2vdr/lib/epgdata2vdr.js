@@ -23,80 +23,81 @@ function Setup (resturl) {
     });
     
     this.on('channel/setup/complete', function () {
-        var ratingRegex = /^\[([\*]*?)\](.*)/;
-        
         epg.channel.getAll(function (res) {
-            var i = 0;
-            
-            self.on('process/next/channel', function () {
-                console.log('Proccess channel_id: ' + res[i].channel_id);
-                
-                rest.get(resturl + '/events/' + res[i].channel_id + '.json?start=0').on('complete', function(events) {
-                    var eventsProcessed = 0;
-                    
-                    if (typeof(events.events) == 'undefined') {
-                        i++;
-                        self.emit('process/next/channel');
-                        return;
-                    }
-                    
-                    self.on('process/next/event', function () {
-                        var data = events.events[eventsProcessed];
-                        var event = {};
-                        var rating = null;
-
-                        if (ratingRegex.test(data.description)) {
-                            var match = data.description.match(ratingRegex);
-                            rating = match[1].length;
-                            data.description = match[2];
-                        }
-
-                        event.id = data.id;
-                        event.title = data.title;
-                        event.short_description = data.short_text;
-                        event.description = data.description;
-                        event.start_time = data.start_time;
-                        event.duration = data.duration;
-                        event.images = data.images;
-                        event.rating = rating;
-                        event.year = (typeof(data.components) == 'undefined') ? null : data.components.year;
-
-                        epg.channel.addEvents(res[i].id, event, function () {
-                            console.log('Event ' + event.id + ' proccessed');
-                            eventsProcessed++;
-                            
-                            if (eventsProcessed == events.events.length) {
-                                i++;
-                                self.emit('process/next/channel');
-                            } else {
-                                self.emit('process/next/event');
-                            }
-                        });
-                    });
-                    
-                    self.emit('process/next/event');
-                }).on('error', function () {
-                    i++;
-                    self.emit('process/next/channel');
-                });
-
-                if (i == res.length) {
-                    self.emit('epg/setup/complete');
-                }
-            });
-            
-            self.emit('process/next/channel');
+            self.emit('process/next/channel', {res: res});
         });
     });
     
+    this.on('process/next/channel', function (data) {
+        if (data.res.length == 0) {
+            self.emit('epg/setup/complete');
+            return;
+        }
+        
+        console.log('Proccess channel: ' + data.res[0].name);
+
+        rest.get(resturl + '/events/' + data.res[0].channel_id + '.json?start=0&limit=3').on('complete', function(events) {
+            if (typeof(events.events) == 'undefined' || events.events.length == 0) {
+                data.res.shift();
+                self.emit('process/next/channel', {res: data.res});
+                return;
+            }
+            
+            self.emit('process/next/event', {events: events.events, res: data.res});
+            return;
+        }).on('error', function () {
+            data.res.shift();
+            self.emit('process/next/channel', {res: data.res});
+            return;
+        });
+    });
+    
+    this.on('process/next/event', function (data) {
+        var event = data.events[0];
+        var rating = null;
+
+        var ratingRegex = /^\[([\*]*?)\](.*)/;
+
+        if (ratingRegex.test(event.description)) {
+            var match = event.description.match(ratingRegex);
+            rating = match[1].length;
+            event.description = match[2];
+        }
+
+        event.id = event.id;
+        event.title = event.title;
+        event.short_description = event.short_text;
+        event.description = event.description;
+        event.start_time = event.start_time;
+        event.duration = event.duration;
+        event.images = event.images;
+        event.rating = rating;
+        event.components = event.components;
+
+        epg.channel.addEvents(data.res[0].id, event, function () {
+            data.events.shift();
+
+            if (data.events.length == 0) {
+                data.res.shift();
+                self.emit('process/next/channel', {res: data.res});
+                return;
+            } else {
+                self.emit('process/next/event', {events: data.events, res: data.res});
+                return;
+            }
+        });
+    });
+    
+    var cnt = 0;
+    
     this.on('epg/setup/complete', function () {
-        console.log('completed');
+        console.log('completed :: ' + cnt++);
     });
 }
 
 sys.inherits(Setup, EventEmitter);
 
-var setup = new Setup('http://127.0.0.1:8002');
+var setup = new Setup('http://192.168.0.192:8002');
 
 //var json = xml2json.toJson(fs.readFileSync('/var/cache/epgdata2vdr/include/category.xml'));
 //console.log(json);
