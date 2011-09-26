@@ -12,7 +12,8 @@ var fs = require('fs'),
     wol = require('wake_on_lan'),
     thetvdb = require('./lib/thetvdb.org'),
     sys = require('sys'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    iniparser = require('iniparser');
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -80,8 +81,11 @@ function bootApplication (app, io) {
     
     global.vdr = {
         plugins: {},
-        channelList: []
+        channelList: [],
+        genremap: iniparser.parseSync('/etc/epgdata2vdr/genremap.conf')
     };
+    
+    console.log(iniparser.parseSync('/etc/epgdata2vdr/genremap.conf'));
     
     global.io = io;
     global.sessionStore = store;
