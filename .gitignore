@@ -2,7 +2,5 @@ nbproject
 .DS_Store
 /node_modules/iconv/deps/libiconv-1.13.1/src/.libs/
 *~
-node_modules/node-syslog/build/
-node_modules/node-syslog/.lock-wscript
-/node_modules/xml/.idea/
+node_modules/*
 npm-debug.log
