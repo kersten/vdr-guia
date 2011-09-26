@@ -1,6 +1,5 @@
 nbproject
 .DS_Store
-/node_modules/iconv/deps/libiconv-1.13.1/src/.libs/
 *~
-node_modules/*
+/node_modules/*
 npm-debug.log
