@@ -5,6 +5,48 @@ module.exports = {
             restfulUrl: restfulUrl
         });
     },
+    "models/models.js": function (req, res) {
+        res.render('../models/models.js', {
+            layout: false
+        });
+    },
+    "collections/Channels.js": function (req, res) {
+        res.render('js/collections/Channels.js', {
+            layout: false
+        });
+    },
+    "models/Channel.js": function (req, res) {
+        res.render('js/models/Channel.js', {
+            layout: false
+        });
+    },
+    "views/Menu.js": function (req, res) {
+        res.render('js/views/Menu.js', {
+            layout: false
+        });
+    },
+    "views/Program.js": function (req, res) {
+        res.render('js/views/Program.js', {
+            layout: false
+        });
+    },
+    "AppController.js": function (req, res) {
+        res.render('js/AppController.js', {
+            layout: false
+        });
+    },
+    "backbone.js": function (req, res) {
+        res.render('js/backbone.js', {
+            layout: false
+        });
+    },
+    "underscore.js": function (req, res) {
+        res.render('js/underscore.js', {
+            layout: false,
+            open: '{{',
+            close: '}}'
+        });
+    },
     "vdr/manager.js": function (req, res) {
         res.render('js/vdr/manager.js', {
             layout: false

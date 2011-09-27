@@ -8,18 +8,21 @@ var fs = require('fs'),
 function Setup (resturl) {
     var self = this;
     
-    rest.get(resturl + '/channels.json?start=0').on('complete', function(data) {
-        var x = 0;
-        
-        for (var i in data.channels) {
-            epg.channel.add(data.channels[i], function () {
-                x++;
-                
-                if (x == data.channels.length) {
-                    self.emit('channel/setup/complete');
-                }
-            });
-        }
+    rest.get(resturl + '/channels.json?start=0').on('success', function(data) {
+        self.emit('channel/insert', {channels: data.channels});
+    });
+    
+    this.on('channel/insert', function (data) {
+        epg.channel.add(data.channels[0], function () {
+            data.channels.shift();
+            
+            if (data.channels.length == 0) {
+                self.emit('channel/setup/complete');
+                return;
+            }
+            
+            self.emit('channel/insert', {channels: data.channels});
+        });
     });
     
     this.on('channel/setup/complete', function () {
@@ -36,7 +39,9 @@ function Setup (resturl) {
         
         console.log('Proccess channel: ' + data.res[0].name);
 
-        rest.get(resturl + '/events/' + data.res[0].channel_id + '.json?start=0&limit=3').on('complete', function(events) {
+        rest.get(resturl + '/events/' + data.res[0].channel_id + '.json?start=0').on('success', function(events) {
+            console.log('Process events');
+            
             if (typeof(events.events) == 'undefined' || events.events.length == 0) {
                 data.res.shift();
                 self.emit('process/next/channel', {res: data.res});
@@ -88,16 +93,12 @@ function Setup (resturl) {
         });
     });
     
-    var cnt = 0;
-    
     this.on('epg/setup/complete', function () {
-        console.log('completed :: ' + cnt++);
+        console.log('completed');
     });
 }
 
 sys.inherits(Setup, EventEmitter);
-
-var setup = new Setup('http://192.168.0.192:8002');
 
 //var json = xml2json.toJson(fs.readFileSync('/var/cache/epgdata2vdr/include/category.xml'));
 //console.log(json);
@@ -108,5 +109,5 @@ epg.actor.get('Brad Pitt', function (err, row) {
 });
 
 module.exports = {
-    setup: setup
+    Setup: Setup
 };

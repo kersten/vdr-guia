@@ -7,7 +7,7 @@
 	<meta http-equiv="content-type"
 		content="text/html;charset=utf-8" />
 
-        <script src="/socket.io/socket.io.js"></script>
+        <!-- <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
         <script type="text/javascript" src="/js/plugins/jquery.tmpl.js"></script>
 
@@ -26,12 +26,81 @@
         <script type="text/javascript" src="/js/vdr/manager/settings.js"></script>
         <script type="text/javascript" src="/js/vdr/manager/timer.js"></script>
         
-        <script type="text/javascript" src="/js/app.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script> -->
+        
+        <!-- Include templates -->
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/menu') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/highlights') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/tvguide') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/program') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/timer') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/search') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/searchtimer') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/recordings') %>
+        </script>
+        
+        <script type="text/template" id="menu_template">
+            <%- partial('../templates/about') %>
+        </script>
+        
+        <!-- Include socket.io -->
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <!-- Include jQuery -->
+        <script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
+        
+        <!-- Include underscore and backbone -->
+        <script type="text/javascript" src="/js/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone.js"></script>
+        
+        <!-- Include models -->
+        <script type="text/javascript" src="/js/models/models.js"></script>
+        
+        <!-- Include collections -->
+        <script type="text/javascript" src="/js/collections/Channels.js"></script>
+        
+        <!-- Include views -->
+        <script type="text/javascript" src="/js/views/Menu.js"></script>
+        <script type="text/javascript" src="/js/views/Program.js"></script>
+        
+        <!-- Include AppController -->
+        <script type="text/javascript" src="/js/AppController.js"></script>
+       
+        <!-- Initalize GUIA -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                window.app = App.initialize();
+            });
+        </script>
+        
+        <!-- <script type="text/template" id="search_template" src="/program"></script> -->
 
         <link href="/css/jquery.jgrowl.css" type="text/css" rel="stylesheet" />
         <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
 
-        <%- partial('authenticate') %>
+        <!-- <%- partial('authenticate') %>
         <%- partial('menu') %>
 
         <%- partial('highlights') %>
@@ -41,26 +110,12 @@
         <%- partial('search') %>
         <%- partial('searchtimer') %>
         <%- partial('recordings') %>
-        <%- partial('about') %>
+        <%- partial('about') %> -->
 </head>
 
 <body>
-    <div class="topbar">
-        <div class="fill">
-            <div class="container" id="menu">
-                <h3>
-                    <a href="/">GUIA</a>
-                </h3>
-
-                <ul>
-                    <li>
-                        <a class="toplinks" href="#about" load="/about"><%= __('About') %></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+    <div id="menu"></div>
+    
     <div class="container" style="margin-top: 50px;" id="body">
 
     </div>

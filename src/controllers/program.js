@@ -7,7 +7,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('getEpg', function (data) {
         var start = (data.site - 1) * config.app.entries;
 
-        rest.get(restfulUrl + '/events/' + data.channelid + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('complete',  function (epg) {
+        rest.get(restfulUrl + '/events/' + data.channelid + '.json?timespan=0&start=' + start + '&limit=' + config.app.entries).on('success',  function (epg) {
             for (var i in epg.events) {
                 var start = new Date(epg.events[i].start_time * 1000);
                 var stop = new Date((epg.events[i].start_time + epg.events[i].duration) * 1000);

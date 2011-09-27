@@ -10,3 +10,4 @@ http.createServer(function (req, res) {
 
 
 var epgdata2vdr = require('epgdata2vdr');
+var setup = new epgdata2vdr.Setup('http://127.0.0.1:8002');

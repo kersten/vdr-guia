@@ -4,10 +4,10 @@ var highlights = {
     tipofday: {}
 };
 
-rest.get(restfulUrl + '/channels.json?start=0&limit=20').on('complete', function(data) {
+rest.get(restfulUrl + '/channels.json?start=0&limit=20').on('success', function(data) {
     return;
     for (var i in data.channels) {
-        rest.get(restfulUrl + '/events/' + data.channels[i].channel_id + '.json?timespan=0&start=0').on('complete',  function (epg) {
+        rest.get(restfulUrl + '/events/' + data.channels[i].channel_id + '.json?timespan=0&start=0').on('success',  function (epg) {
             for (var i in epg.events) {
                 var genreTip = /\[Genretipp\s(.*?)\]/i.exec(epg.events[i].description);
 
