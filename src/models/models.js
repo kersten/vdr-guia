@@ -12,7 +12,6 @@
     
     models.MenuEntryModel = Backbone.Model.extend({});
     models.ChannelModel = Backbone.Model.extend({});
-    models.EpgEntryModel = Backbone.Model.extend({});
     
     Backbone.Model.prototype.xport = function (opt) {
         var result = {},

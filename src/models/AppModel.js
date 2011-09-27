@@ -1,7 +1,7 @@
+var _ = require('underscore')._;
+    Backbone = require('backbone');
+
 var App = Backbone.Model.extend({
-    defaults: {
-        Channels: new Channels()
-    },
     initialize: function () {
         var getChannels = function (channels) {
             socket.removeListener('getChannels', getChannels);
@@ -16,3 +16,5 @@ var App = Backbone.Model.extend({
         socket.emit('getChannels');
     }
 });
+
+exports.App = App;

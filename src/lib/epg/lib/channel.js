@@ -66,6 +66,8 @@ channel.prototype.addEvents = function (id, event, callback) {
                 console.log('Last inserted :: ' + this.lastID);
 
                 db.run('INSERT INTO event2channel VALUES (?, ?)', [this.lastID, id]);
+                
+                if (event.details.length != "undefined")
 
                 callback.call();
             });

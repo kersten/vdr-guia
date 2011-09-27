@@ -3,7 +3,8 @@ var fs = require('fs'),
     epg = require('epg'),
     rest = require('restler'),
     sys = require('sys'),
-    EventEmitter = require('events').EventEmitter;
+    EventEmitter = require('events').EventEmitter,
+    RawEventItemModel = require('RawEventItemModel.js');
 
 function Setup (resturl) {
     var self = this;
@@ -39,7 +40,7 @@ function Setup (resturl) {
         
         console.log('Proccess channel: ' + data.res[0].name);
 
-        rest.get(resturl + '/events/' + data.res[0].channel_id + '.json?start=0').on('success', function(events) {
+        rest.get(resturl + '/events/' + data.res[0].channel_id + '.json?start=0&limit=10').on('success', function(events) {
             console.log('Process events');
             
             if (typeof(events.events) == 'undefined' || events.events.length == 0) {
@@ -58,7 +59,21 @@ function Setup (resturl) {
     });
     
     this.on('process/next/event', function (data) {
-        var event = data.events[0];
+        var event = new RawEventItemModel.init(data.events[0]);
+        
+        console.log(event.toJSON());
+        
+        data.events.shift();
+
+        if (data.events.length == 0) {
+            data.res.shift();
+            self.emit('process/next/channel', {res: data.res});
+            return;
+        } else {
+            self.emit('process/next/event', {events: data.events, res: data.res});
+            return;
+        }
+        
         var rating = null;
 
         var ratingRegex = /^\[([\*]*?)\](.*)/;
@@ -68,16 +83,8 @@ function Setup (resturl) {
             rating = match[1].length;
             event.description = match[2];
         }
-
-        event.id = event.id;
-        event.title = event.title;
-        event.short_description = event.short_text;
-        event.description = event.description;
-        event.start_time = event.start_time;
-        event.duration = event.duration;
-        event.images = event.images;
+        
         event.rating = rating;
-        event.components = event.components;
 
         epg.channel.addEvents(data.res[0].id, event, function () {
             data.events.shift();
