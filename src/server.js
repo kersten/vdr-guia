@@ -1,3 +1,5 @@
+require.paths.unshift(__dirname + "/lib");
+
 var express = require('express');
 var fs = require("fs");
 var crypto = require('crypto');

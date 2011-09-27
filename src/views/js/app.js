@@ -462,6 +462,50 @@ $(document).ready(function () {
 
             return false;
         });
+        
+        var header = $('#searchFormular').data({
+            height: $('#searchFormular').height(),
+            width: $('#searchFormular').width(),
+            top: $('#searchFormular').offset().top
+        });
+        
+        var view = $(window);
+        var tmp = null;
+
+        view.bind("scroll resize", function () {
+            var viewTop = view.scrollTop();
+
+            if ((viewTop + 40 > header.data('top')) && header.css('position') != 'fixed') {
+                tmp = $('<div></div>').css({
+                    width: header.data('width'),
+                    height: header.data('height'),
+                    top: header.data('top')
+                }).addClass('row');
+                // Toggle the message classes.
+                header.css({
+                    position: 'fixed',
+                    top: 40,
+                    height: header.data('height'),
+                    width: header.data('width')
+                });
+
+                tmp.insertBefore(header);
+
+                // Check to see if the view has scroll back up
+                // above the message AND that the message is
+                // currently fixed.
+            } else if ((viewTop + 40 <= header.data('top')) && header.css('position') == 'fixed') {
+                // Toggle the message classes.
+                header.css({
+                    position: '',
+                    top: header.data('top'),
+                    height: header.data('height'),
+                    width: header.data('width')
+                });
+
+                tmp.remove();
+            }
+        });
 
         $('body').overlay('hide');
     }

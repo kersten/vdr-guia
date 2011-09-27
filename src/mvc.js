@@ -13,7 +13,8 @@ var fs = require('fs'),
     thetvdb = require('./lib/thetvdb.org'),
     sys = require('sys'),
     exec = require('child_process').exec,
-    iniparser = require('iniparser');
+    iniparser = require('iniparser')
+    models = require('./models/models');
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -78,6 +79,7 @@ function bootApplication (app, io) {
     global.rest = rest;
     global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
     global.config = config;
+    global.models = models;
     
     global.vdr = {
         plugins: {},
@@ -204,7 +206,7 @@ function bootController (app, file) {
         if (typeof(req.session) == 'undefined' || typeof(req.session.loggedIn) == 'undefined' || !req.session.loggedIn) {
             req.session.loggedIn = false;
 
-            if (!req.url.match(/^\/js.*/) && req.url != '/' && !req.url.match(/\/authenticate.*/) && req.url != '/about') {
+            if (!req.url.match(/^\/js.*/) && req.url != '/' && !req.url.match(/\/authenticate.*/) && req.url != '/about' && !req.url.match(/\/templates.*/)) {
                 res.writeHead(403);
                 res.end();
                 return;
@@ -233,7 +235,7 @@ function bootController (app, file) {
                 action = action + '/:channelid';
             }
 
-            if (prefix == '/js') {
+            if (prefix == '/js' || prefix == '/templates') {
                 console.log('Registering GET: ' + prefix + '/' + action);
                 app.get(prefix + '/' + action, fn);
                 break;

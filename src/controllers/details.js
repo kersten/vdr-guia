@@ -1,6 +1,6 @@
 io.sockets.on('connection', function (socket) {
     socket.on('getDetails', function (data) {
-        rest.get(restfulUrl + '/events/' + data.channelid + '/' + data.eventid + '.json').on('complete', function(data) {
+        rest.get(restfulUrl + '/events/' + data.channelid + '/' + data.eventid + '.json').on('success', function(data) {
             console.log(data);
             socket.emit('getDetails', data);
         });
@@ -17,7 +17,7 @@ module.exports = {
             return;
         }
 
-        rest.get(restfulUrl + '/events/' + channelId + '/' + eventId + '.json').on('complete', function(data) {
+        rest.get(restfulUrl + '/events/' + channelId + '/' + eventId + '.json').on('success', function(data) {
             console.log(data);
 
             res.render('details', {

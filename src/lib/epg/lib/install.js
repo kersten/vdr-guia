@@ -48,11 +48,15 @@ var setup = function (db) {
             +"images INTEGER,"
             +"rating INTEGER,"
             +"year INTEGER"
-        +")");
+        +")", function () {
+            db.run('CREATE UNIQUE INDEX idx_eventId on event(eventId ASC)');
+        });
     });
     
     db.serialize(function() {
-        db.run("CREATE TABLE event2channel (eventId INTEGER, channelId INTEGER)");
+        db.run("CREATE TABLE event2channel (eventId INTEGER, channelId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_event2channel on event2channel(eventId ASC, channelId ASC)');
+        });
     });
 
     db.serialize(function() {

@@ -11,7 +11,7 @@ io.sockets.on('connection', function (socket) {
                 use_subtitle: data.subtitle,
                 use_description: data.description
             }
-        }).on('complete', function(data) {
+        }).on('success', function(data) {
             console.log(data);
 
             for (var i in data.events) {

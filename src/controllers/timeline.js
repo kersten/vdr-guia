@@ -2,7 +2,7 @@ module.exports = {
     index: function (req, res) {
         var channels = new Object();
 
-        rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('complete', function(data) {
+        rest.get(restfulUrl + '/channels/.json?&start=0&limit=10').on('success', function(data) {
             var render = function () {
                 if (data.channels.length != waitForFinish) return;
 
@@ -24,7 +24,7 @@ module.exports = {
             var waitForFinish = 0;
 
             data.channels.forEach(function (channel) {
-                rest.get(restfulUrl + '/events/' + channel.channel_id + '.json?start=0', {channel: channel}).on('complete',  function (epg) {
+                rest.get(restfulUrl + '/events/' + channel.channel_id + '.json?start=0', {channel: channel}).on('success',  function (epg) {
                     for (var i in epg.events) {
                         //var regEx = /Kategorie: (.*?)$/im; // tvm2vdr
                         /*var regEx = /^(.*?)\ .*$/i;

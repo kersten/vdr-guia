@@ -2,7 +2,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('getTimers', function (data) {
         var start = (data.site - 1) * config.app.entries;
 
-        rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
+        rest.get(restfulUrl + '/timers.json?start=' + start + '&limit=' + config.app.entries).on('success', function(data) {
             for (var i in data.timers) {
                 var start = new Date(data.timers[i].start_timestamp);
                 var stop = new Date(data.timers[i].stop_timestamp);
@@ -22,7 +22,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('createTimer', function (data) {
         data = JSON.stringify(data);
 
-        rest.post(restfulUrl + '/timers',{data: data}).on('complete', function (data) {
+        rest.post(restfulUrl + '/timers',{data: data}).on('success', function (data) {
             socket.emit('timerCreated', data.timers[0]);
         }).on('error', function (e) {
             console.log(e);
@@ -32,7 +32,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('deleteTimer', function (data) {
-        rest.del(restfulUrl + '/timers/' + data.timerId).on('complete', function () {
+        rest.del(restfulUrl + '/timers/' + data.timerId).on('success', function () {
             socket.emit('timerDeleted');
         }).on('error', function (e) {
             console.log(e);

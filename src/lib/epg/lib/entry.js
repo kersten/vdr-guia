@@ -1,3 +1,38 @@
+var _ = require('underscore')._,
+    Backbone = require('backbone');
+
+var Entry = Backbone.Model.extend({
+    defaults: {
+        title: null,
+        short_text: null,
+        description: null,
+        category: null,
+        gerne: null,
+        rating: null,
+        actors: null,
+        country: null,
+        regisseur: null,
+        year: null,
+        sequence: null,
+        start_time: null,
+        channel: null,
+        duration: null,
+        images: null,
+        timer_exists: false,
+        timer_active: false,
+        timer_id: null
+    },
+    addTimer: function () {
+        
+    },
+    editTimer: function () {
+        
+    },
+    deleteTimer: function () {
+        
+    }
+});
+
 var db = null;
 
 function init (database) {

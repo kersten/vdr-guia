@@ -2,7 +2,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('getSearchtimers', function (data) {
         var start = (data.site - 1) * config.app.entries;
 
-        rest.get(restfulUrl + '/searchtimers.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
+        rest.get(restfulUrl + '/searchtimers.json?start=' + start + '&limit=' + config.app.entries).on('success', function(data) {
             var sorted = new Array();
 
             for (i in data.searchtimers) {

@@ -40,9 +40,7 @@ channel.prototype.add = function (obj, callback) {
                 obj.is_terr,
                 obj.is_sat,
                 obj.is_radio,
-            ], function (err, res) {
-                console.log(err);
-            });
+            ]);
         } else {
             // TODO: check for changes
         }
@@ -66,6 +64,9 @@ channel.prototype.addEvents = function (id, event, callback) {
                 event.year
             ], function (err, row) {
                 console.log('Last inserted :: ' + this.lastID);
+
+                db.run('INSERT INTO event2channel VALUES (?, ?)', [this.lastID, id]);
+
                 callback.call();
             });
         } else {

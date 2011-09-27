@@ -2,7 +2,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('getRecordings', function (data) {
         var start = (data.site - 1) * config.app.entries;
 
-        rest.get(restfulUrl + '/recordings.json?start=' + start + '&limit=' + config.app.entries).on('complete', function(data) {
+        rest.get(restfulUrl + '/recordings.json?start=' + start + '&limit=' + config.app.entries).on('success', function(data) {
             console.log(data);
 
             for (var i in data.recordings) {
@@ -24,7 +24,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('deleteRecording', function (data) {
         console.log(restfulUrl + '/recordings/' + data.number);
         
-        rest.del(restfulUrl + '/recordings/' + data.number).on('complete', function () {
+        rest.del(restfulUrl + '/recordings/' + data.number).on('success', function () {
             socket.emit('recordingDeleted');
         });
     });
