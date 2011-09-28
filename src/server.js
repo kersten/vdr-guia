@@ -11,10 +11,14 @@ var config = require('./etc/config');
 var app = express.createServer({key: privateKey, cert: certificate});
 app.use(express.static(__dirname));
 
+var browserify = new Array();
+
+fs.readdirSync(__dirname + '/models').forEach(function (file) {
+    browserify.push(__dirname + '/models/' + file);
+});
+
 app.use(require('browserify')({
-    require: [
-        __dirname + '/models/ChannelModel'
-    ],
+    require: browserify,
     mount: '/browserify.js',
     filter: require('uglify-js')
 }));
