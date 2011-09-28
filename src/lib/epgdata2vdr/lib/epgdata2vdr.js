@@ -109,8 +109,6 @@ function Setup (resturl) {
             var eventCollection = new EventCollection();
             
             events.events.forEach(function (item) {
-                console.log(item);
-                
                 item.channel = data.id;
                 
                 eventCollection.add(new RawEventModel(item));
@@ -140,7 +138,9 @@ function Setup (resturl) {
             console.log(typeof(err));
             console.log(err);
             
-            if (typeof(err) == 'object') {
+            if (typeof(err) == 'object' && err == 'null') {
+                console.log('Event exists');
+                
                 db.get('SELECT id FROM event WHERE eventId = ?', event.id, function (err, row) {
                     db.run('INSERT INTO event2channel VALUES (?, ?)', [row.id, event.channel], function (err, row) {
                         console.log('Duplicated event insert in channel');
