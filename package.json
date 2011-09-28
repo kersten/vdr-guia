@@ -38,7 +38,8 @@
         "wake_on_lan": "0.0.1",
         "xml2json": "0.2.3",
         "backbone": "0.5.3",
-        "underscore": "1.1.7"
+        "underscore": "1.1.7",
+        "browserify": "1.5.0"
     },
     "licenses":[{
         "type" : "MIT", 
