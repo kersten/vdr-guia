@@ -13,8 +13,7 @@ var fs = require('fs'),
     thetvdb = require('./lib/thetvdb.org'),
     sys = require('sys'),
     exec = require('child_process').exec,
-    iniparser = require('iniparser')
-    models = require('./models/models');
+    iniparser = require('iniparser');
 
 exports.boot = function (app, io){
   bootApplication(app, io);
@@ -79,7 +78,6 @@ function bootApplication (app, io) {
     global.rest = rest;
     global.restfulUrl = 'http://' + config.vdr.host + ':' + config.vdr.restfulport;
     global.config = config;
-    global.models = models;
     
     global.vdr = {
         plugins: {},

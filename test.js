@@ -1,9 +1,22 @@
 require.paths.unshift(__dirname + "/src/lib");
 require.paths.unshift(__dirname + "/src/models");
-require(__dirname + '/src/ModelFactory.js');
+//require(__dirname + '/src/ModelFactory.js');
 var util = require('util'),    
     http = require('http'),
-    RawEventItemModel = require(__dirname + '/src/models/RawEventItemModel.js');
+    io = require('socket.io').listen(8080);
+    //RawEventItemModel = require(__dirname + '/src/models/RawEventItemModel.js');
+
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(__dirname + '/src/data/epg.data', function () {
+    db.run('SELECT * FROM event', function (err, res) {
+        if (err != null) {
+            var Setup = require('install');
+            Setup(db);
+        }
+    });
+});
+
+global.db = db;
 
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
@@ -53,4 +66,4 @@ http.createServer(function (req, res) {
 //console.log(RawEventItem.toJSON());
 
 var epgdata2vdr = require('epgdata2vdr');
-var setup = new epgdata2vdr.Setup('http://192.168.0.192:8002');
+var setup = new epgdata2vdr.Setup('http://127.0.0.1:8002');

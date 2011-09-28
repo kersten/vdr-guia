@@ -65,8 +65,8 @@ var setup = function (db) {
     });
 
     db.serialize(function() {
-        db.run("CREATE TABLE actor2event (eventId INTEGER, actorId INTEGER)", function () {
-            db.run('CREATE UNIQUE INDEX idx_actor2event on actor2event(eventId ASC, actorId ASC)');
+        db.run("CREATE TABLE actor2event (actorId INTEGER, eventId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_actor2event on actor2event(actorId ASC, eventId ASC)');
         });
     });
 
@@ -75,8 +75,18 @@ var setup = function (db) {
     });
 
     db.serialize(function() {
-        db.run("CREATE TABLE character2actor (actorId INTEGER, characterId INTEGER)", function () {
-            db.run('CREATE UNIQUE INDEX idx_character2actor on character2actor(eventId ASC, characterId ASC)');
+        db.run("CREATE TABLE character2actor (characterId INTEGER, actorId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_character2actor on character2actor(characterId ASC, actorId ASC)');
+        });
+    });
+    
+    db.serialize(function() {
+        db.run("CREATE TABLE regisseur (id INTEGER PRIMARY KEY, name TEXT)");
+    });
+    
+    db.serialize(function() {
+        db.run("CREATE TABLE regisseur2event (regisseurId INTEGER, eventId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_regisseur2event on regisseur2event(regisseurId ASC, eventId ASC)');
         });
     });
 
@@ -85,8 +95,8 @@ var setup = function (db) {
     });
 
     db.serialize(function() {
-        db.run("CREATE TABLE country2event (eventId INTEGER, countryId INTEGER)", function () {
-            db.run('CREATE UNIQUE INDEX idx_country2event on country2event(eventId ASC, countryId ASC)');
+        db.run("CREATE TABLE country2event (countryId INTEGER, eventId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_country2event on country2event(countryId ASC, eventId ASC)');
         });
     });
 
@@ -95,8 +105,8 @@ var setup = function (db) {
     });
 
     db.serialize(function() {
-        db.run("CREATE TABLE genre2event (eventId, genreId INTEGER)", function () {
-            db.run('CREATE UNIQUE INDEX idx_genre2event on genre2event(eventId ASC, genreId ASC)');
+        db.run("CREATE TABLE genre2event (genreId INTEGER, eventId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_genre2event on genre2event(genreId ASC, eventId ASC)');
         });
     });
 
@@ -105,8 +115,8 @@ var setup = function (db) {
     });
 
     db.serialize(function() {
-        db.run("CREATE TABLE category2event (eventId, categoryId INTEGER)", function () {
-            db.run('CREATE UNIQUE INDEX idx_category2event on category2event(eventId ASC, categoryId ASC)');
+        db.run("CREATE TABLE category2event (categoryId INTEGER, eventId INTEGER)", function () {
+            db.run('CREATE UNIQUE INDEX idx_category2event on category2event(categoryId ASC, eventId ASC)');
         });
     });
     
@@ -125,4 +135,4 @@ var setup = function (db) {
     });
 };
 
-exports.setup = setup;
+module.exports = setup;

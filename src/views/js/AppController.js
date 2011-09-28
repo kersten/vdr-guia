@@ -1,4 +1,4 @@
-var AppController = Backbone.Controller.extend({
+var AppController = Backbone.Router.extend({
     initalize: function() {
         this.socket = new io.Socket();
         

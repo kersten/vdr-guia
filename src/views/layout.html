@@ -91,7 +91,27 @@
         <!-- Initalize GUIA -->
         <script type="text/javascript">
             $(document).ready(function () {
-                window.app = App.initialize();
+                window.app = AppController.initialize();
+                
+                Backbone.sync = function (method, model, options) {
+                    var getUrl = function (object) {
+                        if (!(object && object.url)) return null;
+                        return _.isFunction(object.url) ? object.url() : object.url;
+                    };
+
+                    var cmd = getUrl(model).split('/'),
+                        namespace = cmd[0];
+
+                    var params = _.extend({
+                        req: namespace + ':' + method
+                    }, options);
+
+                    params.data = model.toJSON() || {};
+
+                    window.app.get('socket').emit(namespace + ':' + method, params.data, function (data) {
+                        options.success(data);
+                    });
+                };
             });
         </script>
         
