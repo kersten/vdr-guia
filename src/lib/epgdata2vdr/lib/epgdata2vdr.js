@@ -135,10 +135,7 @@ function Setup (resturl) {
             event.parental_rating,
             event.year
         ], function (err, row) {
-            console.log(typeof(err));
-            console.log(err);
-            
-            if (typeof(err) == 'object' && err == 'null') {
+            if (typeof(err) == 'object' || err == null) {
                 console.log('Event exists');
                 
                 db.get('SELECT id FROM event WHERE eventId = ?', event.id, function (err, row) {
