@@ -8,9 +8,7 @@
 ## Installation
     git clone git://github.com/kersten/vdr-guia.git ./GUIA
     cd GUIA
-    npm install iconv
-    npm install socket.io
-    npm install node-syslog
+    npm update
 
 ## Configuration
 

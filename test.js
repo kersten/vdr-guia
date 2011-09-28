@@ -66,4 +66,4 @@ http.createServer(function (req, res) {
 //console.log(RawEventItem.toJSON());
 
 var epgdata2vdr = require('epgdata2vdr');
-var setup = new epgdata2vdr.Setup('http://127.0.0.1:8002');
+var setup = new epgdata2vdr.Setup('http://192.168.0.192:8002');
