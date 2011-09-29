@@ -1,7 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone'),
-    ChannelModel = require('ChannelModel');
+    Backbone = require('backbone');
 
-var EventCollection = Backbone.Collection.extend();
+var EventCollection = Backbone.Collection.extend({});
 
 module.exports = EventCollection;

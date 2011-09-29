@@ -1,9 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone'),
-    SeacrhtimerModel = require('SearchtimerModel');
+    Backbone = require('backbone');
 
-var SearchtimerCollection = Backbone.Collection.extend({
-    model: SearchtimerModel
-});
+var SearchtimerCollection = Backbone.Collection.extend({});
 
 module.exports = SearchtimerCollection;

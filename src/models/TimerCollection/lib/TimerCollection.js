@@ -1,9 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone'),
-    ChannelModel = require('ChannelModel');
+    Backbone = require('backbone');
 
-var TimerCollection = Backbone.Collection.extend({
-    model: ChannelModel
-});
+var TimerCollection = Backbone.Collection.extend({});
 
 module.exports = TimerCollection;

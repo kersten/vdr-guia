@@ -1,9 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone'),
-    RecordingModel = require('RecordingModel');
+    Backbone = require('backbone');
 
-var RecordingCollection = Backbone.Collection.extend({
-    model: RecordingModel
-});
+var RecordingCollection = Backbone.Collection.extend({});
 
 module.exports = RecordingCollection;

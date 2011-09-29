@@ -1,11 +1,6 @@
-require.paths.unshift(__dirname + "/models");
-
 var _ = require('underscore')._,
-    Backbone = require('backbone'),
-    ChannelModel = require('ChannelModel');
+    Backbone = require('backbone');
 
-var ChannelCollection = Backbone.Collection.extend({
-    model: ChannelModel
-});
+var ChannelCollection = Backbone.Collection.extend({});
 
 module.exports = ChannelCollection;
