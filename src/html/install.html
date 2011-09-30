@@ -75,7 +75,10 @@
         <!-- Start installation -->
         <script type="text/javascript">
             $(document).ready(function () {
-                var installation = new InstallView({el: $('#body')});
+                var ChannelModel = require('./ConfigurationModel');
+                var config = new ChannelModel;
+                
+                var installation = new InstallView({el: $('#body'), model: config});
             });
         </script>
 
@@ -91,6 +94,14 @@
         
         <script type="text/template" id="StepOneTemplate">
             <%- partial('templates/install/Step1') %>
+        </script>
+        
+        <script type="text/template" id="StepTwoTemplate">
+            <%- partial('templates/install/Step2') %>
+        </script>
+        
+        <script type="text/template" id="StepThreeTemplate">
+            <%- partial('templates/install/Step3') %>
         </script>
     </head>
 
@@ -108,7 +119,7 @@
 
             </div>
             <footer>
-                <p>&copy; Kersten Burkhardt 2011</p>
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> 2011</p>
             </footer>
         </div>
     </body>

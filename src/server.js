@@ -37,11 +37,11 @@ var io = require('socket.io').listen(app);
  */
 var browserify = new Array();
 
-browserify.push('jquery-browserify', 'backbone-browserify');
-
 fs.readdirSync(__dirname + '/models').forEach(function (file) {
     browserify.push(__dirname + '/models/' + file);
 });
+
+browserify.push('jquery-browserify', 'backbone-browserify');
 
 /*
  * Use browserify in our express app
