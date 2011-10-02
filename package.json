@@ -42,7 +42,8 @@
         "browserify": "1.5.0",
         "uglify-js": "1.1.0",
         "backbone-browserify": "0.5.3",
-        "jquery-browserify": "1.6.2"
+        "jquery-browserify": "1.6.2",
+        "rbytes": "0.0.2"
     },
     "licenses":[{
         "type" : "MIT", 

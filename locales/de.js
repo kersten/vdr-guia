@@ -127,5 +127,6 @@
 	"Switched to cahnnel ": "Switched to cahnnel ",
 	"Switched to channel: ": "Switched to channel: ",
 	"Program for channel ": "Program for channel ",
-	"the complete yavdr team for their fast help, tipps and testings": "the complete yavdr team for their fast help, tipps and testings"
+	"the complete yavdr team for their fast help, tipps and testings": "the complete yavdr team for their fast help, tipps and testings",
+	"What's new": "Was ist neu"
 }

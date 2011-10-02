@@ -71,40 +71,60 @@
         <script type="text/javascript" src="/js/bootstrap.js"></script>
 
         <!-- Load views -->
-        <script type="text/javascript" src="/js/views/InstallView.js"></script>
+        <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
+        <script type="text/javascript" src="/js/views/ContactView.js"></script>
 
         <!-- Start installation -->
         <script type="text/javascript">
-            var uuid = require('node-uuid');
+            var WorkspaceRouter = Backbone.Router.extend({
+                routes: {
+                    "":         "welcome",
+                    "/contact": "contact",
+                    "*actions": "welcome"
+                },
+                
+                updateNavigation: function (req) {
+                    if (req == "") {
+                        $('.nav > li.active').removeClass('active');
+                        $('.nav > li:nth-child(1)').addClass('active');
+                    } else {
+                        $('.nav > li.active').removeClass('active');
+                        $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
+                    }
+                },
+                
+                welcome: function () {
+                    this.updateNavigation("");
+                    var welcome = new WelcomeView({el: $('#body')});
+                    
+                    welcome.render();
+                },
+
+                contact: function () {
+                    this.updateNavigation('/contact');
+                    
+                    var contact = new ContactView({el: $('#body')});
+                    contact.render();
+                }
+            });
             
             $(document).ready(function () {
-                var ConfigurationModel = require('./ConfigurationModel');
-                var config = new ConfigurationModel;
-                
-                new InstallView({el: $('#body'), model: config});
+                /*$(window).bind('hashchange', function () {
+                    console.log()
+                });*/
+                new WorkspaceRouter();
+                Backbone.history.start();
             });
         </script>
 
         <!-- <script type="text/template" id="search_template" src="/program"></script> -->
         <!-- Loading templates -->
-        <script type="text/template" id="InstallViewTemplate">
-            <%- partial('templates/install/InstallView') %>
+        <script type="text/template" id="WelcomeViewTemplate">
+            <%- partial('templates/welcome') %>
         </script>
-
-        <script type="text/template" id="SocializeTemplate">
-            <%- partial('templates/install/Socialize') %>
-        </script>
-
-        <script type="text/template" id="StepOneTemplate">
-            <%- partial('templates/install/Step1') %>
-        </script>
-
-        <script type="text/template" id="StepTwoTemplate">
-            <%- partial('templates/install/Step2') %>
-        </script>
-
-        <script type="text/template" id="StepThreeTemplate">
-            <%- partial('templates/install/Step3') %>
+        
+        <script type="text/template" id="ContactViewTemplate">
+            <%- partial('templates/contact') %>
         </script>
     </head>
 
@@ -113,6 +133,15 @@
             <div class="fill">
                 <div class="container">
                     <a href="#" class="brand">GUIA</a>
+                    <ul class="nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#/contact">Contact</a></li>
+                    </ul>
+                    <form class="pull-right" action="">
+                        <input type="text" placeholder="Username" class="input-small">
+                            <input type="password" placeholder="Password" class="input-small" />
+                            <button type="submit" class="btn">Sign in</button>
+                    </form>
                 </div>
             </div>
         </div>

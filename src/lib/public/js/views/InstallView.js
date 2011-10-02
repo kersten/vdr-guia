@@ -1,5 +1,3 @@
-//var ConfigurationModel = require('./ConfigurationModel');
-
 var InstallView = Backbone.View.extend({
     initialize: function () {
         $(document).attr('title', 'GUIA // Installation');
@@ -15,7 +13,7 @@ var InstallView = Backbone.View.extend({
         var validationFailed = false;
         
         switch ($(event.currentTarget).attr('next')) {
-        case 'StepTwo':
+        case 'StepThree':
             if ($('#username').parent().parent().hasClass('error')) {
                 $('#username').parent().parent().removeClass('error');
                 $('#username').removeClass('error');
@@ -51,13 +49,12 @@ var InstallView = Backbone.View.extend({
                 
                 validationFailed = true;
             } else {
-                this.model.set({password: $('#password').val()});
-                this.model.set({repassword: $('#repassword').val()});
+                var password = hex_sha512($('#password').val());
+                
+                this.model.set({password: password});
             }
-            break;
-        
-        case 'StepThree':
-            console.log('Validate mysql input');
+            
+            this.model.set({socalize: $('#transmit').is(':checked')});
             break;
         
         default:
@@ -65,7 +62,12 @@ var InstallView = Backbone.View.extend({
         }
         
         if (validationFailed) {
-            return this;
+            return false;
+        }
+        
+        if ($(event.currentTarget).attr('next') == 'StepThree') {
+            console.log(this.model);
+            this.model.save();
         }
         
         var nextSite = $(event.currentTarget).attr('next') + 'Template';
@@ -73,18 +75,18 @@ var InstallView = Backbone.View.extend({
         
         this.el.html( template );
         
+        if ($(event.currentTarget).attr('next') == "StepOne") {
+            var id = uuid();
+            this.model.set({socalizeKey: id});
+            $('#socializeKey').html(id);
+        }
+        
         // Set allready inserted values
         $('#username').val(this.model.get('username'));
         $('#password').val(this.model.get('password'));
         $('#repassword').val(this.model.get('repassword'));
         
-        $('#MySQLuser').val(this.model.get('MySQL').username);
-        $('#MySQLpassword').val(this.model.get('MySQL').password);
-        $('#MySQLdatabase').val(this.model.get('MySQL').database);
-        $('#MySQLhost').val(this.model.get('MySQL').host);
-        $('#MySQLport').val(this.model.get('MySQL').port);
-        
-        return this;
+        return false;
     },
     
     render: function () {
