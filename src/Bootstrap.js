@@ -15,7 +15,7 @@ function Bootstrap (app, express) {
 
 Bootstrap.prototype.setupExpress = function () {
     var SessionMongoose = require("session-mongoose");
-    this.mongooseSessionStore = new SessionMongoose({
+    global.mongooseSessionStore = new SessionMongoose({
         url: "mongodb://localhost/GUIAsession",
         interval: 120000 // expiration check worker run interval in millisec (default: 60000)
     });
@@ -89,6 +89,62 @@ Bootstrap.prototype.setupSocketIo = function () {
      * Create socket
      */
     global.io = require('socket.io').listen(this.app);
+    
+    var parseCookie = require('express/node_modules/connect').utils.parseCookie;
+    var Session = require('express/node_modules/connect').middleware.session.Session;
+
+    io.configure(function (){
+        io.set('authorization', function (data, accept) {
+            if (data.headers.cookie) {
+                data.cookie = parseCookie(data.headers.cookie);
+                data.sessionID = data.cookie['guia.id'];
+                
+                // save the session store to the data object
+                // (as required by the Session constructor)
+
+                data.sessionStore = mongooseSessionStore;
+                return mongooseSessionStore.get(data.sessionID, function (err, session) {
+                    console.log(err, session);
+                    
+                    if (err) {
+                        return accept(err.message, false);
+                    } else {
+                        // create a session object, passing data as request and our
+                        // just acquired session data
+                        data.session = new Session(data, session);
+                        return accept(null, true);
+                    }
+                });
+            } else {
+                return accept('No cookie transmitted.', false);
+            }
+        });
+    });
+    
+    io.sockets.on('connection', function (socket) {
+        var hs = socket.handshake;
+
+        var intervalID = setInterval(function () {
+            // reload the session (just in case something changed,
+            // we don't want to override anything, but the age)
+            // reloading will also ensure we keep an up2date copy
+            // of the session with our connection.
+            hs.session.reload( function () {
+                console.log(hs.session);
+                // "touch" it (resetting maxAge and lastAccess)
+                // and save it back again.
+                hs.session.touch().save();
+            });
+        }, 60 * 1000);
+        
+        socket.on('disconnect', function () {
+            console.log('A socket with sessionID ' + hs.sessionID
+                + ' disconnected!');
+            // clear the socket interval to stop refreshing the session
+            clearInterval(intervalID);
+        });
+    });
+
 };
 
 Bootstrap.prototype.setupViews = function () {
@@ -116,6 +172,9 @@ Bootstrap.prototype.setupViews = function () {
     });
     
     this.app.get('/', function (req, res) {
+        mongooseSessionStore.set(req.sessionID, {loggedIn: false}, function () {
+            
+        });
         console.log(req.session.isLoggedIn);
         
         res.render('index', {
@@ -126,7 +185,7 @@ Bootstrap.prototype.setupViews = function () {
 };
 
 Bootstrap.prototype.setupControllers = function () {
-    
+    require(__dirname + '/controllers/NavigationController');
 };
 
 module.exports = Bootstrap;

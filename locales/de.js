@@ -128,5 +128,7 @@
 	"Switched to channel: ": "Switched to channel: ",
 	"Program for channel ": "Program for channel ",
 	"the complete yavdr team for their fast help, tipps and testings": "the complete yavdr team for their fast help, tipps and testings",
-	"What's new": "Was ist neu"
+	"What's new": "Was ist neu",
+	"Contact <small>us</small>": "Contact <small>us</small>",
+	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>"
 }

@@ -71,6 +71,7 @@
         <script type="text/javascript" src="/js/bootstrap.js"></script>
 
         <!-- Load views -->
+        <script type="text/javascript" src="/js/views/NavigationView.js"></script>
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
         <script type="text/javascript" src="/js/views/ContactView.js"></script>
 
@@ -108,12 +109,16 @@
                 }
             });
             
+            var NavigationModel = require('./NavigationModel');
+            
             $(document).ready(function () {
                 /*$(window).bind('hashchange', function () {
                     console.log()
                 });*/
                 new WorkspaceRouter();
                 Backbone.history.start();
+                
+                var nav = new NavigationView({el: $('.topbar'), model: new NavigationModel});
             });
         </script>
 
