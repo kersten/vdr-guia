@@ -15,7 +15,7 @@ function Bootstrap (app, express) {
 
 Bootstrap.prototype.setupExpress = function () {
     var SessionMongoose = require("session-mongoose");
-    var mongooseSessionStore = new SessionMongoose({
+    this.mongooseSessionStore = new SessionMongoose({
         url: "mongodb://localhost/GUIAsession",
         interval: 120000 // expiration check worker run interval in millisec (default: 60000)
     });
@@ -24,7 +24,7 @@ Bootstrap.prototype.setupExpress = function () {
     this.app.use(this.express.cookieParser());
     
     this.app.use(this.express.session({
-        store: mongooseSessionStore,
+        store: this.mongooseSessionStore,
         secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
         key: 'guia.id'
     }));
@@ -95,6 +95,10 @@ Bootstrap.prototype.setupViews = function () {
     var ConfigurationModel = require('./dbmodels/ConfigurationModel');
     
     this.app.all('*', function (req, res, next) {
+        if (typeof(req.session.isLoggedIn) == 'undefined') {
+            req.session.isLoggedIn = false;
+        }
+        
         /*
          * Chek if the app ist installed. If not deliver the install view
          */
@@ -112,8 +116,11 @@ Bootstrap.prototype.setupViews = function () {
     });
     
     this.app.get('/', function (req, res) {
+        console.log(req.session.isLoggedIn);
+        
         res.render('index', {
-            layout: false
+            layout: false,
+            isLoggedIn: req.session.isLoggedIn
         });
     });
 };
