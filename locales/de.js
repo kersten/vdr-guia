@@ -130,5 +130,7 @@
 	"the complete yavdr team for their fast help, tipps and testings": "the complete yavdr team for their fast help, tipps and testings",
 	"What's new": "Was ist neu",
 	"Contact <small>us</small>": "Contact <small>us</small>",
-	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>"
+	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
+	"Home": "Home",
+	"Sign in": "Sign in"
 }

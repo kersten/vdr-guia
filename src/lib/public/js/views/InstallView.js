@@ -13,7 +13,7 @@ var InstallView = Backbone.View.extend({
         var validationFailed = false;
         
         switch ($(event.currentTarget).attr('next')) {
-        case 'StepThree':
+        case 'StepTwo':
             if ($('#username').parent().parent().hasClass('error')) {
                 $('#username').parent().parent().removeClass('error');
                 $('#username').removeClass('error');
@@ -56,6 +56,10 @@ var InstallView = Backbone.View.extend({
             
             this.model.set({socalize: $('#transmit').is(':checked')});
             break;
+        case 'StepThree':
+            this.model.set({vdrhost: $('#VDRHost').val()});
+            this.model.set({restfulport: $('#restfulPort').val()});
+            break;
         
         default:
             break;
@@ -85,6 +89,9 @@ var InstallView = Backbone.View.extend({
         $('#username').val(this.model.get('username'));
         $('#password').val(this.model.get('password'));
         $('#repassword').val(this.model.get('repassword'));
+        
+        $('#VDRHost').val(this.model.get('vdrhost'));
+        $('#restfulPort').val(this.model.get('restfulport'));
         
         return false;
     },

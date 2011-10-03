@@ -1,20 +1,22 @@
 io.sockets.on('connection', function (socket) {
     socket.on('ConfigurationModel:create', function (data) {
         var ConfigurationModel = require('../dbmodels/ConfigurationModel');
+        var UserModel = require('../dbmodels/UserModel');
+        
         var configuration = new ConfigurationModel({
-            user: data.username,
-            password: data.password,
             socalizeKey: data.socalizeKey,
-            socalize: data.socalize
+            socalize: data.socalize,
+            vdrHost: data.vdrhost,
+            restfulPort: data.restfulport
         });
         
-        configuration.save(function(err, user_Saved){
-            if(err){
-                throw err;
-                console.log(err);
-            }else{
-                console.log('saved!');
-            }
+        var user = new UserModel({
+            user: data.username,
+            password: data.password
         });
+        
+        user.save();
+        
+        configuration.save();
     });
 });

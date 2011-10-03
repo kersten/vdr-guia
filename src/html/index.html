@@ -109,7 +109,7 @@
                 }
             });
             
-            var NavigationModel = require('./NavigationModel');
+            var NavigationCollection = require('./NavigationCollection');
             
             $(document).ready(function () {
                 /*$(window).bind('hashchange', function () {
@@ -118,7 +118,26 @@
                 new WorkspaceRouter();
                 Backbone.history.start();
                 
-                var nav = new NavigationView({el: $('.topbar'), model: new NavigationModel});
+                var navigationCollection = new NavigationCollection
+                var nav = new NavigationView({el: $('.topbar'), collection: navigationCollection});
+                
+                navigationCollection.bind('add', function (item) {
+                    console.log(item);
+                    var hash = window.location.hash;
+                    
+                    if (window.location.hash == "" || window.location.hash == "#/") {
+                        hash = '#';
+                    }
+                    
+                    var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
+                    var li = $('<li></li>').append(href);
+                    
+                    if (item.get('link') == hash) {
+                        li.addClass('active');
+                    }
+                    
+                    $('.nav').append(li);
+                });
             });
         </script>
 
@@ -131,6 +150,10 @@
         <script type="text/template" id="ContactViewTemplate">
             <%- partial('templates/contact') %>
         </script>
+        
+        <script type="text/template" id="LoginFormTemplate">
+            <%- partial('templates/LoginForm') %>
+        </script>
     </head>
 
     <body>
@@ -139,14 +162,7 @@
                 <div class="container">
                     <a href="#" class="brand">GUIA</a>
                     <ul class="nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#/contact">Contact</a></li>
                     </ul>
-                    <form class="pull-right" action="">
-                        <input type="text" placeholder="Username" class="input-small">
-                            <input type="password" placeholder="Password" class="input-small" />
-                            <button type="submit" class="btn">Sign in</button>
-                    </form>
                 </div>
             </div>
         </div>

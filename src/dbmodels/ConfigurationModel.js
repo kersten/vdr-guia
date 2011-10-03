@@ -1,16 +1,11 @@
 var ConfigurationSchema = new Schema({
-    user: {
+    socalizeKey: {
         type: String,
-        lowercase: true,
-        required: true,
         unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
-    socalizeKey: String,
-    socalize: Boolean
+    socalize: Boolean,
+    vdrHost: String,
+    restfulPort: Number
 });
 
 module.exports = mongoose.model('Configuration', ConfigurationSchema);
