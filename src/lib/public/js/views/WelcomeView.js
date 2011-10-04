@@ -4,10 +4,16 @@ var WelcomeView = Backbone.View.extend({
     },
     
     render: function () {
-        // Compile the template using underscore
-        var template = _.template( $("#WelcomeViewTemplate").html(), {} );
-        // Load the compiled HTML into the Backbone "el"
-        this.el.html( template );
+        var self = this;
+        
+        $.ajax({
+            url: "/templates/welcome",
+            success: function (res) {
+                var template = _.template(res, {});
+                self.el.html(template);
+            }
+        });
+        
         return this;
     }
 });

@@ -59,6 +59,56 @@ var InstallView = Backbone.View.extend({
         case 'StepThree':
             this.model.set({vdrhost: $('#VDRHost').val()});
             this.model.set({restfulport: $('#restfulPort').val()});
+            
+            var checkRestfulSignal = function (data) {
+                socket.removeListener('Install:checkrestful', checkRestfulSignal);
+                
+                if (data.reachable) {
+                    this.model.save();
+                    
+                    var self = this;
+        
+                    $.ajax({
+                        url: "/templates/install/" + $(event.currentTarget).attr('next'),
+                        success: function (res) {
+                            var template = _.template(res, {});
+                            self.el.html(template);
+
+                            if ($(event.currentTarget).attr('next') == "StepOne") {
+                                var id = uuid();
+                                self.model.set({socalizeKey: id});
+                                $('#socializeKey').html(id);
+                            }
+
+                            // Set allready inserted values
+                            $('#username').val(self.model.get('username'));
+                            $('#password').val(self.model.get('password'));
+                            $('#repassword').val(self.model.get('repassword'));
+
+                            $('#VDRHost').val(self.model.get('vdrhost'));
+                            $('#restfulPort').val(self.model.get('restfulport'));
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: "/templates/install/dialogs/restfulCheck",
+                        success: function (res) {
+                            var template = _.template(res, {});
+                            $('body').append(template);
+                            
+                            $('#restfulCheck').modal('show');
+                        }
+                    });
+                }
+            };
+            
+            socket.on('Install:checkrestful', checkRestfulSignal);
+            
+            socket.emit('Install:checkrestful', {
+                vdrhost: $('#VDRHost').val(),
+                restfulport: $('#restfulPort').val()
+            });
+            
             break;
         
         default:
@@ -70,37 +120,47 @@ var InstallView = Backbone.View.extend({
         }
         
         if ($(event.currentTarget).attr('next') == 'StepThree') {
-            console.log(this.model);
-            this.model.save();
+            return false;
         }
         
-        var nextSite = $(event.currentTarget).attr('next') + 'Template';
-        var template = _.template( $("#" + nextSite).html(), {} );
+        var self = this;
         
-        this.el.html( template );
-        
-        if ($(event.currentTarget).attr('next') == "StepOne") {
-            var id = uuid();
-            this.model.set({socalizeKey: id});
-            $('#socializeKey').html(id);
-        }
-        
-        // Set allready inserted values
-        $('#username').val(this.model.get('username'));
-        $('#password').val(this.model.get('password'));
-        $('#repassword').val(this.model.get('repassword'));
-        
-        $('#VDRHost').val(this.model.get('vdrhost'));
-        $('#restfulPort').val(this.model.get('restfulport'));
+        $.ajax({
+            url: "/templates/install/" + $(event.currentTarget).attr('next'),
+            success: function (res) {
+                var template = _.template(res, {});
+                self.el.html(template);
+                
+                if ($(event.currentTarget).attr('next') == "StepOne") {
+                    var id = uuid();
+                    self.model.set({socalizeKey: id});
+                    $('#socializeKey').html(id);
+                }
+                
+                // Set allready inserted values
+                $('#username').val(self.model.get('username'));
+                $('#password').val(self.model.get('password'));
+                $('#repassword').val(self.model.get('repassword'));
+
+                $('#VDRHost').val(self.model.get('vdrhost'));
+                $('#restfulPort').val(self.model.get('restfulport'));
+            }
+        });
         
         return false;
     },
     
     render: function () {
-        // Compile the template using underscore
-        var template = _.template( $("#InstallViewTemplate").html(), {} );
-        // Load the compiled HTML into the Backbone "el"
-        this.el.html( template );
+        var self = this;
+        
+        $.ajax({
+            url: "/templates/install/InstallView",
+            success: function (res) {
+                var template = _.template(res, {});
+                self.el.html(template);
+            }
+        });
+        
         return this;
     }
 });

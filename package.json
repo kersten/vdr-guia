@@ -43,7 +43,10 @@
         "uglify-js": "1.1.0",
         "backbone-browserify": "0.5.3",
         "jquery-browserify": "1.6.2",
-        "rbytes": "0.0.2"
+        "rbytes": "0.0.2",
+        "mongoose": "2.2.4",
+        "session-mongoose": "0.0.1",
+        "node-uuid": "1.2.0"
     },
     "licenses":[{
         "type" : "MIT", 

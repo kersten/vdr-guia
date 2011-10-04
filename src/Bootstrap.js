@@ -178,7 +178,6 @@ Bootstrap.prototype.setupViews = function () {
     this.app.all('*', function (req, res, next) {
         console.log(req.sessionID);
         mongooseSessionStore.get(req.sessionID, function (err, session) {
-            console.log(err, session);
             if (session == null) {
                 req.session.loggedIn = false;
             } else {
@@ -186,7 +185,7 @@ Bootstrap.prototype.setupViews = function () {
             }
         });
 
-        if (!installed) {
+        if (!installed && !req.url.match(/^\/templates\/install/)) {
             res.render('install', {
                 layout: false
             });
@@ -201,6 +200,13 @@ Bootstrap.prototype.setupViews = function () {
         res.render('index', {
             layout: false,
             isLoggedIn: req.session.loggedIn
+        });
+    });
+    
+    this.app.get('/templates/*', function (req, res) {
+        var template = req.url.substr(1);
+        res.render(template, {
+            layout: false
         });
     });
 };

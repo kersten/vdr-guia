@@ -69,6 +69,9 @@
 
         <!-- Bootstrap application frontend -->
         <script type="text/javascript" src="/js/bootstrap.js"></script>
+        
+        <!-- Load plugins -->
+        <script type="text/javascript" src="/js/jquery-plugins/bootstrap-modal.js"></script>
 
         <!-- Load views -->
         <script type="text/javascript" src="/js/views/InstallView.js"></script>
@@ -83,28 +86,6 @@
                 
                 new InstallView({el: $('#body'), model: config});
             });
-        </script>
-
-        <!-- <script type="text/template" id="search_template" src="/program"></script> -->
-        <!-- Loading templates -->
-        <script type="text/template" id="InstallViewTemplate">
-            <%- partial('templates/install/InstallView') %>
-        </script>
-
-        <script type="text/template" id="SocializeTemplate">
-            <%- partial('templates/install/Socialize') %>
-        </script>
-
-        <script type="text/template" id="StepOneTemplate">
-            <%- partial('templates/install/Step1') %>
-        </script>
-
-        <script type="text/template" id="StepTwoTemplate">
-            <%- partial('templates/install/Step2') %>
-        </script>
-
-        <script type="text/template" id="StepThreeTemplate">
-            <%- partial('templates/install/Step3') %>
         </script>
     </head>
 
