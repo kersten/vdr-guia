@@ -25,7 +25,6 @@ var NavigationView = Backbone.View.extend({
         
         if ($('#loginUser').val() == "" || $('#loginPass').val() == "") {
             // Show error dialog
-            console.log('empty');
             return false;
         }
         
@@ -37,7 +36,6 @@ var NavigationView = Backbone.View.extend({
             if (data.loggedIn) {
                 $(event.currentTarget).parent().remove();
                 
-                console.log($('ul.nav').children());
                 $('ul.nav').children().remove();
                 self.collection.fetch();
             }

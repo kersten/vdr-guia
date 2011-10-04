@@ -5,31 +5,40 @@ io.sockets.on('connection', function (socket) {
         if (hs.session.loggedIn) {
             var menu = [{
                 title: __('Highlights'),
-                link: '#/Highlights'
+                link: '#/Highlights',
+                view: 'Highlights'
             }, {
                 title: __('Program'),
-                link: '#/program'
+                link: '#/program',
+                view: 'Program'
             }, {
                 title: __('Timer'),
-                link: '#/timer'
+                link: '#/timer',
+                view: 'Timer'
             }, (vdr.plugins.epgsearch) ? {
                 title: __('Search'),
-                link: '#/search'
+                link: '#/search',
+                view: 'Search'
             } : null, (vdr.plugins.epgsearch) ? {
                 title: __('Searchtimer'),
-                link: '#/searchtimer'
+                link: '#/searchtimer',
+                view: 'Searchtimer'
             } : null, {
                 title: __('Recordings'),
-                link: '#/recordings'
+                link: '#/recordings',
+                view: 'Recordings'
             }, {
                 title: __('Settings'),
-                link: '#/settings'
+                link: '#/settings',
+                view: 'Settings'
             }, {
                 title: __('Contact'),
-                link: '#/contact'
+                link: '#/contact',
+                view: 'Contact'
             }, {
                 title: __('Logout'),
-                link: '#/logout'
+                link: '#/logout',
+                view: 'Logout'
             }];
         
             socket.emit('NavigationCollection:read', {items: menu, loggedIn: true});

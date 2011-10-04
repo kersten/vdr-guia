@@ -80,6 +80,34 @@
 
         <!-- Start installation -->
         <script type="text/javascript">
+            var routing = {
+                router: null,
+                loadedViews: {},
+                
+                addRoute: function (router, view) {
+                    this.router = router;
+                    
+                    if (typeof(this.loadedViews[view]) == 'undefined') {
+                        this.loadedViews[view] = true;
+                        
+                        $.getScript('/js/views/' + view + 'View.js', function () {
+                            router.routes[view.substr(1)] = render(view);
+                            console.log(router.routes);
+                        });
+                    } else {
+                    }
+                },
+                
+                render: function (view) {
+                    this.router.updateNavigation(view);
+                    
+                    var viewClass = view + 'View';
+                    var view = new viewClass({el: $('#body')});
+                    
+                    view.render();
+                }
+            };
+            
             var WorkspaceRouter = Backbone.Router.extend({
                 routes: {
                     "":         "welcome",
@@ -118,14 +146,13 @@
                 /*$(window).bind('hashchange', function () {
                     console.log()
                 });*/
-                new WorkspaceRouter();
+                var router = new WorkspaceRouter();
                 Backbone.history.start();
                 
                 var navigationCollection = new NavigationCollection
                 var nav = new NavigationView({el: $('.topbar'), collection: navigationCollection});
                 
                 navigationCollection.bind('add', function (item) {
-                    console.log(item);
                     var hash = window.location.hash;
                     
                     if (window.location.hash == "" || window.location.hash == "#/") {
@@ -140,6 +167,8 @@
                     }
                     
                     $('.nav').append(li);
+                    
+                    routing.addRoute(router, item.get('view'));
                 });
             });
         </script>

@@ -156,7 +156,7 @@ Bootstrap.prototype.setupSocketIo = function () {
                 // save the session store to the data object
                 // (as required by the Session constructor)
 
-                data.mongooseSessionStore = mongooseSessionStore;
+                data.sessionStore = mongooseSessionStore;
                 mongooseSessionStore.get(data.sessionID, function (err, session) {
                     if (err) {
                         accept(err.message, false);
