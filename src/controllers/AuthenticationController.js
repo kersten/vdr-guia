@@ -19,4 +19,8 @@ io.sockets.on('connection', function (socket) {
             socket.emit('User:login', {loggedIn: loggedIn});
         });
     });
+    
+    socket.on('User:logout', function () {
+        socket.emit('User:logout', {loggedIn: false});
+    });
 });

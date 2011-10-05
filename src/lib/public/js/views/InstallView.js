@@ -57,6 +57,8 @@ var InstallView = Backbone.View.extend({
             this.model.set({socalize: $('#transmit').is(':checked')});
             break;
         case 'StepThree':
+            var self = this;
+            
             this.model.set({vdrhost: $('#VDRHost').val()});
             this.model.set({restfulport: $('#restfulPort').val()});
             
@@ -64,9 +66,7 @@ var InstallView = Backbone.View.extend({
                 socket.removeListener('Install:checkrestful', checkRestfulSignal);
                 
                 if (data.reachable) {
-                    this.model.save();
-                    
-                    var self = this;
+                    self.model.save();
         
                     $.ajax({
                         url: "/templates/install/" + $(event.currentTarget).attr('next'),

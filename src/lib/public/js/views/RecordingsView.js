@@ -1,13 +1,13 @@
-var HighlightsView = Backbone.View.extend({
+var RecordingsView = Backbone.View.extend({
     initialize: function () {
-        $(document).attr('title', 'GUIA // Highlights');
+        $(document).attr('title', 'GUIA // Recordings');
     },
     
     render: function () {
         var self = this;
         
         $.ajax({
-            url: "/templates/highlights",
+            url: "/templates/recordings",
             success: function (res) {
                 var template = _.template(res, {});
                 self.el.html(template);

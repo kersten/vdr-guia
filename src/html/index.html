@@ -80,39 +80,11 @@
 
         <!-- Start installation -->
         <script type="text/javascript">
-            var routing = {
-                router: null,
+            var WorkspaceRouter = Backbone.Router.extend({
                 loadedViews: {},
                 
-                addRoute: function (router, view) {
-                    this.router = router;
-                    
-                    if (typeof(this.loadedViews[view]) == 'undefined') {
-                        this.loadedViews[view] = true;
-                        
-                        $.getScript('/js/views/' + view + 'View.js', function () {
-                            router.routes[view.substr(1)] = render(view);
-                            console.log(router.routes);
-                        });
-                    } else {
-                    }
-                },
-                
-                render: function (view) {
-                    this.router.updateNavigation(view);
-                    
-                    var viewClass = view + 'View';
-                    var view = new viewClass({el: $('#body')});
-                    
-                    view.render();
-                }
-            };
-            
-            var WorkspaceRouter = Backbone.Router.extend({
                 routes: {
-                    "":         "welcome",
-                    "/contact": "contact",
-                    "*actions": "welcome"
+                    "*actions": "defaultRoute"
                 },
                 
                 updateNavigation: function (req) {
@@ -125,18 +97,34 @@
                     }
                 },
                 
-                welcome: function () {
-                    this.updateNavigation("");
-                    var welcome = new WelcomeView({el: $('#body')});
+                defaultRoute: function (req) {
+                    var self = this;
+                    var original = req;
                     
-                    welcome.render();
+                    if (req == "") {
+                        req = "Welcome";
+                    } else {
+                        req = req.substr(1);
+                        req = req.charAt(0).toUpperCase() + req.substr(1);
+                    }
+                    
+                    if (typeof(this.loadedViews[req]) == 'undefined' || typeof(this.loadedViews[req]) == null) {
+                        this.loadedViews[req] = null;
+                        
+                        $.getScript('/js/views/' + req + 'View.js', function () {
+                            var viewClass = req + 'View';
+                            
+                            self.loadedViews[req] = new window[viewClass]({el: $('#body')});
+                            self.render(req, original);
+                        });
+                    } else {
+                        self.render(req, original);
+                    }
                 },
-
-                contact: function () {
-                    this.updateNavigation('/contact');
-                    
-                    var contact = new ContactView({el: $('#body')});
-                    contact.render();
+                
+                render: function (req, nav) {
+                    this.updateNavigation(nav);
+                    this.loadedViews[req].render();
                 }
             });
             
@@ -167,21 +155,12 @@
                     }
                     
                     $('.nav').append(li);
-                    
-                    routing.addRoute(router, item.get('view'));
                 });
             });
         </script>
 
         <!-- <script type="text/template" id="search_template" src="/program"></script> -->
         <!-- Loading templates -->
-        <script type="text/template" id="WelcomeViewTemplate">
-            <%- partial('templates/welcome') %>
-        </script>
-        
-        <script type="text/template" id="ContactViewTemplate">
-            <%- partial('templates/contact') %>
-        </script>
         
         <script type="text/template" id="LoginFormTemplate">
             <%- partial('templates/LoginForm') %>

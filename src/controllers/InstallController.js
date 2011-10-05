@@ -24,16 +24,16 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('Install:checkrestful', function (data) {
         rest.get('http://' + data.vdrhost + ':' + data.restfulport + '/info.json').on('success', function(data) {
-            socket.emit('Install:checkrestful', {rechable: true});
+            socket.emit('Install:checkrestful', {reachable: true});
             clearTimeout(checkReachable);
         }).on('error', function () {
             console.log('ERROR');
-            socket.emit('Install:checkrestful', {rechable: false});
+            socket.emit('Install:checkrestful', {reachable: false});
             clearTimeout(checkReachable);
         });
         
         var checkReachable = setTimeout(function () {
-            socket.emit('Install:checkrestful', {rechable: false});
+            socket.emit('Install:checkrestful', {reachable: false});
         }, 2000);
     });
 });
