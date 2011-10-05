@@ -8,7 +8,6 @@ io.sockets.on('connection', function (socket) {
             var loggedIn = false;
             
             if (count != 0) {
-                console.log(hs.sessionID);
                 mongooseSessionStore.set(hs.sessionID, {loggedIn: true});
                 loggedIn = true;
                 hs.session.loggedIn = true;
@@ -21,6 +20,12 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on('User:logout', function () {
-        socket.emit('User:logout', {loggedIn: false});
+        mongooseSessionStore.destroy(hs.sessionID, function () {
+            socket.emit('User:logout', {loggedIn: false});
+        });
+        
+        hs.session.loggedIn = false;
+                
+        hs.session.touch().save();
     });
 });

@@ -1,8 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone');
+    Backbone = require('backbone-browserify');
 
-var EventModel = Backbone.Model.extend({
-    url: 'Event'
-});
+var EventModel = Backbone.Model.extend({});
 
 module.exports = EventModel;

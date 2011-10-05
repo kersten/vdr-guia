@@ -69,93 +69,16 @@
 
         <!-- Bootstrap application frontend -->
         <script type="text/javascript" src="/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/js/Application.js"></script>
         
         <!-- Load plugins -->
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-modal.js"></script>
-
-        <!-- Load views -->
-        <script type="text/javascript" src="/js/views/NavigationView.js"></script>
-        <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
-        <script type="text/javascript" src="/js/views/ContactView.js"></script>
-
+        
         <!-- Start installation -->
         <script type="text/javascript">
-            var WorkspaceRouter = Backbone.Router.extend({
-                loadedViews: {},
-                
-                routes: {
-                    "*actions": "defaultRoute"
-                },
-                
-                updateNavigation: function (req) {
-                    if (req == "") {
-                        $('.nav > li.active').removeClass('active');
-                        $('.nav > li:nth-child(1)').addClass('active');
-                    } else {
-                        $('.nav > li.active').removeClass('active');
-                        $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
-                    }
-                },
-                
-                defaultRoute: function (req) {
-                    var self = this;
-                    var original = req;
-                    
-                    if (req == "") {
-                        req = "Welcome";
-                    } else {
-                        req = req.substr(1);
-                        req = req.charAt(0).toUpperCase() + req.substr(1);
-                    }
-                    
-                    if (typeof(this.loadedViews[req]) == 'undefined' || typeof(this.loadedViews[req]) == null) {
-                        this.loadedViews[req] = null;
-                        
-                        $.getScript('/js/views/' + req + 'View.js', function () {
-                            var viewClass = req + 'View';
-                            
-                            self.loadedViews[req] = new window[viewClass]({el: $('#body')});
-                            self.render(req, original);
-                        });
-                    } else {
-                        self.render(req, original);
-                    }
-                },
-                
-                render: function (req, nav) {
-                    this.updateNavigation(nav);
-                    this.loadedViews[req].render();
-                }
-            });
-            
-            var NavigationCollection = require('./NavigationCollection');
-            
             $(document).ready(function () {
-                /*$(window).bind('hashchange', function () {
-                    console.log()
-                });*/
-                var router = new WorkspaceRouter();
-                Backbone.history.start();
-                
-                var navigationCollection = new NavigationCollection
-                var nav = new NavigationView({el: $('.topbar'), collection: navigationCollection});
-                
-                navigationCollection.bind('add', function (item) {
-                    var hash = window.location.hash;
-                    
-                    if (window.location.hash == "" || window.location.hash == "#/") {
-                        hash = '#';
-                    }
-                    
-                    var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
-                    var li = $('<li></li>').append(href);
-                    
-                    if (item.get('link') == hash) {
-                        li.addClass('active');
-                    }
-                    
-                    $('.nav').append(li);
-                });
+                var app = Application;
+                app.initialize();
             });
         </script>
 
@@ -178,11 +101,11 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" id="content">
             <div class="content" id="body">
 
             </div>
-            <footer>
+            <footer id="footer">
                 <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> 2011</p>
             </footer>
         </div>

@@ -204,16 +204,28 @@ Bootstrap.prototype.setupViews = function () {
     });
     
     this.app.get('/templates/*', function (req, res) {
-        var template = req.url.substr(1);
-        res.render(template, {
-            layout: false
-        });
+        if (req.session.loggedIn) {
+            var template = req.url.substr(1);
+            res.render(template, {
+                layout: false
+            });
+        } else {
+            if (req.url != '/templates/contact') {
+                req.url = '/templates/welcome';
+            }
+            
+            res.render(req.url.substr(1), {
+                layout: false
+            });
+        }
     });
 };
 
 Bootstrap.prototype.setupControllers = function () {
     require(__dirname + '/controllers/NavigationController');
     require(__dirname + '/controllers/AuthenticationController');
+    require(__dirname + '/controllers/ChannelController');
+    require(__dirname + '/controllers/EventController');
 };
 
 module.exports = Bootstrap;

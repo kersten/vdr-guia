@@ -38,7 +38,8 @@ io.sockets.on('connection', function (socket) {
             }, {
                 title: __('Logout'),
                 link: '#/logout',
-                view: 'Logout'
+                view: 'Logout',
+                id: 'logoutBtn'
             }];
         
             socket.emit('NavigationCollection:read', {items: menu, loggedIn: true});

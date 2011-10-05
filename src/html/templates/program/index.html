@@ -1,70 +1,26 @@
-<div class="row" id="program_header_div">
-    <div class="span10">
-        <h1>
-            <%= __('Highlights') %>
-            <small><%= __('What\'s up today ..') %></small>
-        </h1>
-    </div>
+<div class="page-header" id="header_div" title="GUIA // <%= __('Program') %>">
+    <h1><%- __('Program <small>What\'s up today ..</small>') %></h1>
 </div>
-
 <div class="row">
-    <div class="span2">
-        <div class="row">
-            <div class="span2" style="background-color: #CCC">
-                <h5>Sparten Tipp 1</h5>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span2" style="background-color: #CCC">
-                <h5>Sparten Tipp 2</h5>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span2" style="background-color: #CCC">
-                <h5>Sparten Tipp 3</h5>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span2" style="background-color: #CCC">
-                <h5>Sparten Tipp 4</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="span8" style="background-color: #CCC">
-        <h1>Tages Tipp</h1><br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-    </div>
-
-    <div class="span6">
-        <div class="row">
-            <div class="span6" style="background-color: #CCC">
-                <h3>Film Tipp 1</h3>
-                <br />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span6" style="background-color: #CCC">
-               <h3>Film Tipp 2</h3>
-               <br />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span6" style="background-color: #CCC">
-                <h3>Film Tipp 3</h3>
-                <br />
-            </div>
-        </div>
-    </div>
+<div class="span10 columns" id="epglist">
+    &nbsp;
+</div>
+<div class="span4 columns" id="channellist" style="overflow: auto;">
+    <table class="zebra-striped"> 
+        <thead>
+            <tr>
+                <th>#</th>
+                <th><%= __('Channels') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <& _.each(channels, function (channel) { &>
+                <tr channelid="<&= channel.get('channel_id') &>" channel_name="<&= channel.get('name') &>" hasimage="<&= channel.get('image') &>" style="cursor: pointer;">
+                    <td><&= channel.get('number') &></td>
+                    <td><&= channel.get('name') &></td>
+                </tr>
+            <& }); &>
+        </tbody>
+    </table>
+</div>
 </div>

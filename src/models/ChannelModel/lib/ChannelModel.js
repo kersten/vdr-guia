@@ -1,12 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone');
+    Backbone = require('backbone-browserify');
 
-var ChannelModel = Backbone.Model.extend({
-    url: 'Channel',
-    
-    defaults: {
-        modern: true
-    }
-});
+var ChannelModel = Backbone.Model.extend({});
 
 module.exports = ChannelModel;

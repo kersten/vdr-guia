@@ -1,4 +1,6 @@
 var NavigationView = Backbone.View.extend({
+    template: null,
+    
     initialize: function () {
         this.collection.fetch();
         
@@ -14,10 +16,32 @@ var NavigationView = Backbone.View.extend({
                 self.collection.add(item);
             });
         });
+        
+        self.collection.bind('add', function (item) {
+            var hash = window.location.hash;
+
+            if (window.location.hash == "" || window.location.hash == "#/") {
+                hash = '#';
+            }
+
+            var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
+            var li = $('<li></li>').append(href);
+
+            if (item.get('link') == hash) {
+                li.addClass('active');
+            }
+
+            if (typeof(item.get('id')) != 'undefined') {
+                li.attr('id', item.get('id'));
+            }
+
+            $('.nav').append(li);
+        });
     },
     
     events: {
-        'click #loginBtn': "login"
+        'click #loginBtn': "login",
+        'click #logoutBtn': "logout"
     },
     
     login: function (event) {
@@ -30,21 +54,28 @@ var NavigationView = Backbone.View.extend({
         
         var password = hex_sha512($('#loginPass').val());
         
-        var loginSignal = function (data) {
-            socket.removeListener('User:login', loginSignal);
-            
+        socket.onceOn('User:login', function (data) {
             if (data.loggedIn) {
+                Application.views = {};
                 $(event.currentTarget).parent().remove();
                 
                 $('ul.nav').children().remove();
                 self.collection.fetch();
+                window.location.hash = '#';
             }
-        };
-        
-        socket.on('User:login', loginSignal)
-        
-        socket.emit('User:login', {username: $('#loginUser').val(), password: password});
+        }, {username: $('#loginUser').val(), password: password});
         
         return false;
+    },
+    
+    logout: function () {
+        var self = this;
+        
+        socket.onceOn('User:logout', function (data) {
+            Application.views = {};
+            $('ul.nav').children().remove();
+            window.location.hash = '#';
+            self.collection.fetch();
+        });
     }
 });

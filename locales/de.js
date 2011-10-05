@@ -132,5 +132,13 @@
 	"Contact <small>us</small>": "Contact <small>us</small>",
 	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
 	"Home": "Home",
-	"Sign in": "Sign in"
+	"Sign in": "Sign in",
+	"Timer <small>What's up today ..</small>": "Timer <small>What's up today ..</small>",
+	"Welcome": "Welcome",
+	"Settings <small>has something changed?</small>": "Settings <small>has something changed?</small>",
+	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>",
+	"Searchtimer <small>never miss anything again</small>": "Searchtimer <small>never miss anything again</small>",
+	"Search <small>What are you looking for?</small>": "Search <small>What are you looking for?</small>",
+	"Program <small>What's up today ..</small>": "Program <small>What's up today ..</small>",
+	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>"
 }
