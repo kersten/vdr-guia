@@ -1,7 +1,7 @@
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
     
-    socket.on('User:login', function (data) {
+    socket.on('User:login', function (data, callback) {
         var UserModel = require('../dbmodels/UserModel');
         
         UserModel.count({user: data.username, password: data.password}, function (err, count) {
@@ -15,13 +15,13 @@ io.sockets.on('connection', function (socket) {
                 hs.session.touch().save();
             }
             
-            socket.emit('User:login', {loggedIn: loggedIn});
+            callback({loggedIn: loggedIn});
         });
     });
     
-    socket.on('User:logout', function () {
+    socket.on('User:logout', function (data, callback) {
         mongooseSessionStore.destroy(hs.sessionID, function () {
-            socket.emit('User:logout', {loggedIn: false});
+            callback({loggedIn: false});
         });
         
         hs.session.loggedIn = false;

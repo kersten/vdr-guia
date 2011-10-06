@@ -11,15 +11,13 @@ var ProgramView = Backbone.View.extend({
             var ChannelCollection = require('./ChannelCollection');
             Application.collections.channellist = new ChannelCollection;
             
-            socket.on('ChannelCollection:read', function (data) {
+            Application.collections.channellist.fetch({success: function (collection, data) {
                 data.channels.forEach(function (channel) {
                     Application.collections.channellist.add(channel);
                 });
                 
                 callback.apply(this, [_.template(self.template, {channels: Application.collections.channellist.models})]);
-            });
-            
-            Application.collections.channellist.fetch();
+            }});
         } else {
             callback.apply(this, [_.template(self.template, {channels: Application.collections.channellist.models})]);
         }

@@ -2,41 +2,39 @@ var NavigationView = Backbone.View.extend({
     template: null,
     
     initialize: function () {
-        this.collection.fetch();
-        
         var self = this;
         
-        socket.on('NavigationCollection:read', function (data) {
-            if (!data.loggedIn) {
+        this.collection.fetch({success: function (collection, data) {
+             if (!data.loggedIn) {
                 var template = _.template( $("#LoginFormTemplate").html(), {} );
                 self.el.children('div.fill').children('div.container').append(template);
             }
             
-            data.items.forEach(function (item) {
-                self.collection.add(item);
+            collection.bind('add', function (item) {
+                var hash = window.location.hash;
+
+                if (window.location.hash == "" || window.location.hash == "#/") {
+                    hash = '#';
+                }
+
+                var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
+                var li = $('<li></li>').append(href);
+
+                if (item.get('link') == hash) {
+                    li.addClass('active');
+                }
+
+                if (typeof(item.get('id')) != 'undefined') {
+                    li.attr('id', item.get('id'));
+                }
+
+                $('.nav').append(li);
             });
-        });
-        
-        self.collection.bind('add', function (item) {
-            var hash = window.location.hash;
-
-            if (window.location.hash == "" || window.location.hash == "#/") {
-                hash = '#';
-            }
-
-            var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
-            var li = $('<li></li>').append(href);
-
-            if (item.get('link') == hash) {
-                li.addClass('active');
-            }
-
-            if (typeof(item.get('id')) != 'undefined') {
-                li.attr('id', item.get('id'));
-            }
-
-            $('.nav').append(li);
-        });
+            
+            data.items.forEach(function (item) {
+                collection.add(item);
+            });
+        }});
     },
     
     events: {
@@ -54,7 +52,7 @@ var NavigationView = Backbone.View.extend({
         
         var password = hex_sha512($('#loginPass').val());
         
-        socket.onceOn('User:login', function (data) {
+        socket.emit('User:login', {username: $('#loginUser').val(), password: password}, function (data) {
             if (data.loggedIn) {
                 Application.views = {};
                 $(event.currentTarget).parent().remove();
@@ -63,7 +61,7 @@ var NavigationView = Backbone.View.extend({
                 self.collection.fetch();
                 window.location.hash = '#';
             }
-        }, {username: $('#loginUser').val(), password: password});
+        });
         
         return false;
     },
@@ -71,7 +69,7 @@ var NavigationView = Backbone.View.extend({
     logout: function () {
         var self = this;
         
-        socket.onceOn('User:logout', function (data) {
+        socket.emit('User:logout', {}, function (data) {
             Application.views = {};
             $('ul.nav').children().remove();
             window.location.hash = '#';

@@ -1,7 +1,7 @@
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
     
-    socket.on('NavigationCollection:read', function () {
+    socket.on('NavigationCollection:read', function (data, callback) {
         if (hs.session.loggedIn) {
             var menu = [{
                 title: __('Highlights'),
@@ -42,7 +42,7 @@ io.sockets.on('connection', function (socket) {
                 id: 'logoutBtn'
             }];
         
-            socket.emit('NavigationCollection:read', {items: menu, loggedIn: true});
+            callback({items: menu, loggedIn: true});
         } else {
             var menu = [{
                 title: __('Home'),
@@ -52,7 +52,7 @@ io.sockets.on('connection', function (socket) {
                 link: '#/contact'
             }];
         
-            socket.emit('NavigationCollection:read', {items: menu, loggedIn: false});
+            callback({items: menu, loggedIn: false});
         }
     });
 });

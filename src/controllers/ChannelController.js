@@ -1,7 +1,7 @@
 io.sockets.on('connection', function (socket) {
-    socket.on('ChannelCollection:read', function () {
+    socket.on('ChannelCollection:read', function (data, callback) {
         rest.get(vdr.restful + '/channels.json?start=0').on('success', function(data) {
-            socket.emit('ChannelCollection:read', {channels: data.channels});
+            callback({channels: data.channels});
         });
     });
 });
