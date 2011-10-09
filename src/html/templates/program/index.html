@@ -14,11 +14,13 @@
             </tr>
         </thead>
         <tbody>
-            <& _.each(channels, function (channel) { &>
+            <& channels.each(function (channel) { &>
+                <& if (channel.get('name') != null) { &>
                 <tr channelid="<&= channel.get('channel_id') &>" channel_name="<&= channel.get('name') &>" hasimage="<&= channel.get('image') &>" style="cursor: pointer;">
                     <td><&= channel.get('number') &></td>
                     <td><&= channel.get('name') &></td>
                 </tr>
+                <& } &>
             <& }); &>
         </tbody>
     </table>

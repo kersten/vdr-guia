@@ -9,17 +9,17 @@ var ProgramView = Backbone.View.extend({
         var self = this;
         if (typeof(Application.collections.channellist) == 'undefined') {
             var ChannelCollection = require('./ChannelCollection');
-            Application.collections.channellist = new ChannelCollection;
+            Application.collections.channellist = new ChannelCollection();
             
             Application.collections.channellist.fetch({success: function (collection, data) {
                 data.channels.forEach(function (channel) {
-                    Application.collections.channellist.add(channel);
+                    collection.add(channel);
                 });
                 
-                callback.apply(this, [_.template(self.template, {channels: Application.collections.channellist.models})]);
+                callback.apply(this, [_.template(self.template, {channels: collection})]);
             }});
         } else {
-            callback.apply(this, [_.template(self.template, {channels: Application.collections.channellist.models})]);
+            callback.apply(this, [_.template(self.template, {channels: collection})]);
         }
     },
     
@@ -35,9 +35,13 @@ var ProgramView = Backbone.View.extend({
     },
     
     loadEpg: function (event) {
+        console.log(event.currentTarget);
+        
         EventCollection = require('./EventCollection');
         var epglist = new EventCollection;
         
-        epglist.fetch({data: {channel_id: $(event.currentTarget).attr('channelid')}});
+        epglist.fetch({data: {channel_id: $(event.currentTarget).attr('channelid')}, success: function () {
+                console.log('ARG');
+        }});
     }
 });

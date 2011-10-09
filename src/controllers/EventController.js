@@ -1,6 +1,7 @@
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
-        console.log(data);
+        console.log(arguments);
+        callback();
         /*rest.get(vdr.restful + '/channels.json?start=0').on('success', function(data) {
             
             
