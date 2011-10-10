@@ -20,6 +20,7 @@ var Application = {
         loadedViews: {},
 
         routes: {
+            "/epg/:channel_id/:page": "epgRoute",
             "*actions": "defaultRoute"
         },
 
@@ -56,6 +57,10 @@ var Application = {
             } else {
                 self.render(req, original);
             }
+        },
+        
+        epgRoute: function (channel_id, page) {
+            console.log(channel_id, page);
         },
 
         render: function (req, nav) {

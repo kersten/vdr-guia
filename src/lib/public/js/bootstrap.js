@@ -10,7 +10,6 @@ _.templateSettings = {
 Backbone.View.prototype.template = null;
 
 Backbone.View.prototype.generateHTML = function (callback) {
-    console.log('Called prototype html');
     callback.apply(this, [_.template(this.template, {})]);
 };
 
@@ -39,7 +38,7 @@ Backbone.View.prototype.renderTemplate = function () {
     }
     
     var self = this;
-        
+    
     if (this.template == null) {
         $.ajax({
             url: "/templates/" + self.url,
@@ -80,14 +79,10 @@ Backbone.sync = function (method, model, options) {
     var params = _.extend({
         req: namespace + ':' + method
     }, options);
-
-    console.log(arguments);
     
     params.data = model.toJSON() || {};
     
-    console.log(params);
-    
-    socket.emit(namespace + ':' + method, params.data, function (data) {
+    socket.emit(namespace + ':' + method, options.data, function (data) {
         options.success(data);
     });
 };

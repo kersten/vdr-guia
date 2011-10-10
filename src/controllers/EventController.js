@@ -1,11 +1,12 @@
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
-        console.log(arguments);
-        callback();
-        /*rest.get(vdr.restful + '/channels.json?start=0').on('success', function(data) {
-            
-            
-            socket.emit('EventCollection:read', {channels: data.channels});
-        });*/
+        var start = 0;
+        
+        rest.get(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20).on('success',  function (epg) {
+            console.log(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20);
+            callback(epg.events);
+        }).on('error', function (e) {
+            console.log(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20);
+        });
     });
 });

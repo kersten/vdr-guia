@@ -35,13 +35,17 @@ var ProgramView = Backbone.View.extend({
     },
     
     loadEpg: function (event) {
-        console.log(event.currentTarget);
+        window.location.hash = '#/epg/' + $(event.currentTarget).attr('channelid') + '/1';
         
         EventCollection = require('./EventCollection');
         var epglist = new EventCollection;
         
-        epglist.fetch({data: {channel_id: $(event.currentTarget).attr('channelid')}, success: function () {
-                
+        epglist.fetch({data: {channel_id: $(event.currentTarget).attr('channelid'), page: 1}, success: function (collection, events) {
+            events.forEach(function (event) {
+                collection.add(event);
+            });
+            
+            
         }});
     }
 });
