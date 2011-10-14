@@ -2,7 +2,7 @@ var ProgramView = Backbone.View.extend({
     url: "program",
     
     events: {
-        'click #channellist > table > tbody > tr': "loadEpg"
+        'click #channellist > table > tbody > tr': "loadEvents"
     },
     
     generateHTML: function (callback) {
@@ -34,18 +34,9 @@ var ProgramView = Backbone.View.extend({
         $('#channellist').css('height', '100%');
     },
     
-    loadEpg: function (event) {
-        window.location.hash = '#/epg/' + $(event.currentTarget).attr('channelid') + '/1';
-        
-        EventCollection = require('./EventCollection');
-        var epglist = new EventCollection;
-        
-        epglist.fetch({data: {channel_id: $(event.currentTarget).attr('channelid'), page: 1}, success: function (collection, events) {
-            events.forEach(function (event) {
-                collection.add(event);
-            });
-            
-            
-        }});
+    loadEvents: function (event) {
+        Application.loadView('/Event', function (req, original) {
+            Application.views[req].renderTemplate($(event.currentTarget).attr('channelid'), 1);
+        });
     }
 });
