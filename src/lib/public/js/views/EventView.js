@@ -56,8 +56,6 @@ var EventView = Backbone.View.extend({
         
         this.eventDiv.append($('<div></div>').addClass('modal-footer').css('bottom', 0));
         
-        this.eventDiv.children('.eventheader').animate({padding: '5px 15px'});
-        
         var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
             elementWidth = this.eventDiv.outerWidth();
             elementHeight = 500;
@@ -73,6 +71,12 @@ var EventView = Backbone.View.extend({
             borderRadius: '6px',
             boxShadow: '0 3px 7px rgba(0, 0, 0, 0.3)'
         });
+        
+        var modalHeader = this.eventDiv.children('.eventheader');
+        modalHeader.css({padding: '5px 15px'});
+        
+        var modalBody = this.eventDiv.children('.eventbody');
+        modalBody.css({padding: '15px'});
         
         Application.overlay('show');
     },
