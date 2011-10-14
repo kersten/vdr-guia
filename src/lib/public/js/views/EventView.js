@@ -70,6 +70,11 @@ var EventView = Backbone.View.extend({
         modalBody.addClass('modal-body').css({'max-height': 500 - (30 + modalFooterHeight + modalHeaderHeight), overflow: 'auto'});
         
         Application.overlay('show');
+        
+        var self = this;
+        $('.siteoverlay').bind('click', function () {
+            self.closeEvent();
+        });
     },
     
     closeEvent: function () {

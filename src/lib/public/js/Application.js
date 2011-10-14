@@ -83,7 +83,7 @@ var Application = {
                 zIndex: 100000,
                 opacity: 0,
                 backgroundColor: '#000000'
-            });
+            }).addClass('siteoverlay');
             
             $('body').append(this.overlayDiv);
         }
