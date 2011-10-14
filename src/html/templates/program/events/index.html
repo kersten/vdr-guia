@@ -8,9 +8,17 @@
             <& } &>
         <& } &>
         
-        <& if (item.has('genretip')) { &>
-            <div style="position: absolute; right: 15px; top: 15px;"><span class="label warning">Tipp</span></div>
+        <div style="position: absolute; right: 15px; top: 15px;">
+        <& if (item.get('timer_exists')) { &>
+            <span class="label important">Timer active</span>
+        <& } else if (item.get('timer_exists') && item.get('timer_active')) { &>
+            <span class="label important">Recording</span>
         <& } &>
+        
+        <& if (item.has('genretip')) { &>
+            <span class="label warning">Tipp</span>
+        <& } &>
+        </div>
     </div>
     <div class="eventbody" style="position:relative; max-height: 100px; overflow: hidden; padding: 15px 5px;">
         <&= item.get('description') &>

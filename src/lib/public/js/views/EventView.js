@@ -59,8 +59,6 @@ var EventView = Backbone.View.extend({
         modalFooterHeight += parseInt(modalFooter.css("margin-top"), 10) + parseInt(modalFooter.css("margin-bottom"), 10); //Total Margin Width
         modalFooterHeight += parseInt(modalFooter.css("borderTopWidth"), 10) + parseInt(modalFooter.css("borderBottomWidth"), 10);
         
-        console.log(this.originalDiv.children('.eventbody')[0].scrollHeight + 30 + modalFooterHeight + modalHeaderHeight);
-        
         this.eventDiv.animate({
             left: X2,
             top: Y2,
@@ -82,16 +80,11 @@ var EventView = Backbone.View.extend({
             top: this.originalDiv.offset().top,
             height: this.originalDiv.height(),
             borderRadius: 'none',
-            backgroundClip: 'none',
+            backgroundClip: 'none'
         }, function () {
             $(this).remove();
             self.originalDiv.css('opacity', 1);
         });
-        
-        //this.eventDiv.children('.eventheader').removeClass('modal-header');
-        //this.eventDiv.children('.eventbody').removeClass('modal-body');
-        //this.eventDiv.children('.eventbody').css({'max-height': 100, overflow: 'hidden'});
-        //$('.modal-footer').remove();
         
         Application.overlay('hide');
     },
