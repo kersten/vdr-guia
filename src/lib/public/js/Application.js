@@ -94,7 +94,11 @@ var Application = {
             break;
         
         case 'hide':
-            
+            var self = this;
+            this.overlayDiv.animate({opacity: 0}, {complete: function () {
+                $(this).remove();
+                self.overlayDiv = null;
+            }});
             break;
         }
     }
