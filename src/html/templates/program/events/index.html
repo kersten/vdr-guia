@@ -1,22 +1,22 @@
 <& events.forEach(function (item) { &>
 <div class="row eventitem span9" style="padding: 0px; cursor: pointer;">
     <div class="eventheader" style="position:relative; border-bottom: 1px solid #DDDDDD; overflow: hidden; white-space:nowrap;">
-        <h3><&= item.get('start') &> - <&= item.get('title') &> <small><&= item.get('short_text') &> - <&= Math.round(parseInt(item.get('duration')) / 60) &> Min.</small></h3>
+        <h3><&= item.get('start') &> - <&= item.get('title') &> <small><&= item.get('short_text') &> - <&= Math.round(parseInt(item.get('duration')) / 60) &> <%= __('Min.') %></small></h3>
         <& if (item.has('rating')) { &>
             <& for (var i = 0; i < item.get('rating'); i++) { &>
             <img src="/img/stars/rating_03.gif" />
             <& } &>
         <& } &>
         
-        <div style="position: absolute; right: 15px; top: 15px;">
+        <div style="position: absolute; right: 15px; top: 10px;">
         <& if (item.get('timer_exists') && !item.get('timer_is_recording')) { &>
-            <span class="label important">Timer active</span>
+            <span class="label important"><%= __('Timer active') %></span>
         <& } else if (item.get('timer_exists') && item.get('timer_is_recording')) { &>
-            <span class="label important timer_active">Recording</span>
+            <span class="label important timer_active"><%= __('Recording') %></span>
         <& } &>
         
         <& if (item.has('genretip')) { &>
-            <span class="label warning">Tipp</span>
+            <span class="label warning"><%= __('Tipp') %></span>
         <& } &>
         </div>
     </div>

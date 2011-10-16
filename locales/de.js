@@ -140,5 +140,9 @@
 	"Searchtimer <small>never miss anything again</small>": "Searchtimer <small>never miss anything again</small>",
 	"Search <small>What are you looking for?</small>": "Search <small>What are you looking for?</small>",
 	"Program <small>What's up today ..</small>": "Program <small>What's up today ..</small>",
-	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>"
+	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>",
+	"Min.": "Min.",
+	"Timer active": "Timer active",
+	"Recording": "Recording",
+	"Tipp": "Tipp"
 }
