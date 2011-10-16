@@ -35,19 +35,10 @@ var EventView = Backbone.View.extend({
         this.eventDiv.insertBefore(event.currentTarget);
         
         var modalHeader = this.eventDiv.children('.eventheader');
-        modalHeader.addClass('modal-header');
+        modalHeader.addClass('modal-header').css('background-color', '#F5F5F5');
         
         var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close'));
         this.eventDiv.append(modalFooter);
-        
-        
-        var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
-            elementWidth = this.eventDiv.outerWidth();
-            elementHeight = this.originalDiv.children('.eventbody')[0].scrollHeight;
-            windowWidth = jQuery(window).width();
-            windowHeight = jQuery(window).height();
-            X2 = (windowWidth/2 - elementWidth/2) + "px";
-            Y2 = (windowHeight/2 - elementHeight/2) + "px";
         
         var modalHeaderHeight = modalHeader.height();
         modalHeaderHeight += parseInt(modalHeader.css("padding-top"), 10) + parseInt(modalHeader.css("padding-bottom"), 10); //Total Padding Width
@@ -59,16 +50,26 @@ var EventView = Backbone.View.extend({
         modalFooterHeight += parseInt(modalFooter.css("margin-top"), 10) + parseInt(modalFooter.css("margin-bottom"), 10); //Total Margin Width
         modalFooterHeight += parseInt(modalFooter.css("borderTopWidth"), 10) + parseInt(modalFooter.css("borderBottomWidth"), 10);
         
+        var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
+            elementWidth = this.eventDiv.outerWidth();
+            elementHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight >= 500) ? 500 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight;
+            windowWidth = jQuery(window).width();
+            windowHeight = jQuery(window).height();
+            X2 = (windowWidth/2 - elementWidth/2) + "px";
+            Y2 = (windowHeight/2 - elementHeight/2) + "px";
+        
         this.eventDiv.animate({
             left: X2,
             top: Y2,
-            height: this.originalDiv.children('.eventbody')[0].scrollHeight + modalFooterHeight + modalHeaderHeight,
+            height: (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight >= 500) ? 500 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight,
             "max-height": 500
         });
         
         var modalBody = this.eventDiv.children('.eventbody');
         modalBody.addClass('modal-body').css({'max-height': 500 - (30 + modalFooterHeight + modalHeaderHeight), overflow: 'auto'});
         
+	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
+
         Application.overlay('show');
         
         var self = this;
@@ -113,6 +114,7 @@ var EventView = Backbone.View.extend({
 
         this.generateHTML(function (res) {
             $('#epglist').html(res);
+            $('.timer_active').blinky();
         });
     },
     

@@ -6,7 +6,7 @@ var EventCollection = Backbone.Collection.extend({
     url: "EventCollection",
     model: EventModel,
     parse: function (response) {
-        response.forEach(function (item) {
+        response.forEach(function (item, index) {
             var start = new Date(item.start_time * 1000);
             var stop = new Date((item.start_time + item.duration) * 1000);
 
@@ -38,6 +38,77 @@ var EventCollection = Backbone.Collection.extend({
             }
 
             item.genretip = genretip;
+            
+            var divisiontip = null;
+
+            var divisiontipRegex = /\[Spartentipp\s(.*?)\](.*)/;
+
+            if (divisiontipRegex.test(item.description)) {
+                var match = item.description.match(divisiontipRegex);
+                divisiontip = match[1];
+                item.description = match[2];
+            }
+
+            item.divisiontip = divisiontip;
+            
+            item.details.forEach(function (detail) {
+                switch (detail.key) {
+                case 'ACTORS':
+                    var actors = detail.value.split(' - ');
+                    
+                    actors.forEach(function (actor, index) {
+                        var extractActorRegex = /(.*?)\s\((.*?)\)/;
+                        
+                        if (extractActorRegex.test(actor)) {
+                            var match = actor.match(extractActorRegex);
+                            actors[index] = {
+                                name: match[1],
+                                character: match[2]
+                            };
+                        } else {
+                            actors[index] = actor;
+                        }
+                    });
+                    
+                    detail.value = actors;
+                    break;
+                
+                case 'COUNTRY':
+                    var short_countries = detail.value.split('/');
+                    
+                    short_countries.forEach(function (country, index) {
+                        switch (country) {
+                        case 'A':
+                            country = 'Österreich';
+                            break;
+                        
+                        case 'CH':
+                            country = 'Schweiz';
+                            break;
+                        
+                        case 'D':
+                            country = 'Deutschland';
+                            break;
+                        }
+                        
+                        short_countries[index] = country;
+                    });
+                    
+                    detail.value = short_countries;
+                    
+                    break;
+                }
+            });
+            
+            var timer_is_recording = false;
+            
+            if (item.timer_exists == true && item.timer_active == true) {
+                if (index == 0) {
+                    timer_is_recording = true;
+                }
+            }
+            
+            item.timer_is_recording = timer_is_recording;
         });
         
         return response;
