@@ -1,7 +1,7 @@
 <& events.forEach(function (item) { &>
 <div class="row eventitem span9" style="padding: 0px; cursor: pointer;">
     <div class="eventheader" style="position:relative; border-bottom: 1px solid #DDDDDD; overflow: hidden; white-space:nowrap;">
-        <h3><&= item.get('start') &> - <&= item.get('title') &> <small><&= item.get('short_text') &> - <&= parseInt(item.get('duration')) / 60 &> Min.</small></h3>
+        <h3><&= item.get('start') &> - <&= item.get('title') &> <small><&= item.get('short_text') &> - <&= Math.round(parseInt(item.get('duration')) / 60) &> Min.</small></h3>
         <& if (item.has('rating')) { &>
             <& for (var i = 0; i < item.get('rating'); i++) { &>
             <img src="/img/stars/rating_03.gif" />
