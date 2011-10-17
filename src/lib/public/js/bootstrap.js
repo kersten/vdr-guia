@@ -24,6 +24,8 @@ Backbone.View.prototype.render = function () {
         self.el.html(res);
         $(document).attr('title', $('#header_div').attr('title'));
         
+        Application.loadingOverlay('hide');
+        
         if (typeof(self.postRender) == 'function') {
             self.postRender();
         }

@@ -13,9 +13,11 @@ var ProgramView = Backbone.View.extend({
             
             Application.collections.channellist.fetch({success: function (collection) {
                 callback.apply(this, [_.template(self.template, {channels: collection})]);
+                Application.loadingOverlay('hide');
             }});
         } else {
             callback.apply(this, [_.template(self.template, {channels: Application.collections.channellist})]);
+            Application.loadingOverlay('hide');
         }
     },
     
@@ -31,6 +33,8 @@ var ProgramView = Backbone.View.extend({
     },
     
     loadEvents: function (event) {
+        Application.loadingOverlay('show');
+        
         Application.loadView('/Event', function (req, original) {
             Application.views[req].renderTemplate($(event.currentTarget).attr('channelid'), 1);
         });
