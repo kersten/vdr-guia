@@ -1,3 +1,98 @@
 <div class="page-header" id="header_div" title="GUIA // <%= __('Search') %>">
     <h1><%- __('Search <small>What are you looking for?</small>') %></h1>
 </div>
+<div class="row">
+    <div class="span14">
+        <form class="form-stacked">
+            <fieldset>
+                <div class="clearfix">
+                    <div class="input">
+                        <div class="input-append">
+                            <input id="search" class="xlarge span13" placeholder="<%= __('Search for') %>" type="text" name="search" />
+                            <span class="add-on" style="cursor: pointer" id="showAdvancedSearchoptions">+</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="row" id="advancedSearchoptions" style="display: none;">
+    <div class="span7">
+        <form class="form-stacked">
+            <fieldset>
+                <legend><%= __('Advanced options')%></legend>
+                <div class="clearfix">
+                    <label id="optionsCheckboxes">Search in</label>
+                    <ul class="inputs-list">
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked" />
+                                <span>Title</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Description</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Characternames</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Year</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="span7">
+        <form class="form-stacked">
+            <fieldset>
+                <legend>&nbsp;</legend>
+                <div class="clearfix">
+                    <label id="optionsCheckboxes">&nbsp;</label>
+                    <ul class="inputs-list">
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Short text</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Actornames</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Regisseur</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="option1" name="optionsCheckboxes" />
+                                <span>Country</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="span14" id="searchresults">
+        
+    </div>
+</div>

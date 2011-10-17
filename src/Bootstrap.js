@@ -226,6 +226,7 @@ Bootstrap.prototype.setupControllers = function () {
     require(__dirname + '/controllers/AuthenticationController');
     require(__dirname + '/controllers/ChannelController');
     require(__dirname + '/controllers/EventController');
+    require(__dirname + '/controllers/RecordingsController');
 };
 
 module.exports = Bootstrap;

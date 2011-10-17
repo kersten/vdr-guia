@@ -1,8 +1,6 @@
 var _ = require('underscore')._,
-    Backbone = require('backbone');
+    Backbone = require('backbone-browserify');
 
-var RecordingModel = Backbone.Model.extend({
-    url: 'Recording'
-});
+var RecordingModel = Backbone.Model.extend({});
 
 module.exports = RecordingModel;

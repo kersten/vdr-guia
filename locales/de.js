@@ -144,5 +144,6 @@
 	"Min.": "Min.",
 	"Timer active": "Timer active",
 	"Recording": "Recording",
-	"Tipp": "Tipp"
+	"Tipp": "Tipp",
+	"Advanced options": "Advanced options"
 }
