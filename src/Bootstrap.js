@@ -9,9 +9,13 @@ function Bootstrap (app, express) {
     var self = this;
     
     this.setupExpress(function () {
+        console.log('Express setup complete ..');
+        
         self.setupSocketIo();
         
         self.setupDatabase(function (data) {
+            console.log('Database setup complete ..');
+            
             global.installed = data.installed;
             
             if (data.installed) {
@@ -222,12 +226,16 @@ Bootstrap.prototype.setupViews = function () {
 };
 
 Bootstrap.prototype.setupControllers = function () {
-    require(__dirname + '/controllers/NavigationController');
-    require(__dirname + '/controllers/AuthenticationController');
-    require(__dirname + '/controllers/ChannelController');
-    require(__dirname + '/controllers/EventController');
-    require(__dirname + '/controllers/RecordingsController');
-    require(__dirname + '/controllers/SearchController');
+    fs.readdir(__dirname + '/controllers', function (err, files) {
+        if (err) throw err;
+        files.forEach(function (file) {
+            file = file.replace('.js', '');
+            
+            if (file != 'InstallController') {
+                require('./controllers/' + file);
+            }
+        });
+    });
 };
 
 module.exports = Bootstrap;

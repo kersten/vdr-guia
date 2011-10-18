@@ -131,7 +131,7 @@ var Application = {
     loadingOverlay: function (method) {
         if (method == 'show') {
             this.spinner.overlayDiv = $('<div></div>').css({
-                position: 'absolute',
+                position: 'fixed',
                 top: '0px',
                 width: $(window).width(),
                 height: $(window).height(),

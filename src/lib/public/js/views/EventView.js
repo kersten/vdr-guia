@@ -102,7 +102,6 @@ var EventView = Backbone.View.extend({
         Application.collections.eventlist = new EventCollection();
 
         Application.collections.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
-            console.log(collection);
             callback.apply(this, [_.template(self.template, {events: collection})]);
             Application.loadingOverlay('hide');
         }});

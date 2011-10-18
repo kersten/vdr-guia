@@ -21,30 +21,18 @@ var SearchView = Backbone.View.extend({
     
     search: function (event) {
         if (event.keyCode == 13) {
+            $('#showAdvancedSearchoptions').text('+');
+            $('#advancedSearchoptions').slideUp();
+            
             $(event.currentTarget).attr('disabled', true);
             $(event.currentTarget).blur();
             
             Application.loadingOverlay('show');
             
-            var SearchresultCollection = require('./SearchresultCollection');
-            var searchresultCollection = new SearchresultCollection;
-            
-            var self = this;
-            
-            searchresultCollection.fetch({
-                data: {
-                    term: $(event.currentTarget).val()
-                },
-                
-                success: function (collection) {
-                    /*Application.loadView('/Event', function (req, original) {
-                        Application.views[req].renderTemplate($(event.currentTarget).attr('channelid'), 1);
-                    });*/
-                    
-                    console.log(collection);
-                    
-                    //$('#searchresults').append(_.template(self.template, {searchresults: collection}));
-                }
+            Application.loadView('/Searchresults', function (req, original) {
+                Application.views[req].renderTemplate($(event.currentTarget).val(), 1, function () {
+                    $(event.currentTarget).attr('disabled', false);
+                });
             });
             
             return false;
