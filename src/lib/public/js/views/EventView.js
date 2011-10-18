@@ -114,6 +114,7 @@ var EventView = Backbone.View.extend({
 
         this.generateHTML(function (res) {
             $('#epglist').html(res);
+            $('#epglist').css('max-height', $('#channellist').css('max-height'));
             $('.timer_active').blinky();
         });
     },

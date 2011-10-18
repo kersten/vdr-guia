@@ -1,6 +1,7 @@
 var fs = require("fs");
 var i18n = require('i18n');
-var rest = require('restler')
+var rest = require('restler');
+var LogoCollection = require('./models/LogoCollection');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -19,6 +20,8 @@ function Bootstrap (app, express) {
             global.installed = data.installed;
             
             if (data.installed) {
+                self.setupLogos();
+                
                 vdr.host = data.vdrHost;
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
                 
@@ -183,7 +186,7 @@ Bootstrap.prototype.setupViews = function () {
         console.log(req.sessionID);
         mongooseSessionStore.get(req.sessionID, function (err, session) {
             if (session == null) {
-                req.session.loggedIn = false;
+                next();
             } else {
                 req.session.loggedIn = session.loggedIn;
             }
@@ -223,6 +226,29 @@ Bootstrap.prototype.setupViews = function () {
             });
         }
     });
+    
+    this.app.get('/logo/*', function (req, res) {
+        if (req.session.loggedIn) {
+            var channel_name = unescape(req.url.substr(6));
+            
+            var logo = vdr.logoCollection.find(function (logo) {
+                return channel_name == logo.get('name');
+            });
+            
+            if (typeof(logo) != 'undefined') {
+                var filename = __dirname + '/share/logos/' + logo.get('file');
+                res.contentType(filename);
+                
+                var image = fs.readFileSync(filename);
+                
+                res.end(image);
+            } else {
+                res.status(404);
+            }
+        } else {
+            res.status(403);
+        }
+    });
 };
 
 Bootstrap.prototype.setupControllers = function () {
@@ -235,6 +261,24 @@ Bootstrap.prototype.setupControllers = function () {
                 require('./controllers/' + file);
             }
         });
+    });
+};
+
+Bootstrap.prototype.setupLogos = function () {
+    var logos = new LogoCollection();
+    
+    fs.readdir(__dirname + '/share/logos', function (err, files) {
+        if (err) throw err;
+        
+        files.forEach(function (logo) {
+            if (logo.match(/.png$/))
+                logos.add({
+                    file: logo,
+                    name: logo.replace('.png', '')
+                });
+        });
+        
+        vdr.logoCollection = logos;
     });
 };
 

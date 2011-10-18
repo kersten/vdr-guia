@@ -15,8 +15,7 @@ var SearchresultsView = Backbone.View.extend({
             },
 
             success: function (collection) {
-                var diff = $('#content').height() - $('#header_div').height();
-                $('#searchresults').css('max-height', $(window).height() - $('#header_div').height());
+                $('#searchresults').css('max-height', $(window).height() - $('body').height() - 40);
                 
                 callback.apply(this, [_.template(self.template, {searchresults: collection})]);
             }

@@ -22,14 +22,13 @@ var ProgramView = Backbone.View.extend({
     },
     
     postRender: function () {
-        var diff = $('#content').height() - $('#channellist').parent().height() - $('#header_div').height();
+        var maxHeight = $(window).height() - ($('body').height() - $('#channellist').height()) - 40;
         
-        $('#channellist').parent().css('height', $(window).height() - $('#channellist').parent().offset().top - diff).data({
-            height: $(window).height() - $('#channellist').offset().top,
-            top: $('#channellist').offset().top
+        $('#channellist').parent().css('max-height', maxHeight);
+        $('#channellist').css({
+            height: '100%',
+            maxHeight: maxHeight
         });
-        
-        $('#channellist').css('height', '100%');
     },
     
     loadEvents: function (event) {
@@ -37,6 +36,24 @@ var ProgramView = Backbone.View.extend({
         
         Application.loadView('/Event', function (req, original) {
             Application.views[req].renderTemplate($(event.currentTarget).attr('channelid'), 1);
+            
+            var oldImg = $('#header_div > img');
+            
+            var img = $('<img></img>').attr('src', '/logo/' + $(event.currentTarget).attr('channel_name')).css({
+                display: 'none',
+                height: 65,
+                position: 'absolute',
+                right: 20,
+                top: 5
+            }).appendTo('#header_div');
+
+            img.load(function () {
+                img.fadeIn('normal', function () {
+                    if (oldImg != null) {
+                        oldImg.remove();
+                    }
+                });
+            });
         });
     }
 });
