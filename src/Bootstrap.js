@@ -206,7 +206,8 @@ Bootstrap.prototype.setupViews = function () {
         
         res.render('index', {
             layout: false,
-            isLoggedIn: req.session.loggedIn
+            isLoggedIn: req.session.loggedIn,
+            vdr: JSON.stringify(vdr.plugins)
         });
     });
     

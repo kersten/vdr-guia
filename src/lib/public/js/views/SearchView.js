@@ -11,12 +11,19 @@ var SearchView = Backbone.View.extend({
         case '+':
             $(event.currentTarget).text('-');
             $('#advancedSearchoptions').slideDown();
+            $('#searchinputfield').focus();
             break;
             
         case '-':
             $(event.currentTarget).text('+');
             $('#advancedSearchoptions').slideUp();
+            $('#searchinputfield').focus();
+            break;
         }
+    },
+    
+    postRender: function () {
+        $('#searchinputfield').focus();
     },
     
     search: function (event) {

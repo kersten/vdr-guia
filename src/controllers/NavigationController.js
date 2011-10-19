@@ -19,11 +19,11 @@ io.sockets.on('connection', function (socket) {
                 title: __('Search'),
                 link: '#/search',
                 view: 'Search'
-            } : null, (vdr.plugins.epgsearch) ? {
+            } : null, /* (vdr.plugins.epgsearch) ? {
                 title: __('Searchtimer'),
                 link: '#/searchtimer',
                 view: 'Searchtimer'
-            } : null, {
+            } : null,*/ {
                 title: __('Recordings'),
                 link: '#/recordings',
                 view: 'Recordings'

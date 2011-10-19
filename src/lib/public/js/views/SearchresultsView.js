@@ -110,7 +110,6 @@ var SearchresultsView = Backbone.View.extend({
                 callback.apply(this, [_.template(self.template, {searchresults: collection})]);
                 
                 var newSearchtimer = $('#createNewSearchtimer');
-                console.log(newSearchtimer.outerHeight());
                 
                 newSearchtimer.css({
                     position: 'absolute',
@@ -122,6 +121,12 @@ var SearchresultsView = Backbone.View.extend({
                         $('#createNewSearchtimerDialog').modal('show').bind('hide', function () {
                             Application.overlay('hide');
                         });
+                        
+                        $('#createNewSearchtimerDialog > .modal-body').css({
+                            maxHeight: $(window).height() - 40 - 97 - ($('#createNewSearchtimerDialog > .modal-header').outerHeight() + $('#createNewSearchtimerDialog > .modal-footer').outerHeight())
+                        });
+                        
+                        $('#newSearchtimerSearchField').val($('#searchinputfield').val());
                         
                         $('#btnCreateNewSearchtimer').unbind();
                         $('#btnCreateNewSearchtimer').click(function () {
@@ -135,15 +140,9 @@ var SearchresultsView = Backbone.View.extend({
                     });
                 });
                 
-                newSearchtimer.fadeIn();
-                /*    .addClass('label success')
-                    .css({
-                        position: 'absolute',
-                        top: ($('#searchinputfield').height() - 13) / 2,
-                        left: $('#searchinputfield').width(),
-                        cursor: 'pointer'
-                    }
-                );*/
+                if (typeof(Application.vdr.plugins.epgsearch) != 'undefined') {
+                    newSearchtimer.fadeIn();
+                }
             }
         });
     },
