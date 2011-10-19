@@ -116,31 +116,13 @@ var SearchresultsView = Backbone.View.extend({
                     top: (($('#searchinputfield').height() - newSearchtimer.outerHeight()) / 2) + ($('#searchinputfield').height() - newSearchtimer.outerHeight()),
                     left: $('#searchinputfield').width() - newSearchtimer.outerWidth(),
                     cursor: 'pointer'
-                }).click(function () {
-                    Application.overlay('show', function () {
-                        $('#createNewSearchtimerDialog').modal('show').bind('hide', function () {
-                            Application.overlay('hide');
-                        });
-                        
-                        $('#createNewSearchtimerDialog > .modal-body').css({
-                            maxHeight: $(window).height() - 40 - 97 - ($('#createNewSearchtimerDialog > .modal-header').outerHeight() + $('#createNewSearchtimerDialog > .modal-footer').outerHeight())
-                        });
-                        
-                        $('#newSearchtimerSearchField').val($('#searchinputfield').val());
-                        
-                        $('#btnCreateNewSearchtimer').unbind();
-                        $('#btnCreateNewSearchtimer').click(function () {
-                            console.log('CREATE');
-                        });
-                        
-                        $('#btnCancelNewSearchtimer').unbind();
-                        $('#btnCancelNewSearchtimer').click(function () {
-                            $('#createNewSearchtimerDialog').modal('hide');
-                        });
+                }).click(function (event) {
+                    Application.loadSubView('/Searchtimer', function (req, original) {
+                        Application.views[req].openDialog($(event.currentTarget));
                     });
                 });
                 
-                if (typeof(Application.vdr.plugins.epgsearch) != 'undefined') {
+                if (typeof(Application.vdr.plugins.epgsearch) != 'undefined' && collection.length != 0) {
                     newSearchtimer.fadeIn();
                 }
             }

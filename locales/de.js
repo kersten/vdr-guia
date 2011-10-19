@@ -25,5 +25,10 @@
 	"Use channel": "Use channel",
 	"Welcome": "Welcome",
 	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
-	"What's new": "What's new"
+	"What's new": "What's new",
+	"Program <small>What's up today ..</small>": "Program <small>What's up today ..</small>",
+	"Channels": "Channels",
+	"Timer <small>What's up today ..</small>": "Timer <small>What's up today ..</small>",
+	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>",
+	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>"
 }
