@@ -145,5 +145,8 @@
 	"Timer active": "Timer active",
 	"Recording": "Recording",
 	"Tipp": "Tipp",
-	"Advanced options": "Advanced options"
+	"Advanced options": "Advanced options",
+	"New searchtimer": "New searchtimer"
+}	"Abort": "Abort"
+}	"Create": "Create"
 }

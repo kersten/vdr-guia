@@ -29,7 +29,7 @@ var SearchView = Backbone.View.extend({
             
             Application.loadingOverlay('show');
             
-            Application.loadView('/Searchresults', function (req, original) {
+            Application.loadSubView('/Searchresults', function (req, original) {
                 Application.views[req].renderTemplate($(event.currentTarget).val(), 1, function () {
                     $(event.currentTarget).attr('disabled', false);
                 });

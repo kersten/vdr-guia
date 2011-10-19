@@ -7,9 +7,10 @@
             <fieldset>
                 <div class="clearfix">
                     <div class="input">
-                        <div class="input-append">
+                        <div class="input-append" style="position: relative">
                             <input id="searchinputfield" class="xlarge span13" placeholder="<%= __('Search for') %>" type="text" name="searchinputfield" />
                             <span class="add-on" style="cursor: pointer" id="showAdvancedSearchoptions">+</span>
+                            <span id="createNewSearchtimer" class="label success" style="display: none;"><%= __('Create new searchtimer') %></span>
                         </div>
                     </div>
                 </div>
@@ -17,6 +18,7 @@
         </form>
     </div>
 </div>
+
 <div class="row" id="advancedSearchoptions" style="display: none;">
     <div class="span7">
         <form class="form-stacked">
@@ -91,9 +93,33 @@
         </form>
     </div>
 </div>
+
 <div class="row">
     <div class="span14" id="searchresults" style="overflow: auto;">
         
         <div class="transoverlay" style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; margin: 0; padding: 40px 0; background-image: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); background-image: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); background-image: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); background-image: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); background-image: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);"></div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="createNewSearchtimerDialog">
+    <div class="modal-header">
+        <a class="close" href="#">×</a>
+        <h3><%= __('New searchtimer') %></h3>
+    </div>
+    <div class="modal-body">
+        <form class="">
+            <fieldset>
+                <div class="clearfix">
+                    <label for="xlInput"><%= __('Search for') %></label>
+                    <div class="input">
+                        <input id="newSearchtimerSearchField" class="xlarge" type="text" name="searchinputfield" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="btn primary" id="btnCreateNewSearchtimer"><%= __('Create') %></a>
+        <a class="btn secondary" id="btnCancelNewSearchtimer"><%= __('Cancel') %></a>
     </div>
 </div>

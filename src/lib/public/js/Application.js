@@ -1,6 +1,7 @@
 var Application = {
     navigation: null,
     views: {},
+    currentView: null,
     models: {},
     collections: {},
     overlayDiv: null,
@@ -75,6 +76,10 @@ var Application = {
             req = req.substr(1);
             req = req.charAt(0).toUpperCase() + req.substr(1);
         }
+        
+        if (this.currentView != null) {
+            $(Application.views[this.currentView].el).children().remove();
+        }
 
         if (typeof(Application.views[req]) == 'undefined' || typeof(Application.views[req]) == null) {
             Application.views[req] = null;
@@ -84,7 +89,38 @@ var Application = {
 
                 Application.views[req] = new window[viewClass]({
                     el: $('#body')
-                    });
+                });
+                
+                self.currentView = req;
+                callback.apply(self, [req, original]);
+            });
+        } else {
+            this.currentView = req;
+            callback.apply(self, [req, original]);
+        }
+    },
+    
+    loadSubView: function (req, callback) {
+        var self = this;
+        var original = req;
+
+        if (req == "") {
+            req = "Welcome";
+        } else {
+            req = req.substr(1);
+            req = req.charAt(0).toUpperCase() + req.substr(1);
+        }
+
+        if (typeof(Application.views[req]) == 'undefined' || typeof(Application.views[req]) == null) {
+            Application.views[req] = null;
+
+            $.getScript('/js/views/' + req + 'View.js', function () {
+                var viewClass = req + 'View';
+
+                Application.views[req] = new window[viewClass]({
+                    el: $('#body')
+                });
+                
                 callback.apply(self, [req, original]);
             });
         } else {
@@ -92,7 +128,7 @@ var Application = {
         }
     },
     
-    overlay: function (method) {
+    overlay: function (method, callback) {
         if (this.overlayDiv == null) {
             this.overlayDiv = $('<div></div>').css({
                 position: 'fixed',
@@ -111,6 +147,10 @@ var Application = {
         case 'show':
             this.overlayDiv.animate({
                 opacity: 0.8
+            }, function () {
+                if (typeof(callback) == 'function') {
+                    callback.call();
+                }
             });
             break;
 

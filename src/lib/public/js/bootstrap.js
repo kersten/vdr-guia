@@ -85,6 +85,10 @@ Backbone.sync = function (method, model, options) {
     params.data = model.toJSON() || {};
     
     socket.emit(namespace + ':' + method, options.data, function (data) {
-        options.success(data);
+        if (typeof(data.error) != 'undefined') {
+            options.error(data);
+        } else {
+            options.success(data);
+        }
     });
 };

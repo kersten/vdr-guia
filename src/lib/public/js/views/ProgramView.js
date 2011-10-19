@@ -34,7 +34,7 @@ var ProgramView = Backbone.View.extend({
     loadEvents: function (event) {
         Application.loadingOverlay('show');
         
-        Application.loadView('/Event', function (req, original) {
+        Application.loadSubView('/Event', function (req, original) {
             Application.views[req].renderTemplate($(event.currentTarget).attr('channelid'), 1);
             
             var oldImg = $('#header_div > img');
@@ -45,7 +45,7 @@ var ProgramView = Backbone.View.extend({
                 position: 'absolute',
                 right: 20,
                 top: 5
-            }).appendTo('#header_div');
+            }).attr('title', $(event.currentTarget).attr('channel_name')).appendTo('#header_div');
 
             img.load(function () {
                 img.fadeIn('normal', function () {
