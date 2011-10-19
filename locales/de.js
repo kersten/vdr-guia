@@ -22,5 +22,8 @@
 	"Recording": "Recording",
 	"Tipp": "Tipp",
 	"Mode": "Mode",
-	"Use channel": "Use channel"
+	"Use channel": "Use channel",
+	"Welcome": "Welcome",
+	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
+	"What's new": "What's new"
 }
