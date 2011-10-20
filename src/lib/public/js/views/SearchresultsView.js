@@ -137,7 +137,7 @@ var SearchresultsView = Backbone.View.extend({
         var self = this;
 
         this.generateHTML(function (res) {
-            $('#searchresults').html(res);
+            $('#searchresults').prepend(res);
             callback.call();
             Application.loadingOverlay('hide');
         });
