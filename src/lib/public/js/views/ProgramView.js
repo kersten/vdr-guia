@@ -2,7 +2,7 @@ var ProgramView = Backbone.View.extend({
     url: "program",
     
     events: {
-        'click #channellist > table > tbody > tr': "loadEvents"
+        'click #channellist > div > table > tbody > tr': "loadEvents"
     },
     
     generateHTML: function (callback) {
@@ -29,6 +29,8 @@ var ProgramView = Backbone.View.extend({
             height: '100%',
             maxHeight: maxHeight
         });
+        
+         $('#channellist').lionbars();
     },
     
     loadEvents: function (event) {

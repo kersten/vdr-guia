@@ -67,6 +67,7 @@ var EventView = Backbone.View.extend({
         
         var modalBody = this.eventDiv.children('.eventbody');
         modalBody.addClass('modal-body').css({'max-height': 500 - (30 + modalFooterHeight + modalHeaderHeight), overflow: 'auto'});
+        modalBody.lionbars();
         
 	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
 
@@ -117,6 +118,7 @@ var EventView = Backbone.View.extend({
         this.generateHTML(function (res) {
             $('#epglist').html(res);
             $('#epglist').css('max-height', $('#channellist').css('max-height'));
+            $('#epglist').lionbars();
             $('.timer_active').blinky();
         });
     },
