@@ -30,5 +30,7 @@
 	"Channels": "Channels",
 	"Timer <small>What's up today ..</small>": "Timer <small>What's up today ..</small>",
 	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>",
-	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>"
+	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>",
+	"Home": "Home",
+	"Settings <small>has something changed?</small>": "Settings <small>has something changed?</small>"
 }

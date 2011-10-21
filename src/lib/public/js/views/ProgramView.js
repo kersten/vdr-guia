@@ -26,8 +26,10 @@ var ProgramView = Backbone.View.extend({
         
         $('#channellist').parent().css('max-height', maxHeight);
         $('#channellist').css({
-            height: '100%',
-            maxHeight: maxHeight
+            height: maxHeight,
+            maxHeight: maxHeight,
+            postion: 'relative',
+            overflow: 'hidden'
         });
         
          $('#channellist').lionbars();

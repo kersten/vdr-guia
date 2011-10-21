@@ -2,27 +2,27 @@
     <h1><%- __('Program <small>What\'s up today ..</small>') %></h1>
 </div>
 <div class="row">
-<div class="span10 columns" id="epglist">
-    &nbsp;
-</div>
-<div class="span4 columns" id="channellist" style="">
-    <table class="zebra-striped"> 
-        <thead>
-            <tr>
-                <th>#</th>
-                <th><%= __('Channels') %></th>
-            </tr>
-        </thead>
-        <tbody>
-            <& channels.each(function (channel) { &>
-                <& if (channel.has('name')) { &>
-                <tr channelid="<&= channel.get('channel_id') &>" channel_name="<&= channel.get('name') &>" hasimage="<&= channel.get('image') &>" style="cursor: pointer;">
-                    <td><&= channel.get('number') &></td>
-                    <td><&= channel.get('name') &></td>
+    <div class="span10 columns" id="epglist">
+        &nbsp;
+    </div>
+    <div class="span4 columns" id="channellist" style="">
+        <table class="zebra-striped"> 
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th><%= __('Channels') %></th>
                 </tr>
-                <& } &>
-            <& }); &>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                <& channels.each(function (channel) { &>
+                    <& if (channel.has('name')) { &>
+                    <tr channelid="<&= channel.get('channel_id') &>" channel_name="<&= channel.get('name') &>" hasimage="<&= channel.get('image') &>" style="cursor: pointer;">
+                        <td><&= channel.get('number') &></td>
+                        <td><&= channel.get('name') &></td>
+                    </tr>
+                    <& } &>
+                <& }); &>
+            </tbody>
+        </table>
+    </div>
 </div>

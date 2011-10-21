@@ -61,12 +61,19 @@ var EventView = Backbone.View.extend({
         this.eventDiv.animate({
             left: X2,
             top: Y2,
-            height: (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight >= 500) ? 500 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight,
-            "max-height": 500
+            height: (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
         });
         
+        var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
+        
         var modalBody = this.eventDiv.children('.eventbody');
-        modalBody.addClass('modal-body').css({'max-height': 500 - (30 + modalFooterHeight + modalHeaderHeight), overflow: 'auto'});
+        modalBody.addClass('modal-body').css({
+            height: maxHeight,
+            maxHeight: maxHeight,
+            overflow: 'hidden',
+            position: 'relative'
+        });
+        
         modalBody.lionbars();
         
 	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
@@ -106,6 +113,7 @@ var EventView = Backbone.View.extend({
             callback.apply(this, [_.template(self.template, {events: collection})]);
             Application.loadingOverlay('hide');
         }, error: function () {
+            $('#epglist').children().remove();
             Application.loadingOverlay('hide');
         }});
     },
@@ -117,8 +125,15 @@ var EventView = Backbone.View.extend({
 
         this.generateHTML(function (res) {
             $('#epglist').html(res);
-            $('#epglist').css('max-height', $('#channellist').css('max-height'));
+            $('#epglist').css({
+                maxHeight: $('#channellist').css('max-height'),
+                height:  $('#channellist').css('max-height'),
+                overflow: 'hidden',
+                position: 'relative'
+            });
+            
             $('#epglist').lionbars();
+            
             $('.timer_active').blinky();
         });
     },

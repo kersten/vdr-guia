@@ -105,7 +105,12 @@ var SearchresultsView = Backbone.View.extend({
             },
 
             success: function (collection) {
-                $('#container_searchresults').css('max-height', $(window).height() - $('body').height() - 40);
+                $('#container_searchresults').css({
+                    maxHeight: $(window).height() - $('body').height() - 40,
+                    height: $(window).height() - $('body').height() - 40,
+                    overflow: 'hidden',
+                    position: 'relative'
+                });
                 
                 callback.apply(this, [_.template(self.template, {searchresults: collection})]);
                 
@@ -137,8 +142,10 @@ var SearchresultsView = Backbone.View.extend({
         var self = this;
 
         this.generateHTML(function (res) {
-            $('#searchresults').append(res);
+            $('#searchresults').html(res);
+            
             $('#container_searchresults').lionbars();
+            
             callback.call();
             Application.loadingOverlay('hide');
         });
