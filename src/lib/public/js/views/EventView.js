@@ -15,7 +15,7 @@ var EventView = Backbone.View.extend({
     showEvent: function (event) {
         this.originalDiv = $(event.currentTarget);
         this.eventDiv = $(event.currentTarget).clone();
-        this.eventDiv.children('.eventbody').children('.transoverlay').remove();
+        
         this.eventDiv.children('.eventbody').css('padding', "");
             
         this.eventDiv.css({
@@ -64,6 +64,8 @@ var EventView = Backbone.View.extend({
             height: (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
         });
         
+        this.eventDiv.children('.eventbody').children('.transoverlay').fadeOut(); //remove();
+        //console.log(this.eventDiv.children('.eventbody').children('.transoverlay'));
         var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
         
         var modalBody = this.eventDiv.children('.eventbody');
