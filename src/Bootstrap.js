@@ -222,8 +222,10 @@ Bootstrap.prototype.setupViews = function () {
                 layout: false
             });
         } else {
-            if (req.url != '/templates/contact') {
-                req.url = '/templates/welcome';
+            if (installed) {
+                if (req.url != '/templates/contact') {
+                    req.url = '/templates/welcome';
+                }
             }
             
             res.render(req.url.substr(1), {
