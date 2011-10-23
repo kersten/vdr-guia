@@ -8,8 +8,7 @@ var EventView = Backbone.View.extend({
     },
     
     events: {
-        'click .eventitem': 'showEvent',
-        'click .closeevent': 'closeEvent'
+        'click .eventitem': 'showEvent'
     },
     
     showEvent: function (event) {
@@ -33,12 +32,14 @@ var EventView = Backbone.View.extend({
         }).removeClass('eventitem').addClass('span13');
         
         $(event.currentTarget).css('opacity', 0);
-        this.eventDiv.insertBefore(event.currentTarget);
+        $('body').append(this.eventDiv);
         
         var modalHeader = this.eventDiv.children('.eventheader');
         modalHeader.addClass('modal-header').css('background-color', '#F5F5F5');
         
-        var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close'));
+        var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close').click(function () {
+            self.closeEvent();
+        }));
         this.eventDiv.append(modalFooter);
         
         var modalHeaderHeight = modalHeader.height();
@@ -96,7 +97,6 @@ var EventView = Backbone.View.extend({
 
         Application.overlay('show');
         
-        var self = this;
         $('.siteoverlay').bind('click', function () {
             self.closeEvent();
         });
@@ -187,11 +187,15 @@ var EventView = Backbone.View.extend({
                     opacity: 0.0
                 }).bind('mouseenter', function () {
                     $(this).data('mouseIn', true);
-                    $('#channellist').animate({right: '+=50'});
-                    $('#channellistSlideBarTrans').fadeOut();
+                    $('#channellistSlideBarTrans').animate({left: '+=60'}, 'fast');
+                    $('#channellist').animate({right: '+=50'}, 'fast');
+                    
+                    //$('#channellistSlideBarTrans').fadeOut('fast');
                 }).bind('mouseleave', function () {
-                    $('#channellist').animate({right: '-=50'});
-                    $('#channellistSlideBarTrans').fadeIn();
+                    $('#channellistSlideBarTrans').animate({left: '-=60'}, 'fast');
+                    $('#channellist').animate({right: '-=50'}, 'fast');
+                    
+                    //$('#channellistSlideBarTrans').fadeIn('fast');
                 }).bind('click', function () {
                     if ($(this).data('mouseIn')) {
                         $('#epglist').fadeOut();

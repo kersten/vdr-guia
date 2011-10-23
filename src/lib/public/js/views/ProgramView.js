@@ -1,5 +1,8 @@
 var ProgramView = Backbone.View.extend({
     url: "program",
+    page: 1,
+    items: null,
+    update: false,
     
     events: {
         'click .media-grid > li': 'loadEvents',
@@ -7,7 +10,53 @@ var ProgramView = Backbone.View.extend({
     },
     
     preload: function (event, data) {
-        console.log(data);
+        console.log(((($('.media-grid').outerHeight() - 2)) / 2) + ' < ' +data.offsetV);
+        
+        if ((($('.media-grid').outerHeight() - 2) / 2) < data.offsetV) {
+            if (!this.update) {
+                this.update = true;
+                this.page += 1;
+
+                var self = this;
+
+                this.channellist.fetch({
+                    data: {
+                        page: this.page,
+                        limit: this.items
+                    },
+                    success: function (collection) {
+                        collection.forEach(function (chan) {
+                            if (chan.has('name')) {
+                                var channel = $('<li></li>');
+
+                                channel.attr({
+                                    channel_id: chan.get('channel_id'),
+                                    channel_name: chan.get('name'),
+                                    hasimage: chan.get('image')
+                                });
+
+                                channel.css('cursor', 'pointer');
+
+                                var link = $('<a></a>').append($('<img></img>').attr({
+                                    src: '/logo/' + chan.get('name'),
+                                    title: chan.get('name')
+                                }).css({
+                                    width: 90,
+                                    height: 51
+                                }).addClass('thumbnail'));
+
+                                channel.append(link);
+
+                                $('.media-grid').append(channel);
+                            }
+                        });
+
+                        //$('#channellist').bind('scroll', self.preload);
+                        self.update = false;
+                    }
+                });
+            }
+        }
     },
     
     generateHTML: function (callback) {
@@ -27,12 +76,14 @@ var ProgramView = Backbone.View.extend({
         });
         
         var ChannelCollection = require('./ChannelCollection');
-        var channellist = new ChannelCollection();
+        this.channellist = new ChannelCollection();
+        
+        this.items = Math.ceil(maxHeight / 73) * 7 * 2;
 
-        channellist.fetch({
+        this.channellist.fetch({
             data: {
-                page: 1,
-                limit: Math.ceil(maxHeight / 73) * 7 * 2
+                page: this.page,
+                limit: this.items
             }, success: function (collection) {
                 collection.forEach(function (chan) {
                     if (chan.has('name')) {
