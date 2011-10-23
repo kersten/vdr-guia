@@ -13,6 +13,7 @@ var EventView = Backbone.View.extend({
     },
     
     showEvent: function (event) {
+        var self = this;
         this.originalDiv = $(event.currentTarget);
         this.eventDiv = $(event.currentTarget).clone();
         
@@ -28,8 +29,8 @@ var EventView = Backbone.View.extend({
             backgroundClip: 'padding-box',
             borderRadius: '6px 6px 6px 6px',
             overflow: 'hidden',
-            height: this.originalDiv.height()
-        }).removeClass('eventitem');
+            height: this.originalDiv.outerHeight()
+        }).removeClass('eventitem').addClass('span13');
         
         $(event.currentTarget).css('opacity', 0);
         this.eventDiv.insertBefore(event.currentTarget);
@@ -58,15 +59,7 @@ var EventView = Backbone.View.extend({
             X2 = (windowWidth/2 - elementWidth/2) + "px";
             Y2 = (windowHeight/2 - elementHeight/2) + "px";
         
-        this.eventDiv.animate({
-            left: X2,
-            top: Y2,
-            height: (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
-        });
-        
-        this.eventDiv.children('.eventbody').children('.transoverlay').fadeOut(); //remove();
-        //console.log(this.eventDiv.children('.eventbody').children('.transoverlay'));
-        var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight + 30 >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
+        var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
         
         var modalBody = this.eventDiv.children('.eventbody');
         modalBody.addClass('modal-body').css({
@@ -76,7 +69,28 @@ var EventView = Backbone.View.extend({
             position: 'relative'
         });
         
-        modalBody.lionbars();
+        
+        
+        this.eventDiv.animate({
+            left: X2,
+            top: Y2,
+            height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
+        }, function () {
+            modalBody.lionbarsRelative();
+            
+            Application.shortcuts[114] = function (event) {
+                console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
+                event.preventDefault();
+                
+                Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            };
+        });
+        
+        this.eventDiv.children('.eventbody').find('.transoverlay').fadeOut();
         
 	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
 
@@ -89,7 +103,11 @@ var EventView = Backbone.View.extend({
     },
     
     closeEvent: function () {
+        delete(Application.shortcuts[114]);
+        
         var self = this;
+        
+        this.eventDiv.children('.eventbody').find('.transoverlay').fadeIn();
         
         this.eventDiv.animate({
             left: this.originalDiv.offset().left - 30,
@@ -126,17 +144,74 @@ var EventView = Backbone.View.extend({
         }
 
         this.generateHTML(function (res) {
-            $('#epglist').html(res);
             $('#epglist').css({
                 maxHeight: $('#channellist').css('max-height'),
                 height:  $('#channellist').css('max-height'),
                 overflow: 'hidden',
-                position: 'relative'
+                postion: 'absolute',
+                top:0
+                //width: 700
             });
             
-            $('#epglist').lionbars();
+            $('#epglist').html(res);
             
             $('.timer_active').blinky();
+            
+            
+            $('#channellist').animate({
+                right: 40 - $('#channellist').width()
+            }, function () {
+                $('#channellist').append($('<div></div>').attr('id', 'channellistSlideBarTrans').css({
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: 40,
+                    height: '100%',
+                    background: '-moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
+                    
+                }).css({
+                    background: '-webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+                .css({
+                    background: '-ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+                .css({
+                    background: '-o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+                .css({
+                    background: 'linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
+                })).append($('<div></div>').attr('id', 'channellistSlideBar').css({
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#000000',
+                    opacity: 0.0
+                }).bind('mouseenter', function () {
+                    $(this).data('mouseIn', true);
+                    $('#channellist').animate({right: '+=50'});
+                    $('#channellistSlideBarTrans').fadeOut();
+                }).bind('mouseleave', function () {
+                    $('#channellist').animate({right: '-=50'});
+                    $('#channellistSlideBarTrans').fadeIn();
+                }).bind('click', function () {
+                    if ($(this).data('mouseIn')) {
+                        $('#epglist').fadeOut();
+                        $('#header_div > img').fadeOut();
+                        
+                        $('#channellist').animate({
+                            right: 0
+                        }, function () {
+                            $('#epglist').children().remove();
+                        });
+                        
+                        $('#channellistSlideBar').remove();
+                        $('#channellistSlideBarTrans').remove();
+                    }
+                }));
+            });
+            
+            $('#epglist').fadeIn('normal', function () {
+                $('#epglist').lionbars();
+            });
         });
     },
     

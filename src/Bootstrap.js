@@ -2,6 +2,7 @@ var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
 var LogoCollection = require('./models/LogoCollection');
+var http = require('http');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -59,7 +60,9 @@ Bootstrap.prototype.setupExpress = function (cb) {
         store: mongooseSessionStore,
         secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
         key: 'guia.id',
-        cookie: {maxAge: 60000 * 60 * 24}
+        cookie: {
+            maxAge: 60000 * 60 * 24
+        }
     }));
     
     this.app.use(i18n.init);
@@ -114,7 +117,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.use(require('browserify')({
         require: browserify,
         mount: '/browserify.js'
-        //filter: require('uglify-js')
+    //filter: require('uglify-js')
     }));
     
     cb.call();
@@ -132,7 +135,9 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         if (cnt == 0) {
             require(__dirname + '/controllers/InstallController');
 
-            cb.apply(this, [{installed: false}]);
+            cb.apply(this, [{
+                installed: false
+            }]);
         } else {
             ConfigurationModel.findOne({}, function (err, data) {
                 cb.apply(this, [{
@@ -183,10 +188,9 @@ Bootstrap.prototype.setupSocketIo = function () {
 
 Bootstrap.prototype.setupViews = function () {
     this.app.all('*', function (req, res, next) {
-        console.log(req.sessionID);
         mongooseSessionStore.get(req.sessionID, function (err, session) {
             if (session == null) {
-                next();
+                //req.session.loggedIn = false;
             } else {
                 req.session.loggedIn = session.loggedIn;
             }
@@ -202,8 +206,6 @@ Bootstrap.prototype.setupViews = function () {
     });
     
     this.app.get('/', function (req, res) {
-        mongooseSessionStore.set(req.sessionID, {loggedIn: false});
-        
         res.render('index', {
             layout: false,
             isLoggedIn: req.session.loggedIn,
@@ -244,8 +246,31 @@ Bootstrap.prototype.setupViews = function () {
                 
                 res.end(image);
             } else {
-                res.status(404);
-            }
+                var http_client = http.createClient(80, 'placehold.it');
+                var image_get_request = http_client.request('GET', 'http://placehold.it/90x51.png&text=' + req.url.substr(6), {
+                    'Host': 'placehold.it',
+                    "User-Agent": 'Firefox/7.0.1',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                });
+                
+                image_get_request.addListener('response', function(proxy_response){
+                    var current_byte_index = 0;
+                    var response_content_length = parseInt(proxy_response.header("Content-Length"));
+                    var response_body = new Buffer(response_content_length);
+                    
+                    proxy_response.setEncoding('binary');
+                    proxy_response.addListener('data', function(chunk){
+                        response_body.write(chunk, current_byte_index, "binary");
+                        current_byte_index += chunk.length;
+                    });
+                    proxy_response.addListener('end', function(){
+                        res.contentType('image/png');
+                        res.send(response_body);
+                    });
+                });
+                
+                image_get_request.end();
+            } 
         } else {
             res.status(403);
         }

@@ -1,28 +1,11 @@
 <div class="page-header" id="header_div" title="GUIA // <%= __('Program') %>" style="position:relative;">
     <h1><%- __('Program <small>What\'s up today ..</small>') %></h1>
 </div>
-<div class="row">
-    <div class="span10 columns" id="epglist">
-        &nbsp;
-    </div>
-    <div class="span4 columns" id="channellist" style="">
-        <table class="zebra-striped"> 
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th><%= __('Channels') %></th>
-                </tr>
-            </thead>
-            <tbody>
-                <& channels.each(function (channel) { &>
-                    <& if (channel.has('name')) { &>
-                    <tr channelid="<&= channel.get('channel_id') &>" channel_name="<&= channel.get('name') &>" hasimage="<&= channel.get('image') &>" style="cursor: pointer;">
-                        <td><&= channel.get('number') &></td>
-                        <td><&= channel.get('name') &></td>
-                    </tr>
-                    <& } &>
-                <& }); &>
-            </tbody>
-        </table>
+
+<div class="row" style="overflow: hidden; position: relative;">
+    <div class="span13 columns" id="epglist" style="display: none;"></div>
+    <div class="span14 columns" id="channellist">
+        <ul class="media-grid">
+        </ul>
     </div>
 </div>

@@ -15,41 +15,59 @@ var EventCollection = Backbone.Collection.extend({
 
             item.day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + (((start.getMonth() + 1)  < 10) ? '0' : '') + (start.getMonth() + 1);
             
+            item.description = item.description.replace(/[\r\n]+/g, '<br />');
+            
             var rating = null;
 
-            var ratingRegex = /\[([\*]*?)\](.*)/;
+            var ratingRegex = /\[([\*]*?)\]/;
 
             if (ratingRegex.test(item.description)) {
                 var match = item.description.match(ratingRegex);
                 rating = match[1].length;
-                item.description = match[2];
+                
+                item.description = item.description.replace(ratingRegex, '');
             }
 
             item.rating = rating;
             
             var genretip = null;
 
-            var genretipRegex = /\[Genretipp\s(.*?)\](.*)/;
+            var genretipRegex = /\[Genretipp\s(.*?)\]/;
 
             if (genretipRegex.test(item.description)) {
                 var match = item.description.match(genretipRegex);
                 genretip = match[1];
-                item.description = match[2];
+                
+                item.description = item.description.replace(genretipRegex, '');
             }
 
             item.genretip = genretip;
             
             var divisiontip = null;
 
-            var divisiontipRegex = /\[Spartentipp\s(.*?)\](.*)/;
+            var divisiontipRegex = /\[Spartentipp\s(.*?)\]/;
 
             if (divisiontipRegex.test(item.description)) {
                 var match = item.description.match(divisiontipRegex);
                 divisiontip = match[1];
-                item.description = match[2];
+                
+                item.description = item.description.replace(divisiontipRegex, '');
             }
 
             item.divisiontip = divisiontip;
+            
+            var showid = null;
+
+            var showidRegex = /Show-Id:\s(.*?)$/;
+
+            if (showidRegex.test(item.description)) {
+                var match = item.description.match(showidRegex);
+                showid = match[2];
+                
+                item.description = item.description.replace(showidRegex, '');
+            }
+
+            item.showid = showid;
             
             item.details.forEach(function (detail) {
                 switch (detail.key) {

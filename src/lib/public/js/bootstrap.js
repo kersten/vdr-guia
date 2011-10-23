@@ -56,19 +56,6 @@ Backbone.View.prototype.renderTemplate = function () {
 
 var socket = io.connect();
 
-socket.onceOn = function (signal, cb, data) {
-    this.emit(signal, (typeof(data) != 'undefined') ? data : {});
-    
-    var self = this;
-    
-    var signalCb = function () {
-        cb.apply(this, arguments);
-        self.removeListener(signal, signalCb);
-    }
-    
-    this.on(signal, signalCb);
-};
-
 Backbone.sync = function (method, model, options) {
     var getUrl = function (object) {
         if (!(object && object.url)) return null;

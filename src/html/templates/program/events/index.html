@@ -1,5 +1,5 @@
 <& events.forEach(function (item) { &>
-<div class="row eventitem span9" style="padding: 0px; cursor: pointer;">
+<div class="eventitem" style="padding: 0px; cursor: pointer;" channel_id="<&= item.get('channel') &>" event_id="<&= item.get('id') &>">
     <div class="eventheader" style="position:relative; border-bottom: 1px solid #DDDDDD; overflow: hidden; white-space:nowrap;">
         <h3><&= item.get('start') &> - <&= item.get('title') &> <small><&= item.get('short_text') &> - <&= Math.round(parseInt(item.get('duration')) / 60) &> <%= __('Min.') %></small></h3>
         <& if (item.has('rating')) { &>

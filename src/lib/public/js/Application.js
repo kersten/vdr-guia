@@ -5,6 +5,7 @@ var Application = {
     models: {},
     collections: {},
     overlayDiv: null,
+    shortcuts: {}, 
     spinner: {
         opts: {
             lines: 12, // The number of lines to draw
@@ -16,6 +17,19 @@ var Application = {
             trail: 58, // Afterglow percentage
             shadow: false // Whether to render a shadow
         }
+    },
+    
+    recordEvent: function (channel_id, event_id, options) {
+        socket.emit('Event:record', {
+            channel_id: channel_id,
+            event_id: event_id
+        }, function (data) {
+            if (typeof(data.error) != 'undefined') {
+                options.error(data);
+            } else {
+                options.success(data);
+            }
+        });
     },
     
     initialize: function () {
@@ -30,6 +44,14 @@ var Application = {
                 el: $('.topbar'), 
                 collection: Application.collections.navigationCollection
                 });
+        });
+        
+        $(document).bind('keypress', function (event) {
+            console.log('Key pressed: ' + event.which);
+            
+            if (typeof(Application.shortcuts[event.which]) != 'undefined') {
+                Application.shortcuts[event.which].apply(this, [event]);
+            }
         });
     },
     
