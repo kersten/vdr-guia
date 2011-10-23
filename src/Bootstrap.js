@@ -133,6 +133,8 @@ Bootstrap.prototype.setupDatabase = function (cb) {
     
     ConfigurationModel.count({}, function (err, cnt) {
         if (cnt == 0) {
+            console.log('Not installed! Delivering installation');
+            
             require(__dirname + '/controllers/InstallController');
 
             cb.apply(this, [{

@@ -1,5 +1,6 @@
 io.sockets.on('connection', function (socket) {
     socket.on('SearchresultCollection:read', function (data, callback) {
+        data = data.data;
         var start = 0;
         
         rest.post(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20, {
