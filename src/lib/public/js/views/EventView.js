@@ -93,7 +93,7 @@ var EventView = Backbone.View.extend({
         
         this.eventDiv.children('.eventbody').find('.transoverlay').fadeOut();
         
-	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
+	modalHeader.children('div').find('.timer_active').css('opacity', 1).blinky();
 
         Application.overlay('show');
         
@@ -155,8 +155,6 @@ var EventView = Backbone.View.extend({
             
             $('#epglist').html(res);
             
-            $('.timer_active').blinky();
-            
             
             $('#channellist').animate({
                 right: 40 - $('#channellist').width()
@@ -215,6 +213,7 @@ var EventView = Backbone.View.extend({
             
             $('#epglist').fadeIn('normal', function () {
                 $('#epglist').lionbars();
+                $('.timer_active').blinky();
             });
         });
     },
