@@ -1,5 +1,6 @@
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
+        data = data.data;
         var start = 0;
         
         rest.get(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20).on('success',  function (epg) {

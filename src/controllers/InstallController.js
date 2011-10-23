@@ -2,6 +2,9 @@ var net = require('net');
 
 io.sockets.on('connection', function (socket) {
     socket.on('ConfigurationModel:create', function (data) {
+        console.log(data.model);
+        data = data.model;
+        
         var ConfigurationModel = require('../dbmodels/ConfigurationModel');
         var UserModel = require('../dbmodels/UserModel');
         

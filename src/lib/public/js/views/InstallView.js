@@ -66,6 +66,7 @@ var InstallView = Backbone.View.extend({
                 socket.removeListener('Install:checkrestful', checkRestfulSignal);
                 
                 if (data.reachable) {
+                    console.log(self.model);
                     self.model.save();
         
                     $.ajax({
