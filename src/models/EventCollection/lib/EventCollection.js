@@ -69,54 +69,56 @@ var EventCollection = Backbone.Collection.extend({
 
             item.showid = showid;
             
-            item.details.forEach(function (detail) {
-                switch (detail.key) {
-                case 'ACTORS':
-                    var actors = detail.value.split(' - ');
-                    
-                    actors.forEach(function (actor, index) {
-                        var extractActorRegex = /(.*?)\s\((.*?)\)/;
-                        
-                        if (extractActorRegex.test(actor)) {
-                            var match = actor.match(extractActorRegex);
-                            actors[index] = {
-                                name: match[1],
-                                character: match[2]
-                            };
-                        } else {
-                            actors[index] = actor;
-                        }
-                    });
-                    
-                    detail.value = actors;
-                    break;
-                
-                case 'COUNTRY':
-                    var short_countries = detail.value.split('/');
-                    
-                    short_countries.forEach(function (country, index) {
-                        switch (country) {
-                        case 'A':
-                            country = 'Österreich';
-                            break;
-                        
-                        case 'CH':
-                            country = 'Schweiz';
-                            break;
-                        
-                        case 'D':
-                            country = 'Deutschland';
-                            break;
-                        }
-                        
-                        short_countries[index] = country;
-                    });
-                    
-                    detail.value = short_countries;
-                    
-                    break;
-                }
-            });
+            if (typeof(item.details) != 'undefined') {
+                item.details.forEach(function (detail) {
+                    switch (detail.key) {
+                    case 'ACTORS':
+                        var actors = detail.value.split(' - ');
+
+                        actors.forEach(function (actor, index) {
+                            var extractActorRegex = /(.*?)\s\((.*?)\)/;
+
+                            if (extractActorRegex.test(actor)) {
+                                var match = actor.match(extractActorRegex);
+                                actors[index] = {
+                                    name: match[1],
+                                    character: match[2]
+                                };
+                            } else {
+                                actors[index] = actor;
+                            }
+                        });
+
+                        detail.value = actors;
+                        break;
+
+                    case 'COUNTRY':
+                        var short_countries = detail.value.split('/');
+
+                        short_countries.forEach(function (country, index) {
+                            switch (country) {
+                            case 'A':
+                                country = 'Österreich';
+                                break;
+
+                            case 'CH':
+                                country = 'Schweiz';
+                                break;
+
+                            case 'D':
+                                country = 'Deutschland';
+                                break;
+                            }
+
+                            short_countries[index] = country;
+                        });
+
+                        detail.value = short_countries;
+
+                        break;
+                    }
+                });
+            }
             
             var timer_is_recording = false;
             

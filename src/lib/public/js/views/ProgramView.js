@@ -10,9 +10,9 @@ var ProgramView = Backbone.View.extend({
     },
     
     preload: function (event, data) {
-        console.log(((($('.media-grid').outerHeight() - 2)) / 2) + ' < ' +data.offsetV);
+        console.log(((($('#channellist').height() - 2)) - 400) + ' < ' +data.offsetV);
         
-        if ((($('.media-grid').outerHeight() - 2) / 2) < data.offsetV) {
+        if ((($('#channellist').height() - 2) - 400) < data.offsetV) {
             if (!this.update) {
                 this.update = true;
                 this.page += 1;
