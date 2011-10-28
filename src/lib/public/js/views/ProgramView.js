@@ -9,8 +9,40 @@ var ProgramView = Backbone.View.extend({
         'scroll #channellist': 'preload'
     },
     
+    addChannel: function (item) {
+        if (item.has('name')) {
+            var channel = $('<li></li>');
+
+            channel.attr({
+                channel_id: item.get('channel_id'),
+                channel_name: item.get('name'),
+                hasimage: item.get('image')
+            });
+
+            channel.css({
+                cursor: 'pointer',
+                backgroundColor: '#FFFFFF'
+            });
+
+            var link = $('<a></a>').append($('<img></img>').attr({
+                src: '/logo/' + item.get('name'),
+                title: item.get('name')
+            }).css({
+                width: 90,
+                height: 51
+            }).addClass('thumbnail'));
+
+            channel.append(link);
+
+            $('.media-grid').append(channel);
+        }
+    },
+    
     preload: function (event, data) {
-        console.log(((($('#channellist').height() - 2)) - 400) + ' < ' +data.offsetV);
+        var self = this;
+        
+        console.log(((($('#channellist').height() - 2)) - 400) + ' < ' + data.scrollPosition);
+        console.log(data);
         
         if ((($('#channellist').height() - 2) - 400) < data.offsetV) {
             if (!this.update) {
@@ -26,29 +58,7 @@ var ProgramView = Backbone.View.extend({
                     },
                     success: function (collection) {
                         collection.forEach(function (chan) {
-                            if (chan.has('name')) {
-                                var channel = $('<li></li>');
-
-                                channel.attr({
-                                    channel_id: chan.get('channel_id'),
-                                    channel_name: chan.get('name'),
-                                    hasimage: chan.get('image')
-                                });
-
-                                channel.css('cursor', 'pointer');
-
-                                var link = $('<a></a>').append($('<img></img>').attr({
-                                    src: '/logo/' + chan.get('name'),
-                                    title: chan.get('name')
-                                }).css({
-                                    width: 90,
-                                    height: 51
-                                }).addClass('thumbnail'));
-
-                                channel.append(link);
-
-                                $('.media-grid').append(channel);
-                            }
+                            self.addChannel(chan);
                         });
 
                         //$('#channellist').bind('scroll', self.preload);
@@ -71,7 +81,7 @@ var ProgramView = Backbone.View.extend({
             height: maxHeight,
             maxHeight: maxHeight,
             postion: 'absolute',
-            overflow: 'hidden',
+            overflow: 'auto',
             top:0
         });
         
@@ -86,32 +96,10 @@ var ProgramView = Backbone.View.extend({
                 limit: this.items
             }, success: function (collection) {
                 collection.forEach(function (chan) {
-                    if (chan.has('name')) {
-                        var channel = $('<li></li>');
-
-                        channel.attr({
-                            channel_id: chan.get('channel_id'),
-                            channel_name: chan.get('name'),
-                            hasimage: chan.get('image')
-                        });
-
-                        channel.css('cursor', 'pointer');
-
-                        var link = $('<a></a>').append($('<img></img>').attr({
-                            src: '/logo/' + chan.get('name'),
-                            title: chan.get('name')
-                        }).css({
-                            width: 90,
-                            height: 51
-                        }).addClass('thumbnail'));
-
-                        channel.append(link);
-
-                        $('.media-grid').append(channel);
-                    }
+                    self.addChannel(chan);
                 });
                 
-                $('#channellist').lionbars();
+                //$('#channellist').lionbars();
                 Application.loadingOverlay('hide');
             }
         });
