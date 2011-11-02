@@ -1,4 +1,6 @@
 nbproject
+.project
+.settings
 .DS_Store
 *~
 /node_modules/*
