@@ -75,7 +75,6 @@ var ProgramView = Backbone.View.extend({
             top:0
         });
         
-        var ChannelCollection = require('./ChannelCollection');
         this.channellist = new ChannelCollection();
         
         this.items = Math.ceil(maxHeight / 73) * 7 * 2;

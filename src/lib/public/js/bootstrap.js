@@ -1,7 +1,3 @@
-var $ = jQuery = require('jquery-browserify'),
-    _ = require('underscore')._,
-    Backbone = require('backbone-browserify');
-
 _.templateSettings = {
     evaluate    : /<&([\s\S]+?)&>/g,
     interpolate : /<&=([\s\S]+?)&>/g

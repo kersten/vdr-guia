@@ -126,7 +126,6 @@ var EventView = Backbone.View.extend({
     generateHTML: function (callback) {
         var self = this;
         
-        var EventCollection = require('./EventCollection');
         Application.collections.eventlist = new EventCollection();
 
         Application.collections.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {

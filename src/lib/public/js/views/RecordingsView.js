@@ -4,7 +4,6 @@ var RecordingsView = Backbone.View.extend({
     generateHTML: function (callback) {
         var self = this;
         if (typeof(Application.collections.recordings) == 'undefined') {
-            var RecordingCollection = require('./RecordingCollection');
             Application.collections.recordings = new RecordingCollection();
             
             Application.collections.recordings.fetch({success: function (collection) {

@@ -33,8 +33,6 @@ var Application = {
     },
     
     initialize: function () {
-        var NavigationCollection = require('./NavigationCollection');
-        
         new this.router();
         Backbone.history.start();
 
