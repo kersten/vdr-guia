@@ -1,0 +1,1 @@
+var LogoModel = Backbone.Model.extend({});

@@ -105,11 +105,11 @@ Bootstrap.prototype.setupExpress = function (cb) {
      */
     var browserify = new Array();
 
-    fs.readdirSync(__dirname + '/models').forEach(function (file) {
+    /*fs.readdirSync(__dirname + '/models').forEach(function (file) {
         browserify.push(__dirname + '/models/' + file);
-    });
+    });*/
 
-    browserify.push('jquery-browserify', 'backbone-browserify', 'node-uuid');
+    browserify.push('node-uuid');
 
     /*
      * Use browserify in our express app

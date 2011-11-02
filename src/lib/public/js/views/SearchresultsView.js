@@ -64,7 +64,7 @@ var SearchresultsView = Backbone.View.extend({
         var modalBody = this.eventDiv.children('.eventbody');
         modalBody.addClass('modal-body').css({'max-height': 500 - (30 + modalFooterHeight + modalHeaderHeight), overflow: 'auto'});
         
-	modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
+        modalHeader.children('div').children('.timer_active').css('opacity', 1).blinky();
 
         Application.overlay('show');
         
@@ -94,7 +94,6 @@ var SearchresultsView = Backbone.View.extend({
     generateHTML: function (callback) {
         var self = this;
         
-        var EventCollection = require('./EventCollection');
         var eventCollection = new EventCollection;
         eventCollection.url = 'SearchresultCollection';
 
@@ -139,8 +138,6 @@ var SearchresultsView = Backbone.View.extend({
             return this;
         }
         
-        var self = this;
-
         this.generateHTML(function (res) {
             $('#searchresults').html(res);
             
