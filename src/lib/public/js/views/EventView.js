@@ -147,20 +147,22 @@ var EventView = Backbone.View.extend({
                 maxHeight: $('#channellist').css('max-height'),
                 height:  $('#channellist').css('max-height'),
                 overflow: 'hidden',
-                postion: 'absolute',
+                position: 'absolute',
                 top:0
-                //width: 700
             });
             
             $('#epglist').html(res);
             
+            $('#channellist').css({
+                overflow: 'hidden'
+            });
             
             $('#channellist').animate({
                 right: 40 - $('#channellist').width()
             }, function () {
                 $('#channellist').append($('<div></div>').attr('id', 'channellistSlideBarTrans').css({
                     position: 'absolute',
-                    top: 0,
+                    top: $('#channellist').scrollTop(),
                     left: 0,
                     width: 40,
                     height: '100%',
@@ -176,7 +178,7 @@ var EventView = Backbone.View.extend({
                     background: 'linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
                 })).append($('<div></div>').attr('id', 'channellistSlideBar').css({
                     position: 'absolute',
-                    top: 0,
+                    top: $('#channellist').scrollTop(),
                     left: 0,
                     width: '100%',
                     height: '100%',
@@ -204,6 +206,10 @@ var EventView = Backbone.View.extend({
                             $('#epglist').children().remove();
                         });
                         
+                        $('#channellist').css({
+                            overflow: 'auto'
+                        });
+                        
                         $('#channellistSlideBar').remove();
                         $('#channellistSlideBarTrans').remove();
                     }
@@ -211,7 +217,7 @@ var EventView = Backbone.View.extend({
             });
             
             $('#epglist').fadeIn('normal', function () {
-                $('#epglist').lionbars();
+                //$('#epglist').lionbars();
                 $('.timer_active').blinky();
             });
         });
