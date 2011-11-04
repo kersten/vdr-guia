@@ -70,14 +70,12 @@ var EventView = Backbone.View.extend({
             position: 'relative'
         });
         
-        
-        
         this.eventDiv.animate({
             left: X2,
             top: Y2,
             height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
         }, function () {
-            modalBody.lionbarsRelative();
+            //modalBody.lionbarsRelative();
             
             Application.shortcuts[114] = function (event) {
                 console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
@@ -146,7 +144,7 @@ var EventView = Backbone.View.extend({
             $('#epglist').css({
                 maxHeight: $('#channellist').css('max-height'),
                 height:  $('#channellist').css('max-height'),
-                overflow: 'hidden',
+                overflow: 'auto',
                 position: 'absolute',
                 top:0
             });
