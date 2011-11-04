@@ -141,7 +141,7 @@ var SearchresultsView = Backbone.View.extend({
         this.generateHTML(function (res) {
             $('#searchresults').html(res);
             
-            $('#container_searchresults').lionbars();
+            //$('#container_searchresults').lionbars();
             
             callback.call();
             Application.loadingOverlay('hide');
