@@ -13,18 +13,25 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('Event:record', function (data, callback) {
         rest.post(vdr.restful + '/timers', {
-            data: JSON.stringify({
+            data: {
                 channel: data.channel_id,
                 eventid: data.event_id,
                 minpre: 5,
                 minpost: 15
-            })
+            }
         }).on('success', function (data) {
+            callback(vdr.restful + '/timers' + ' :: CREATED');
             callback(data.timers[0]);
         }).on('error', function () {
-            console.log('error: ' + vdr.restful + '/timers');
         }).on('403', function () {
-            console.log('403: ' + vdr.restful + '/timers');
+        });
+    });
+    
+    socket.on('Event:deleteTimer', function (data, callback) {
+        rest.del(vdr.restful + '/timers/' + data.timer_id).on('success', function (data) {
+            callback(vdr.restful + '/timers' + ' :: ERROR');
+        }).on('error', function () {
+        }).on('403', function (e) {
         });
     });
 });

@@ -20,8 +20,8 @@ var EventView = Backbone.View.extend({
             
         this.eventDiv.css({
             position: 'fixed',
-            left: $(event.currentTarget).offset().left,
-            top: $(event.currentTarget).offset().top,
+            left: $(event.currentTarget).offset().left - 35,
+            top: $(event.currentTarget).offset().top - 5,
             zIndex: 100001,
             backgroundColor: '#FFFFFF',
             cursor: 'auto',
@@ -66,14 +66,14 @@ var EventView = Backbone.View.extend({
         modalBody.addClass('modal-body').css({
             height: maxHeight,
             maxHeight: maxHeight,
-            overflow: 'hidden',
+            overflow: 'auto',
             position: 'relative'
         });
         
         this.eventDiv.animate({
             left: X2,
             top: Y2,
-            height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - 30 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
+            height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (modalFooterHeight + modalHeaderHeight)) ? 500 : 30 + this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
         }, function () {
             //modalBody.lionbarsRelative();
             
@@ -81,11 +81,19 @@ var EventView = Backbone.View.extend({
                 console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
                 event.preventDefault();
                 
-                Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
-                    success: function (data) {
-                        console.log(data);
-                    }
-                });
+                if (self.eventDiv.attr('timer_exists') == true) {
+                    Application.deleteEventTimer(self.eventDiv.attr('timer_id'), {
+                        success: function (data) {
+                            console.log(data);
+                        }
+                    });
+                } else {
+                    Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
+                        success: function (data) {
+                            console.log(data);
+                        }
+                    });
+                }
             };
         });
         

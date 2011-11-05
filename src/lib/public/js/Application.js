@@ -32,6 +32,18 @@ var Application = {
         });
     },
     
+    deleteEventTimer: function (timer_id, options) {
+        socket.emit('Event:deleteTimer', {
+            timer_id: timer_id
+        }, function (data) {
+            if (typeof(data.error) != 'undefined') {
+                options.error(data);
+            } else {
+                options.success(data);
+            }
+        });
+    },
+    
     initialize: function () {
         new this.router();
         Backbone.history.start();

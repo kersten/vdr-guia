@@ -32,5 +32,10 @@
 	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>",
 	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>",
 	"Home": "Home",
-	"Settings <small>has something changed?</small>": "Settings <small>has something changed?</small>"
+	"Settings <small>has something changed?</small>": "Settings <small>has something changed?</small>",
+	"GUIA options": "GUIA options",
+	"Channelmanager": "Channelmanager",
+	"Social options": "Social options",
+	"Contact <small>us</small>": "Contact <small>us</small>",
+	"Details": "Details"
 }
