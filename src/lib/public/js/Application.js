@@ -36,7 +36,7 @@ var Application = {
         socket.emit('Event:deleteTimer', {
             timer_id: timer_id
         }, function (data) {
-            if (typeof(data.error) != 'undefined') {
+            if (typeof(data) != 'undefined' && typeof(data.error) != 'undefined') {
                 options.error(data);
             } else {
                 options.success(data);

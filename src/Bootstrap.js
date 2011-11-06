@@ -236,7 +236,7 @@ Bootstrap.prototype.setupViews = function () {
     
     this.app.get('/logo/*', function (req, res) {
         if (req.session.loggedIn) {
-            var channel_name = unescape(req.url.substr(6));
+            var channel_name = unescape(req.url.substr(6)).replace(/\//, '|');
             
             var logo = vdr.logoCollection.find(function (logo) {
                 return channel_name == logo.get('name');
@@ -268,6 +268,13 @@ Bootstrap.prototype.setupViews = function () {
                         current_byte_index += chunk.length;
                     });
                     proxy_response.addListener('end', function(){
+                        fs.writeFile(__dirname + '/share/logos/' + channel_name + '.png', response_body, function (err) {
+                            vdr.logoCollection.add({
+                                file: channel_name + '.png',
+                                name: channel_name
+                            });
+                        });
+                        
                         res.contentType('image/png');
                         res.send(response_body);
                     });
@@ -301,6 +308,8 @@ Bootstrap.prototype.setupLogos = function () {
         if (err) throw err;
         
         files.forEach(function (logo) {
+            logo = logo.replace(/\//, '|');
+            
             if (logo.match(/.png$/))
                 logos.add({
                     file: logo,

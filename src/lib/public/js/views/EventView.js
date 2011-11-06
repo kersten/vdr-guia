@@ -28,6 +28,15 @@ var EventView = Backbone.View.extend({
             backgroundClip: 'padding-box',
             borderRadius: '6px 6px 6px 6px',
             overflow: 'hidden',
+            '-webkit-border-radius': '6px',
+            '-moz-border-radius': '6px',
+            'border-radius': '6px',
+            '-webkit-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            '-moz-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            'box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            '-webkit-background-clip': 'padding-box',
+            '-moz-background-clip': 'padding-box',
+            'background-clip': 'padding-box',
             height: this.originalDiv.outerHeight()
         }).removeClass('eventitem').addClass('span13');
         
@@ -35,11 +44,23 @@ var EventView = Backbone.View.extend({
         $('body').append(this.eventDiv);
         
         var modalHeader = this.eventDiv.children('.eventheader');
-        modalHeader.addClass('modal-header').css('background-color', '#F5F5F5');
+        modalHeader.addClass('modal-header').css({
+            'background-color': '#F5F5F5',
+            '-webkit-border-radius': '6px 6px 0 0',
+            '-moz-border-radius': '6px 6px 0 0',
+            'border-radius': '6px 6px 0 0'
+        });
+        
+        var recordBtn = $('<a></a>');
+        recordBtn.addClass('btn error recordevent').text('Seriestimer');
+        
+        if (this.eventDiv.attr('timer_exists') == "true") {
+            recordBtn.addClass('disabled');
+        }
         
         var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close').click(function () {
             self.closeEvent();
-        }));
+        })).append(recordBtn);
         this.eventDiv.append(modalFooter);
         
         var modalHeaderHeight = modalHeader.height();
@@ -78,19 +99,40 @@ var EventView = Backbone.View.extend({
             //modalBody.lionbarsRelative();
             
             Application.shortcuts[114] = function (event) {
-                console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
                 event.preventDefault();
                 
-                if (self.eventDiv.attr('timer_exists') == true) {
+                if (self.eventDiv.attr('timer_exists') == "true") {
+                    console.log('Delete Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
+                    
                     Application.deleteEventTimer(self.eventDiv.attr('timer_id'), {
                         success: function (data) {
-                            console.log(data);
+                            self.eventDiv.attr('timer_exists', "false");
+                            self.originalDiv.attr('timer_exists', "false");
+                            
+                            self.eventDiv.attr('timer_id', '');
+                            self.originalDiv.attr('timer_id', '');
+                            
+                            self.eventDiv.find('.timer_exists').fadeOut();
+                            self.originalDiv.find('.timer_exists').fadeOut();
                         }
                     });
                 } else {
+                    console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
+                    
                     Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
                         success: function (data) {
-                            console.log(data);
+                            self.eventDiv.attr('timer_exists', "true");
+                            self.originalDiv.attr('timer_exists', "true");
+                            self.eventDiv.attr('timer_id', data.id);
+                            self.originalDiv.attr('timer_id', data.id);
+                            
+                            var timerSpan = $('<span></span>').css("display", "none").addClass("label important timer_exists").html('Timer active');
+                            var timerSpan2 = timerSpan.clone();
+                            
+                            self.originalDiv.find('.informationlabels').append(timerSpan);
+                            self.eventDiv.find('.informationlabels').append(timerSpan2);
+                            timerSpan.fadeIn();
+                            timerSpan2.fadeIn();
                         }
                     });
                 }
@@ -135,8 +177,23 @@ var EventView = Backbone.View.extend({
         Application.collections.eventlist = new EventCollection();
 
         Application.collections.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
-            callback.apply(this, [_.template(self.template, {events: collection})]);
+            callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
             Application.loadingOverlay('hide');
+            $('#epglist').endlessScroll({
+                //bottomPixels: 600,
+                callback: function (p) {
+                    Application.loadingOverlay('show');
+                    self.page = p + 1;
+                    Application.collections.eventlist.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
+                        if (collection.length == 0) {
+                            $('#epglist').unbind('scroll');
+                        }
+                        var events = _.template(self.template, {events: collection, preloaded: true});
+                        $('#epglist > .endless_scroll_inner_wrap').append(events);
+                        Application.loadingOverlay('hide');
+                    }});
+                }
+            });
         }, error: function () {
             $('#epglist').children().remove();
             Application.loadingOverlay('hide');
@@ -204,6 +261,7 @@ var EventView = Backbone.View.extend({
                 }).bind('click', function () {
                     if ($(this).data('mouseIn')) {
                         $('#epglist').fadeOut();
+                        $('#epglist').unbind();
                         $('#header_div > img').fadeOut();
                         
                         $('#channellist').animate({

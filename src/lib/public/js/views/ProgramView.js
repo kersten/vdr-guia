@@ -5,8 +5,7 @@ var ProgramView = Backbone.View.extend({
     update: false,
     
     events: {
-        'click .media-grid > li': 'loadEvents',
-        'scroll #channellist': 'preload'
+        'click .media-grid > li': 'loadEvents'
     },
     
     addChannel: function (item) {
@@ -99,8 +98,25 @@ var ProgramView = Backbone.View.extend({
                     self.addChannel(chan);
                 });
                 
-                //$('#channellist').lionbars();
                 Application.loadingOverlay('hide');
+                
+                $('#channellist').endlessScroll({
+                    callback: function (p) {
+                        Application.loadingOverlay('show');
+                        self.page = p + 1;
+                        self.channellist.fetch({data: {page: self.page, limit: self.items}, success: function (collection) {
+                            if (collection.length == 0) {
+                                $('#channellist').unbind('scroll');
+                            }
+                            
+                            collection.forEach(function (chan) {
+                                self.addChannel(chan);
+                            });
+                            
+                            Application.loadingOverlay('hide');
+                        }});
+                    }
+                });
             }
         });
     },
