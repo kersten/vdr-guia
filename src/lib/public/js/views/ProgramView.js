@@ -48,8 +48,6 @@ var ProgramView = Backbone.View.extend({
                 this.update = true;
                 this.page += 1;
 
-                var self = this;
-
                 this.channellist.fetch({
                     data: {
                         page: this.page,
@@ -88,6 +86,8 @@ var ProgramView = Backbone.View.extend({
         this.channellist = new ChannelCollection();
         
         this.items = Math.ceil(maxHeight / 73) * 7 * 2;
+
+        this.page = 1;
 
         this.channellist.fetch({
             data: {

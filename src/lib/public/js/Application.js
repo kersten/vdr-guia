@@ -109,9 +109,7 @@ var Application = {
             req = req.charAt(0).toUpperCase() + req.substr(1);
         }
         
-        /*if (this.currentView != null) {
-            console.log(this.currentView);
-            console.log(Application.views);
+        /*if (this.currentView != null && typeof(Application.views[this.currentView]) != 'undefined') {
             $(Application.views[this.currentView].el).children().remove();
         }*/
 
