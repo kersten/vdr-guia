@@ -10,31 +10,31 @@ var NavigationView = Backbone.View.extend({
                 self.el.children('div.fill').children('div.container').append(template);
             }
             
-            collection.bind('add', function (item) {
-                var hash = window.location.hash;
-
-                if (window.location.hash == "" || window.location.hash == "#/") {
-                    hash = '#';
-                }
-
-                var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
-                var li = $('<li></li>').append(href);
-
-                if (item.get('link') == hash) {
-                    li.addClass('active');
-                }
-
-                if (typeof(item.get('id')) != 'undefined') {
-                    li.attr('id', item.get('id'));
-                }
-
-                $('.nav').append(li);
-            });
-            
             data.items.forEach(function (item) {
                 collection.add(item);
             });
         }});
+        
+        this.collection.bind('add', function (item) {
+            var hash = window.location.hash;
+
+            if (window.location.hash == "" || window.location.hash == "#/") {
+                hash = '#';
+            }
+
+            var href = $('<a></a>').attr('href', item.get('link')).text(item.get('title'));
+            var li = $('<li></li>').append(href);
+
+            if (item.get('link') == hash) {
+                li.addClass('active');
+            }
+
+            if (typeof(item.get('id')) != 'undefined') {
+                li.attr('id', item.get('id'));
+            }
+
+            $('.nav').append(li);
+        });
     },
     
     events: {
@@ -58,7 +58,11 @@ var NavigationView = Backbone.View.extend({
                 $(event.currentTarget).parent().remove();
                 
                 $('ul.nav').children().remove();
-                self.collection.fetch();
+                self.collection.fetch({success: function (collection, data) {
+                    data.items.forEach(function (item) {
+                        collection.add(item);
+                    });
+                }});
                 window.location.hash = '#';
             }
         });

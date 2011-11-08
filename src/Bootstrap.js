@@ -1,7 +1,6 @@
 var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
-var LogoCollection = require('./models/LogoCollection');
 var http = require('http');
 
 function Bootstrap (app, express) {
@@ -50,7 +49,7 @@ function Bootstrap (app, express) {
 Bootstrap.prototype.setupExpress = function (cb) {
     var SessionMongoose = require("session-mongoose");
     global.mongooseSessionStore = new SessionMongoose({
-        url: "mongodb://localhost/GUIAsession"
+        url: "mongodb://127.0.0.1/GUIAsession"
     });
     
     this.app.use(this.express.bodyParser());
@@ -127,9 +126,13 @@ Bootstrap.prototype.setupDatabase = function (cb) {
     global.mongoose = require('mongoose');
     global.Schema = mongoose.Schema;
     
-    mongoose.connect('mongodb://localhost/GUIA');
+    console.log('Connect to database ..');
+    mongoose.connect('mongodb://127.0.0.1/GUIA');
+    mongoose.connection.on('error', function (e) {
+        throw e;
+    });
     
-    var ConfigurationModel = require('./dbmodels/ConfigurationModel');
+    var ConfigurationModel = require('./schemas/ConfigurationSchema');
     
     ConfigurationModel.count({}, function (err, cnt) {
         if (cnt == 0) {
@@ -141,6 +144,8 @@ Bootstrap.prototype.setupDatabase = function (cb) {
                 installed: false
             }]);
         } else {
+            console.log('GUIA installed! Getting configuration ..');
+            
             ConfigurationModel.findOne({}, function (err, data) {
                 cb.apply(this, [{
                     installed: true,
@@ -156,6 +161,8 @@ Bootstrap.prototype.setupSocketIo = function () {
     /*
      * Create socket
      */
+    console.log('Setting up socket.io ..');
+    
     global.io = require('socket.io').listen(this.app);
     
     var parseCookie = require('express/node_modules/connect').utils.parseCookie;
@@ -189,25 +196,35 @@ Bootstrap.prototype.setupSocketIo = function () {
 };
 
 Bootstrap.prototype.setupViews = function () {
+    console.log('Setting up views ..');
+    
     this.app.all('*', function (req, res, next) {
-        mongooseSessionStore.get(req.sessionID, function (err, session) {
-            if (session == null) {
-                //req.session.loggedIn = false;
-            } else {
-                req.session.loggedIn = session.loggedIn;
-            }
-        });
-
+        console.log('Incoming request ..');
+        
         if (!installed && !req.url.match(/^\/templates\/install/)) {
+            console.log('serving installation ..');
             res.render('install', {
                 layout: false
             });
         } else {
-            next();
+            console.log('Process request ..');
+        
+            mongooseSessionStore.get(req.sessionID, function (err, session) {
+                if (session == null) {
+                    console.log('Not loggedin ..');
+                } else {
+                    console.log('Loggedin ..');
+                    req.session.loggedIn = session.loggedIn;
+                }
+                
+                next();
+            });
         }
     });
     
     this.app.get('/', function (req, res) {
+        console.log('Render index.html ..');
+        
         res.render('index', {
             layout: false,
             isLoggedIn: req.session.loggedIn,
@@ -234,54 +251,58 @@ Bootstrap.prototype.setupViews = function () {
         }
     });
     
+    var LogoSchema = require('./schemas/LogoSchema');
+    
     this.app.get('/logo/*', function (req, res) {
         if (req.session.loggedIn) {
             var channel_name = unescape(req.url.substr(6)).replace(/\//, '|');
             
-            var logo = vdr.logoCollection.find(function (logo) {
-                return channel_name == logo.get('name');
-            });
-            
-            if (typeof(logo) != 'undefined') {
-                var filename = __dirname + '/share/logos/' + logo.get('file');
-                res.contentType(filename);
-                
-                var image = fs.readFileSync(filename);
-                
-                res.end(image);
-            } else {
-                var http_client = http.createClient(80, 'placehold.it');
-                var image_get_request = http_client.request('GET', 'http://placehold.it/90x51.png&text=' + req.url.substr(6), {
-                    'Host': 'placehold.it',
-                    "User-Agent": 'Firefox/7.0.1',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                });
-                
-                image_get_request.addListener('response', function(proxy_response){
-                    var current_byte_index = 0;
-                    var response_content_length = parseInt(proxy_response.header("Content-Length"));
-                    var response_body = new Buffer(response_content_length);
+            LogoSchema.findOne({name: channel_name}, function (err, data) {
+                if (err) {
+                    console.log('Logo ' + channel_name + ' not found, getting placeholder');
                     
-                    proxy_response.setEncoding('binary');
-                    proxy_response.addListener('data', function(chunk){
-                        response_body.write(chunk, current_byte_index, "binary");
-                        current_byte_index += chunk.length;
+                    var http_client = http.createClient(80, 'placehold.it');
+                    var image_get_request = http_client.request('GET', 'http://placehold.it/90x51.png&text=' + req.url.substr(6), {
+                        'Host': 'placehold.it',
+                        "User-Agent": 'Firefox/7.0.1',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                     });
-                    proxy_response.addListener('end', function(){
-                        fs.writeFile(__dirname + '/share/logos/' + channel_name + '.png', response_body, function (err) {
-                            vdr.logoCollection.add({
-                                file: channel_name + '.png',
-                                name: channel_name
-                            });
-                        });
+                    
+                    image_get_request.addListener('response', function(proxy_response){
+                        var current_byte_index = 0;
+                        var response_content_length = parseInt(proxy_response.header("Content-Length"));
+                        var response_body = new Buffer(response_content_length);
                         
-                        res.contentType('image/png');
-                        res.send(response_body);
+                        proxy_response.setEncoding('binary');
+                        proxy_response.addListener('data', function(chunk){
+                            response_body.write(chunk, current_byte_index, "binary");
+                            current_byte_index += chunk.length;
+                        });
+                        proxy_response.addListener('end', function(){
+                            fs.writeFile(__dirname + '/share/logos/' + channel_name + '.png', response_body, function (err) {
+                                var logoModel = new LogoSchema({
+                                    file: channel_name + '.png',
+                                    name: channel_name
+                                });
+                                
+                                logoModel.save();
+                            });
+                            
+                            res.contentType('image/png');
+                            res.send(response_body);
+                        });
                     });
-                });
-                
-                image_get_request.end();
-            } 
+                    
+                    image_get_request.end();
+                } else {
+                    var filename = __dirname + '/share/logos/' + data.file;
+                    res.contentType(filename);
+                    
+                    var image = fs.readFileSync(filename);
+                    
+                    res.end(image);
+                }
+            });
         } else {
             res.status(403);
         }
@@ -289,6 +310,8 @@ Bootstrap.prototype.setupViews = function () {
 };
 
 Bootstrap.prototype.setupControllers = function () {
+    console.log('Setting up controllers ..');
+    
     fs.readdir(__dirname + '/controllers', function (err, files) {
         if (err) throw err;
         files.forEach(function (file) {
@@ -302,7 +325,9 @@ Bootstrap.prototype.setupControllers = function () {
 };
 
 Bootstrap.prototype.setupLogos = function () {
-    var logos = new LogoCollection();
+    var LogoSchema = require('./schemas/LogoSchema');
+    
+    console.log('Setting up logos ..');
     
     fs.readdir(__dirname + '/share/logos', function (err, files) {
         if (err) throw err;
@@ -310,14 +335,17 @@ Bootstrap.prototype.setupLogos = function () {
         files.forEach(function (logo) {
             logo = logo.replace(/\//, '|');
             
-            if (logo.match(/.png$/))
-                logos.add({
+            if (logo.match(/.png$/)) {
+                var logoModel = new LogoSchema({
                     file: logo,
                     name: logo.replace('.png', '')
                 });
+                
+                logoModel.save();
+            }
         });
         
-        vdr.logoCollection = logos;
+        console.log('done');
     });
 };
 

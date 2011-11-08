@@ -1,5 +1,3 @@
-require.paths.unshift(__dirname + "/models");
-
 var express = require('express');
 var fs = require("fs");
 

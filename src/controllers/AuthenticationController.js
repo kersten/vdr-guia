@@ -2,9 +2,9 @@ io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
     
     socket.on('User:login', function (data, callback) {
-        var UserModel = require('../dbmodels/UserModel');
+        var UserSchema = require('../schemas/UserSchema');
         
-        UserModel.count({user: data.username, password: data.password}, function (err, count) {
+        UserSchema.count({user: data.username, password: data.password}, function (err, count) {
             var loggedIn = false;
             
             if (count != 0) {
