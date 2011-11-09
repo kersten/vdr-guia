@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <title>GUIA</title>
+        <meta http-equiv="content-type"
+              content="text/html;charset=utf-8" />
+
+        <!-- Include stylesheets -->
+        <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
+        <style type="text/css">
+            /* Override some defaults */
+            html, body {
+                background-color: #eee;
+            }
+            body {
+                padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+            }
+            .container > footer p {
+                text-align: center; /* center align it with the container */
+            }
+            .container {
+                width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+            }
+
+            /* The white background content wrapper */
+            .content {
+                background-color: #fff;
+                padding: 20px;
+                margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+                -webkit-border-radius: 0 0 6px 6px;
+                -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            }
+
+            /* Page header tweaks */
+            .page-header {
+                background-color: #f5f5f5;
+                padding: 20px 20px 10px;
+                margin: -20px -20px 20px;
+            }
+
+            
+            /* Give a quick and non-cross-browser friendly divider */
+            .content .span4 {
+                margin-left: 0;
+                padding-left: 19px;
+                border-left: 1px solid #eee;
+            }
+
+            .topbar .btn {
+                border: 0;
+            }
+
+        </style>
+
+        <!-- Include browserify library and socket.io -->
+        <script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
+        <script type="text/javascript" src="/js/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone.js"></script>
+        
+        <script type="text/javascript" src="/browserify.js"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/js/sha512.js"></script>
+
+        <!-- Bootstrap application frontend -->
+        <script type="text/javascript" src="/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/js/Application.js"></script>
+        
+        <!-- Include Collections and Models -->
+        <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
+        <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
+        <script type="text/javascript" src="/js/models/EventModel.js"></script>
+        <script type="text/javascript" src="/js/models/LogoModel.js"></script>
+        <script type="text/javascript" src="/js/models/NavigationModel.js"></script>
+        <script type="text/javascript" src="/js/models/RawEventModel.js"></script>
+        <script type="text/javascript" src="/js/models/RecordingModel.js"></script>
+        <script type="text/javascript" src="/js/models/SearchtimerModel.js"></script>
+        <script type="text/javascript" src="/js/models/TimerModel.js"></script>
+        
+        <script type="text/javascript" src="/js/collections/ChannelCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/EventCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/LogoCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/NavigationCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/RecordingCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/SearchtimerCollection.js"></script>
+        <script type="text/javascript" src="/js/collections/TimerCollection.js"></script>
+        
+        <!-- Load plugins -->
+        <script type="text/javascript" src="/js/jquery-plugins/bootstrap-modal.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/bootstrap-tabs.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/blinky.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/spin.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
+        
+        <!-- Start installation -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var app = Application;
+                app.vdr = {
+                    plugins: <%- vdr %>
+                };
+                
+                app.initialize();
+            });
+        </script>
+
+        <!-- <script type="text/template" id="search_template" src="/program"></script> -->
+        <!-- Loading templates -->
+        
+        <script type="text/template" id="LoginFormTemplate">
+            <%- partial('templates/LoginForm') %>
+        </script>
+    </head>
+
+    <body>
+        <div class="topbar">
+            <div class="fill">
+                <div class="container">
+                    <a href="#" class="brand">GUIA</a>
+                    <ul class="nav">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="content">
+            <div class="content" id="body">
+
+            </div>
+            <footer id="footer">
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> 2011</p>
+            </footer>
+        </div>
+    </body>
+</html>

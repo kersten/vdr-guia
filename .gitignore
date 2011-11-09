@@ -1,6 +1,9 @@
 nbproject
+.project
+.settings
 .DS_Store
 *~
 /node_modules/*
 npm-debug.log
 src/data/epg.data
+src/share/logos/*.png
