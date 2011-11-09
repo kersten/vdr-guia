@@ -330,6 +330,16 @@ Bootstrap.prototype.setupLogos = function () {
     
     console.log('Setting up logos ..');
     
+    LogoSchema.find({}, function (err, data) {
+        data.forEach(function (logo) {
+            try {
+                fs.lstatSync(__dirname + '/share/logos' + logo.file);
+            } catch (e) {
+                logo.remove();
+            }
+        });
+    });
+    
     fs.readdir(__dirname + '/share/logos', function (err, files) {
         if (err) throw err;
         
