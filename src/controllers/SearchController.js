@@ -1,7 +1,7 @@
 io.sockets.on('connection', function (socket) {
     socket.on('SearchresultCollection:read', function (data, callback) {
         data = data.data;
-        var start = 0;
+        var start = (data.page - 1) * 20;
         
         rest.post(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20, {
             data: {

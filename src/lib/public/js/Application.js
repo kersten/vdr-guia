@@ -19,6 +19,166 @@ var Application = {
         }
     },
     
+    showEvent: function (event) {
+        var self = this;
+        this.originalDiv = $(event.currentTarget);
+        this.eventDiv = $(event.currentTarget).clone();
+        
+        this.eventDiv.children('.eventbody').css('padding', "");
+            
+        this.eventDiv.css({
+            position: 'fixed',
+            left: $(event.currentTarget).offset().left - 35,
+            top: $(event.currentTarget).offset().top - 5,
+            zIndex: 100001,
+            backgroundColor: '#FFFFFF',
+            cursor: 'auto',
+            backgroundClip: 'padding-box',
+            borderRadius: '6px 6px 6px 6px',
+            overflow: 'hidden',
+            '-webkit-border-radius': '6px',
+            '-moz-border-radius': '6px',
+            'border-radius': '6px',
+            '-webkit-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            '-moz-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            'box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
+            '-webkit-background-clip': 'padding-box',
+            '-moz-background-clip': 'padding-box',
+            'background-clip': 'padding-box',
+            height: this.originalDiv.outerHeight()
+        }).removeClass('eventitem').addClass('span13');
+        
+        $(event.currentTarget).css('opacity', 0);
+        $('body').append(this.eventDiv);
+        
+        var modalHeader = this.eventDiv.children('.eventheader');
+        modalHeader.addClass('modal-header').css({
+            'background-color': '#F5F5F5',
+            '-webkit-border-radius': '6px 6px 0 0',
+            '-moz-border-radius': '6px 6px 0 0',
+            'border-radius': '6px 6px 0 0'
+        });
+        
+        var recordBtn = $('<a></a>');
+        recordBtn.addClass('btn error recordevent').text('Seriestimer');
+        
+        if (this.eventDiv.attr('timer_exists') == "true") {
+            recordBtn.addClass('disabled');
+        }
+        
+        var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close').click(function () {
+            self.closeEvent();
+        })).append(recordBtn);
+        this.eventDiv.append(modalFooter);
+        
+        var modalHeaderHeight = modalHeader.height();
+        modalHeaderHeight += parseInt(modalHeader.css("padding-top"), 10) + parseInt(modalHeader.css("padding-bottom"), 10); //Total Padding Width
+        modalHeaderHeight += parseInt(modalHeader.css("margin-top"), 10) + parseInt(modalHeader.css("margin-bottom"), 10); //Total Margin Width
+        modalHeaderHeight += parseInt(modalHeader.css("borderTopWidth"), 10) + parseInt(modalHeader.css("borderBottomWidth"), 10);
+        
+        var modalFooterHeight = modalFooter.height();
+        modalFooterHeight += parseInt(modalFooter.css("padding-top"), 10) + parseInt(modalFooter.css("padding-bottom"), 10); //Total Padding Width
+        modalFooterHeight += parseInt(modalFooter.css("margin-top"), 10) + parseInt(modalFooter.css("margin-bottom"), 10); //Total Margin Width
+        modalFooterHeight += parseInt(modalFooter.css("borderTopWidth"), 10) + parseInt(modalFooter.css("borderBottomWidth"), 10);
+        
+        var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
+            elementWidth = this.eventDiv.outerWidth();
+            elementHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight >= 500) ? 500 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight;
+            windowWidth = jQuery(window).width();
+            windowHeight = jQuery(window).height();
+            X2 = (windowWidth/2 - elementWidth/2) + "px";
+            Y2 = (windowHeight/2 - elementHeight/2) + "px";
+        
+        var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
+        
+        var modalBody = this.eventDiv.children('.eventbody');
+        modalBody.addClass('modal-body').css({
+            height: maxHeight,
+            maxHeight: maxHeight,
+            overflow: 'auto',
+            position: 'relative'
+        });
+        
+        this.eventDiv.animate({
+            left: X2,
+            top: Y2,
+            height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (modalFooterHeight + modalHeaderHeight)) ? 500 : 30 + this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
+        }, function () {
+            //modalBody.lionbarsRelative();
+            
+            Application.shortcuts[114] = function (event) {
+                event.preventDefault();
+                
+                if (self.eventDiv.attr('timer_exists') == "true") {
+                    console.log('Delete Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
+                    
+                    Application.deleteEventTimer(self.eventDiv.attr('timer_id'), {
+                        success: function (data) {
+                            self.eventDiv.attr('timer_exists', "false");
+                            self.originalDiv.attr('timer_exists', "false");
+                            
+                            self.eventDiv.attr('timer_id', '');
+                            self.originalDiv.attr('timer_id', '');
+                            
+                            self.eventDiv.find('.timer_exists').fadeOut();
+                            self.originalDiv.find('.timer_exists').fadeOut();
+                        }
+                    });
+                } else {
+                    console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
+                    
+                    Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
+                        success: function (data) {
+                            self.eventDiv.attr('timer_exists', "true");
+                            self.originalDiv.attr('timer_exists', "true");
+                            self.eventDiv.attr('timer_id', data.id);
+                            self.originalDiv.attr('timer_id', data.id);
+                            
+                            var timerSpan = $('<span></span>').css("display", "none").addClass("label important timer_exists").html('Timer active');
+                            var timerSpan2 = timerSpan.clone();
+                            
+                            self.originalDiv.find('.informationlabels').append(timerSpan);
+                            self.eventDiv.find('.informationlabels').append(timerSpan2);
+                            timerSpan.fadeIn();
+                            timerSpan2.fadeIn();
+                        }
+                    });
+                }
+            };
+        });
+        
+        this.eventDiv.children('.eventbody').find('.transoverlay').fadeOut();
+        
+	modalHeader.children('div').find('.timer_active').css('opacity', 1).blinky();
+
+        Application.overlay('show');
+        
+        $('.siteoverlay').bind('click', function () {
+            self.closeEvent();
+        });
+    },
+    
+    closeEvent: function () {
+        delete(Application.shortcuts[114]);
+        
+        var self = this;
+        
+        this.eventDiv.children('.eventbody').find('.transoverlay').fadeIn();
+        
+        this.eventDiv.animate({
+            left: this.originalDiv.offset().left - 30,
+            top: this.originalDiv.offset().top,
+            height: this.originalDiv.height(),
+            borderRadius: 'none',
+            backgroundClip: 'none'
+        }, function () {
+            $(this).remove();
+            self.originalDiv.css('opacity', 1);
+        });
+        
+        Application.overlay('hide');
+    },
+    
     recordEvent: function (channel_id, event_id, options) {
         socket.emit('Event:record', {
             channel_id: channel_id,
