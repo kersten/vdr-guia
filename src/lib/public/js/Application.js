@@ -372,7 +372,13 @@ var Application = {
             }).addClass('loadingoverlay').appendTo('body');
 
             this.spinner.overlayDiv.spin(this.spinner.opts);
+            
+            this.overlayTimeout = setTimeout(function () {
+                alert('An error occured, please try again.');
+                Application.loadingOverlay('hide');
+            }, 10000);
         } else {
+            clearTimeout(this.overlayTimeout);
             this.spinner.overlayDiv.spin(false);
             this.spinner.overlayDiv.remove();
         }

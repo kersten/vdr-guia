@@ -37,5 +37,10 @@
 	"Channelmanager": "Channelmanager",
 	"Social options": "Social options",
 	"Contact <small>us</small>": "Contact <small>us</small>",
-	"Details": "Details"
+	"Details": "Details",
+	"Channel": "Channel",
+	"Start": "Start",
+	"End": "End",
+	"File": "File",
+	"Day": "Day"
 }
