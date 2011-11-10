@@ -87,6 +87,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
      */
     this.app.use(this.express.static(__dirname + '/lib/public'));
     this.app.use(this.express.favicon(__dirname + '/lib/public/img/favicon.ico'));
+    this.app.use(this.express.errorHandler({ dumpExceptions: true, showStack: true }));
     
     /*
      * Register Template engine with .html and .js
@@ -116,8 +117,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
      */
     this.app.use(require('browserify')({
         require: browserify,
-        mount: '/browserify.js'
-    //filter: require('uglify-js')
+        mount: '/browserify.js',
+        filter: require('uglify-js')
     }));
     
     cb.call();

@@ -58,20 +58,21 @@
 
         </style>
 
-        <!-- Include browserify library and socket.io -->
+        <!-- Include jquery, backbone and underscore -->
         <script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
         <script type="text/javascript" src="/js/underscore.js"></script>
         <script type="text/javascript" src="/js/backbone.js"></script>
         
+        <!-- Include browserify library and socket.io -->
         <script type="text/javascript" src="/browserify.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/sha512.js"></script>
 
-        <!-- Bootstrap application frontend -->
+        <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/bootstrap.js"></script>
         <script type="text/javascript" src="/js/Application.js"></script>
         
-        <!-- Include Collections and Models -->
+        <!-- Include models -->
         <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
         <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
         <script type="text/javascript" src="/js/models/EventModel.js"></script>
@@ -82,6 +83,7 @@
         <script type="text/javascript" src="/js/models/SearchtimerModel.js"></script>
         <script type="text/javascript" src="/js/models/TimerModel.js"></script>
         
+        <!-- Include collections -->
         <script type="text/javascript" src="/js/collections/ChannelCollection.js"></script>
         <script type="text/javascript" src="/js/collections/EventCollection.js"></script>
         <script type="text/javascript" src="/js/collections/LogoCollection.js"></script>
@@ -90,14 +92,14 @@
         <script type="text/javascript" src="/js/collections/SearchtimerCollection.js"></script>
         <script type="text/javascript" src="/js/collections/TimerCollection.js"></script>
         
-        <!-- Load plugins -->
+        <!-- Include jquery plugins -->
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-modal.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-tabs.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/blinky.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/spin.min.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
         
-        <!-- Start installation -->
+        <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
                 var app = Application;
@@ -108,9 +110,6 @@
                 app.initialize();
             });
         </script>
-
-        <!-- <script type="text/template" id="search_template" src="/program"></script> -->
-        <!-- Loading templates -->
         
         <script type="text/template" id="LoginFormTemplate">
             <%- partial('templates/LoginForm') %>
