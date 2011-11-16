@@ -1,5 +1,5 @@
 var SearchresultsView = Backbone.View.extend({
-    url: "search/results",
+    url: "program/events",
     eventDiv: null,
     originalDiv: null,
     
@@ -27,11 +27,27 @@ var SearchresultsView = Backbone.View.extend({
                 $('#container_searchresults').css({
                     maxHeight: $(window).height() - $('body').height() - 40,
                     height: $(window).height() - $('body').height() - 40,
-                    overflow: 'hidden',
+                    overflow: 'auto',
                     position: 'relative'
                 });
                 
-                callback.apply(this, [_.template(self.template, {searchresults: collection})]);
+                callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
+                
+                $('#container_searchresults').endlessScroll({
+                    //bottomPixels: 600,
+                    callback: function (p) {
+                        Application.loadingOverlay('show');
+                        self.page = p + 1;
+                        eventCollection.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
+                            if (collection.length == 0) {
+                                $('#container_searchresults').unbind('scroll');
+                            }
+                            var events = _.template(self.template, {events: collection, preloaded: true});
+                            $('#searchresults').append(events);
+                            Application.loadingOverlay('hide');
+                        }});
+                    }
+                });
                 
                 var newSearchtimer = $('#createNewSearchtimer');
                 
@@ -60,8 +76,7 @@ var SearchresultsView = Backbone.View.extend({
         
         this.generateHTML(function (res) {
             $('#searchresults').html(res);
-            
-            //$('#container_searchresults').lionbars();
+            $('.timer_active').blinky();
             
             callback.call();
             Application.loadingOverlay('hide');
