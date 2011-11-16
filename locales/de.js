@@ -42,5 +42,7 @@
 	"Start": "Start",
 	"End": "End",
 	"File": "File",
-	"Day": "Day"
+	"Day": "Day",
+	"Close": "Close",
+	"Delete": "Delete"
 }

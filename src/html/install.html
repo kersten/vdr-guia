@@ -62,6 +62,11 @@
 
         </style>
 
+        <!-- Include jquery, backbone and underscore -->
+        <script type="text/javascript" src="/js/jquery-1.6.4.js"></script>
+        <script type="text/javascript" src="/js/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone.js"></script>
+        
         <!-- Include browserify library and socket.io -->
         <script type="text/javascript" src="/browserify.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -75,13 +80,14 @@
 
         <!-- Load views -->
         <script type="text/javascript" src="/js/views/InstallView.js"></script>
+        
+        <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
 
         <!-- Start installation -->
         <script type="text/javascript">
             var uuid = require('node-uuid');
             
             $(document).ready(function () {
-                var ConfigurationModel = require('./ConfigurationModel');
                 var config = new ConfigurationModel;
                 
                 new InstallView({el: $('#body'), model: config});

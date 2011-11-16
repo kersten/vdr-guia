@@ -5,8 +5,8 @@ io.sockets.on('connection', function (socket) {
         console.log(data.model);
         data = data.model;
         
-        var ConfigurationModel = require('../dbmodels/ConfigurationModel');
-        var UserModel = require('../dbmodels/UserModel');
+        var ConfigurationModel = require('../schemas/ConfigurationSchema');
+        var UserModel = require('../schemas/UserSchema');
         
         var configuration = new ConfigurationModel({
             socalizeKey: data.socalizeKey,
