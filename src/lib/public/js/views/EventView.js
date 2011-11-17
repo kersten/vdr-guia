@@ -7,6 +7,10 @@ var EventView = Backbone.View.extend({
         
     },
     
+    destructor: function () {
+        $(this.el).children().remove();
+    },
+    
     events: {
         'click .eventitem': 'showEvent'
     },

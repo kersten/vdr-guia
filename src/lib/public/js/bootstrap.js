@@ -50,6 +50,10 @@ Backbone.View.prototype.renderTemplate = function () {
     }
 };
 
+Backbone.View.prototype.destructor = function () {
+    $(this.el).children().remove();
+}
+
 var socket = io.connect();
 
 Backbone.sync = function (method, model, options) {

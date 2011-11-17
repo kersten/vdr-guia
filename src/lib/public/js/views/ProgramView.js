@@ -144,7 +144,7 @@ var ProgramView = Backbone.View.extend({
         Application.loadingOverlay('show');
         
         Application.loadSubView('/Event', function (req, original) {
-            Application.views[req].renderTemplate($(event.currentTarget).attr('channel_id'), 1);
+            Application.currentSubView.renderTemplate($(event.currentTarget).attr('channel_id'), 1);
             
             var oldImg = $('#header_div > img');
             

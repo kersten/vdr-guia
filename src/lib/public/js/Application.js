@@ -1,6 +1,19 @@
 var Application = {
     navigation: null,
-    views: {},
+    views: {
+        contact: ContactView,
+        event: EventView,
+        highlights: HighlightsView,
+        logout: LogoutView,
+        navigation: NavigationView,
+        program: ProgramView,
+        recordings: RecordingsView,
+        search: SearchView,
+        searchresults: SearchresultsView,
+        settings: SettingsView,
+        timer: TimerView,
+        welcome: WelcomeView
+    },
     currentView: null,
     models: {},
     collections: {},
@@ -209,11 +222,9 @@ var Application = {
         Backbone.history.start();
 
         this.collections.navigationCollection = new NavigationCollection;
-        $.getScript('/js/views/NavigationView.js', function () {
-            this.navigation = new NavigationView({
-                el: $('.topbar'), 
-                collection: Application.collections.navigationCollection
-                });
+        this.navigation = new NavigationView({
+            el: $('.topbar'), 
+            collection: Application.collections.navigationCollection
         });
         
         $(document).bind('keypress', function (event) {
@@ -248,76 +259,54 @@ var Application = {
             var self = this;
             
             Application.loadView(req, function (req, original) {
-                self.render(req, original);
+                self.render.apply(this, [req, original, self]);
             });
         },
 
-        render: function (req, nav) {
-            this.updateNavigation(nav);
-            Application.views[req].renderTemplate();
+        render: function (req, nav, router) {
+            router.updateNavigation(nav);
+            this.currentView.renderTemplate();
         }
     }),
     
     loadView: function (req, callback) {
-        var self = this;
         var original = req;
 
         if (req == "") {
-            req = "Welcome";
-        } else {
-            req = req.substr(1);
-            req = req.charAt(0).toUpperCase() + req.substr(1);
+            req = "/Welcome";
         }
         
-        /*if (this.currentView != null && typeof(Application.views[this.currentView]) != 'undefined') {
-            $(Application.views[this.currentView].el).children().remove();
-        }*/
-
-        if (typeof(Application.views[req]) == 'undefined' || typeof(Application.views[req]) == null) {
-            Application.views[req] = null;
-
-            $.getScript('/js/views/' + req + 'View.js', function () {
-                var viewClass = req + 'View';
-
-                Application.views[req] = new window[viewClass]({
-                    el: $('#body')
-                });
-                
-                self.currentView = req;
-                callback.apply(self, [req, original]);
-            });
-        } else {
-            this.currentView = req;
-            callback.apply(self, [req, original]);
+        req = req.substr(1);
+        req = req.charAt(0).toLowerCase() + req.substr(1);
+        
+        if (this.currentView != null) {
+            this.currentView.destructor();
+            delete this.currentView;
+            this.currentView = null;
         }
+        
+        this.currentView = new Application.views[req]({
+            el: $('#body')
+        });
+        
+        callback.apply(this, [req, original]);
     },
     
     loadSubView: function (req, callback) {
-        var self = this;
         var original = req;
 
         if (req == "") {
-            req = "Welcome";
-        } else {
-            req = req.substr(1);
-            req = req.charAt(0).toUpperCase() + req.substr(1);
+            req = "/Welcome";
         }
-
-        if (typeof(Application.views[req]) == 'undefined' || typeof(Application.views[req]) == null) {
-            Application.views[req] = null;
-
-            $.getScript('/js/views/' + req + 'View.js', function () {
-                var viewClass = req + 'View';
-
-                Application.views[req] = new window[viewClass]({
-                    el: $('#body')
-                });
-                
-                callback.apply(self, [req, original]);
-            });
-        } else {
-            callback.apply(self, [req, original]);
-        }
+        
+        req = req.substr(1);
+        req = req.charAt(0).toLowerCase() + req.substr(1);
+        
+        this.currentSubView = new Application.views[req]({
+            el: $('#body')
+        });
+        
+        callback.apply(this, [req, original]);
     },
     
     overlay: function (method, callback) {
