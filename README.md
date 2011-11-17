@@ -3,7 +3,7 @@
 ## Requirements
 
 	- nodejs
-	- redis
+	- mongodb
 
 ## Installation
     git clone git://github.com/kersten/vdr-guia.git ./GUIA
