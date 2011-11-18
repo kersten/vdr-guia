@@ -22,7 +22,7 @@
         
         <& if (index == 0 && preloaded == false) { &>
             <div style="height: 5px; bottom: 0px; width: 100%; background-color: whiteSmoke;">
-                <div class="runningBar" style="height: 5px; width: <&= (((((new Date().getTime() / 1000) - item.get('start_time')) / 60) / (parseInt(item.get('duration') / 60))) * 100) &>%; background-color: greenyellow;"></div>
+                <div class="runningBar" style="height: 5px; background-color: greenyellow;"></div>
             </div>
         <& } &>
     </div>

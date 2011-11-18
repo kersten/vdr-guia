@@ -30,14 +30,19 @@ var EventView = Backbone.View.extend({
             
             function runningBar () {
                 var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
-                var leftPixel = left / $('.runningBar').parent().width();
+                var leftPixel = ($('.runningBar').parent().width() / 100) * left;
                 
                 if (left >= 100) {
                     $('.eventitem:first').slideUp();
                 }
                 
-                $('.runningBar').animate({width: '+=' + leftPixel}, runningBar);
+                $('.runningBar').animate({width: leftPixel}, runningBar);
             }
+            
+            var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
+            var leftPixel = ($('.runningBar').parent().width() / 100) * left;
+            
+            $('.runningBar').css({width: leftPixel});
             
             runningBar();
             
