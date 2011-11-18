@@ -4,11 +4,6 @@ var ProgramView = Backbone.View.extend({
     items: null,
     update: false,
     
-    destructor: function () {
-        $(this.el).undelegate('.media-grid > li', 'click');
-        $(this.el).children().remove();
-    },
-    
     events: {
         'click .media-grid > li': 'loadEvents'
     },
