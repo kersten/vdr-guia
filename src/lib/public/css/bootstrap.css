@@ -2467,3 +2467,20 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 }
+
+#epglist .runningBarContainer {
+  height: 5px;
+  bottom: 0px;
+  width: 100%;
+  background-color: whiteSmoke;
+  display: none;
+}
+
+#epglist .eventitem.running .runningBarContainer {
+  display: block;
+}
+
+#epglist .runningBarContainer .runningBar {
+  height: 5px;
+  background-color: greenyellow;
+}
