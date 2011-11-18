@@ -163,7 +163,7 @@ var Application = {
         
         this.eventDiv.children('.eventbody').find('.transoverlay').fadeOut();
         
-	modalHeader.children('div').find('.timer_active').css('opacity', 1).blinky();
+        modalHeader.children('div').find('.timer_active').css('opacity', 1).blinky();
 
         Application.overlay('show');
         
