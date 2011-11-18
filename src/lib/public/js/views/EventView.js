@@ -9,7 +9,7 @@ var EventView = Backbone.View.extend({
     },
     
     destructor: function () {
-        clearInterval(this.runningInterval);
+        
     },
     
     events: {
@@ -28,10 +28,18 @@ var EventView = Backbone.View.extend({
         Application.collections.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
             callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
             
-            self.runningInterval = setInterval(function () {
+            function runningBar () {
                 var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
-                $('.runningBar').animate({width: left + '%'});
-            }, 500);
+                var leftPixel = left / $('.runningBar').parent().width();
+                
+                if (left >= 100) {
+                    $('.eventitem:first').slideUp();
+                }
+                
+                $('.runningBar').animate({width: '+=' + leftPixel}, runningBar);
+            }
+            
+            runningBar();
             
             Application.loadingOverlay('hide');
             
@@ -128,6 +136,7 @@ var EventView = Backbone.View.extend({
                             $('#epglist').children().remove();
                             self.destructor();
                             delete self;
+                            Application.currentSubView = null;
                         });
                         
                         $('#channellist').css({

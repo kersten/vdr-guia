@@ -15,6 +15,7 @@ var Application = {
         welcome: WelcomeView
     },
     currentView: null,
+    currentSubView: null,
     models: {},
     collections: {},
     overlayDiv: null,
@@ -285,6 +286,12 @@ var Application = {
             this.currentView = null;
         }
         
+        if (this.currentSubView != null) {
+            this.currentSubView.destructor();
+            delete this.currentSubView;
+            this.currentSubView = null;
+        }
+        
         this.currentView = new Application.views[req]({
             el: $('#body')
         });
@@ -301,6 +308,12 @@ var Application = {
         
         req = req.substr(1);
         req = req.charAt(0).toLowerCase() + req.substr(1);
+        
+        if (this.currentSubView != null) {
+            this.currentSubView.destructor();
+            delete this.currentSubView;
+            this.currentSubView = null;
+        }
         
         this.currentSubView = new Application.views[req]({
             el: $('#body')
