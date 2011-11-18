@@ -24,15 +24,6 @@
             <div style="height: 5px; bottom: 0px; width: 100%; background-color: whiteSmoke;">
                 <div class="runningBar" style="height: 5px; width: <&= (((((new Date().getTime() / 1000) - item.get('start_time')) / 60) / (parseInt(item.get('duration') / 60))) * 100) &>%; background-color: greenyellow;"></div>
             </div>
-        
-        <&
-            clearInterval(jQuery.data(document.body, 'runningBarIntervalId'));
-            jQuery.data(document.body, 'runningBarIntervalId', setInterval(function () {
-                
-                var left = ((((new Date().getTime() / 1000) - item.get('start_time')) / 60) / (parseInt(item.get('duration') / 60))) * 100;
-                $('.runningBar').animate({width: left + '%'});
-            }, 1000));
-        &>
         <& } &>
     </div>
     <div class="eventbody" style="position:relative; max-height: 100px; overflow: hidden; padding: 15px;">
