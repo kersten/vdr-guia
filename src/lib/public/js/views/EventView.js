@@ -34,6 +34,7 @@ var EventView = Backbone.View.extend({
                 
                 if (left >= 100) {
                     $('.eventitem:first').slideUp();
+                    return;
                 }
                 
                 $('.runningBar').animate({width: leftPixel}, runningBar);
