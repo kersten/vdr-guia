@@ -228,6 +228,14 @@ var Application = {
             collection: Application.collections.navigationCollection
         });
         
+        function setClock() {
+            var now = new Date();
+            $('#clock').text((now.getHours() < 10?"0":"") + now.getHours() + (now.getSeconds() %2 == 0?":":" ") + (now.getMinutes() < 10?"0":"") + now.getMinutes());
+            setTimeout(setClock, 1000);
+        }
+        
+        setClock();
+        
         $(document).bind('keypress', function (event) {
             console.log('Key pressed: ' + event.which);
             
