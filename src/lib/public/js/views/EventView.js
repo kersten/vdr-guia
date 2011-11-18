@@ -9,7 +9,7 @@ var EventView = Backbone.View.extend({
     },
     
     destructor: function () {
-        
+        $(this.el).undelegate('.eventitem', 'click');
     },
     
     events: {
