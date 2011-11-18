@@ -30,7 +30,8 @@ var Application = {
             speed: 1, // Rounds per second
             trail: 58, // Afterglow percentage
             shadow: false // Whether to render a shadow
-        }
+        },
+        open: false
     },
     
     showEvent: function (event) {
@@ -372,25 +373,32 @@ var Application = {
 
     loadingOverlay: function (method) {
         if (method == 'show') {
-            this.spinner.overlayDiv = $('<div></div>').css({
-                position: 'fixed',
-                top: '0px',
-                width: $(window).width(),
-                height: $(window).height(),
-                zIndex: 10000,
-                opacity: 1
-            }).addClass('loadingoverlay').appendTo('body');
+            if (!this.spinner.open) {
+        	this.spinner.open = true;
+                this.spinner.overlayDiv = $('<div></div>').css({
+                    position: 'fixed',
+                    top: '0px',
+                    width: $(window).width(),
+                    height: $(window).height(),
+                    zIndex: 10000,
+                    opacity: 1
+                }).addClass('loadingoverlay').appendTo('body');
 
-            this.spinner.overlayDiv.spin(this.spinner.opts);
-            
-            this.overlayTimeout = setTimeout(function () {
-                alert('An error occured, please try again.');
-                Application.loadingOverlay('hide');
-            }, 10000);
+                this.spinner.overlayDiv.spin(this.spinner.opts);
+                
+                
+                this.overlayTimeout = setTimeout(function () {
+                    alert('An error occured, please try again.');
+                    Application.loadingOverlay('hide');
+                }, 10000);        	
+            }
         } else {
-            clearTimeout(this.overlayTimeout);
-            this.spinner.overlayDiv.spin(false);
-            this.spinner.overlayDiv.remove();
+            if (this.spinner.open) {
+                clearTimeout(this.overlayTimeout);
+                this.spinner.overlayDiv.spin(false);
+                this.spinner.overlayDiv.remove();        	
+                this.spinner.open = false;
+            }
         }
     }
 };

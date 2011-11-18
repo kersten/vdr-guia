@@ -44,5 +44,6 @@
 	"File": "File",
 	"Day": "Day",
 	"Close": "Close",
-	"Delete": "Delete"
+	"Delete": "Delete",
+	"a'clock": "a'clock"
 }
