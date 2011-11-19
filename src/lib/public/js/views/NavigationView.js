@@ -33,7 +33,7 @@ var NavigationView = Backbone.View.extend({
                 li.attr('id', item.get('id'));
             }
 
-            $('.nav').append(li);
+            $('.nav:first').append(li);
         });
     },
     

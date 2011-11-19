@@ -21,7 +21,6 @@ var EventView = Backbone.View.extend({
     },
     
     generateHTML: function (callback) {
-        console.log('LOAD EVENTS');
         var self = this;
         
         Application.collections.eventlist = new EventCollection();
