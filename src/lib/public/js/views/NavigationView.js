@@ -13,6 +13,9 @@ var NavigationView = Backbone.View.extend({
             data.items.forEach(function (item) {
                 collection.add(item);
             });
+            
+            $('.pull-right').fadeIn();
+            $('ul.nav').fadeIn();
         }});
         
         this.collection.bind('add', function (item) {
@@ -33,7 +36,7 @@ var NavigationView = Backbone.View.extend({
                 li.attr('id', item.get('id'));
             }
 
-            $('.nav:first').append(li);
+            $('ul.nav:first').append(li);
         });
     },
     
@@ -54,15 +57,20 @@ var NavigationView = Backbone.View.extend({
         
         socket.emit('User:login', {username: $('#loginUser').val(), password: password}, function (data) {
             if (data.loggedIn) {
-                Application.views = {};
                 $(event.currentTarget).parent().remove();
                 
-                $('ul.nav').children().remove();
-                self.collection.fetch({success: function (collection, data) {
-                    data.items.forEach(function (item) {
-                        collection.add(item);
-                    });
-                }});
+                $('ul.nav').fadeOut(function () {
+                    $('ul.nav').children().remove();
+                    
+                    self.collection.fetch({success: function (collection, data) {
+                        data.items.forEach(function (item) {
+                            collection.add(item);
+                        });
+
+                        $('ul.nav').fadeIn();
+                    }});
+                });
+            
                 window.location.hash = '#';
             }
         });
@@ -74,10 +82,23 @@ var NavigationView = Backbone.View.extend({
         var self = this;
         
         socket.emit('User:logout', {}, function (data) {
-            Application.views = {};
-            $('ul.nav').children().remove();
-            window.location.hash = '#';
-            self.collection.fetch();
+            $('ul.nav').fadeOut(function () {
+                $('ul.nav').children().remove();
+                window.location.hash = '#';
+                self.collection.fetch({success: function (collection, data) {
+                    if (!data.loggedIn) {
+                        var template = _.template( $("#LoginFormTemplate").html(), {} );
+                        self.el.children('div.fill').children('div.container').append(template);
+                    }
+
+                    data.items.forEach(function (item) {
+                        collection.add(item);
+                    });
+
+                    $('.pull-right').fadeIn();
+                    $('ul.nav').fadeIn();
+                }});
+            });
         });
     }
 });
