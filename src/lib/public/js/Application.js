@@ -125,8 +125,6 @@ var Application = {
                 event.preventDefault();
                 
                 if (self.eventDiv.attr('timer_exists') == "true") {
-                    console.log('Delete Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
-                    
                     Application.deleteEventTimer(self.eventDiv.attr('timer_id'), {
                         success: function (data) {
                             self.eventDiv.attr('timer_exists', "false");
@@ -140,8 +138,6 @@ var Application = {
                         }
                     });
                 } else {
-                    console.log('Record: ' + self.eventDiv.attr('channel_id') + '/' + self.eventDiv.attr('event_id'));
-                    
                     Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
                         success: function (data) {
                             self.eventDiv.attr('timer_exists', "true");
