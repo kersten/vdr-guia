@@ -40,6 +40,13 @@ var EventView = Backbone.View.extend({
                             collection.remove(collection.models[0]);
                             $('.eventitem:first').addClass('running');
                             el = $('.eventitem.running .runningBar');
+                            
+                            var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
+                            var leftPixel = ($('.runningBar').parent().width() / 100) * left;
+
+                            $('.eventitem.running .runningBar').css({width: leftPixel});
+                            
+                            runningBar();
                             return;
                         });
                     }
