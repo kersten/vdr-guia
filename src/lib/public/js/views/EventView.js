@@ -96,71 +96,71 @@ var EventView = Backbone.View.extend({
                 overflow: 'hidden'
             });
             
+            $('#channellist').append($('<div></div>').attr('id', 'channellistSlideBarTrans').css({
+                position: 'absolute',
+                top: $('#channellist').scrollTop(),
+                left: 0,
+                width: 40,
+                height: '100%',
+                display: 'none',
+                background: '-moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
+
+            }).css({
+                background: '-webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+            .css({
+                background: '-ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+            .css({
+                background: '-o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
+            .css({
+                background: 'linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
+            }).fadeIn()).append($('<div></div>').attr('id', 'channellistSlideBar').css({
+                position: 'absolute',
+                top: $('#channellist').scrollTop(),
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#000000',
+                opacity: 0.0
+            }).bind('mouseenter', function () {
+                $(this).data('mouseIn', true);
+                $('#channellistSlideBarTrans').animate({left: '+=60'}, 'fast');
+                $('#channellist').animate({right: '+=50'}, 'fast');
+
+                //$('#channellistSlideBarTrans').fadeOut('fast');
+            }).bind('mouseleave', function () {
+                $('#channellistSlideBarTrans').animate({left: '-=60'}, 'fast');
+                $('#channellist').animate({right: '-=50'}, 'fast');
+
+                //$('#channellistSlideBarTrans').fadeIn('fast');
+            }).bind('click', function () {
+                if ($(this).data('mouseIn')) {
+                    $('#epglist').fadeOut();
+                    $('#epglist').unbind();
+                    $('#header_div > img').fadeOut();
+
+                    $('#channellist').animate({
+                        right: 0
+                    }, function () {
+                        $('#epglist').children().remove();
+                        self.destructor();
+                        delete self;
+                        Application.currentSubView = null;
+                    });
+
+                    $('#channellist').css({
+                        overflow: 'auto'
+                    });
+
+                    $('#channellistSlideBar').remove();
+                    $('#channellistSlideBarTrans').remove();
+                }
+            }));
+            
             $('#channellist').animate({
                 right: 40 - $('#channellist').width()
-            }, function () {
-                $('#channellist').append($('<div></div>').attr('id', 'channellistSlideBarTrans').css({
-                    position: 'absolute',
-                    top: $('#channellist').scrollTop(),
-                    left: 0,
-                    width: 40,
-                    height: '100%',
-                    background: '-moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
-                    
-                }).css({
-                    background: '-webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
-                .css({
-                    background: '-ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
-                .css({
-                    background: '-o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'})
-                .css({
-                    background: 'linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)'
-                })).append($('<div></div>').attr('id', 'channellistSlideBar').css({
-                    position: 'absolute',
-                    top: $('#channellist').scrollTop(),
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#000000',
-                    opacity: 0.0
-                }).bind('mouseenter', function () {
-                    $(this).data('mouseIn', true);
-                    $('#channellistSlideBarTrans').animate({left: '+=60'}, 'fast');
-                    $('#channellist').animate({right: '+=50'}, 'fast');
-                    
-                    //$('#channellistSlideBarTrans').fadeOut('fast');
-                }).bind('mouseleave', function () {
-                    $('#channellistSlideBarTrans').animate({left: '-=60'}, 'fast');
-                    $('#channellist').animate({right: '-=50'}, 'fast');
-                    
-                    //$('#channellistSlideBarTrans').fadeIn('fast');
-                }).bind('click', function () {
-                    if ($(this).data('mouseIn')) {
-                        $('#epglist').fadeOut();
-                        $('#epglist').unbind();
-                        $('#header_div > img').fadeOut();
-                        
-                        $('#channellist').animate({
-                            right: 0
-                        }, function () {
-                            $('#epglist').children().remove();
-                            self.destructor();
-                            delete self;
-                            Application.currentSubView = null;
-                        });
-                        
-                        $('#channellist').css({
-                            overflow: 'auto'
-                        });
-                        
-                        $('#channellistSlideBar').remove();
-                        $('#channellistSlideBarTrans').remove();
-                    }
-                }));
             });
             
             $('#epglist').fadeIn('normal', function () {
-                //$('#epglist').lionbars();
                 $('.timer_active').blinky();
             });
         });
