@@ -68,34 +68,6 @@ var EventView = Backbone.View.extend({
                     }});
                 }
             });
-            
-
-            function runningBar () {
-                var el = $('.eventitem.running .runningBar');
-                if (el) {
-                    var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
-                    var leftPixel = (el.parent().width() / 100) * left;
-                  
-                    if (left >= 100) {
-                	$('.eventitem:first').slideUp(function() {
-                	    $(this).remove();
-                	    collection.remove(collection.models[0]);
-                	    $('.eventitem:first').addClass('running');
-                	    el = $('.eventitem.running .runningBar');
-                	});
-                    }
-
-                    el.animate({width: leftPixel}, runningBar);                  
-                }
-            }
-            
-            var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
-            var leftPixel = ($('.runningBar').parent().width() / 100) * left;
-            
-            $('.eventitem.running .runningBar').css({width: leftPixel});
-            
-            runningBar();
-            
         }, error: function () {
             $('#epglist').children().remove();
             Application.loadingOverlay('hide');
