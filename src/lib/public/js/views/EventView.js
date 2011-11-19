@@ -45,9 +45,9 @@ var EventView = Backbone.View.extend({
     generateHTML: function (callback) {
         var self = this;
         
-        Application.collections.eventlist = new EventCollection();
+        this.eventlist = new EventCollection();
 
-        Application.collections.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
+        this.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
             callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
             
             self.runningBar(collection);
@@ -55,11 +55,10 @@ var EventView = Backbone.View.extend({
             Application.loadingOverlay('hide');
             
             $('#epglist').endlessScroll({
-                //bottomPixels: 600,
                 callback: function (p) {
                     Application.loadingOverlay('show');
                     self.page = p + 1;
-                    Application.collections.eventlist.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
+                    this.eventlist.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
                         if (collection.length == 0) {
                             $('#epglist').unbind('scroll');
                         }
