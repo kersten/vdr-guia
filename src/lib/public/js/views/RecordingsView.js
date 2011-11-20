@@ -3,15 +3,12 @@ var RecordingsView = Backbone.View.extend({
     
     generateHTML: function (callback) {
         var self = this;
-        if (typeof(Application.collections.recordings) == 'undefined') {
-            Application.collections.recordings = new RecordingCollection();
-            
-            Application.collections.recordings.fetch({success: function (collection) {
-                callback.apply(this, [_.template(self.template, {recordings: collection})]);
-            }});
-        } else {
-            callback.apply(this, [_.template(self.template, {recordings: Application.collections.recordings})]);
-        }
+        this.recordings = new RecordingCollection();
+
+        this.recordings.fetch({success: function (collection) {
+                console.log(collection)
+            callback.apply(this, [_.template(self.template, {recordings: collection})]);
+        }});
     },
     
     postRender: function () {
