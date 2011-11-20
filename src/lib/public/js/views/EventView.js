@@ -58,7 +58,7 @@ var EventView = Backbone.View.extend({
                 callback: function (p) {
                     Application.loadingOverlay('show');
                     self.page = p + 1;
-                    this.eventlist.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
+                    self.eventlist.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
                         if (collection.length == 0) {
                             $('#epglist').unbind('scroll');
                         }
