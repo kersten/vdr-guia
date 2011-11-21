@@ -19,7 +19,7 @@ the parameters to suite your needs.
 [![Donate](http://pledgie.com/campaigns/16319.png)](http://www.pledgie.com/campaigns/16319)
 
 ### License ###
-    Copyright (c) 2011, Kersten Burkhardt
+    Copyright (c) 2011, Kersten Burkhardt and Volker Richert
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,11 +32,11 @@ the parameters to suite your needs.
     3. All advertising materials mentioning features or use of this software
        must display the following acknowledgement:
        This product includes software developed by Kersten Burkhardt
-       (kerstenk@gmail.com).
+       (kerstenk@gmail.com) and Volker Richert.
     4. The names of its contributors may be used to endorse or promote products
        derived from this software without specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY KERSTEN BURKHARDT ''AS IS'' AND ANY
+    THIS SOFTWARE IS PROVIDED BY KERSTEN BURKHARDT AND VOLKER RICHERT ''AS IS'' AND ANY
     EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
     DISCLAIMED. IN NO EVENT SHALL KERSTEN BURKHARDT BE LIABLE FOR ANY
