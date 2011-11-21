@@ -16,4 +16,4 @@ To configure GUIA you have to edit the file _src/etc/config_ and change
 the parameters to suite your needs.
 
 ## Donate
-http://www.pledgie.com/campaigns/16319
+[![Donate](http://pledgie.com/campaigns/16319.png)](http://www.pledgie.com/campaigns/16319)
