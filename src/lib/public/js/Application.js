@@ -40,7 +40,7 @@ var Application = {
         this.eventDiv = $(event.currentTarget).clone();
         
         this.eventDiv.children('.eventbody').css('padding', "");
-            
+
         this.eventDiv.css({
             position: 'fixed',
             left: $(event.currentTarget).offset().left - 35,
@@ -61,7 +61,7 @@ var Application = {
             '-moz-background-clip': 'padding-box',
             'background-clip': 'padding-box',
             height: this.originalDiv.outerHeight()
-        }).removeClass('eventitem').addClass('span13');
+        }).removeClass('eventitem').addClass('span13 modalevent');
         
         $(event.currentTarget).css('opacity', 0);
         $('body').append(this.eventDiv);

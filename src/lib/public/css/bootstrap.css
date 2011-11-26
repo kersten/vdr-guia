@@ -2484,3 +2484,21 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   height: 5px;
   background-color: greenyellow;
 }
+
+.eventbody .eventimage {
+	display: none;
+	float: left;
+	margin: 0 5px 0 0;
+}
+
+.eventbody .eventimage.first {
+    display: inline;
+    float: right;
+    margin: 0 0 5px 5px;
+}
+
+
+.modalevent .eventbody .eventimage {
+    display: inline;
+}
+
