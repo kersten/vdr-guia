@@ -1,7 +1,6 @@
 var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
-var http = require('http');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -23,6 +22,7 @@ function Bootstrap (app, express) {
                 self.setupLogos();
                 
                 vdr.host = data.vdrHost;
+                vdr.restfulPort = data.restfulPort;
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
                 
                 rest.get(vdr.restful + '/info.json').on('success', function(data) {

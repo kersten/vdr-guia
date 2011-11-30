@@ -1,5 +1,6 @@
 var LogoSchema = require('../schemas/LogoSchema'),
-    fs = require('fs');
+    fs = require('fs'),
+    http = require('http');
 
 var LogoView = {
     url: '/logo/*',
