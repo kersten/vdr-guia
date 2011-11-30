@@ -3,7 +3,6 @@ var http = require('http');
 var EventImageView = {
     url: '/events/image/:eventid/:imageid',
     func: function (req, res) {
-        // vdr.restful +'/events/iamge/' + req.params.eventid + '/' +req.params.imageid
         if (req.session.loggedIn) {
             var http_client = http.createClient(vdr.restfulPort, vdr.host);
             var image_get_request = http_client.request('GET', '/events/image/' + req.params.eventid + '/' + req.params.imageid, {
