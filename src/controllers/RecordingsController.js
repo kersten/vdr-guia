@@ -23,20 +23,24 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('RecordingCollection:read', function (data, callback) {
         rest.get(vdr.restful + '/recordings.json').on('success',  function (recordings) {
-            var records = [];
+            recordings = recordings.recordings;
+            var records = new Array();
+            var directories = new Array();
             
-            recordings.recordings.forEach(function (data) {
+            recordings.forEach(function (data) {
                 if (data.name.match(/~/)) {
-                    var dirArray = data.name.split('~');
-                    dirArray.pop();
+                    var directory = data.name.split('~');
                     
-                    var obj = parseDir(dirArray, {});
+                    if (directories.indexOf(directory[0]) != -1) {
+                        return;
+                    }
                     
-                    obj.push(data);
-                    records.push(obj);
-                } else {
-                    records.push(data);
+                    directories.push(directory[0])
+                    data.name = directory[0];
+                    data.directory = true;
                 }
+                
+                records.push(data);
             });
             
             callback(records);

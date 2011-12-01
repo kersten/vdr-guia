@@ -1,6 +1,14 @@
 var RecordingsView = Backbone.View.extend({
     url: "recordings",
     
+    events: {
+        'click tr[isRecording="true"]': "showEvent"
+    },
+    
+    showEvent: function () {
+        console.log('Show info for recording');
+    },
+    
     generateHTML: function (callback) {
         var self = this;
         this.recordings = new RecordingCollection();
