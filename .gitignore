@@ -7,3 +7,5 @@ nbproject
 npm-debug.log
 src/data/epg.data
 src/share/logos/*.png
+
+textmate.tmproj
