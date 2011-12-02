@@ -48,4 +48,12 @@ io.sockets.on('connection', function (socket) {
             console.log(vdr.restful + '/recordings.json?start=' + start + '&limit=' + 20);
         });
     });
+    
+    socket.on('Recording:readOne', function (data, callback) {
+        rest.get(vdr.restful + '/recordings/' + data.number + '.json').on('success', function (data) {
+            callback(data.recordings[0]);
+        }).on('error', function () {
+        }).on('403', function () {
+        });
+    });
 });
