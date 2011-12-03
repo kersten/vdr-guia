@@ -34,16 +34,17 @@ var SearchresultsView = Backbone.View.extend({
                 callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
                 
                 $('#container_searchresults').endlessScroll({
-                    //bottomPixels: 600,
                     callback: function (p) {
                         Application.loadingOverlay('show');
                         self.page = p + 1;
-                        eventCollection.fetch({data: {channel_id: self.channel_id, page: self.page}, success: function (collection) {
+                        eventCollection.fetch({data: {term: self.query, page: self.page}, success: function (collection) {
                             if (collection.length == 0) {
                                 $('#container_searchresults').unbind('scroll');
                             }
+                            
                             var events = _.template(self.template, {events: collection, preloaded: true});
                             $('#searchresults').append(events);
+                            
                             Application.loadingOverlay('hide');
                         }});
                     }
