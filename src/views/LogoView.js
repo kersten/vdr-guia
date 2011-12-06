@@ -9,11 +9,18 @@ var LogoView = {
             var channel_name = unescape(req.url.substr(6)).replace(/\//, '|');
             
             LogoSchema.findOne({name: channel_name}, function (err, data) {
-                if (err || data == null) {
+                try {
+                    var filename = __dirname + '/../share/logos/' + data.file;
+                    res.contentType(filename);
+                    
+                    var image = fs.readFileSync(filename);
+                    
+                    res.end(image);
+                } catch (e) {
                     console.log('Logo ' + channel_name + ' not found, getting placeholder');
                     
                     var http_client = http.createClient(80, 'placehold.it');
-                    var image_get_request = http_client.request('GET', 'http://placehold.it/170x95.png&text=' + req.url.substr(6), {
+                    var image_get_request = http_client.request('GET', 'http://placehold.it/240x134.png&text=' + req.url.substr(6), {
                         'Host': 'placehold.it',
                         "User-Agent": 'Firefox/7.0.1',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
@@ -45,13 +52,6 @@ var LogoView = {
                     });
                     
                     image_get_request.end();
-                } else {
-                    var filename = __dirname + '/../share/logos/' + data.file;
-                    res.contentType(filename);
-                    
-                    var image = fs.readFileSync(filename);
-                    
-                    res.end(image);
                 }
             });
         } else {

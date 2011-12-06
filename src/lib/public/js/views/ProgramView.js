@@ -27,7 +27,7 @@ var ProgramView = Backbone.View.extend({
                 src: '/logo/' + item.get('name'),
                 title: item.get('name')
             }).css({
-                width: 170,
+                width: 240,
             }).addClass('thumbnail'));
 
             channel.append(link);
