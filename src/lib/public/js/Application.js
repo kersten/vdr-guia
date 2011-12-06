@@ -3,7 +3,7 @@ var Application = {
     views: {
         contact: ContactView,
         event: EventView,
-        highlights: HighlightsView,
+        tvguide: TVGuideView,
         logout: LogoutView,
         navigation: NavigationView,
         program: ProgramView,

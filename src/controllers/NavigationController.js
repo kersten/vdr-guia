@@ -4,9 +4,9 @@ io.sockets.on('connection', function (socket) {
     socket.on('NavigationCollection:read', function (data, callback) {
         if (hs.session.loggedIn) {
             var menu = [{
-                title: __('Highlights'),
-                link: '#/Highlights',
-                view: 'Highlights'
+                title: __('TV Guide'),
+                link: '#/tvguide',
+                view: 'TVGuide'
             }, {
                 title: __('Program'),
                 link: '#/program',
