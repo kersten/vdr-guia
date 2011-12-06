@@ -13,7 +13,7 @@ var LogoView = {
                     console.log('Logo ' + channel_name + ' not found, getting placeholder');
                     
                     var http_client = http.createClient(80, 'placehold.it');
-                    var image_get_request = http_client.request('GET', 'http://placehold.it/90x51.png&text=' + req.url.substr(6), {
+                    var image_get_request = http_client.request('GET', 'http://placehold.it/170x95.png&text=' + req.url.substr(6), {
                         'Host': 'placehold.it',
                         "User-Agent": 'Firefox/7.0.1',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
