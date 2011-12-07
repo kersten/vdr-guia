@@ -28,6 +28,7 @@ var ProgramView = Backbone.View.extend({
                 title: item.get('name')
             }).css({
                 width: 240,
+                height: 134,
             }).addClass('thumbnail'));
 
             channel.append(link);
@@ -74,7 +75,7 @@ var ProgramView = Backbone.View.extend({
             height: maxHeight,
             maxHeight: maxHeight,
             position: 'absolute',
-            overflow: 'auto',
+            overflow: 'hidden',
             top:0,
             right: 0
         });
@@ -93,6 +94,8 @@ var ProgramView = Backbone.View.extend({
                 collection.forEach(function (chan) {
                     self.addChannel(chan);
                 });
+                
+                $('#channellist').lionbars();
                 
                 Application.loadingOverlay('hide');
                 
