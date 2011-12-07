@@ -134,9 +134,9 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         throw e;
     });
     
-    var ConfigurationModel = require('./schemas/ConfigurationSchema');
+    var ConfigurationSchema = require('./schemas/ConfigurationSchema');
     
-    ConfigurationModel.count({}, function (err, cnt) {
+    ConfigurationSchema.count({}, function (err, cnt) {
         if (cnt == 0) {
             console.log('Not installed! Delivering installation');
             
@@ -148,7 +148,7 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         } else {
             console.log('GUIA installed! Getting configuration ..');
             
-            ConfigurationModel.findOne({}, function (err, data) {
+            ConfigurationSchema.findOne({}, function (err, data) {
                 cb.apply(this, [{
                     installed: true,
                     vdrHost: data.vdrHost,
@@ -171,6 +171,8 @@ Bootstrap.prototype.setupSocketIo = function () {
     var Session = require('express/node_modules/connect').middleware.session.Session;
 
     io.configure(function (){
+        io.set('transports', ['websocket']);
+        
         io.set('authorization', function (data, accept) {
             if (data.headers.cookie) {
                 data.cookie = parseCookie(data.headers.cookie);

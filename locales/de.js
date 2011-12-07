@@ -47,5 +47,6 @@
 	"Delete": "Delete",
 	"a'clock": "a'clock",
 	"TV Guide": "TV Guide",
-	"TV Guide <small>What's up today ..</small>": "TV Guide <small>What's up today ..</small>"
+	"TV Guide <small>What's up today ..</small>": "TV Guide <small>What's up today ..</small>",
+	"Hightlights": "Hightlights"
 }
