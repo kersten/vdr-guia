@@ -115,11 +115,11 @@ Bootstrap.prototype.setupExpress = function (cb) {
     /*
      * Use browserify in our express app
      */
-    this.app.use(require('browserify')({
+    /*this.app.use(require('browserify')({
         require: browserify,
         mount: '/browserify.js',
         filter: require('uglify-js')
-    }));
+    }));*/
     
     cb.call();
 };

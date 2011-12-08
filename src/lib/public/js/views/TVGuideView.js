@@ -9,5 +9,7 @@ var TVGuideView = Backbone.View.extend({
             console.log(collection);
             Application.loadingOverlay('hide');
         }});
+        
+        callback.apply(this, [_.template(self.template)]);
     }
 });
