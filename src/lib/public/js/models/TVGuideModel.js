@@ -1,0 +1,1 @@
+var TVGuideModel = Backbone.Model.extend({});

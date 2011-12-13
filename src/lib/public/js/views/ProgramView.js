@@ -27,8 +27,8 @@ var ProgramView = Backbone.View.extend({
                 src: '/logo/' + item.get('name'),
                 title: item.get('name')
             }).css({
-                width: 90,
-                height: 51
+                width: 240,
+                height: 134,
             }).addClass('thumbnail'));
 
             channel.append(link);
@@ -39,9 +39,6 @@ var ProgramView = Backbone.View.extend({
     
     preload: function (event, data) {
         var self = this;
-        
-        console.log(((($('#channellist').height() - 2)) - 400) + ' < ' + data.scrollPosition);
-        console.log(data);
         
         if ((($('#channellist').height() - 2) - 400) < data.offsetV) {
             if (!this.update) {
@@ -78,14 +75,14 @@ var ProgramView = Backbone.View.extend({
             height: maxHeight,
             maxHeight: maxHeight,
             position: 'absolute',
-            overflow: 'auto',
+            overflow: 'hidden',
             top:0,
             right: 0
         });
         
         this.channellist = new ChannelCollection();
         
-        this.items = Math.ceil(maxHeight / 73) * 7 * 2;
+        this.items = Math.ceil(maxHeight / 95) * 4 * 2;
 
         this.page = 1;
 
@@ -97,6 +94,8 @@ var ProgramView = Backbone.View.extend({
                 collection.forEach(function (chan) {
                     self.addChannel(chan);
                 });
+                
+                $('#channellist').lionbars();
                 
                 Application.loadingOverlay('hide');
                 

@@ -29,11 +29,11 @@
     <div class="eventbody" style="position:relative; max-height: 100px; overflow: hidden; padding: 15px;">
         <& if (item.has('images') && item.get('images') > 0) { &>
         <div class="eventimages" >
-            <img src="http://4s.scrapper-site.net:8002/events/image/<&= item.get('id') &>/0" class="eventimage first" />
+            <img src="/events/image/<&= item.get('id') &>/0" class="eventimage first" />
             <& if (item.get('images') > 1) { &>
-            <& for (var i = 1; i < item.get('images'); i++) { &>
-            <img class="eventimage" src="http://4s.scrapper-site.net:8002/events/image/<&= item.get('id') &>/<&= i &>" />
-            <& } &>
+                <& for (var i = 1; i < item.get('images'); i++) { &>
+                    <img class="eventimage" src="/events/image/<&= item.get('id') &>/<&= i &>" />
+                <& } &>
             <& } &>
         </div>
         <& } &>

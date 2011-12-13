@@ -2,24 +2,35 @@
     <h1><%- __('Recordings <small>What\'s up today ..</small>') %></h1>
 </div>
 <div class="row">
-<div class="span14 columns" id="recordingslist" style="overflow: auto;">
-    <table class="zebra-striped"> 
-        <thead>
-            <tr>
-                <th>#</th>
-                <th><%= __('Recordings') %></th>
-            </tr>
-        </thead>
-        <tbody>
-            <& recordings.each(function (recording) { &>
-                <& if (recording.has('name')) { &>
-                <tr channelid="<&= recording.get('channel_id') &>" channel_name="<&= recording.get('name') &>" hasimage="<&= recording.get('image') &>" style="cursor: pointer;">
-                    <td><&= recording.get('number') &></td>
-                    <td><&= recording.get('name') &></td>
-                </tr>
-                <& } &>
-            <& }); &>
-        </tbody>
-    </table>
+    <div class="span14 columns" id="recordingslist" style="overflow: auto;">
+        <table class="zebra-striped bordered-table">
+            <tbody>
+                <& recordings.each(function (recording) { &>
+                    <& if (recording.has('directory') && recording.get('directory') == true) { &>
+                    <tr channelid="<&= recording.get('channel_id') &>" channel_name="<&= recording.get('name') &>" hasimage="<&= recording.get('image') &>" style="cursor: pointer;">
+                        <td><&= recording.get('name') &><span>+</span></td>
+                    </tr>
+                    <& } else { &>
+                    <tr number="<&= recording.get('number') &>" title="<&= recording.get('event_title') &>" isNew="<&= recording.get('is_new') &>" isFile="true" style="cursor: pointer;">
+                        <td><&= recording.get('event_title') &></td>
+                    </tr>
+                    <& } &>
+                <& }); &>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<div id="recording_details" class="modal hide fade" style="display: none; ">
+    <div class="modal-header">
+        <a href="#" class="close">×</a>
+        <h3></h3>
+    </div>
+    <div class="modal-body">
+        <p></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn"><%= __('Close') %></button>
+        <button class="btn danger"><%= __('Delete') %></button>
+    </div>
 </div>
