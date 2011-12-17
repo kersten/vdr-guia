@@ -9,4 +9,4 @@ var LogoSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Logo', LogoSchema);
+mongoose.model('Logo', LogoSchema);

@@ -1,10 +1,15 @@
 var ActorSchema = require('./ActorSchema');
 
 var EventSchema = new Schema({
-    event_id: {
+    id: {
         type: String,
         required: true,
         unique: true
+    },
+    
+    event_id: {
+        type: String,
+        required: true
     },
     
     channel_id: {
@@ -34,7 +39,7 @@ var EventSchema = new Schema({
     
     stop: {
         type: Number,
-        required: true
+        required: false
     },
     
     duration: {
@@ -44,9 +49,15 @@ var EventSchema = new Schema({
     
     actors: [ActorSchema],
     
-    Regisseur: [RegisseurSchema],
+    Regisseur: {
+        type: String,
+        required: false
+    },
     
-    host: [HostSchema],
+    host: {
+        type: String,
+        required: false
+    },
     
     parental_rating: {
         type: Number,
@@ -64,19 +75,13 @@ var EventSchema = new Schema({
     },
     
     year: {
-        type: Number,
-        required: false
-    },
-    
-    category: {
         type: String,
         required: false
     },
     
-    genre: {
-        type: String,
-        required: false
-    }
+    components: [],
+    
+    genre: []
 });
 
-module.exports = mongoose.model('Event', EventSchema);
+mongoose.model('Event', EventSchema);

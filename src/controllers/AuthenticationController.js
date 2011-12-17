@@ -1,10 +1,10 @@
+var user = mongoose.model('User');
+
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
     
     socket.on('User:login', function (data, callback) {
-        var UserSchema = require('../schemas/UserSchema');
-        
-        UserSchema.count({user: data.username, password: data.password}, function (err, count) {
+        user.count({user: data.username, password: data.password}, function (err, count) {
             var loggedIn = false;
             
             if (count != 0) {

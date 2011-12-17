@@ -9,3 +9,5 @@ var ActorSchema = new Schema({
         required: false
     }
 });
+
+mongoose.model('Actor', ActorSchema);

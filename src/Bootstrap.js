@@ -19,11 +19,11 @@ function Bootstrap (app, express) {
             global.installed = data.installed;
             
             if (data.installed) {
-                self.setupLogos();
-                
                 vdr.host = data.vdrHost;
                 vdr.restfulPort = data.restfulPort;
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
+                
+                self.setupLogos();
                 
                 rest.get(vdr.restful + '/info.json').on('success', function(data) {
                     vdr.plugins.epgsearch = false;
@@ -32,6 +32,7 @@ function Bootstrap (app, express) {
                         vdr.plugins[data.vdr.plugins[i].name] = true;
                     }
 
+                    self.setupEpgImport(vdr.restful, global.mongoose);
                     self.setupControllers();
                     self.setupViews();
                 }).on('error', function () {
@@ -87,7 +88,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
      */
     this.app.use(this.express.static(__dirname + '/lib/public'));
     this.app.use(this.express.favicon(__dirname + '/lib/public/img/favicon.ico'));
-    this.app.use(this.express.errorHandler({ dumpExceptions: true, showStack: true }));
+    this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
     
     /*
      * Register Template engine with .html and .js
@@ -104,13 +105,13 @@ Bootstrap.prototype.setupExpress = function (cb) {
     /*
      * Create browserify array for included modules to web interface
      */
-    var browserify = new Array();
+    //var browserify = new Array();
 
     /*fs.readdirSync(__dirname + '/models').forEach(function (file) {
         browserify.push(__dirname + '/models/' + file);
     });*/
 
-    browserify.push('node-uuid');
+    //browserify.push('node-uuid');
 
     /*
      * Use browserify in our express app
@@ -134,7 +135,14 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         throw e;
     });
     
-    var ConfigurationSchema = require('./schemas/ConfigurationSchema');
+    var schemas = fs.readdirSync(__dirname + '/schemas');
+    
+    schemas.forEach(function (schema) {
+        schema = schema.replace('.js', '');
+        require(__dirname + '/schemas/' + schema);
+    });
+    
+    var ConfigurationSchema = mongoose.model('Configuration');
     
     ConfigurationSchema.count({}, function (err, cnt) {
         if (cnt == 0) {
@@ -266,7 +274,7 @@ Bootstrap.prototype.setupControllers = function () {
 };
 
 Bootstrap.prototype.setupLogos = function () {
-    var LogoSchema = require('./schemas/LogoSchema');
+    var LogoSchema = mongoose.model('Logo');
     
     console.log('Setting up logos ..');
     
@@ -298,6 +306,13 @@ Bootstrap.prototype.setupLogos = function () {
         
         console.log('done');
     });
+};
+
+Bootstrap.prototype.setupEpgImport = function (restful) {
+    var EpgImport = require('./lib/Epg/Import');
+    var importer = new EpgImport(vdr.restful);
+    
+    importer.start();
 };
 
 module.exports = Bootstrap;

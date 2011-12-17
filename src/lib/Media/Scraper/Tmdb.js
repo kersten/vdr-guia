@@ -11,7 +11,7 @@ this.apikey;
 
 var buildUrl = function(query,method,skipcache) {
   if(!query.lang) query.lang = 'en';
-  var url = urlbase+method+'/'+query.lang+'/json/'+exports.apikey+'/'+encodeURIComponent(query.query);
+  var url = urlbase+method+'/'+query.lang+'/json/'+exports.apikey+'/'+query.query;
   console.log(url);
   if(query.year) url += '+'+query.year;
   if(skipcache) return { url: url };

@@ -13,7 +13,7 @@ var ProgramView = Backbone.View.extend({
             var channel = $('<li></li>');
 
             channel.attr({
-                channel_id: item.get('channel_id'),
+                channel_id: item.get('_id'),
                 channel_name: item.get('name'),
                 hasimage: item.get('image')
             });
@@ -37,32 +37,6 @@ var ProgramView = Backbone.View.extend({
         }
     },
     
-    preload: function (event, data) {
-        var self = this;
-        
-        if ((($('#channellist').height() - 2) - 400) < data.offsetV) {
-            if (!this.update) {
-                this.update = true;
-                this.page += 1;
-
-                this.channellist.fetch({
-                    data: {
-                        page: this.page,
-                        limit: this.items
-                    },
-                    success: function (collection) {
-                        collection.forEach(function (chan) {
-                            self.addChannel(chan);
-                        });
-
-                        //$('#channellist').bind('scroll', self.preload);
-                        self.update = false;
-                    }
-                });
-            }
-        }
-    },
-    
     generateHTML: function (callback) {
         var self = this;
         
@@ -82,7 +56,7 @@ var ProgramView = Backbone.View.extend({
         
         this.channellist = new ChannelCollection();
         
-        this.items = Math.ceil(maxHeight / 95) * 4 * 2;
+        this.items = Math.ceil(maxHeight / 95) * 3 * 2;
 
         this.page = 1;
 
@@ -95,17 +69,15 @@ var ProgramView = Backbone.View.extend({
                     self.addChannel(chan);
                 });
                 
-                $('#channellist').lionbars();
+                self.page++;
                 
-                Application.loadingOverlay('hide');
-                
-                $('#channellist').endlessScroll({
-                    callback: function (p) {
+                $('#channellist').lionbars({
+                    reachedBottom: function () {
                         Application.loadingOverlay('show');
-                        self.page = p + 1;
+                        
                         self.channellist.fetch({data: {page: self.page, limit: self.items}, success: function (collection) {
                             if (collection.length == 0) {
-                                $('#channellist').unbind('scroll');
+                                return;
                             }
                             
                             collection.forEach(function (chan) {
@@ -114,8 +86,12 @@ var ProgramView = Backbone.View.extend({
                             
                             Application.loadingOverlay('hide');
                         }});
+                    
+                        self.page++;
                     }
                 });
+                
+                Application.loadingOverlay('hide');
             }
         });
     },

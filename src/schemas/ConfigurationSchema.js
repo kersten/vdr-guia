@@ -8,4 +8,4 @@ var ConfigurationSchema = new Schema({
     restfulPort: Number
 });
 
-module.exports = mongoose.model('Configuration', ConfigurationSchema);
+mongoose.model('Configuration', ConfigurationSchema);
