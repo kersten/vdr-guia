@@ -12,7 +12,7 @@ this.apikey;
 var buildUrl = function(query,method,skipcache) {
   if(!query.lang) query.lang = 'en';
   var url = urlbase+method+'/'+query.lang+'/json/'+exports.apikey+'/'+query.query;
-  console.log(url);
+  //console.log(url);
   if(query.year) url += '+'+query.year;
   if(skipcache) return { url: url };
 
@@ -108,20 +108,20 @@ this.Genres = {
 
 this.fetch = function(url,callback) {
   if(this.cache && url.key) {
-    console.log('Looking for URL '+url.url+' from cache with key: '+url.key);
+    //console.log('Looking for URL '+url.url+' from cache with key: '+url.key);
     this.cache.get(url.key,function(err,reply) {
       if(!reply) {
         fetchexternal(url,callback);
-        console.log('No cache hit for key: '+url.key+'. Fetching externally.');
+        //console.log('No cache hit for key: '+url.key+'. Fetching externally.');
       }
       else {
         callback(undefined,JSON.parse(reply));
-        console.log('Cache hit for key: '+url.key+'.');
+        //console.log('Cache hit for key: '+url.key+'.');
       }
     });
   }
   else {
-    console.log('Skipped cache lookup for url: '+url.url+'.');
+    //console.log('Skipped cache lookup for url: '+url.url+'.');
     fetchexternal(url,callback);
   }
 }
@@ -138,8 +138,8 @@ exports.handle = function(url, error, response, body, callback, cachekey) {
     res = JSON.parse(body);
   }
   catch(e) {
-    console.error('Error parsing body. Body was:');
-    console.error(body);
+    //console.error('Error parsing body. Body was:');
+    //console.error(body);
     error = 'Error parsing body.';
   }
 
@@ -147,7 +147,7 @@ exports.handle = function(url, error, response, body, callback, cachekey) {
     callback(undefined,res);
     if(this.cache && url.key) {
       this.cache.set(url.key,body);
-      console.log('Set value in cache with key: '+url.key);
+      //console.log('Set value in cache with key: '+url.key);
     }
     return;
   }

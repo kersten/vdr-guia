@@ -30,12 +30,12 @@ mongoose.connection.on('error', function (e) {
     throw e;
 });
 
-//var Actor = require('./src/lib/Actor');
-//var actor = new Actor();
+var Actor = require('./src/lib/Actor');
+var actor = new Actor();
 
-//actor.scrapeAll();
+actor.scrapeAll();
 
-var Movie = require('./src/lib/Movie');
-var movie = new Movie();
+//var Movie = require('./src/lib/Movie');
+//var movie = new Movie();
 
-movie.scrapeAll();
+//movie.scrapeAll();
