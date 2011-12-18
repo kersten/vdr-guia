@@ -3,26 +3,26 @@ var EventView = Backbone.View.extend({
     eventDiv: null,
     originalDiv: null,
     runningInterval: null,
-    
+
     initialize: function () {
-        
+
     },
-    
+
     destructor: function () {
         $(this.el).undelegate('.eventitem', 'click');
     },
-    
+
     events: {
         'click .eventitem': 'showEvent'
     },
-    
+
     showEvent: function (event) {
         Application.showEvent(event);
     },
-    
+
     runningBar: function (collection) {
         var self = this;
-        
+
         var running = ((parseInt(collection.models[0].get('duration')) * 1000) - (((new Date().getTime() / 1000) - collection.models[0].get('start_time')) * 1000));
         var left = ((((new Date().getTime() / 1000) - collection.models[0].get('start_time')) / 60) / (parseInt(collection.models[0].get('duration') / 60))) * 100;
         var leftPixel = ($('.runningBar').parent().width() / 100) * left;
@@ -36,24 +36,24 @@ var EventView = Backbone.View.extend({
                 $(this).remove();
                 collection.remove(collection.models[0]);
                 $('.eventitem:first').addClass('running');
-                
+
                 self.runningBar(collection);
             });
         });
     },
-    
+
     generateHTML: function (callback) {
         var self = this;
-        
+
         this.eventlist = new EventCollection();
 
         this.eventlist.fetch({data: {channel_id: this.channel_id, page: this.page}, success: function (collection) {
             callback.apply(this, [_.template(self.template, {events: collection, preloaded: false})]);
-            
+
             self.runningBar(collection);
-            
+
             Application.loadingOverlay('hide');
-            
+
             $('#epglist').endlessScroll({
                 callback: function (p) {
                     Application.loadingOverlay('show');
@@ -73,12 +73,12 @@ var EventView = Backbone.View.extend({
             Application.loadingOverlay('hide');
         }});
     },
-    
+
     render: function () {
         if (this.template == null) {
             return this;
         }
-        
+
         var self = this;
 
         this.generateHTML(function (res) {
@@ -89,13 +89,13 @@ var EventView = Backbone.View.extend({
                 position: 'absolute',
                 top:0
             });
-            
+
             $('#epglist').html(res);
-            
+
             $('#channellist').css({
                 overflow: 'hidden'
             });
-            
+
             $('#channellist').append($('<div></div>').attr('id', 'channellistSlideBarTrans').css({
                 position: 'absolute',
                 top: $('#channellist').scrollTop(),
@@ -155,23 +155,23 @@ var EventView = Backbone.View.extend({
                     $('#channellistSlideBarTrans').remove();
                 }
             }));
-            
+
             $('#channellist').animate({
                 right: 40 - $('#channellist').width()
             });
-            
+
             $('#epglist').fadeIn('normal', function () {
                 $('.timer_active').blinky();
             });
         });
     },
-    
+
     renderTemplate: function (channel_id, page) {
         this.channel_id = channel_id,
         this.page = page;
-        
+
         var self = this;
-    
+
         if (this.template == null) {
             $.ajax({
                 url: "/templates/" + self.url,

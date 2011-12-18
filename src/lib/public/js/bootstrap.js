@@ -11,7 +11,7 @@ Backbone.View.prototype.generateHTML = function (callback) {
 
 Backbone.View.prototype.render = function () {
     var self = this;
-    
+
     if (this.template == null) {
         return this;
     }
@@ -19,9 +19,9 @@ Backbone.View.prototype.render = function () {
     this.generateHTML(function (res) {
         self.el.html(res);
         $(document).attr('title', $('#header_div').attr('title'));
-        
+
         Application.loadingOverlay('hide');
-        
+
         if (typeof(self.postRender) == 'function') {
             self.postRender();
         }
@@ -34,9 +34,9 @@ Backbone.View.prototype.renderTemplate = function () {
     if (typeof(this.url) == 'undefined') {
         return this;
     }
-    
+
     var self = this;
-    
+
     if (this.template == null) {
         $.ajax({
             url: "/templates/" + self.url,
@@ -69,14 +69,20 @@ Backbone.sync = function (method, model, options) {
     var params = _.extend({
         req: namespace + ':' + method
     }, options);
-    
+
     params.model = model.toJSON() || {};
-    
+
+    console.log(namespace + ':' + method);
+
     socket.emit(namespace + ':' + method, params, function (data) {
-        if (typeof(data.error) != 'undefined') {
+        if (data !== undefined && data.error !== undefined) {
             options.error(data);
         } else {
-            options.success(data);
+            if (data === undefined) {
+                options.success();
+            } else {
+                options.success(data);
+            }
         }
     });
 };

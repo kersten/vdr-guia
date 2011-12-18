@@ -44,7 +44,7 @@
                 margin: -20px -20px 20px;
             }
 
-            
+
             /* Give a quick and non-cross-browser friendly divider */
             .content .span4 {
                 margin-left: 0;
@@ -55,7 +55,7 @@
             .topbar .btn {
                 border: 0;
             }
-            
+
             .span-one-third {
                 width: 260px;
             }
@@ -66,12 +66,12 @@
         <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
         <script type="text/javascript" src="/js/backbone/underscore.js"></script>
         <script type="text/javascript" src="/js/backbone/backbone.js"></script>
-        
+
         <!-- Include utitlities -->
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/utils/sha512.js"></script>
         <script type="text/javascript" src="/js/bootstrap.js"></script>
-        
+
         <!-- Include views -->
         <script type="text/javascript" src="/js/views/ContactView.js"></script>
         <script type="text/javascript" src="/js/views/EventView.js"></script>
@@ -83,9 +83,11 @@
         <script type="text/javascript" src="/js/views/SearchView.js"></script>
         <script type="text/javascript" src="/js/views/SearchresultsView.js"></script>
         <script type="text/javascript" src="/js/views/SettingsView.js"></script>
+        <script type="text/javascript" src="/js/views/SettingsChannelsView.js"></script>
+        <script type="text/javascript" src="/js/views/SettingsGuiaView.js"></script>
         <script type="text/javascript" src="/js/views/TimerView.js"></script>
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
-        
+
         <!-- Include models -->
         <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
         <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
@@ -97,7 +99,7 @@
         <script type="text/javascript" src="/js/models/SearchtimerModel.js"></script>
         <script type="text/javascript" src="/js/models/TimerModel.js"></script>
         <script type="text/javascript" src="/js/models/TVGuideModel.js"></script>
-        
+
         <!-- Include collections -->
         <script type="text/javascript" src="/js/collections/ChannelCollection.js"></script>
         <script type="text/javascript" src="/js/collections/EventCollection.js"></script>
@@ -107,7 +109,7 @@
         <script type="text/javascript" src="/js/collections/SearchtimerCollection.js"></script>
         <script type="text/javascript" src="/js/collections/TimerCollection.js"></script>
         <script type="text/javascript" src="/js/collections/TVGuideCollection.js"></script>
-        
+
         <!-- Include jquery plugins -->
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-modal.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-tabs.js"></script>
@@ -120,10 +122,10 @@
         <script type="text/javascript" src="/js/jquery-plugins/spin.min.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/lionbars.min.js"></script>
-        
+
         <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/Application.js"></script>
-        
+
         <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
@@ -131,11 +133,11 @@
                 app.vdr = {
                     plugins: <%- vdr %>
                 };
-                
+
                 app.initialize();
             });
         </script>
-        
+
         <script type="text/template" id="LoginFormTemplate">
             <%- partial('templates/LoginForm') %>
         </script>
@@ -146,7 +148,7 @@
             <div class="fill">
                 <div class="container">
                     <a href="#" class="brand">GUIA</a>
-                    
+
                     <ul class="nav" style="display: none;">
                     </ul>
 

@@ -48,5 +48,10 @@
 	"a'clock": "a'clock",
 	"TV Guide": "TV Guide",
 	"TV Guide <small>What's up today ..</small>": "TV Guide <small>What's up today ..</small>",
-	"Hightlights": "Hightlights"
+	"Hightlights": "Hightlights",
+	"GUIA Database": "GUIA Database",
+	"Please select the channels that you've want to see in GUIA": "Please select the channels that you've want to see in GUIA",
+	"Please select the channels that you've want to see in GUIA.": "Please select the channels that you've want to see in GUIA.",
+	"Active": "Active",
+	"Set your default options for GUIA": "Set your default options for GUIA"
 }

@@ -5,7 +5,11 @@ var ConfigurationSchema = new Schema({
     },
     socalize: Boolean,
     vdrHost: String,
-    restfulPort: Number
+    restfulPort: Number,
+    epgscandelay: {
+        type: Number,
+        required: false
+    }
 });
 
 mongoose.model('Configuration', ConfigurationSchema);

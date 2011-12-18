@@ -4,25 +4,20 @@ io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
         data = data.data;
         var start = (data.page - 1) * 20;
-        
+        var date = new Date();
+
         var query = events.find({});
-        
+
         query.where('channel_id', data.channel_id);
+        query.$gt('stop', date.getTime() / 1000);
         query.skip(start);
         query.limit(20);
-        
+
         query.exec(function (err, doc) {
             callback(doc);
         });
-        
-        /*rest.get(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20).on('success',  function (epg) {
-            callback(epg.events);
-        }).on('error', function (e) {
-            callback({error: 'No events found'});
-            console.log(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20);
-        });*/
     });
-    
+
     socket.on('Event:readOne', function (data, callback) {
         rest.get(vdr.restful + '/events/' + data.channel_id + '/' +  + data.event_id + '.json').on('success', function (data) {
             callback(data.events[0]);
@@ -30,7 +25,7 @@ io.sockets.on('connection', function (socket) {
         }).on('403', function () {
         });
     });
-    
+
     socket.on('Event:record', function (data, callback) {
         rest.post(vdr.restful + '/timers', {
             data: {
@@ -45,7 +40,7 @@ io.sockets.on('connection', function (socket) {
         }).on('403', function () {
         });
     });
-    
+
     socket.on('Event:deleteTimer', function (data, callback) {
         rest.del(vdr.restful + '/timers/' + data.timer_id).on('success', function (data) {
             callback();

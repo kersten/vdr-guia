@@ -3,16 +3,16 @@ var EventCollection = Backbone.Collection.extend({
     model: EventModel,
     parse: function (response) {
         response.forEach(function (item, index) {
-            var start = new Date(item.start_time * 1000);
-            var stop = new Date((item.start_time + item.duration) * 1000);
+            var start = new Date(item.start * 1000);
+            var stop = new Date((item.start + item.duration) * 1000);
 
             item.start = ((start.getHours() < 10) ? '0' : '') + start.getHours() + ':' + ((start.getMinutes() < 10) ? '0' : '') + start.getMinutes();
             item.stop = ((stop.getHours() < 10) ? '0' : '') + stop.getHours() + ':' + ((stop.getMinutes() < 10) ? '0' : '') + stop.getMinutes();
 
             item.day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + (((start.getMonth() + 1)  < 10) ? '0' : '') + (start.getMonth() + 1);
-            
+
             item.description = item.description.replace(/[\r\n]+/g, '<br />');
-            
+
             var rating = null;
 
             var ratingRegex = /\[([\*]*?)\]/;
@@ -20,12 +20,12 @@ var EventCollection = Backbone.Collection.extend({
             if (ratingRegex.test(item.description)) {
                 var match = item.description.match(ratingRegex);
                 rating = match[1].length;
-                
+
                 item.description = item.description.replace(ratingRegex, '');
             }
 
             item.rating = rating;
-            
+
             var genretip = null;
 
             var genretipRegex = /\[Genretipp\s(.*?)\]/;
@@ -33,12 +33,12 @@ var EventCollection = Backbone.Collection.extend({
             if (genretipRegex.test(item.description)) {
                 var match = item.description.match(genretipRegex);
                 genretip = match[1];
-                
+
                 item.description = item.description.replace(genretipRegex, '');
             }
 
             item.genretip = genretip;
-            
+
             var divisiontip = null;
 
             var divisiontipRegex = /\[Spartentipp\s(.*?)\]/;
@@ -46,12 +46,12 @@ var EventCollection = Backbone.Collection.extend({
             if (divisiontipRegex.test(item.description)) {
                 var match = item.description.match(divisiontipRegex);
                 divisiontip = match[1];
-                
+
                 item.description = item.description.replace(divisiontipRegex, '');
             }
 
             item.divisiontip = divisiontip;
-            
+
             var showid = null;
 
             var showidRegex = /Show-Id:\s(.*?)$/;
@@ -59,12 +59,12 @@ var EventCollection = Backbone.Collection.extend({
             if (showidRegex.test(item.description)) {
                 var match = item.description.match(showidRegex);
                 showid = match[2];
-                
+
                 item.description = item.description.replace(showidRegex, '');
             }
 
             item.showid = showid;
-            
+
             if (typeof(item.details) != 'undefined') {
                 item.details.forEach(function (detail) {
                     switch (detail.key) {
@@ -115,18 +115,18 @@ var EventCollection = Backbone.Collection.extend({
                     }
                 });
             }
-            
+
             var timer_is_recording = false;
-            
+
             if (item.timer_exists == true && item.timer_active == true) {
                 if (index == 0) {
                     timer_is_recording = true;
                 }
             }
-            
+
             item.timer_is_recording = timer_is_recording;
         });
-        
+
         return response;
     }
 });

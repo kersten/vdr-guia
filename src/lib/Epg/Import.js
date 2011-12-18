@@ -6,6 +6,8 @@ var async = require('async');
 var ActorDetails = require('../Actor');
 
 function EpgImport (restful) {
+    this.newEpg = false;
+
     this.restful = restful;
 
     var ChannelImport = require('../Channel/Import');
@@ -17,16 +19,16 @@ EpgImport.prototype.start = function (callback) {
     console.log("Starting epg import ...");
 
     this.channelImporter.start(function () {
-        var channelQuery = ChannnelSchema.find({});
+        var channelQuery = ChannnelSchema.find({active: true});
 
         channelQuery.each(function (err, channel, next) {
             if (channel === undefined) {
-                callback.call();
+                callback(self.newEpg);
                 return;
             }
 
             if (next === undefined) {
-                callback.call();
+                callback(self.newEpg);
                 return;
             }
 
@@ -46,23 +48,27 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
     query.exec(function (err, e) {
         if (e != null) {
-            from = e.start;
+            from = e.stop + 60;
         }
 
-        console.log('Get events: ' + self.restful + '/events/' + channel.channel_id + '.json?from=' + from + '&start=0&limit=20');
-        rest.get(self.restful + '/events/' + channel.channel_id + '.json?from=' + from + '&start=0&limit=20').on('success', function (res) {
+        console.log('Get events from channel: ' + channel.name);
+        rest.get(self.restful + '/events/' + channel.channel_id + '.json?timespan=0&from=' + from + '&start=0&limit=100').on('success', function (res) {
             if (res.events.length == 0) {
                 next.call();
                 return;
             }
 
-            async.map(res.events, function (event, callback) {
-                console.log('Extract event: ' + event.title);
+            self.newEpg = true;
 
+            async.map(res.events, function (event, callback) {
                 self.extractDetails(channel, event, function (event) {
                     self.insertEpg(event, callback);
                 });
             }, function (err, result) {
+                if (err) {
+                    self.newEpg = false;
+                }
+
                 next.call();
             });
         }).on('error', function () {
@@ -74,8 +80,6 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 EpgImport.prototype.extractDetails = function (channel, event, callback) {
     async.series([
         function (callback) {
-            console.log('Extract base infos from: ' + event.title);
-
             event.event_id = event.id;
             event.id = event.channel + '_' + event.id;
 
@@ -130,8 +134,6 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 
             callback(null, null);
         }, function (callback) {
-            console.log('Extract details from: ' + event.title);
-
             if (event.details === undefined) {
                 callback(null, null);
             }
@@ -156,8 +158,6 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 
             callback(null, null)
         }, function (callback) {
-            console.log('Extract actors from: ' + event.title);
-
             if (event.details === undefined) {
                 callback(null, null);
             }
@@ -211,25 +211,20 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 callback(null, null);
             });
         }, function (callback) {
-            console.log('Clean event: ' + event.title);
             delete(event.details);
             event.description = event.description.replace(new RegExp( "\\n.*", "g" ), '');
 
             callback(null, null);
         }
     ], function (err, results) {
-        console.log('Extract finished for: ' + event.title);
         callback(event);
     });
 };
 
 EpgImport.prototype.insertEpg = function (event, callback) {
-    console.log('Insert event: ' + event.title);
-
     var eventSchema = new EventSchema(event);
     eventSchema.save(function (err, doc) {
-        console.log('Done inserting event: ' + event.title);
-        callback(null, doc);
+        callback(err, doc);
     });
 };
 

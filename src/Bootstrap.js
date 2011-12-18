@@ -309,12 +309,30 @@ Bootstrap.prototype.setupLogos = function () {
 };
 
 Bootstrap.prototype.setupEpgImport = function (restful) {
+    var config = mongoose.model('Configuration');
     var EpgImport = require('./lib/Epg/Import');
     var importer = new EpgImport(vdr.restful);
 
     function runImporter () {
-        importer.start(function () {
-            runImporter();
+        importer.start(function (hadEpg) {
+            if (hadEpg) {
+                runImporter();
+            } else {
+                config.findOne({}, function (err, doc) {
+                    if (doc.epgscandelay === undefined) {
+                        console.log('Delayed new epg scan .. starting in one hour');
+
+                        setTimeout(function () {
+                            runImporter();
+                        }, 1000 * 60 * 60);
+                    } else {
+                        console.log('Delayed new epg scan .. starting in ' + doc.epgscandelay + ' hours');
+                        setTimeout(function () {
+                            runImporter();
+                        }, (1000 * 60 * 60) * doc.epgscandelay);
+                    }
+                });
+            }
         });
     }
 
