@@ -311,6 +311,9 @@ Bootstrap.prototype.setupLogos = function () {
 Bootstrap.prototype.setupEpgImport = function (restful) {
     var config = mongoose.model('Configuration');
     var EpgImport = require('./lib/Epg/Import');
+    var ActorDetails = require('./lib/Actor');
+    var MovieDetails = require('./lib/Movie');
+    var SeasonDetails = require('./lib/Season');
     var importer = new EpgImport(vdr.restful);
 
     function runImporter () {
@@ -333,6 +336,12 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
                     }
                 });
             }
+
+            var actorDetails = new ActorDetails();
+            actorDetails.fetchAll();
+
+            var movieDetails = new MovieDetails();
+            movieDetails.fetchAll();
         });
     }
 

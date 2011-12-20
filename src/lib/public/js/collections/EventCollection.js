@@ -3,6 +3,8 @@ var EventCollection = Backbone.Collection.extend({
     model: EventModel,
     parse: function (response) {
         response.forEach(function (item, index) {
+            item.start_time = item.start;
+
             var start = new Date(item.start * 1000);
             var stop = new Date((item.start + item.duration) * 1000);
 

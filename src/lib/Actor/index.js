@@ -1,30 +1,29 @@
 var events =  mongoose.model('Event');
+var actors =  mongoose.model('Actor');
 var actorDetails =  mongoose.model('ActorDetails');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
     apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'
 });
 
-function Actor (actorId, actorName) {
-    this.id = actorId;
-    this.name = actorName;
+function Actor () {
 }
 
-Actor.prototype.fetchInformation = function () {
-    var self = this;
-
-    actorDetails.findOne({'epg_name': self.name}, function (err, doc) {
+Actor.prototype.fetchInformation = function (actorId, actorName, callback) {
+    actorDetails.findOne({'actorID': actorId}, function (err, doc) {
         if (doc == null) {
             tmdb.Person.search({
-                query: self.name,
+                query: actorName,
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
+                    callback.call();
                     return;
                 }
 
                 for(var x in res) {
                     if (res[x] == "Nothing found.") {
+                        callback.call();
                         return;
                     }
 
@@ -36,14 +35,30 @@ Actor.prototype.fetchInformation = function () {
                             return;
                         }
 
-                        res[0].actorID = self.id;
+                        res[0].tmdbId = res[x].id;
+                        res[0].actorID = actorId;
 
                         var actorDetailsSchema = new actorDetails(res[0]);
-                        actorDetailsSchema.save();
+                        actorDetailsSchema.save(function () {
+                            callback.call();
+                        });
                     });
+
+                    return;
                 }
             });
+        } else {
+            callback.call();
         }
+    });
+};
+
+Actor.prototype.fetchAll = function () {
+    var self = this;
+    var query = actors.find({});
+
+    query.each(function (err, actor, next) {
+        self.fetchInformation(actor._id, actor.name, next)
     });
 };
 

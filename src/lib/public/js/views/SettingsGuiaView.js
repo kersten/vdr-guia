@@ -24,7 +24,17 @@ var SettingsGuiaView = Backbone.View.extend({
                 console.log('Update sync time to: ' + $('#epgsyncdelay option:selected').val());
             });
 
-            Application.loadingOverlay('hide');
+            socket.emit('Configuration:fetch', {
+                value: 'syncdelay'
+            }, function (data) {
+                if (data.data.value === undefined) {
+                    $('#epgsyncdelay option[value="1"]').attr('selected',true);
+                } else {
+                    $('#epgsyncdelay option[value="' + data.data.value + '"]').attr('selected',true);
+                }
+
+                Application.loadingOverlay('hide');
+            });
         });
     },
 

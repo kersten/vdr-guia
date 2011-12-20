@@ -3,7 +3,6 @@ var EventSchema = mongoose.model('Event');
 var ActorSchema = mongoose.model('Actor');
 var ChannnelSchema = mongoose.model('Channel');
 var async = require('async');
-var ActorDetails = require('../Actor');
 
 function EpgImport (restful) {
     this.newEpg = false;
@@ -40,7 +39,7 @@ EpgImport.prototype.start = function (callback) {
 EpgImport.prototype.fetchEpg = function (channel, next) {
     var self = this;
 
-    var from = 0;
+    var from = new Date().getTime() / 1000 - (3600 * 4);
     var query = EventSchema.findOne({});
 
     query.where('channel_id', channel._id);
@@ -58,7 +57,9 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
                 return;
             }
 
-            self.newEpg = true;
+            if (res.events.length == 100) {
+                self.newEpg = true;
+            }
 
             async.map(res.events, function (event, callback) {
                 self.extractDetails(channel, event, function (event) {
@@ -113,7 +114,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 var tip = event.description.match(/\[Genretipp (.*?)\] /);
                 event.tip = {
                     genre: tip[1],
-                    type: 'genre'
+                    style: 'genre'
                 }
 
                 event.description = event.description.replace(/\[Genretipp .*?\] /, '');
@@ -123,7 +124,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 var tip = event.description.match(/\[Spartentipp (.*?)\] /);
                 event.tip = {
                     genre: tip[1],
-                    type: 'sparte'
+                    style: 'sparte'
                 }
 
                 event.description = event.description.replace(/\[Spartentipp .*?\] /, '');
@@ -187,8 +188,8 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                                         character: actor_details[2]
                                     });
 
-                                    var actorDetails = new ActorDetails(actor._id, actor_details[1]);
-                                    actorDetails.fetchInformation();
+                                    //var actorDetails = new ActorDetails(actor._id, actor_details[1]);
+                                    //actorDetails.fetchInformation();
 
                                     callback(null, null);
                                 });

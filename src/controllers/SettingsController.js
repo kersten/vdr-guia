@@ -15,4 +15,15 @@ io.sockets.on('connection', function (socket) {
             });
         });
     });
+
+    socket.on('Configuration:fetch', function (data, callback) {
+        var config = mongoose.model('Configuration');
+        config.findOne({}, function (err, doc) {
+            if (doc.epgscandelay === undefined) {
+                callback({success: true});
+            } else {
+                callback({success: true, data: {value: doc.epgscandelay}});
+            }
+        });
+    });
 });

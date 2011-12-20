@@ -7,24 +7,24 @@
             <img src="/img/stars/rating_03.gif" />
             <& } &>
         <& } &>
-        
+
         <div class="informationlabels" style="position: absolute; right: 15px; top: 10px;">
         <& if (item.get('timer_exists') && !item.get('timer_is_recording')) { &>
             <span class="label important timer_exists"><%= __('Timer active') %></span>
         <& } else if (item.get('timer_exists') && item.get('timer_is_recording')) { &>
             <span class="label important timer_exists timer_active"><%= __('Recording') %></span>
         <& } &>
-        
+
         <& if (item.has('genretip')) { &>
             <span class="label warning"><%= __('Tipp') %></span>
         <& } &>
         </div>
-        
-        
+
+
             <div class="runningBarContainer">
                 <div class="runningBar"></div>
             </div>
-        
+
     </div>
     <div class="eventbody" style="position:relative; max-height: 100px; overflow: hidden; padding: 15px;">
         <& if (item.has('images') && item.get('images') > 0) { &>
