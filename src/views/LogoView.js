@@ -17,7 +17,7 @@ var LogoView = {
                     
                     res.end(image);
                 } catch (e) {
-                    console.log('Logo ' + channel_name + ' not found, getting placeholder');
+                    log.dbg('Logo ' + channel_name + ' not found, getting placeholder');
                     
                     var http_client = http.createClient(80, 'placehold.it');
                     var image_get_request = http_client.request('GET', 'http://placehold.it/240x134.png&text=' + req.url.substr(6), {

@@ -15,7 +15,7 @@ io.sockets.on('connection', function (socket) {
         }).on('success',  function (epg) {
             callback(epg.events);
         }).on('error', function (e) {
-            console.log(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20);
+            log.dbg(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20);
         });
     });
 });

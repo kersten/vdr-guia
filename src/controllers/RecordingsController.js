@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
             
             callback(records);
         }).on('error', function (e) {
-            console.log(vdr.restful + '/recordings.json?start=' + start + '&limit=' + 20);
+            log.dbg(vdr.restful + '/recordings.json?start=' + start + '&limit=' + 20);
         });
     });
     

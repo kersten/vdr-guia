@@ -6,7 +6,7 @@ io.sockets.on('connection', function (socket) {
         rest.get(vdr.restful + '/timers.json?start=' + start + '&limit=' + data.limit).on('success',  function (timers) {
             callback(timers.timers);
         }).on('error', function (e) {
-            console.log(vdr.restful + '/timers.json?start=' + start + '&limit=' + data.limit);
+            log.dbg(vdr.restful + '/timers.json?start=' + start + '&limit=' + data.limit);
         });
     });
 });
