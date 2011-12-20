@@ -9,7 +9,7 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    console.log('Fetching informations for: ' + movie.title);
+    log.dbg('Fetching informations for: ' + movie.title);
 
     movieDetails.findOne({'epg_name': movie.title}, function (err, doc) {
         if (doc == null) {
