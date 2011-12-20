@@ -12,8 +12,6 @@ io.sockets.on('connection', function (socket) {
         primetime = Math.round(primetime.getTime() / 1000);
         
         rest.get(vdr.restful + '/channels.json?start=' + start + '&limit=' + limit).on('success', function(data) {
-            console.log(data.channels);
-            
             async.map(data.channels, function (event, callback) {
                 rest.get(vdr.restful + '/events/' + event.channel_id + '.json?from=' + primetime + '&start=0&limit=1').on('success', function(data) {
                     var result = {};
