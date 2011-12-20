@@ -8,397 +8,44 @@
                 <td style="text-align: right; width: 10px;">
                     &nbsp;
                 </td>
-                <td>
+                <& events.forEach(function (channel) { &>
+                <td style="width: 270px;">
                     <div style="text-align: center;">
-                        <img src="/logo/RTL HD" title="RTL HD" style="width: 140px;" class="thumbnail" />
+                        <img src="/logo/<&= channel.get('channel_name') &>" title="<&= channel.get('channel_name') &>" style="width: 140px;" class="thumbnail" />
                     </div>
-                    
+
                     <div>
-                        <u>Actionserie</u><br />
-                        <span class="label important">20:15</span> <strong>Alarm für Cobra 11</strong>
+                        <u><&= channel.get('primetime').category &></u><br />
+                        <span class="label important"><&= channel.get('primetime').start_time &></span> <strong><&= channel.get('primetime').title &></strong>
                     </div>
                 </td>
-                <td>
-                    <div style="text-align: center;">
-                        <img src="/logo/ProSieben HD" title="ProSieben HD" style="width: 140px;" class="thumbnail" />
-                    </div>
-                    
-                    <div>
-                        <u>Castingshow</u><br />
-                        <span class="label important">20:15</span> <strong>The Voice of Germany</strong>
-                    </div>
-                </td>
-                <td>
-                    <div style="text-align: center;">
-                        <img src="/logo/SAT.1 HD" title="SAT.1 HD" style="width: 140px;" class="thumbnail" />
-                    </div>
-                    
-                    <div>
-                        <u>Polizeiserie</u><br />
-                        <span class="label important">20:15</span> <strong>Der Bulle von Tölz</strong>
-                    </div>
-                </td>
+                <& }); &>
             </tr>
-            
+
+            <& for (var i = 5; i < 30; i++) { &>
+            <& if (i >= 24) { x = i - 24 } else { x = i }&>
             <tr>
                 <td style="text-align: right; width: 10px;">
-                    5
+                    <&= x &>
                 </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
+
+                <& events.forEach(function (channel) { &>
+                    <& if (!_.isArray(channel.get('events')[x])) { &>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <& } else { &>
+                    <td>
+                        <& _.each(channel.get('events')[x], function (event) { &>
+                        <div>
+                            <&= event.title &>
+                        </div>
+                        <& }); &>
+                    </td>
+                    <& } &>
+                <& }); &>
             </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    6
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    7
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    8
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    9
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    10
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    11
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    12
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    13
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    14
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    15
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    16
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    17
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    18
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    19
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    20
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    21
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    22
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    23
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    24
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    1
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    2
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    3
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
-            
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    4
-                </td>
-                <td>
-                    5:10 RTL
-                </td>
-                <td>
-                    5:00 Prosieben
-                </td>
-                <td>
-                    5:30 Kabel1
-                </td>
-            </tr>
+            <& } &>
         </table>
     </div>
 </div>

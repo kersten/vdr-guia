@@ -31,5 +31,6 @@
 	"Search <small>What are you looking for?</small>": "Search <small>What are you looking for?</small>",
 	"Search for": "Search for",
 	"Create new searchtimer": "Create new searchtimer",
-	"Advanced options": "Advanced options"
+	"Advanced options": "Advanced options",
+	"TV Guide <small>What's up today ..</small>": "TV Guide <small>What's up today ..</small>"
 }

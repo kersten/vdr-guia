@@ -10,6 +10,7 @@ io.sockets.on('connection', function (socket) {
 
         query.where('channel_id', data.channel_id);
         query.$gt('stop', date.getTime() / 1000);
+        query.sort('start', 1);
         query.skip(start);
         query.limit(20);
 
