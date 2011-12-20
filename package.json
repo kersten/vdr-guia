@@ -21,6 +21,7 @@
     "dependencies":
     {
         "async": "",
+        "node-logging": "0.1.2",
         "ejs": ">= 0.4.3",
         "express": ">= 2.5.0",
         "i18n": ">= 0.3.0",
