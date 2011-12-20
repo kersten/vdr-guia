@@ -327,13 +327,13 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
             } else {
                 config.findOne({}, function (err, doc) {
                     if (doc.epgscandelay === undefined) {
-                        console.log('Delayed new epg scan .. starting in one hour');
+                        log.dbg('Delayed new epg scan .. starting in one hour');
 
                         setTimeout(function () {
                             runImporter();
                         }, 1000 * 60 * 60);
                     } else {
-                        console.log('Delayed new epg scan .. starting in ' + doc.epgscandelay + ' hours');
+                        log.dbg('Delayed new epg scan .. starting in ' + doc.epgscandelay + ' hours');
                         setTimeout(function () {
                             runImporter();
                         }, (1000 * 60 * 60) * doc.epgscandelay);
