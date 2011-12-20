@@ -2483,20 +2483,21 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   background-color: greenyellow;
 }
 
-.eventbody .eventimage {
+.eventbody .eventimages {
+	float:right;
+	width: 120px;
+	margin-left: 10px;
+}
+.eventbody .eventimages .eventimage {
 	display: none;
-	float: left;
-	margin: 0 5px 0 0;
+	margin-bottom: 5px;
 }
 
-.eventbody .eventimage.first {
+.eventbody .eventimages .eventimage.first {
     display: inline;
-    float: right;
-    margin: 0 0 5px 5px;
 }
 
-
-.modalevent .eventbody .eventimage {
+.modalevent .eventbody .eventimages .eventimage {
     display: inline;
 }
 
