@@ -15,7 +15,7 @@ function EpgImport (restful) {
 
 EpgImport.prototype.start = function (callback) {
     var self = this;
-    console.log("Starting epg import ...");
+    log.dbg("Starting epg import ...");
 
     this.channelImporter.start(function () {
         var channelQuery = ChannnelSchema.find({active: true});

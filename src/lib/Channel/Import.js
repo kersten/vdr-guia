@@ -9,8 +9,8 @@ function ChannelImport (restful, mongoConnection) {
 
 ChannelImport.prototype.start = function (callback) {
     var self = this;
-    console.log("Starting channel import ...");
-    
+    log.dbg("Starting channel import ...");
+
     rest.get(self.restful + '/channels.json?start=0').on('success', function(data) {
         data.channels.forEach(function (channel) {
             var channelSchema = new ChannelSchema(channel);
@@ -18,7 +18,7 @@ ChannelImport.prototype.start = function (callback) {
                 if (err) {
                     ChannelSchema.find({'channel_id': channel.channel_id}, function (err, c) {
                         c = c[0];
-                        
+
                         c.name = channel.name;
                         c.number = channel.number;
                         c.channel_id = channel.channel_id;
@@ -31,13 +31,13 @@ ChannelImport.prototype.start = function (callback) {
                         c.is_terr = channel.is_terr;
                         c.is_sat = channel.is_sat;
                         c.is_radio = channel.is_radio;
-                        
+
                         c.save();
                     });
                 }
             });
         });
-        
+
         callback.call();
     });
 };
