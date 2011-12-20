@@ -50,7 +50,7 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
             from = e.stop + 60;
         }
 
-        console.log('Get events from channel: ' + channel.name);
+        log.dbg('Get events from channel: ' + channel.name);
         rest.get(self.restful + '/events/' + channel.channel_id + '.json?timespan=0&from=' + from + '&start=0&limit=100').on('success', function (res) {
             if (res.events.length == 0) {
                 next.call();
