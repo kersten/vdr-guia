@@ -5,16 +5,17 @@ var rest = require('restler');
 function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
+    this.logging = require('node-logging');
 
     var self = this;
 
     this.setupExpress(function () {
-        console.log('Express setup complete ..');
+        log.dbg('Express setup complete ..');
 
         self.setupSocketIo();
 
         self.setupDatabase(function (data) {
-            console.log('Database setup complete ..');
+            log.dbg('Database setup complete ..');
 
             global.installed = data.installed;
 
@@ -36,8 +37,8 @@ function Bootstrap (app, express) {
                     self.setupControllers();
                     self.setupViews();
                 }).on('error', function () {
-                    console.log('ERROR');
-                    console.log(vdr);
+                    log.bad('ERROR');
+                    log.dbg(JSON.stringify(vdr), true);
                 });
             } else {
                 self.setupControllers();
@@ -55,6 +56,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
 
     this.app.use(this.express.bodyParser());
     this.app.use(this.express.cookieParser());
+    this.app.use(this.logging.requestLogger);
 
     this.app.use(this.express.session({
         store: mongooseSessionStore,
@@ -82,6 +84,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
         restful: null,
         plugins: {}
     };
+
+    global.log = this.logging;
 
     /*
      * Set public directory for directly serving files
@@ -129,7 +133,8 @@ Bootstrap.prototype.setupDatabase = function (cb) {
     global.mongoose = require('mongoose');
     global.Schema = mongoose.Schema;
 
-    console.log('Connect to database ..');
+    log.dbg('Connect to database ..');
+
     mongoose.connect('mongodb://127.0.0.1/GUIA');
     mongoose.connection.on('error', function (e) {
         throw e;
@@ -146,7 +151,7 @@ Bootstrap.prototype.setupDatabase = function (cb) {
 
     ConfigurationSchema.count({}, function (err, cnt) {
         if (cnt == 0) {
-            console.log('Not installed! Delivering installation');
+            log.dbg('Not installed! Delivering installation');
 
             require(__dirname + '/controllers/InstallController');
 
@@ -154,7 +159,7 @@ Bootstrap.prototype.setupDatabase = function (cb) {
                 installed: false
             }]);
         } else {
-            console.log('GUIA installed! Getting configuration ..');
+            log.dbg('GUIA installed! Getting configuration ..');
 
             ConfigurationSchema.findOne({}, function (err, data) {
                 cb.apply(this, [{
@@ -171,7 +176,7 @@ Bootstrap.prototype.setupSocketIo = function () {
     /*
      * Create socket
      */
-    console.log('Setting up socket.io ..');
+    log.dbg('Setting up socket.io ..');
 
     global.io = require('socket.io').listen(this.app);
 
@@ -208,24 +213,24 @@ Bootstrap.prototype.setupSocketIo = function () {
 };
 
 Bootstrap.prototype.setupViews = function () {
-    console.log('Setting up views ..');
+    log.dbg('Setting up views ..');
 
     this.app.all('*', function (req, res, next) {
-        console.log('Incoming request ..');
+        log.dbg('Incoming request ..');
 
         if (!installed && !req.url.match(/^\/templates\/install/)) {
-            console.log('serving installation ..');
+            log.dbg('serving installation ..');
             res.render('install', {
                 layout: false
             });
         } else {
-            console.log('Process request ..');
+            log.dbg('Process request ..');
 
             mongooseSessionStore.get(req.sessionID, function (err, session) {
                 if (session == null) {
-                    console.log('Not loggedin ..');
+                    log.dbg('Not loggedin ..');
                 } else {
-                    console.log('Loggedin ..');
+                    log.dbg('Loggedin ..');
                     req.session.loggedIn = session.loggedIn;
                 }
 
@@ -235,7 +240,7 @@ Bootstrap.prototype.setupViews = function () {
     });
 
     this.app.get('/', function (req, res) {
-        console.log('Render index.html ..');
+        log.dbg('Render index.html ..');
 
         res.render('index', {
             layout: false,
@@ -259,7 +264,7 @@ Bootstrap.prototype.setupViews = function () {
 };
 
 Bootstrap.prototype.setupControllers = function () {
-    console.log('Setting up controllers ..');
+    log.dbg('Setting up controllers ..');
 
     fs.readdir(__dirname + '/controllers', function (err, files) {
         if (err) throw err;
@@ -275,8 +280,7 @@ Bootstrap.prototype.setupControllers = function () {
 
 Bootstrap.prototype.setupLogos = function () {
     var LogoSchema = mongoose.model('Logo');
-
-    console.log('Setting up logos ..');
+    log.dbg('Setting up logos ..');
 
     LogoSchema.find({}, function (err, data) {
         data.forEach(function (logo) {
@@ -304,7 +308,7 @@ Bootstrap.prototype.setupLogos = function () {
             }
         });
 
-        console.log('done');
+        log.dbg('done');
     });
 };
 
