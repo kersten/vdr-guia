@@ -58,6 +58,10 @@ Actor.prototype.fetchAll = function () {
     var query = actors.find({});
 
     query.each(function (err, actor, next) {
+        if (actor == null) {
+            return;
+        }
+
         self.fetchInformation(actor._id, actor.name, next)
     });
 };

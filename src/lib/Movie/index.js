@@ -61,11 +61,7 @@ Movie.prototype.fetchAll = function () {
     query.where('category', 'Spielfilm');
 
     query.each(function (err, movie, next) {
-        if (movie === undefined) {
-            return;
-        }
-
-        if (next === undefined) {
+        if (movie == null) {
             return;
         }
 

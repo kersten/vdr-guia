@@ -1,6 +1,7 @@
 var async = require('async');
 var channels = mongoose.model('Channel');
 var events = mongoose.model('Event');
+var movies = mongoose.model('MovieDetails');
 
 io.sockets.on('connection', function (socket) {
     socket.on('TVGuideCollection:read', function (data, callback) {
@@ -8,15 +9,21 @@ io.sockets.on('connection', function (socket) {
 
         var guideResults = new Array();
 
-        var start = (data.page -1) * 3;
+        var start = (data.page -1) * 4;
 
         var date = new Date();
-        var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 > 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() > 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
+        var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
+        primetime = primetime.getTime() / 1000;
 
         date = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 > 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() > 10) ? '0' + date.getDate() : date.getDate()) + ' 05:00:00');
 
         var starttime = date;
         starttime = starttime.getTime() / 1000;
+
+        if (date.getHours() > 6) {
+            starttime -= 86400;
+            primetime -= 86400;
+        }
 
         var stoptime = starttime + 86400;
 
@@ -26,7 +33,7 @@ io.sockets.on('connection', function (socket) {
         channelQuery.where('active', true);
         channelQuery.sort('number', 1);
         channelQuery.skip(start);
-        channelQuery.limit(3);
+        channelQuery.limit(4);
 
         channelQuery.each(function (err, doc, next) {
             if (doc == null) {
@@ -44,7 +51,7 @@ io.sockets.on('connection', function (socket) {
             var primetimeQuery = events.findOne({});
 
             primetimeQuery.where('channel_id', doc._id);
-            primetimeQuery.where('start').gte(primetime.getTime() / 1000);
+            primetimeQuery.where('start').gte(primetime);
             primetimeQuery.sort('start', 1);
 
             primetimeQuery.run(function (err, doc) {
@@ -53,9 +60,40 @@ io.sockets.on('connection', function (socket) {
 
                 doc.start_time = start_time.getHours() + ':' + start_time.getMinutes();
 
-                result.primetime = doc;
+                result.primetime.event = doc;
 
-                fetchEpg(result.channel_id, result, next);
+                if (result.primetime.event.get('category') != null && result.primetime.event.get('category').match(/film/)) {
+                    movies.findOne({epg_name: doc.title}, function (err, doc) {
+                        if (doc == null) {
+                            fetchEpg(result.channel_id, result, next);
+                            return;
+                        }
+
+                        result.primetime.tmdb = doc;
+
+                        if (doc.get('backdrops') != null) {
+                            doc.get('backdrops').forEach(function (drop) {
+                                if (drop.image.size == 'thumb') {
+                                    result.primetime.image = drop.image.url;
+                                    return
+                                }
+                            });
+                        }
+
+                        if (result.primetime.image === undefined && doc.get('posters') != null) {
+                            doc.get('posters').forEach(function (poster) {
+                                if (poster.image.size == 'thumb') {
+                                    result.primetime.image = poster.image.url;
+                                    return
+                                }
+                            });
+                        }
+
+                        fetchEpg(result.channel_id, result, next);
+                    });
+                } else {
+                    fetchEpg(result.channel_id, result, next);
+                }
             });
         });
 
@@ -80,6 +118,8 @@ io.sockets.on('connection', function (socket) {
 
                 var date = new Date();
                 date.setTime(doc.start * 1000);
+
+                doc.start_time = ((date.getHours() < 10) ? '0' + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes() : date.getMinutes());
 
                 if (eventsObj[date.getDate() + ':' + date.getHours()] === undefined) {
                     eventsObj[date.getDate() + ':' + date.getHours()] = new Array();

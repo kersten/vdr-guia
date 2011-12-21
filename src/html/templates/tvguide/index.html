@@ -3,49 +3,95 @@
 </div>
 <div class="row">
     <div class="span14">
-        <table>
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    &nbsp;
-                </td>
-                <& events.forEach(function (channel) { &>
-                <td style="width: 270px;">
-                    <div style="text-align: center;">
-                        <img src="/logo/<&= channel.get('channel_name') &>" title="<&= channel.get('channel_name') &>" style="width: 140px;" class="thumbnail" />
-                    </div>
-
-                    <div>
-                        <u><&= channel.get('primetime').category &></u><br />
-                        <span class="label important"><&= channel.get('primetime').start_time &></span> <strong><&= channel.get('primetime').title &></strong>
-                    </div>
-                </td>
-                <& }); &>
-            </tr>
-
-            <& for (var i = 5; i < 29; i++) { &>
-            <& if (i >= 24) { x = i - 24 } else { x = i }&>
-            <tr>
-                <td style="text-align: right; width: 10px;">
-                    <&= x &>
-                </td>
-
-                <& events.forEach(function (channel) { &>
-                    <& if (!_.isArray(channel.get('events')[x])) { &>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <& } else { &>
-                    <td>
-                        <& _.each(channel.get('events')[x], function (event) { &>
-                        <div>
-                            <&= event.title &>
-                        </div>
+        <& var day = new Array('<%= __('SUN') %>', '<%= __('MON') %>', '<%= __('TUE') %>', '<%= __('WED') %>', '<%= __('THU') %>', '<%= __('FRI') %>', '<%= __('SAT') %>'); &>
+        <& var month = new Array('<%= __('January') %>', '<%= __('February') %>', '<%= __('March') %>', '<%= __('April') %>', '<%= __('May') %>', '<%= __('June') %>', '<%= __('July') %>', '<%= __('August') %>', '<%= __('September') %>', '<%= __('October') %>', '<%= __('November') %>', '<%= __('December') %>'); &>
+        <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDay() > 10) ? '0' + new Date().getDay(): new Date().getDay() &>. <&= month[new Date().getMonth()] &></small></h1>
+        <div>
+            <div>
+                <table class="zebra-striped">
+                    <tr>
+                        <& events.forEach(function (channel) { &>
+                        <td style="width: 25%;">
+                            <div style="text-align: center; background-position: right; background-image: url('/logo/<&= channel.get('channel_name') &>'); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
+                                <h3 style="float: left;"><&= channel.get('channel_name') &></h3>
+                            </div>
+                        </td>
                         <& }); &>
-                    </td>
+                    </tr>
+
+                    <& var dayPlus = 0; &>
+                    <& for (var i = 5; i < 29; i++) { &>
+                    <& if (i >= 24) { x = i - 24; dayPlus = 1 } else { x = i; }&>
+
+                    <& if (x == 5 || x == 12 || x == 20) { &>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="slideup">
+                + 5-12
+            </div>
+
+            <div class="slideupTable">
+                <table class="zebra-striped">
                     <& } &>
-                <& }); &>
-            </tr>
-            <& } &>
-        </table>
+
+                    <& if (x == 20) { &>
+                    <tr>
+                        <& events.forEach(function (channel) { &>
+                        <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 25%;" _id="<&= channel.get('primetime').event._id &>">
+                            <div style="background-color: #0064cd; text-align: center; color: #ffffff; padding: 0px 10px 0px 9px;" class="eventDetails isPrime">
+                                <strong><&= channel.get('primetime').event.category &></strong>
+                            </div>
+
+                            <div style="padding: 0px 10px 0px 9px; max-height: 263px; overflow: hidden;" class="eventDetails isPrime">
+                                <div>
+                                    <span class="label important"><&= channel.get('primetime').event.start_time &></span> <strong><&= channel.get('primetime').event.title &></strong>
+                                </div>
+                                <& if (channel.get('primetime').image) { &>
+                                <div style="width: 205px; height: 100px; background: url(<&= channel.get('primetime').image &>) center no-repeat;">
+
+                                </div>
+                                <& } &>
+                                <div>
+                                    <&= channel.get('primetime').description &>
+                                </div>
+                            </div>
+                        </td>
+                        <& }); &>
+                    </tr>
+                    <& } &>
+                    <tr>
+                        <& events.forEach(function (channel) { &>
+                            <& for (var k in channel.get('events')) { &>
+                                <& var day = k.match(/(.*?):/); day = parseInt(day[1]); &>
+                                <& break; &>
+                            <& } &>
+
+                            <& if (!_.isArray(channel.get('events')[(day  + dayPlus) + ':' + x])) { &>
+                            <td  style="width: 25%;">
+                                &nbsp;
+                            </td>
+                            <& } else { &>
+                            <td  style="width: 25%;">
+                                <& _.each(channel.get('events')[(day  + dayPlus) + ':' + x], function (event) { &>
+
+                                <div style="clear: left;" _id="<&= event._id &>">
+                                    <div style="float: left; width: 20px; cursor: pointer;" class="record">
+                                        &#9991;
+                                    </div>
+                                    <div style="cursor: pointer;" class="eventDetails">
+                                        <&= event.start_time &> <&= event.title &>
+                                    </div>
+                                </div>
+                                <& }); &>
+                            </td>
+                            <& } &>
+                        <& }); &>
+                    </tr>
+                    <& } &>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
