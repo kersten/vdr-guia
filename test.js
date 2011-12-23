@@ -6,6 +6,7 @@ tvdb.getSeries('Dexter', function (result) {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
 global.mongoose = require('mongoose');
 global.Schema = mongoose.Schema;
@@ -32,6 +33,8 @@ actor.scrapeAll();
 //movie.scrapeAll();
 }); */
 =======
+=======
+>>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
 /*var tmdb = require('./src/lib/Media/Scraper/Tmdb').init({
     apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'
 });
@@ -48,5 +51,9 @@ tmdb.Movie.search({
             console.log(res[0].cast);
         });
     }
+<<<<<<< HEAD
+});*/
+>>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
+=======
 });*/
 >>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
