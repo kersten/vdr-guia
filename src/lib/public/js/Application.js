@@ -11,10 +11,17 @@ var Application = {
         search: SearchView,
         searchresults: SearchresultsView,
         settings: SettingsView,
-        settingschannels: SettingsChannelsView,
-        settingsguia: SettingsGuiaView,
         timer: TimerView,
         welcome: WelcomeView
+    },
+    subViews: {
+        program: {
+            event: ProgramEventView
+        },
+        settings: {
+            channels: SettingsChannelsView,
+            guia: SettingsGuiaView
+        }
     },
     currentView: null,
     currentSubView: null,
@@ -248,6 +255,7 @@ var Application = {
         loadedViews: {},
 
         routes: {
+            "/Event/:id": "eventRoute",
             "*actions": "defaultRoute"
         },
 
@@ -259,6 +267,16 @@ var Application = {
                 $('.nav > li.active').removeClass('active');
                 $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
             }
+        },
+
+        eventRoute: function (_id) {
+            Application.loadingOverlay('show');
+
+            var self = this;
+
+            Application.loadView('/Event', function (req, original) {
+                self.render.apply(this, [req, original, self]);
+            });
         },
 
         defaultRoute: function (req) {
@@ -307,14 +325,31 @@ var Application = {
     },
 
     loadSubView: function (req, callback) {
+        var self = this;
         var original = req;
 
         if (req == "") {
             req = "/Welcome";
         }
 
-        req = req.substr(1);
-        req = req.charAt(0).toLowerCase() + req.substr(1);
+        req = req.split('/');
+
+        var view = null;
+
+        _.each(req, function (sub) {
+            sub = sub.charAt(0).toLowerCase() + sub.substr(1);
+
+
+
+            if (self.subViews[sub] !== undefined && view == null) {
+                view = self.subViews[sub];
+                return;
+            }
+
+            if (view[sub] !== undefined) {
+                view = view[sub];
+            }
+        });
 
         if (this.currentSubView != null) {
             this.currentSubView.destructor();
@@ -322,7 +357,7 @@ var Application = {
             this.currentSubView = null;
         }
 
-        this.currentSubView = new Application.views[req]({
+        this.currentSubView = new view({
             el: $('#body')
         });
 

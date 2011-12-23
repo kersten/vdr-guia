@@ -11,7 +11,7 @@
                 <table class="zebra-striped">
                     <tr>
                         <& events.forEach(function (channel) { &>
-                        <td style="width: 25%;">
+                        <td style="width: 205px">
                             <div style="text-align: center; background-position: right; background-image: url('/logo/<&= channel.get('channel_name') &>'); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
                                 <h3 style="float: left;"><&= channel.get('channel_name') &></h3>
                             </div>
@@ -39,12 +39,12 @@
                     <& if (x == 20) { &>
                     <tr>
                         <& events.forEach(function (channel) { &>
-                        <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 25%;" _id="<&= channel.get('primetime').event._id &>">
-                            <div style="background-color: #0064cd; text-align: center; color: #ffffff; padding: 0px 10px 0px 9px;" class="eventDetails isPrime">
+                        <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 205px;" _id="<&= channel.get('primetime').event._id &>">
+                            <div style="background-color: #0064cd; text-align: center; color: #ffffff;" class="eventDetails isPrime">
                                 <strong><&= channel.get('primetime').event.category &></strong>
                             </div>
 
-                            <div style="padding: 0px 10px 0px 9px; max-height: 263px; overflow: hidden;" class="eventDetails isPrime">
+                            <div style=" max-height: 263px; overflow: hidden;" class="eventDetails isPrime">
                                 <div>
                                     <span class="label important"><&= channel.get('primetime').event.start_time &></span> <strong><&= channel.get('primetime').event.title &></strong>
                                 </div>
@@ -69,11 +69,11 @@
                             <& } &>
 
                             <& if (!_.isArray(channel.get('events')[(day  + dayPlus) + ':' + x])) { &>
-                            <td  style="width: 25%;">
+                            <td  style="width: 205px;">
                                 &nbsp;
                             </td>
                             <& } else { &>
-                            <td  style="width: 25%;">
+                            <td  style="width: 205px;">
                                 <& _.each(channel.get('events')[(day  + dayPlus) + ':' + x], function (event) { &>
 
                                 <div style="clear: left;" _id="<&= event._id &>">

@@ -25,7 +25,6 @@
         "ejs": ">= 0.4.3",
         "express": ">= 2.5.0",
         "i18n": ">= 0.3.0",
-        "iconv": ">= 1.1.2",
         "iniparser": ">= 1.0.4",
         "monomi": ">= 0.0.1",
         "node-expat": ">= 1.4.0",
@@ -42,7 +41,9 @@
         "rbytes": ">= 0.0.2",
         "mongoose": ">= 2.3.10",
         "session-mongoose": ">= 0.0.1",
-        "node-uuid": ">= 1.2.0"
+        "dnode": ">= 0.9.3",
+        "node-uuid": ">= 1.2.0",
+        "MQTTClient": ">= 0.0.1"
     },
     "licenses":[{
         "type" : "MIT",

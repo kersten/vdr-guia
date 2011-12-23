@@ -29,7 +29,7 @@ var SettingsView = Backbone.View.extend({
 
         var view = section;
 
-        Application.loadSubView('/Settings' + view, function (req, original) {
+        Application.loadSubView('Settings/' + view, function (req, original) {
             Application.currentSubView.renderTemplate();
         });
     }

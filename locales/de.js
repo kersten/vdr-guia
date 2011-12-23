@@ -60,5 +60,10 @@
 	"September": "September",
 	"October": "October",
 	"November": "November",
-	"December": "December"
+	"December": "December",
+	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>",
+	"Close": "Close",
+	"Delete": "Delete",
+	"Contact <small>us</small>": "Contact <small>us</small>",
+	"Details": "Details"
 }

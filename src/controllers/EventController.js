@@ -19,6 +19,12 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('EventModel:read', function (data, callback) {
+        events.findOne({_id: data.data._id}, function (err, doc) {
+            callback(doc);
+        });
+    });
+
     socket.on('Event:readOne', function (data, callback) {
         rest.get(vdr.restful + '/events/' + data.channel_id + '/' +  + data.event_id + '.json').on('success', function (data) {
             callback(data.events[0]);

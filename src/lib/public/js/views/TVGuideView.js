@@ -47,11 +47,11 @@ var TVGuideView = Backbone.View.extend({
             });
 
             $('.eventDetails').click(function () {
-                console.log("Show details: " + $(this).parent().attr('_id'));
+                location.hash = '/Event/' + $(this).parent().attr('_id');
             });
 
             $('.record').click(function () {
-                console.log("Record: " + $(this).parent().attr('_id'));
+                location.hash = '/Event/' + $(this).parent().attr('_id');
             });
 
             if (typeof(self.postRender) == 'function') {

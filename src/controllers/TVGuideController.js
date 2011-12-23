@@ -6,7 +6,6 @@ var movies = mongoose.model('MovieDetails');
 io.sockets.on('connection', function (socket) {
     socket.on('TVGuideCollection:read', function (data, callback) {
         data = data.data;
-
         var guideResults = new Array();
 
         var start = (data.page -1) * 4;
@@ -20,7 +19,7 @@ io.sockets.on('connection', function (socket) {
         var starttime = date;
         starttime = starttime.getTime() / 1000;
 
-        if (date.getHours() > 6) {
+        if (date.getHours() < 6) {
             starttime -= 86400;
             primetime -= 86400;
         }

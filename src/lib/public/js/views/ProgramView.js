@@ -3,11 +3,11 @@ var ProgramView = Backbone.View.extend({
     page: 1,
     items: null,
     update: false,
-    
+
     events: {
         'click .media-grid > li': 'loadEvents'
     },
-    
+
     addChannel: function (item) {
         if (item.has('name')) {
             var channel = $('<li></li>');
@@ -36,14 +36,14 @@ var ProgramView = Backbone.View.extend({
             $('.media-grid').append(channel);
         }
     },
-    
+
     generateHTML: function (callback) {
         var self = this;
-        
+
         callback.apply(this, [_.template(self.template)]);
-        
+
         var maxHeight = $(window).height() - $('#content').outerHeight() - $('.topbar').outerHeight();
-        
+
         $('#channellist').parent().css({maxHeight: maxHeight, height: maxHeight});
         $('#channellist').css({
             height: maxHeight,
@@ -53,9 +53,9 @@ var ProgramView = Backbone.View.extend({
             top:0,
             right: 0
         });
-        
+
         this.channellist = new ChannelCollection();
-        
+
         this.items = Math.ceil(maxHeight / 95) * 3 * 2;
 
         this.page = 1;
@@ -68,34 +68,34 @@ var ProgramView = Backbone.View.extend({
                 collection.forEach(function (chan) {
                     self.addChannel(chan);
                 });
-                
+
                 self.page++;
-                
+
                 $('#channellist').lionbars({
                     reachedBottom: function () {
                         Application.loadingOverlay('show');
-                        
+
                         self.channellist.fetch({data: {page: self.page, limit: self.items}, success: function (collection) {
                             if (collection.length == 0) {
                                 return;
                             }
-                            
+
                             collection.forEach(function (chan) {
                                 self.addChannel(chan);
                             });
-                            
+
                             Application.loadingOverlay('hide');
                         }});
-                    
+
                         self.page++;
                     }
                 });
-                
+
                 Application.loadingOverlay('hide');
             }
         });
     },
-    
+
     render: function () {
         var self = this;
 
@@ -114,15 +114,15 @@ var ProgramView = Backbone.View.extend({
 
         return this;
     },
-    
+
     loadEvents: function (event) {
         Application.loadingOverlay('show');
-        
-        Application.loadSubView('/Event', function (req, original) {
+
+        Application.loadSubView('Program/Event', function (req, original) {
             Application.currentSubView.renderTemplate($(event.currentTarget).attr('channel_id'), 1);
-            
+
             var oldImg = $('#header_div > img');
-            
+
             var img = $('<img></img>').attr('src', '/logo/' + $(event.currentTarget).attr('channel_name')).css({
                 display: 'none',
                 height: 65,

@@ -6,17 +6,14 @@ function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
     this.logging = require('node-logging');
-
     var self = this;
 
     this.setupExpress(function () {
         log.dbg('Express setup complete ..');
-
         self.setupSocketIo();
 
         self.setupDatabase(function (data) {
             log.dbg('Database setup complete ..');
-
             global.installed = data.installed;
 
             if (data.installed) {
@@ -57,7 +54,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.use(this.express.bodyParser());
     this.app.use(this.express.cookieParser());
     this.app.use(this.logging.requestLogger);
-
     this.app.use(this.express.session({
         store: mongooseSessionStore,
         secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
@@ -152,7 +148,6 @@ Bootstrap.prototype.setupDatabase = function (cb) {
     ConfigurationSchema.count({}, function (err, cnt) {
         if (cnt == 0) {
             log.dbg('Not installed! Delivering installation');
-
             require(__dirname + '/controllers/InstallController');
 
             cb.apply(this, [{
@@ -307,7 +302,7 @@ Bootstrap.prototype.setupLogos = function () {
                 logoModel.save();
             }
         });
-
+        
         log.dbg('done');
     });
 };
