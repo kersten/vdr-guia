@@ -5,6 +5,7 @@ tvdb.getSeries('Dexter', function (result) {
     console.log(result);
 });
 
+<<<<<<< HEAD
 /*
 global.mongoose = require('mongoose');
 global.Schema = mongoose.Schema;
@@ -30,3 +31,22 @@ actor.scrapeAll();
 
 //movie.scrapeAll();
 }); */
+=======
+/*var tmdb = require('./src/lib/Media/Scraper/Tmdb').init({
+    apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'
+});
+
+tmdb.Movie.search({
+    query: 'Matrix',
+    lang: 'de'
+}, function(err,res) {
+    for(var x in res) {
+        tmdb.Movie.getInfo({
+            query: res[x].id.toString(),
+            lang: 'de'
+        }, function (err, res) {
+            console.log(res[0].cast);
+        });
+    }
+});*/
+>>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33

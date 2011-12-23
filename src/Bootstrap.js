@@ -6,14 +6,17 @@ function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
     this.logging = require('node-logging');
+
     var self = this;
 
     this.setupExpress(function () {
         log.dbg('Express setup complete ..');
+
         self.setupSocketIo();
 
         self.setupDatabase(function (data) {
             log.dbg('Database setup complete ..');
+
             global.installed = data.installed;
 
             if (data.installed) {
@@ -274,6 +277,7 @@ Bootstrap.prototype.setupControllers = function () {
 };
 
 Bootstrap.prototype.setupLogos = function () {
+
     var LogoSchema = mongoose.model('Logo');
     log.dbg('Setting up logos ..');
 
@@ -302,7 +306,7 @@ Bootstrap.prototype.setupLogos = function () {
                 logoModel.save();
             }
         });
-        
+
         log.dbg('done');
     });
 };
