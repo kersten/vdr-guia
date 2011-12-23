@@ -6,26 +6,25 @@ function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
     this.logging = require('node-logging');
-    
     var self = this;
-    
+
     this.setupExpress(function () {
         log.dbg('Express setup complete ..');
-        
+
         self.setupSocketIo();
-        
+
         self.setupDatabase(function (data) {
             log.dbg('Database setup complete ..');
-            
+
             global.installed = data.installed;
-            
+
             if (data.installed) {
-                self.setupLogos();
-                
                 vdr.host = data.vdrHost;
                 vdr.restfulPort = data.restfulPort;
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
-                
+
+                self.setupLogos();
+
                 rest.get(vdr.restful + '/info.json').on('success', function(data) {
                     vdr.plugins.epgsearch = false;
 
@@ -33,6 +32,7 @@ function Bootstrap (app, express) {
                         vdr.plugins[data.vdr.plugins[i].name] = true;
                     }
 
+                    self.setupEpgImport(vdr.restful, global.mongoose);
                     self.setupControllers();
                     self.setupViews();
                 }).on('error', function () {
@@ -52,11 +52,10 @@ Bootstrap.prototype.setupExpress = function (cb) {
     global.mongooseSessionStore = new SessionMongoose({
         url: "mongodb://127.0.0.1/GUIAsession"
     });
-    
+
     this.app.use(this.express.bodyParser());
     this.app.use(this.express.cookieParser());
     this.app.use(this.logging.requestLogger);
-    
     this.app.use(this.express.session({
         store: mongooseSessionStore,
         secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
@@ -65,7 +64,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
             maxAge: 60000 * 60 * 24
         }
     }));
-    
+
     this.app.use(i18n.init);
 
     i18n.configure({
@@ -75,46 +74,46 @@ Bootstrap.prototype.setupExpress = function (cb) {
         // where to register __() and __n() to, might be "global" if you know what you are doing
         register: global
     });
-    
+
     global.rest = rest;
-    
+
     global.vdr = {
         host: null,
         restful: null,
         plugins: {}
     };
-    
+
     global.log = this.logging;
-    
+
     /*
      * Set public directory for directly serving files
      */
     this.app.use(this.express.static(__dirname + '/lib/public'));
     this.app.use(this.express.favicon(__dirname + '/lib/public/img/favicon.ico'));
-    this.app.use(this.express.errorHandler({ dumpExceptions: true, showStack: true }));
-    
+    this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
+
     /*
      * Register Template engine with .html and .js
      */
     this.app.register('.html', require('ejs'));
     this.app.register('.js', require('ejs'));
-    
+
     /*
      * Register view directory
      */
     this.app.set('views', __dirname + '/html');
     this.app.set('view engine', 'html');
-    
+
     /*
      * Create browserify array for included modules to web interface
      */
-    var browserify = new Array();
+    //var browserify = new Array();
 
     /*fs.readdirSync(__dirname + '/models').forEach(function (file) {
         browserify.push(__dirname + '/models/' + file);
     });*/
 
-    browserify.push('node-uuid');
+    //browserify.push('node-uuid');
 
     /*
      * Use browserify in our express app
@@ -124,26 +123,34 @@ Bootstrap.prototype.setupExpress = function (cb) {
         mount: '/browserify.js',
         filter: require('uglify-js')
     }));*/
-    
+
     cb.call();
 };
 
 Bootstrap.prototype.setupDatabase = function (cb) {
     global.mongoose = require('mongoose');
     global.Schema = mongoose.Schema;
-    
+
     log.dbg('Connect to database ..');
+
     mongoose.connect('mongodb://127.0.0.1/GUIA');
     mongoose.connection.on('error', function (e) {
         throw e;
     });
-    
-    var ConfigurationSchema = require('./schemas/ConfigurationSchema');
-    
+
+    var schemas = fs.readdirSync(__dirname + '/schemas');
+
+    schemas.forEach(function (schema) {
+        schema = schema.replace('.js', '');
+        require(__dirname + '/schemas/' + schema);
+    });
+
+    var ConfigurationSchema = mongoose.model('Configuration');
+
     ConfigurationSchema.count({}, function (err, cnt) {
         if (cnt == 0) {
             log.dbg('Not installed! Delivering installation');
-            
+
             require(__dirname + '/controllers/InstallController');
 
             cb.apply(this, [{
@@ -151,7 +158,7 @@ Bootstrap.prototype.setupDatabase = function (cb) {
             }]);
         } else {
             log.dbg('GUIA installed! Getting configuration ..');
-            
+
             ConfigurationSchema.findOne({}, function (err, data) {
                 cb.apply(this, [{
                     installed: true,
@@ -168,20 +175,20 @@ Bootstrap.prototype.setupSocketIo = function () {
      * Create socket
      */
     log.dbg('Setting up socket.io ..');
-    
+
     global.io = require('socket.io').listen(this.app);
-    
+
     var parseCookie = require('express/node_modules/connect').utils.parseCookie;
     var Session = require('express/node_modules/connect').middleware.session.Session;
 
     io.configure(function (){
         io.set('transports', ['websocket']);
-        
+
         io.set('authorization', function (data, accept) {
             if (data.headers.cookie) {
                 data.cookie = parseCookie(data.headers.cookie);
                 data.sessionID = data.cookie['guia.id'];
-                
+
                 // save the session store to the data object
                 // (as required by the Session constructor)
 
@@ -205,10 +212,10 @@ Bootstrap.prototype.setupSocketIo = function () {
 
 Bootstrap.prototype.setupViews = function () {
     log.dbg('Setting up views ..');
-    
+
     this.app.all('*', function (req, res, next) {
         log.dbg('Incoming request ..');
-        
+
         if (!installed && !req.url.match(/^\/templates\/install/)) {
             log.dbg('serving installation ..');
             res.render('install', {
@@ -216,7 +223,7 @@ Bootstrap.prototype.setupViews = function () {
             });
         } else {
             log.dbg('Process request ..');
-        
+
             mongooseSessionStore.get(req.sessionID, function (err, session) {
                 if (session == null) {
                     log.dbg('Not loggedin ..');
@@ -224,31 +231,31 @@ Bootstrap.prototype.setupViews = function () {
                     log.dbg('Loggedin ..');
                     req.session.loggedIn = session.loggedIn;
                 }
-                
+
                 next();
             });
         }
     });
-    
+
     this.app.get('/', function (req, res) {
         log.dbg('Render index.html ..');
-        
+
         res.render('index', {
             layout: false,
             isLoggedIn: req.session.loggedIn,
             vdr: JSON.stringify(vdr.plugins)
         });
     });
-    
+
     var self = this;
-    
+
     fs.readdir(__dirname + '/views', function (err, files) {
         if (err) throw err;
         files.forEach(function (file) {
             file = file.replace('.js', '');
-            
+
             var view = require(__dirname + '/views/' + file);
-            
+
             self.app.get(view.url, view.func);
         });
     });
@@ -261,7 +268,7 @@ Bootstrap.prototype.setupControllers = function () {
         if (err) throw err;
         files.forEach(function (file) {
             file = file.replace('.js', '');
-            
+
             if (file != 'InstallController') {
                 require('./controllers/' + file);
             }
@@ -271,9 +278,8 @@ Bootstrap.prototype.setupControllers = function () {
 
 Bootstrap.prototype.setupLogos = function () {
     var LogoSchema = require('./schemas/LogoSchema');
-    
     log.dbg('Setting up logos ..');
-    
+
     LogoSchema.find({}, function (err, data) {
         data.forEach(function (logo) {
             try {
@@ -283,25 +289,65 @@ Bootstrap.prototype.setupLogos = function () {
             }
         });
     });
-    
+
     fs.readdir(__dirname + '/share/logos', function (err, files) {
         if (err) throw err;
-        
+
         files.forEach(function (logo) {
             logo = logo.replace(/\//, '|');
-            
+
             if (logo.match(/.png$/)) {
                 var logoModel = new LogoSchema({
                     file: logo,
                     name: logo.replace('.png', '')
                 });
-                
+
                 logoModel.save();
             }
         });
-        
+
         log.dbg('done');
     });
+};
+
+Bootstrap.prototype.setupEpgImport = function (restful) {
+    var config = mongoose.model('Configuration');
+    var EpgImport = require('./lib/Epg/Import');
+    var ActorDetails = require('./lib/Actor');
+    var MovieDetails = require('./lib/Movie');
+    var SeasonDetails = require('./lib/Season');
+    var importer = new EpgImport(vdr.restful);
+
+    function runImporter () {
+        importer.start(function (hadEpg) {
+            if (hadEpg) {
+                runImporter();
+            } else {
+                config.findOne({}, function (err, doc) {
+                    if (doc.epgscandelay === undefined) {
+                        log.dbg('Delayed new epg scan .. starting in one hour');
+
+                        setTimeout(function () {
+                            runImporter();
+                        }, 1000 * 60 * 60);
+                    } else {
+                        log.dbg('Delayed new epg scan .. starting in ' + doc.epgscandelay + ' hours');
+                        setTimeout(function () {
+                            runImporter();
+                        }, (1000 * 60 * 60) * doc.epgscandelay);
+                    }
+                });
+            }
+
+            var actorDetails = new ActorDetails();
+            actorDetails.fetchAll();
+
+            var movieDetails = new MovieDetails();
+            movieDetails.fetchAll();
+        });
+    }
+
+    runImporter();
 };
 
 module.exports = Bootstrap;
