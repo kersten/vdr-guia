@@ -263,11 +263,7 @@ Bootstrap.prototype.setupViews = function () {
 
 Bootstrap.prototype.setupControllers = function () {
     log.dbg('Setting up controllers ..');
-<<<<<<< HEAD
-
-=======
-
->>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
+    
     fs.readdir(__dirname + '/controllers', function (err, files) {
         if (err) throw err;
         files.forEach(function (file) {
@@ -281,17 +277,9 @@ Bootstrap.prototype.setupControllers = function () {
 };
 
 Bootstrap.prototype.setupLogos = function () {
-<<<<<<< HEAD
-
-    var LogoSchema = mongoose.model('Logo');
-    log.dbg('Setting up logos ..');
-
-=======
     var LogoSchema = require('./schemas/LogoSchema');
-
     log.dbg('Setting up logos ..');
 
->>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
     LogoSchema.find({}, function (err, data) {
         data.forEach(function (logo) {
             try {
@@ -317,11 +305,7 @@ Bootstrap.prototype.setupLogos = function () {
                 logoModel.save();
             }
         });
-<<<<<<< HEAD
 
-=======
-
->>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
         log.dbg('done');
     });
 };
