@@ -4,7 +4,6 @@ io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
         data = data.data;
         var start = (data.page - 1) * 20;
-<<<<<<< HEAD
         var date = new Date();
 
         var query = events.find({});
@@ -17,14 +16,6 @@ io.sockets.on('connection', function (socket) {
 
         query.exec(function (err, doc) {
             callback(doc);
-=======
-        
-        rest.get(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20).on('success',  function (epg) {
-            callback(epg.events);
-        }).on('error', function (e) {
-            callback({error: 'No events found'});
-            log.dbg(vdr.restful + '/events/' + data.channel_id + '.json?timespan=0&start=' + start + '&limit=' + 20);
->>>>>>> ade30b4de1a72ef0b93ef2a140099b6a82e19a33
         });
     });
 
