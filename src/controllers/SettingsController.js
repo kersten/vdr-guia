@@ -1,3 +1,5 @@
+var channels = mongoose.model('Channel');
+
 io.sockets.on('connection', function (socket) {
     socket.on('ChannelModel:create', function (data, callback) {
         data = data.model;

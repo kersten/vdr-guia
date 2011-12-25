@@ -2,7 +2,9 @@ var EventView = Backbone.View.extend({
     url: "event",
 
     initialize: function () {
-
+        if (this.options.params._id === undefined) {
+            
+        }
     },
 
     generateHTML: function (callback) {
@@ -11,7 +13,7 @@ var EventView = Backbone.View.extend({
 
         this.event.fetch({
             data: {
-                _id: '4eefa0012f32ed7d18005ab0'
+                _id: this.options.params._id
             },
             success: function (event) {
                 console.log(self.event);

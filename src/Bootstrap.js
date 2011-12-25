@@ -144,29 +144,31 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         schema = schema.replace('.js', '');
         require(__dirname + '/schemas/' + schema);
     });
+    
+    mongoose.connection.on('open', function () {
+        var ConfigurationSchema = mongoose.model('Configuration');
 
-    var ConfigurationSchema = mongoose.model('Configuration');
+        ConfigurationSchema.count({}, function (err, cnt) {
+            if (cnt == 0) {
+                log.dbg('Not installed! Delivering installation');
 
-    ConfigurationSchema.count({}, function (err, cnt) {
-        if (cnt == 0) {
-            log.dbg('Not installed! Delivering installation');
+                require(__dirname + '/controllers/InstallController');
 
-            require(__dirname + '/controllers/InstallController');
-
-            cb.apply(this, [{
-                installed: false
-            }]);
-        } else {
-            log.dbg('GUIA installed! Getting configuration ..');
-
-            ConfigurationSchema.findOne({}, function (err, data) {
                 cb.apply(this, [{
-                    installed: true,
-                    vdrHost: data.vdrHost,
-                    restfulPort: data.restfulPort
+                    installed: false
                 }]);
-            });
-        }
+            } else {
+                log.dbg('GUIA installed! Getting configuration ..');
+
+                ConfigurationSchema.findOne({}, function (err, data) {
+                    cb.apply(this, [{
+                        installed: true,
+                        vdrHost: data.vdrHost,
+                        restfulPort: data.restfulPort
+                    }]);
+                });
+            }
+        });
     });
 };
 
@@ -277,7 +279,7 @@ Bootstrap.prototype.setupControllers = function () {
 };
 
 Bootstrap.prototype.setupLogos = function () {
-    var LogoSchema = require('./schemas/LogoSchema');
+    var LogoSchema = mongoose.model('Logo');
     log.dbg('Setting up logos ..');
 
     LogoSchema.find({}, function (err, data) {

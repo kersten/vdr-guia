@@ -276,6 +276,10 @@ var Application = {
 
             Application.loadView('/Event', function (req, original) {
                 self.render.apply(this, [req, original, self]);
+            } , {
+                params: {
+                    _id: _id
+                }
             });
         },
 
@@ -295,7 +299,7 @@ var Application = {
         }
     }),
 
-    loadView: function (req, callback) {
+    loadView: function (req, callback, options) {
         var original = req;
 
         if (req == "") {
@@ -316,10 +320,10 @@ var Application = {
             delete this.currentSubView;
             this.currentSubView = null;
         }
+        
+        var viewOptions = jQuery.extend({el: $('#body')}, options);
 
-        this.currentView = new Application.views[req]({
-            el: $('#body')
-        });
+        this.currentView = new Application.views[req](viewOptions);
 
         callback.apply(this, [req, original]);
     },

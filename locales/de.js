@@ -65,5 +65,9 @@
 	"Close": "Close",
 	"Delete": "Delete",
 	"Contact <small>us</small>": "Contact <small>us</small>",
-	"Details": "Details"
+	"Details": "Details",
+	"Welcome": "Welcome",
+	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
+	"What's new": "What's new",
+	"Home": "Home"
 }

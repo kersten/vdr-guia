@@ -1,4 +1,4 @@
-var logos = mongoose.model('Logo'),
+var LogoSchema = mongoose.model('Logo'),
     fs = require('fs'),
     http = require('http');
 
@@ -8,7 +8,7 @@ var LogoView = {
         if (req.session.loggedIn) {
             var channel_name = unescape(req.url.substr(6)).replace(/\//, '|');
             
-            logos.findOne({name: channel_name}, function (err, data) {
+            LogoSchema.findOne({name: channel_name}, function (err, data) {
                 try {
                     var filename = __dirname + '/../share/logos/' + data.file;
                     res.contentType(filename);
