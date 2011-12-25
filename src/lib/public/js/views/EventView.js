@@ -15,9 +15,14 @@ var EventView = Backbone.View.extend({
             data: {
                 _id: this.options.params._id
             },
-            success: function (event) {
-                console.log(self.event);
-                callback.apply(this, [_.template(self.template, {event: self.event})]);
+            success: function () {
+                var event = self.event;
+                
+                if (event.get('description') != null) {
+                    
+                }
+                
+                callback.apply(this, [_.template(self.template, {event: event})]);
             }
         });
     }
