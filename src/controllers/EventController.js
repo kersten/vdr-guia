@@ -1,4 +1,5 @@
 var events = mongoose.model('Event');
+var movies = mongoose.model('MovieDetails');
 
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
@@ -21,7 +22,14 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('EventModel:read', function (data, callback) {
         events.findOne({_id: data.data._id}, function (err, doc) {
-            callback(doc);
+            movies.findOne({epg_name: doc.title}, function (err, details) {
+                if (details == null) {
+                    callback(doc);
+                } else {
+                    doc.set('tmdb', details);
+                    callback(doc);
+                }
+            })
         });
     });
 

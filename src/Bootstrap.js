@@ -24,6 +24,8 @@ function Bootstrap (app, express) {
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
 
                 self.setupLogos();
+                self.setupControllers();
+                self.setupViews();
 
                 rest.get(vdr.restful + '/info.json').on('success', function(data) {
                     vdr.plugins.epgsearch = false;
@@ -33,10 +35,8 @@ function Bootstrap (app, express) {
                     }
 
                     self.setupEpgImport(vdr.restful, global.mongoose);
-                    self.setupControllers();
-                    self.setupViews();
                 }).on('error', function () {
-                    log.bad('ERROR');
+                    log.bad('VDR is not running ..');
                     log.dbg(JSON.stringify(vdr), true);
                 });
             } else {
@@ -88,7 +88,9 @@ Bootstrap.prototype.setupExpress = function (cb) {
     /*
      * Set public directory for directly serving files
      */
-    this.app.use(this.express.static(__dirname + '/lib/public'));
+    this.app.use(this.express.static(__dirname + '/lib/js'));
+    this.app.use(this.express.static(__dirname + '/share/www'));
+
     this.app.use(this.express.favicon(__dirname + '/lib/public/img/favicon.ico'));
     this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
 
@@ -144,7 +146,7 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         schema = schema.replace('.js', '');
         require(__dirname + '/schemas/' + schema);
     });
-    
+
     mongoose.connection.on('open', function () {
         var ConfigurationSchema = mongoose.model('Configuration');
 
@@ -265,7 +267,7 @@ Bootstrap.prototype.setupViews = function () {
 
 Bootstrap.prototype.setupControllers = function () {
     log.dbg('Setting up controllers ..');
-    
+
     fs.readdir(__dirname + '/controllers', function (err, files) {
         if (err) throw err;
         files.forEach(function (file) {

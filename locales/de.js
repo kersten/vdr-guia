@@ -69,5 +69,6 @@
 	"Welcome": "Welcome",
 	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
 	"What's new": "What's new",
-	"Home": "Home"
+	"Home": "Home",
+	"Posters": "Posters"
 }

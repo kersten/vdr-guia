@@ -1,6 +1,6 @@
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
-    
+
     socket.on('NavigationCollection:read', function (data, callback) {
         if (hs.session.loggedIn) {
             var menu = [{
@@ -12,18 +12,6 @@ io.sockets.on('connection', function (socket) {
                 link: '#/program',
                 view: 'Program'
             }, {
-                title: __('Timer'),
-                link: '#/timer',
-                view: 'Timer'
-            }, (vdr.plugins.epgsearch) ? {
-                title: __('Search'),
-                link: '#/search',
-                view: 'Search'
-            } : null, /* (vdr.plugins.epgsearch) ? {
-                title: __('Searchtimer'),
-                link: '#/searchtimer',
-                view: 'Searchtimer'
-            } : null,*/ {
                 title: __('Recordings'),
                 link: '#/recordings',
                 view: 'Recordings'
@@ -32,16 +20,12 @@ io.sockets.on('connection', function (socket) {
                 link: '#/settings',
                 view: 'Settings'
             }, {
-                title: __('Contact'),
-                link: '#/contact',
-                view: 'Contact'
-            }, {
                 title: __('Logout'),
                 link: '#/logout',
                 view: 'Logout',
                 id: 'logoutBtn'
             }];
-        
+
             callback({items: menu, loggedIn: true});
         } else {
             var menu = [{
@@ -51,7 +35,7 @@ io.sockets.on('connection', function (socket) {
                 title: __('Contact'),
                 link: '#/contact'
             }];
-        
+
             callback({items: menu, loggedIn: false});
         }
     });

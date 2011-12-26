@@ -1,0 +1,44 @@
+<div class="page-header">
+    <h1 id="title"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+    <p><&= event.get('short_description') &></p>
+</div>
+<div class="row">
+    <div class="span4">
+        <ul class="media-grid">
+            <li>
+                <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
+            </li>
+        </ul>
+        <p><a id="showallposters">Show all posters</a></p>
+
+        <div style="border-bottom: 1px solid #DDD;">
+            <h6>Details</h6>
+        </div>
+    </div>
+
+    <div class="span10">
+        <p>
+            <&= event.get('description') &>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span14" style="font-size: 9px; text-align: right;">
+        <a href="<&= event.get('tmdb').url &>" target="_blank">Open in tmdb.org</a>
+    </div>
+</div>
+
+<div class="modal hide fade" id="showallpostersDialog">
+    <div class="modal-header">
+        <a class="close" href="#">×</a>
+        <h3><%= __('Posters') %></h3>
+    </div>
+    <div class="modal-body" style="overflow: auto;">
+        <ul class="media-grid">
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a class="btn primary" id="btnCreateNewSearchtimer"><%= __('Close') %></a>
+    </div>
+</div>
