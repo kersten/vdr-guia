@@ -45,5 +45,13 @@
 	"Active": "Active",
 	"Channel": "Channel",
 	"Posters": "Posters",
-	"Close": "Close"
+	"Close": "Close",
+	"Welcome": "Welcome",
+	"Welcome to GUIA <small>Manage your VDR</small>": "Welcome to GUIA <small>Manage your VDR</small>",
+	"What's new": "What's new",
+	"Home": "Home",
+	"Contact": "Contact",
+	"Hightlights": "Hightlights",
+	"Highlights <small>What's up today ..</small>": "Highlights <small>What's up today ..</small>",
+	"Highlights": "Highlights"
 }
