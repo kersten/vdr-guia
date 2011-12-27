@@ -17,7 +17,7 @@ var EventView = Backbone.View.extend({
 
         _.each(this.event.get('tmdb').posters, function (poster) {
             if (poster.image.size == 'thumb') {
-                mediaGrid.append('<li><img class="thumbnail" src="' + poster.image.url + '"/></li>');
+                mediaGrid.append('<li><a><img class="thumbnail" src="' + poster.image.url + '"/></a></li>');
             }
         });
 
@@ -29,6 +29,10 @@ var EventView = Backbone.View.extend({
     },
 
     generateHTML: function (callback) {
+        if (this.options.params.action !== undefined && this.options.params.action == 'posters') {
+            this.event.set({show: 'posters'});
+        }
+
         callback.apply(this, [_.template(this.template, {event: this.event})]);
     },
 

@@ -4,12 +4,9 @@
 </div>
 <div class="row">
     <div class="span4">
-        <ul class="media-grid">
-            <li>
-                <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
-            </li>
-        </ul>
-        <p><a id="showallposters">Show all posters</a></p>
+        <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
+
+        <p style="cursor: pointer;"><a href="#/Event/<&= event.get('_id') &>/posters">Show all posters</a></p>
 
         <div style="border-bottom: 1px solid #DDD;">
             <h6>Details</h6>
@@ -17,9 +14,29 @@
     </div>
 
     <div class="span10">
+        <& if (event.get('show') == 'posters') { &>
+            <p style="cursor: pointer;"><a href="#/Event/<&= event.get('_id') &>">Back to description</a></p>
+
+            <ul class="media-grid">
+            <& _.each(event.get('tmdb').posters, function (poster) { &>
+                <& if (poster.image.size == 'thumb') { &>
+                <li>
+                    <a>
+                        <img src="<&= poster.image.url &>" />
+                    </a>
+                </li>
+                <& } &>
+            <& }); &>
+            </ul>
+        <& } else { &>
         <p>
-            <&= event.get('description') &>
+            <& if (event.get('tmdb').translated == true) { &>
+                <&= event.get('tmdb').overview &>
+            <& } else { &>
+                <&= event.get('description') &>
+            <& } &>
         </p>
+        <& } &>
     </div>
 </div>
 

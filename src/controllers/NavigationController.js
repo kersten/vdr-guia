@@ -16,14 +16,29 @@ io.sockets.on('connection', function (socket) {
                 link: '#/recordings',
                 view: 'Recordings'
             }, {
-                title: __('Settings'),
-                link: '#/settings',
-                view: 'Settings'
-            }, {
-                title: __('Logout'),
-                link: '#/logout',
-                view: 'Logout',
-                id: 'logoutBtn'
+                title: __('Me'),
+                items: [{
+                    title: __('My Profile'),
+                    link: '#/me',
+                    view: 'Me'
+                }, {
+                    title: __('Help'),
+                    link: '#/help',
+                    view: 'Help'
+                }, {
+                    title: __('Shortcuts'),
+                    link: '#/shortcuts',
+                    view: 'Shortcuts'
+                }, {
+                    title: __('Settings'),
+                    link: '#/settings',
+                    view: 'Settings'
+                }, {
+                    title: __('Logout'),
+                    link: '#/logout',
+                    view: 'Logout',
+                    id: 'logoutBtn'
+                }]
             }];
 
             callback({items: menu, loggedIn: true});

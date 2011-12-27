@@ -1,5 +1,6 @@
 var events =  mongoose.model('Event');
 var movieDetails =  mongoose.model('MovieDetails');
+var async = require('async');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
     apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'
@@ -9,12 +10,12 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    log.dbg('Fetching informations for: ' + movie.title);
+    log.dbg('Fetching informations for: ' + movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''));
 
     movieDetails.findOne({'epg_name': movie.title}, function (err, doc) {
         if (doc == null) {
             tmdb.Movie.search({
-                query: movie.title + (movie.year !== undefined) ? ' ' + movie.year : '',
+                query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
@@ -22,31 +23,38 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                     return;
                 }
 
-                for(var x in res) {
-                    if (res[x] == "Nothing found.") {
+                async.map(res, function (tmdbMovie, callback) {
+                    if (tmdbMovie == "Nothing found.") {
                         callback.call();
                         return;
                     }
 
                     tmdb.Movie.getInfo({
-                        query: res[x].id.toString(),
+                        query: tmdbMovie.id.toString(),
                         lang: 'de'
                     }, function (err, res) {
                         if(typeof(err) != 'undefined') {
+                            callback(null, null);
                             return;
                         }
 
-                        res[0].tmdbId = res[x].id;
-                        res[0].epg_name = movie.title;
+                        res = res[0];
 
-                        var movieDetailsSchema = new movieDetails(res[0]);
-                        movieDetailsSchema.save(function () {
-                            callback.call();
-                        });
+                        if (res.name == movie.title) {
+                            res.tmdbId = tmdbMovie.id;
+                            res.epg_name = movie.title;
+
+                            var movieDetailsSchema = new movieDetails(res);
+                            movieDetailsSchema.save(function () {
+                                callback('fin', null);
+                            });
+                        }
+
+                        callback(null, null);
                     });
-
-                    return;
-                }
+                }, function (err, results) {
+                    callback.call();
+                });
             });
         } else {
             callback.call();

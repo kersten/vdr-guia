@@ -25,7 +25,7 @@ var NavigationView = Backbone.View.extend({
                 hash = '#';
             }
 
-            if (item.get('title') !== undefined) {
+            if (item.get('title') !== undefined && item.get('items') == null) {
                 var href = $('<a></a>').attr('href', item.get('link')).html(item.get('title'));
                 var li = $('<li></li>').append(href);
 
@@ -39,6 +39,25 @@ var NavigationView = Backbone.View.extend({
                 }
 
                 $('ul.nav:first').append(li);
+            }
+
+            if (item.get('items')) {
+                var dropdownHref = $('<a></a>').html(item.get('title')).addClass('menu');
+                var dropdownUl = $('<ul></ul>').addClass('menu-dropdown');
+                var dropdownLi = $('<li></li>').append(dropdownHref).append(dropdownUl).addClass('menu').attr('data-dropdown', 'dropdown');
+
+                item.get('items').forEach(function (item) {
+                    var href = $('<a></a>').attr('href', item.link).html(item.title);
+                    var li = $('<li></li>').append(href);
+
+                    if (typeof(item.id) != 'undefined') {
+                        li.attr('id', item.id);
+                    }
+
+                    dropdownUl.append(li);
+                });
+
+                $('ul.nav:first').append(dropdownLi);
             }
         });
     },

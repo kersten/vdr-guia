@@ -256,6 +256,7 @@ var Application = {
 
         routes: {
             "/Event/:id": "eventRoute",
+            "/Event/:id/posters": "eventPostersRoute",
             "*actions": "defaultRoute"
         },
 
@@ -278,6 +279,23 @@ var Application = {
                 view: '/Event',
                 params: {
                     _id: _id
+                },
+                callback: function (req, original) {
+                    self.render.apply(this, [req, original, self]);
+                }
+            });
+        },
+
+        eventPostersRoute: function (_id) {
+            Application.loadingOverlay('show');
+
+            var self = this;
+
+            Application.loadView({
+                view: '/Event',
+                params: {
+                    _id: _id,
+                    action: 'posters'
                 },
                 callback: function (req, original) {
                     self.render.apply(this, [req, original, self]);
