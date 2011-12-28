@@ -26,6 +26,34 @@ io.sockets.on('connection', function (socket) {
                 if (details == null) {
                     callback(doc);
                 } else {
+                    details.set('directors', new Array());
+                    details.set('writers', new Array());
+                    details.set('actors', new Array());
+
+                    if (details.get('cast') !== undefined) {
+                        details.get('cast').forEach(function (cast) {
+                            switch (cast.department) {
+                                case 'Directing':
+                                    details.get('directors').push(cast);
+                                    break;
+
+                                case 'Writing':
+                                    details.get('writers').push(cast);
+                                    break;
+
+                                case 'Actors':
+                                    details.get('actors').push(cast);
+                                    break;
+
+                                default:
+                                    log.dbg('Unknown type for tmdb cast data: ' + cast.department);
+                                    break;
+                            }
+                        });
+                    }
+
+                    delete(details.cast);
+
                     doc.set('tmdb', details);
                     callback(doc);
                 }

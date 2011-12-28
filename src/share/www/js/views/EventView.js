@@ -3,7 +3,8 @@ var EventView = Backbone.View.extend({
     eventType: 'epg',
 
     events: {
-        'click #showallposters': 'showallposters'
+        'click #showallposters': 'showallposters',
+        'click .lightboxPoster': 'lightboxPoster'
     },
 
     initialize: function () {
@@ -25,6 +26,21 @@ var EventView = Backbone.View.extend({
             backdrop: true,
             keyboard: true,
             show: true
+        });
+    },
+
+    lightboxPoster: function (ev) {
+        var id = $(ev.currentTarget).attr('id').split('_');
+        id = id[1];
+
+        _.each(this.event.get('tmdb').posters, function (poster) {
+            if (poster.image.size == 'mid' && poster.image.id == id) {
+                $('#a_' + $(ev.currentTarget).attr('id')).fancybox({
+                    openEffect: 'elastic',
+                    closeEffect: 'elastic',
+                    href: poster.image.url
+                });
+            }
         });
     },
 

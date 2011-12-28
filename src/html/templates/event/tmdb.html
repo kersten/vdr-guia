@@ -1,6 +1,11 @@
 <div class="page-header">
+    <div style="float:right;">
+        <img src="/icons/amazon.png" style="height: 16px; vertical-align: sub;" /> Buy it from <a style="cursor: pointer;" href="http://www.amazon.de/gp/search?index=aps&url=search-alias%3Ddvd&tag=meiblo05-21&keywords=<&= escape(event.get('title')) &>">Amazon</a>
+    </div>
     <h1 id="title"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+    <& if (event.get('short_description')) { &>
     <p><&= event.get('short_description') &></p>
+    <& } &>
 </div>
 <div class="row">
     <div class="span4">
@@ -14,6 +19,19 @@
     </div>
 
     <div class="span10">
+        <& if (event.get('tmdb').rating) { &>
+        <p>
+            <& for (var i = 0; i < 10; i++) {
+                if (event.get('tmdb').rating > i) { &>
+                    <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_full.png" />
+                <& } else { &>
+                    <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_gray.png" />
+                <& }
+            } &>
+            <&= event.get('tmdb').rating &> / 10 (<&= event.get('tmdb').votes &> Votes)
+        </p>
+        <& } &>
+
         <& if (event.get('show') == 'posters') { &>
             <p style="cursor: pointer;"><a href="#/Event/<&= event.get('_id') &>">Back to description</a></p>
 
@@ -21,8 +39,8 @@
             <& _.each(event.get('tmdb').posters, function (poster) { &>
                 <& if (poster.image.size == 'thumb') { &>
                 <li>
-                    <a>
-                        <img src="<&= poster.image.url &>" />
+                    <a id="a_poster_<&= poster.image.id &>">
+                        <img height="138px" src="<&= poster.image.url &>" class="lightboxPoster" id="poster_<&= poster.image.id &>" />
                     </a>
                 </li>
                 <& } &>
@@ -36,6 +54,45 @@
                 <&= event.get('description') &>
             <& } &>
         </p>
+
+        <& if (event.get('tmdb').directors.length > 0) { &>
+        <h5>Crew</h5>
+        <p>
+            <table>
+            <& _.each(event.get('tmdb').directors, function (director) { &>
+                <tr>
+                    <td>Director:</td>
+                    <td><a href="#/Person/<&= director.id &>"><&= director.name &></a></td>
+                </tr>
+            <& }); &>
+            </table>
+        </p>
+        <& } &>
+
+        <& if (event.get('tmdb').actors.length > 0) { &>
+        <h5>Cast</h5>
+        <p>
+            <& if (event.get('tmdb').actors.length > 3) { &>
+            <a href="#/Event/<&= event.get('_id') &>/cast">Show all</a>
+            <& } &>
+
+            <& _.each(event.get('tmdb').actors, function (actor, index) {
+            if (index > 3) {
+                return;
+            } &>
+
+            <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
+                <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
+                    <a href="#/Person/<&= actor.id &>"><img src="<&= actor.profile &>" width="45"></a>
+                </span>
+                <span class="text" style="float: left;">
+                    <a href="#/Person/<&= actor.id &>"><&= actor.name &></a><br>
+                    as <&= actor.character &>
+                </span>
+            </div>
+            <& }); &>
+        </p>
+        <& } &>
         <& } &>
     </div>
 </div>
