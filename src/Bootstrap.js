@@ -26,19 +26,8 @@ function Bootstrap (app, express) {
                 self.setupLogos();
                 self.setupControllers();
                 self.setupViews();
-
-                rest.get(vdr.restful + '/info.json').on('success', function(data) {
-                    vdr.plugins.epgsearch = false;
-
-                    for (var i in data.vdr.plugins) {
-                        vdr.plugins[data.vdr.plugins[i].name] = true;
-                    }
-
-                    self.setupEpgImport(vdr.restful, global.mongoose);
-                }).on('error', function () {
-                    log.bad('VDR is not running ..');
-                    log.dbg(JSON.stringify(vdr), true);
-                });
+                
+                self.setupVdr();
             } else {
                 self.setupControllers();
                 self.setupViews();
@@ -311,6 +300,27 @@ Bootstrap.prototype.setupLogos = function () {
         });
 
         log.dbg('done');
+    });
+};
+
+Bootstrap.prototype.setupVdr = function () {
+    var self = this;
+    
+    rest.get(vdr.restful + '/info.json').on('success', function(data) {
+        vdr.plugins.epgsearch = false;
+
+        for (var i in data.vdr.plugins) {
+            vdr.plugins[data.vdr.plugins[i].name] = true;
+        }
+
+        self.setupEpgImport(vdr.restful, global.mongoose);
+    }).on('error', function () {
+        log.bad('VDR is not running .. retrying in 5 Minutes');
+        log.dbg(JSON.stringify(vdr), true);
+        
+        setTimeout(function () {
+            self.setupVdr();
+        }, 300000);
     });
 };
 
