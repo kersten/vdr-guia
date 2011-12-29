@@ -1,4 +1,5 @@
 var ActorSchema = require('./ActorSchema');
+var ChannelSchema = require('./ChannelSchema');
 
 var EventSchema = new Schema({
     id: {
@@ -13,7 +14,7 @@ var EventSchema = new Schema({
     },
 
     channel_id: {
-        type: String,
+        type: ChannelSchema,
         required: true
     },
 

@@ -242,13 +242,13 @@ var Application = {
 
         setClock();
 
-        $(document).bind('keypress', function (event) {
+        /*$(document).bind('keypress', function (event) {
             console.log('Key pressed: ' + event.which);
 
             if (typeof(Application.shortcuts[event.which]) != 'undefined') {
                 Application.shortcuts[event.which].apply(this, [event]);
             }
-        });
+        });*/
     },
 
     router: Backbone.Router.extend({

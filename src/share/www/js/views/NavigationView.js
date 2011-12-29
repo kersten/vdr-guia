@@ -64,7 +64,8 @@ var NavigationView = Backbone.View.extend({
 
     events: {
         'click #loginBtn': "login",
-        'click #logoutBtn': "logout"
+        'click #logoutBtn': "logout",
+        'keypress #search': 'liveSearch'
     },
 
     login: function (event) {
@@ -122,5 +123,27 @@ var NavigationView = Backbone.View.extend({
                 }});
             });
         });
+    },
+
+    liveSearch: function (ev) {
+        if (this.timeoutId !== undefined) {
+            clearTimeout(this.timeoutId);
+        }
+
+        this.timeoutId = setTimeout(function () {
+            var searchresult = new SearchresultModel();
+            searchresult.fetch({
+                data: {
+                    query: $(ev.currentTarget).val()
+                }, success: function () {
+                    _.each(searchresult.get('events'), function (event) {
+                        var start = new Date();
+                        start.setTime(event.start);
+
+                        console.log(event.title + '(' + start.getHours() + ':' + start.getMinutes() + ')');
+                    })
+                }
+            });
+        }, 300);
     }
 });

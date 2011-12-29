@@ -1,21 +1,47 @@
+var events = mongoose.model('Event');
+var actors = mongoose.model('ActorDetails');
+var movies = mongoose.model('MovieDetails');
+var async = require('async');
+
 io.sockets.on('connection', function (socket) {
-    socket.on('SearchresultCollection:read', function (data, callback) {
+    socket.on('Searchresult:read', function (data, callback) {
         data = data.data;
-        var start = (data.page - 1) * 20;
-        
-        rest.post(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20, {
-            data: {
-                query: data.term,
-                mode: 0,
-                channelid: 0,
-                use_title: true,
-                use_subtitle: false,
-                use_description: false
+
+        var result = {
+            events: {}
+        };
+
+        async.parallel([
+            function (callback) {
+                var i = 0;
+                var query = events.find({title: new RegExp(data.query, "ig")});
+
+                query.sort('start', 1);
+                query.populate('channel_id');
+                query.exec(function (err, docs) {
+                    docs.forEach(function (doc) {
+                        if (i == 3) {
+                            return;
+                        }
+
+                        if (result.events[doc.title] === undefined) {
+                            result.events[doc.title] = doc;
+                            i++;
+                        }
+                    });
+
+                    callback();
+                });
+            }, function (callback) {
+                /*actors.where('name', new RegExp(data.query, "ig")).distinct('name').limit(3).run(function (err, docs) {
+                    result.actors = docs;
+
+                    callback();
+                });*/
+                callback();
             }
-        }).on('success',  function (epg) {
-            callback(epg.events);
-        }).on('error', function (e) {
-            log.dbg(vdr.restful + '/events/search.json?start=' + start + '&limit=' + 20);
+        ], function(err, results){
+            callback(result);
         });
     });
 });

@@ -91,7 +91,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.use(this.express.static(__dirname + '/lib/js'));
     this.app.use(this.express.static(__dirname + '/share/www'));
 
-    this.app.use(this.express.favicon(__dirname + '/lib/public/img/favicon.ico'));
+    this.app.use(this.express.favicon(__dirname + '/share/www/img/favicon.ico'));
     this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
 
     /*

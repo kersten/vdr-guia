@@ -1,0 +1,26 @@
+.livesearch p a {
+    color: #0069D6;
+    text-decoration: none;
+    line-height: inherit;
+    font-weight: inherit;
+    text-shadow: none;
+}
+
+.livesearch p a:hover {
+    color: #00438A;
+    text-decoration: underline;
+}
+
+.livesearch p a:hover, a:active {
+    outline: 0;
+}
+
+.livesearch .searchresult {
+    cursor: pointer;
+}
+
+.livesearch .searchresult:hover {
+    background-color: #0069D6;
+    color: white;
+    cursor: pointer;
+}
