@@ -1,6 +1,6 @@
 var events =  mongoose.model('Event');
 var actors =  mongoose.model('Actor');
-var actorDetails =  mongoose.model('ActorDetails');
+var actorDetails =  mongoose.model('ActorDetail');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
     apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'

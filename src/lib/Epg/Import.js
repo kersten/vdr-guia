@@ -103,6 +103,12 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 event.category = event_type[1];
             }
 
+            if (event.category == null) {
+                if (event.duration > 5400) {
+                    event.category = 'eventually film';
+                }
+            }
+
             if (event.description.match(/\[[\*]{1,}\] /)) {
                 var rating = event.description.match(/\[([\*]{1,})\] /);
                 event.rating = rating[1].length;

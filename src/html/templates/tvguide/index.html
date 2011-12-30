@@ -5,7 +5,7 @@
     <div class="span14">
         <& var day = new Array('<%= __('SUN') %>', '<%= __('MON') %>', '<%= __('TUE') %>', '<%= __('WED') %>', '<%= __('THU') %>', '<%= __('FRI') %>', '<%= __('SAT') %>'); &>
         <& var month = new Array('<%= __('January') %>', '<%= __('February') %>', '<%= __('March') %>', '<%= __('April') %>', '<%= __('May') %>', '<%= __('June') %>', '<%= __('July') %>', '<%= __('August') %>', '<%= __('September') %>', '<%= __('October') %>', '<%= __('November') %>', '<%= __('December') %>'); &>
-        <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDay() > 10) ? '0' + new Date().getDay(): new Date().getDay() &>. <&= month[new Date().getMonth()] &></small></h1>
+        <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDate() < 10) ? '0' + new Date().getDate(): new Date().getDate() &>. <&= month[new Date().getMonth()] &></small></h1>
         <div>
             <div>
                 <table class="zebra-striped">

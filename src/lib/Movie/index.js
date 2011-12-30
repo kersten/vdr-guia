@@ -1,5 +1,5 @@
 var events =  mongoose.model('Event');
-var movieDetails =  mongoose.model('MovieDetails');
+var movieDetails =  mongoose.model('MovieDetail');
 var async = require('async');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
@@ -10,12 +10,13 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    log.dbg('Fetching informations for: ' + movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''));
-
     movieDetails.findOne({'epg_name': movie.title}, function (err, doc) {
         if (doc == null) {
+            log.dbg('Fetching informations for: ' + movie.title);
+
             tmdb.Movie.search({
-                query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
+                //query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
+                query: movie.title,
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
@@ -40,17 +41,22 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 
                         res = res[0];
 
+                        log.dbg('Found movie with name: ' + res.name);
+
                         if (res.name == movie.title) {
                             res.tmdbId = tmdbMovie.id;
-                            res.epg_name = movie.title;
 
                             var movieDetailsSchema = new movieDetails(res);
                             movieDetailsSchema.save(function () {
-                                callback('fin', null);
+                                movie.set({tmdbId: movieDetailsSchema._id});
+                                movie.save(function () {
+                                    log.dbg('Movie details saved .. ');
+                                    callback('fin', null);
+                                });
                             });
+                        } else {
+                            callback(null, null);
                         }
-
-                        callback(null, null);
                     });
                 }, function (err, results) {
                     callback.call();
@@ -64,12 +70,13 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 
 Movie.prototype.fetchAll = function () {
     var self = this;
-    var query = events.find({});
+    var query = events.find({tmdbId: {$exists: false}});
 
-    query.where('category', 'Spielfilm');
+    query.where('category', new RegExp('film', 'ig'));
 
     query.each(function (err, movie, next) {
         if (movie == null) {
+            log.dbg('Fetching movies finished ..');
             return;
         }
 

@@ -1,7 +1,7 @@
 var async = require('async');
 var channels = mongoose.model('Channel');
 var events = mongoose.model('Event');
-var movies = mongoose.model('MovieDetails');
+var movies = mongoose.model('MovieDetail');
 
 io.sockets.on('connection', function (socket) {
     socket.on('TVGuideCollection:read', function (data, callback) {

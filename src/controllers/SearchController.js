@@ -1,6 +1,6 @@
 var events = mongoose.model('Event');
-var actors = mongoose.model('ActorDetails');
-var movies = mongoose.model('MovieDetails');
+var actors = mongoose.model('ActorDetail');
+var movies = mongoose.model('MovieDetail');
 var async = require('async');
 
 io.sockets.on('connection', function (socket) {
@@ -18,6 +18,8 @@ io.sockets.on('connection', function (socket) {
 
                 query.sort('start', 1);
                 query.populate('channel_id');
+                query.populate('tmdbId');
+
                 query.exec(function (err, docs) {
                     docs.forEach(function (doc) {
                         if (i == 3) {
@@ -33,11 +35,24 @@ io.sockets.on('connection', function (socket) {
                     callback();
                 });
             }, function (callback) {
-                /*actors.where('name', new RegExp(data.query, "ig")).distinct('name').limit(3).run(function (err, docs) {
-                    result.actors = docs;
+                var i = 0;
+                var query = actors.find({name: new RegExp(data.query, "ig")});
+
+                query.exec(function (err, docs) {
+                    docs.forEach(function (doc) {
+                        if (i == 3) {
+                            return;
+                        }
+
+                        if (result.actors[doc.name] === undefined) {
+                            result.actors[doc.name] = doc;
+                            i++;
+                        }
+                    });
 
                     callback();
-                });*/
+                });
+
                 callback();
             }
         ], function(err, results){

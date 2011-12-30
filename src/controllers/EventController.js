@@ -1,5 +1,5 @@
 var events = mongoose.model('Event');
-var movies = mongoose.model('MovieDetails');
+var movies = mongoose.model('MovieDetail');
 
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
@@ -22,6 +22,11 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('EventModel:read', function (data, callback) {
         events.findOne({_id: data.data._id}, function (err, doc) {
+            if (doc == null) {
+                callback(null);
+                return;
+            }
+
             movies.findOne({epg_name: doc.title}, function (err, details) {
                 if (details == null) {
                     callback(doc);

@@ -26,7 +26,7 @@ function Bootstrap (app, express) {
                 self.setupLogos();
                 self.setupControllers();
                 self.setupViews();
-                
+
                 self.setupVdr();
             } else {
                 self.setupControllers();
@@ -129,14 +129,14 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         throw e;
     });
 
-    var schemas = fs.readdirSync(__dirname + '/schemas');
-
-    schemas.forEach(function (schema) {
-        schema = schema.replace('.js', '');
-        require(__dirname + '/schemas/' + schema);
-    });
-
     mongoose.connection.on('open', function () {
+        var schemas = fs.readdirSync(__dirname + '/schemas');
+
+        schemas.forEach(function (schema) {
+            schema = schema.replace('.js', '');
+            require(__dirname + '/schemas/' + schema);
+        });
+
         var ConfigurationSchema = mongoose.model('Configuration');
 
         ConfigurationSchema.count({}, function (err, cnt) {
@@ -305,7 +305,7 @@ Bootstrap.prototype.setupLogos = function () {
 
 Bootstrap.prototype.setupVdr = function () {
     var self = this;
-    
+
     rest.get(vdr.restful + '/info.json').on('success', function(data) {
         vdr.plugins.epgsearch = false;
 
@@ -317,7 +317,7 @@ Bootstrap.prototype.setupVdr = function () {
     }).on('error', function () {
         log.bad('VDR is not running .. retrying in 5 Minutes');
         log.dbg(JSON.stringify(vdr), true);
-        
+
         setTimeout(function () {
             self.setupVdr();
         }, 300000);
@@ -336,6 +336,7 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
         importer.start(function (hadEpg) {
             if (hadEpg) {
                 runImporter();
+                return;
             } else {
                 config.findOne({}, function (err, doc) {
                     if (doc.epgscandelay === undefined) {
