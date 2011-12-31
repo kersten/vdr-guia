@@ -141,7 +141,11 @@ var NavigationView = Backbone.View.extend({
                         start.setTime(event.start);
 
                         console.log(event.title + '(' + start.getHours() + ':' + start.getMinutes() + ')');
-                    })
+                    });
+
+                    _.each(searchresult.get('actors'), function (actor) {
+                        console.log(actor.name + ' as ' + actor.character);
+                    });
                 }
             });
         }, 300);

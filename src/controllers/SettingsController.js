@@ -12,9 +12,41 @@ io.sockets.on('connection', function (socket) {
     socket.on('Configuration:create', function (data, callback) {
         var config = mongoose.model('Configuration');
         config.findOne({}, function (err, doc) {
-            config.update({_id: doc._id}, {epgscandelay: data.syncdelay}, false, function () {
-                callback({success: true});
-            });
+            var values = null;
+
+            switch (data.key) {
+                case 'epgscandelay':
+                    values = {
+                        epgscandelay: data.value
+                    };
+                    break;
+
+                case 'fetchTmdbMovies':
+                    values = {
+                        fetchTmdbMovies: data.value
+                    };
+                    break;
+
+                case 'fetchTmdbActors':
+                    values = {
+                        fetchTmdbActors: data.value
+                    };
+                    break;
+
+               case 'fetchThetvdbSeasons':
+                    values = {
+                        fetchThetvdbSeasons: data.value
+                    };
+                    break;
+            }
+
+            if (values != null) {
+                config.update({_id: doc._id}, values, false, function () {
+                    callback({success: true});
+                });
+            } else {
+                callback({success: false});
+            }
         });
     });
 

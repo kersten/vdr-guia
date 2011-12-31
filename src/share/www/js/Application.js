@@ -242,13 +242,21 @@ var Application = {
 
         setClock();
 
-        /*$(document).bind('keypress', function (event) {
-            console.log('Key pressed: ' + event.which);
+        $('.fetchTmdbInfos').live('click', function (ev) {
+            console.log($(ev.currentTarget).attr('_id'));
 
-            if (typeof(Application.shortcuts[event.which]) != 'undefined') {
-                Application.shortcuts[event.which].apply(this, [event]);
-            }
-        });*/
+            $('#fetchTmdbInfo').modal({
+                backdrop: true,
+                keyboard: true,
+                show: true
+            });
+
+            // TODO: Fetch infos on unknown movie
+
+            $('#fetchTmdbInfoClose').click(function () {
+                $('#fetchTmdbInfo').modal('hide');
+            });
+        });
     },
 
     router: Backbone.Router.extend({

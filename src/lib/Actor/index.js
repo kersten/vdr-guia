@@ -9,60 +9,58 @@ var tmdb = require('../Media/Scraper/Tmdb').init({
 function Actor () {
 }
 
-Actor.prototype.fetchInformation = function (actorId, actorName, callback) {
-    actorDetails.findOne({'actorID': actorId}, function (err, doc) {
-        if (doc == null) {
-            tmdb.Person.search({
-                query: actorName,
+Actor.prototype.fetchInformation = function (actor, callback) {
+    tmdb.Person.search({
+        query: actor.name,
+        lang: 'de'
+    }, function (err, res) {
+        if(typeof(err) != 'undefined') {
+            callback.call();
+            return;
+        }
+
+        for(var x in res) {
+            if (res[x] == "Nothing found.") {
+                callback.call();
+                return;
+            }
+
+            tmdb.Person.getInfo({
+                query: res[x].id.toString(),
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
-                    callback.call();
                     return;
                 }
 
-                for(var x in res) {
-                    if (res[x] == "Nothing found.") {
+                res[0].tmdbId = res[x].id;
+                //res[0].actorID = actorId;
+
+                var actorDetailsSchema = new actorDetails(res[0]);
+                actorDetailsSchema.save(function () {
+                    actor.set({tmdbId: actorDetailsSchema._id});
+
+                    actor.save(function () {
                         callback.call();
-                        return;
-                    }
-
-                    tmdb.Person.getInfo({
-                        query: res[x].id.toString(),
-                        lang: 'de'
-                    }, function (err, res) {
-                        if(typeof(err) != 'undefined') {
-                            return;
-                        }
-
-                        res[0].tmdbId = res[x].id;
-                        res[0].actorID = actorId;
-
-                        var actorDetailsSchema = new actorDetails(res[0]);
-                        actorDetailsSchema.save(function () {
-                            callback.call();
-                        });
                     });
-
-                    return;
-                }
+                });
             });
-        } else {
-            callback.call();
+
+            return;
         }
     });
 };
 
 Actor.prototype.fetchAll = function () {
     var self = this;
-    var query = actors.find({});
+    var query = actors.find({tmdbId: {$exists: false}});
 
     query.each(function (err, actor, next) {
         if (actor == null) {
             return;
         }
 
-        self.fetchInformation(actor._id, actor.name, next)
+        self.fetchInformation(actor, next)
     });
 };
 

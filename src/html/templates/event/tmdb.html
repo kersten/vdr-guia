@@ -60,6 +60,15 @@
             <& }); &>
             </ul>
         <& } else { &>
+
+        <p style="text-align: right;" class="recordThis">
+            <& if (event.get('timer_active') == false) { &>
+                <img src="/icons/devine/black/16x16/Circle.png" alt="Record" title="Record" style="cursor: pointer;" />
+            <& } else { &>
+                <img src="/icons/devine/black/16x16/Circle-2.png" alt="Delete Timer" title="Delete Timer" style="cursor: pointer;" />
+            <& } &>
+        </p>
+
         <& if (event.get('tmdb').rating) { &>
         <p>
             <& for (var i = 1; i < 11; i++) {

@@ -1,6 +1,5 @@
 var events = mongoose.model('Event');
-var actors = mongoose.model('ActorDetail');
-var movies = mongoose.model('MovieDetail');
+var actors = mongoose.model('Actor');
 var async = require('async');
 
 io.sockets.on('connection', function (socket) {
@@ -8,8 +7,11 @@ io.sockets.on('connection', function (socket) {
         data = data.data;
 
         var result = {
-            events: {}
+            events: {},
+            actors: {}
         };
+
+        log.dbg('Search for: ' + data.query);
 
         async.parallel([
             function (callback) {
@@ -17,7 +19,6 @@ io.sockets.on('connection', function (socket) {
                 var query = events.find({title: new RegExp(data.query, "ig")});
 
                 query.sort('start', 1);
-                query.populate('channel_id');
                 query.populate('tmdbId');
 
                 query.exec(function (err, docs) {
@@ -36,9 +37,14 @@ io.sockets.on('connection', function (socket) {
                 });
             }, function (callback) {
                 var i = 0;
-                var query = actors.find({name: new RegExp(data.query, "ig")});
+                var query = actors.find();
+
+                query.or([{name: new RegExp(data.query, "ig")}, {character: new RegExp(data.query, "ig")}]);
+                query.populate('tmdbId');
 
                 query.exec(function (err, docs) {
+                    console.log(arguments);
+
                     docs.forEach(function (doc) {
                         if (i == 3) {
                             return;
@@ -52,8 +58,6 @@ io.sockets.on('connection', function (socket) {
 
                     callback();
                 });
-
-                callback();
             }
         ], function(err, results){
             callback(result);

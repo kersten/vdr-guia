@@ -6,9 +6,9 @@
     <form class="form-stacked">
         <fieldset>
             <div class="clearfix">
-                <label for="epgsyncdelay"><%- __('Pause between epg update') %></label>
+                <label for="epgscandelay"><%- __('Pause between epg update') %></label>
                 <div class="input">
-                    <select class="medium" name="epgsyncdelay" id="epgsyncdelay">
+                    <select class="medium" name="epgscandelay" id="epgscandelay">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -19,23 +19,23 @@
             </div>
 
             <div class="clearfix">
-                <label for="epgsyncdelay"><%- __('Fetch TMDb actors') %></label>
+                <label for="fetchTmdbActors"><%- __('Fetch TMDb actors') %></label>
                 <div class="input">
-                    <input type="checkbox" id="fetchTMDbActors" checked="checked" />
+                    <input type="checkbox" id="fetchTmdbActors" checked="checked" />
                 </div>
             </div>
 
             <div class="clearfix">
-                <label for="epgsyncdelay"><%- __('Fetch TMDb movies') %></label>
+                <label for="fetchTmdbMovies"><%- __('Fetch TMDb movies') %></label>
                 <div class="input">
-                    <input type="checkbox" id="fetchTMDbMovies" checked="checked" />
+                    <input type="checkbox" id="fetchTmdbMovies" checked="checked" />
                 </div>
             </div>
 
             <div class="clearfix">
-                <label for="epgsyncdelay"><%- __('Fetch thetvdb seasons') %></label>
+                <label for="fetchThetvdbSeasons"><%- __('Fetch thetvdb seasons') %></label>
                 <div class="input">
-                    <input type="checkbox" id="fetchTMDbMovies" checked="checked" />
+                    <input type="checkbox" id="fetchThetvdbSeasons" checked="checked" />
                 </div>
             </div>
         </fieldset>

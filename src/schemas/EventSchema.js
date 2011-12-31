@@ -1,7 +1,3 @@
-require('./ActorSchema');
-require('./ChannelSchema');
-require('./MovieDetailSchema');
-
 var EventSchema = new Schema({
     id: {
         type: String,
@@ -15,7 +11,8 @@ var EventSchema = new Schema({
     },
 
     channel_id: {
-        type: mongoose.model('Channel'),
+        type: Schema.ObjectId,
+        ref: 'Channel',
         required: true
     },
 
@@ -54,7 +51,10 @@ var EventSchema = new Schema({
         required: true
     },
 
-    actors: [mongoose.model('Actor')],
+    actors: [{
+        type: Schema.ObjectId,
+        ref: 'Actor'
+    }],
 
     Regisseur: {
         type: String,
@@ -62,7 +62,8 @@ var EventSchema = new Schema({
     },
 
     tmdbId: {
-        type: mongoose.model('MovieDetail'),
+        type: Schema.ObjectId,
+        ref: 'MovieDetail',
         required: false
     },
 

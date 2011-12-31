@@ -4,10 +4,11 @@ var ActorSchema = mongoose.model('Actor');
 var ChannnelSchema = mongoose.model('Channel');
 var async = require('async');
 
-function EpgImport (restful) {
+function EpgImport (restful, numEvents) {
     this.newEpg = false;
 
     this.restful = restful;
+    this.numEvents = numEvents || 100;
 
     var ChannelImport = require('../Channel/Import');
     this.channelImporter = new ChannelImport(restful);
@@ -47,29 +48,28 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
     query.exec(function (err, e) {
         if (e != null) {
-            from = e.stop + 60;
+            from = Math.round(e.stop + 60);
         }
 
         log.dbg('Get events from channel: ' + channel.name);
-        rest.get(self.restful + '/events/' + channel.channel_id + '.json?timespan=0&from=' + from + '&start=0&limit=100').on('success', function (res) {
+        log.dbg(self.restful + '/events/' + channel.channel_id + '.json?timespan=0&from=' + from + '&start=0&limit=' + self.numEvents);
+        rest.get(self.restful + '/events/' + channel.channel_id + '.json?timespan=0&from=' + from + '&start=0&limit=' + self.numEvents).on('success', function (res) {
             if (res.events.length == 0) {
                 next.call();
                 return;
             }
 
-            if (res.events.length == 100) {
+            if (res.events.length == self.numEvents) {
                 self.newEpg = true;
             }
+
+            log.dbg('Found ' + res.events.length + ' new events');
 
             async.map(res.events, function (event, callback) {
                 self.extractDetails(channel, event, function (event) {
                     self.insertEpg(event, callback);
                 });
             }, function (err, result) {
-                if (err) {
-                    self.newEpg = false;
-                }
-
                 next.call();
             });
         }).on('error', function () {
@@ -167,6 +167,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
         }, function (callback) {
             if (event.details === undefined) {
                 callback(null, null);
+                return;
             }
 
             async.map(event.details, function (details, callback) {
@@ -182,29 +183,19 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                             actor_details = [null, a, null]
                         }
 
-                        ActorSchema.findOne({name: actor_details[1]}, function (err, doc) {
+                        ActorSchema.findOne({name: actor_details[1], character: actor_details[2]}, function (err, doc) {
                             if (doc == null) {
                                 var actor = new ActorSchema({
-                                    name: actor_details[1]
-                                });
-
-                                actor.save(function (err, doc) {
-                                    event.actors.push({
-                                        actorId: actor._id,
-                                        character: actor_details[2]
-                                    });
-
-                                    //var actorDetails = new ActorDetails(actor._id, actor_details[1]);
-                                    //actorDetails.fetchInformation();
-
-                                    callback(null, null);
-                                });
-                            } else {
-                                event.actors.push({
-                                    actorId: doc._id,
+                                    name: actor_details[1],
                                     character: actor_details[2]
                                 });
 
+                                actor.save(function () {
+                                    event.actors.push(actor._id);
+                                    callback(null, null);
+                                });
+                            } else {
+                                event.actors.push(doc._id);
                                 callback(null, null);
                             }
                         });

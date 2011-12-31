@@ -152,6 +152,8 @@ Bootstrap.prototype.setupDatabase = function (cb) {
                 log.dbg('GUIA installed! Getting configuration ..');
 
                 ConfigurationSchema.findOne({}, function (err, data) {
+                    global.guia = data;
+
                     cb.apply(this, [{
                         installed: true,
                         vdrHost: data.vdrHost,
@@ -204,6 +206,7 @@ Bootstrap.prototype.setupSocketIo = function () {
 };
 
 Bootstrap.prototype.setupViews = function () {
+    var ConfigurationSchema = mongoose.model('Configuration');
     log.dbg('Setting up views ..');
 
     this.app.all('*', function (req, res, next) {
@@ -233,10 +236,13 @@ Bootstrap.prototype.setupViews = function () {
     this.app.get('/', function (req, res) {
         log.dbg('Render index.html ..');
 
-        res.render('index', {
-            layout: false,
-            isLoggedIn: req.session.loggedIn,
-            vdr: JSON.stringify(vdr.plugins)
+        ConfigurationSchema.findOne({}, function (err, data) {
+            res.render('index', {
+                layout: false,
+                isLoggedIn: req.session.loggedIn,
+                vdr: JSON.stringify(vdr.plugins),
+                guia: JSON.stringify(data)
+            });
         });
     });
 
@@ -330,7 +336,7 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
     var ActorDetails = require('./lib/Actor');
     var MovieDetails = require('./lib/Movie');
     var SeasonDetails = require('./lib/Season');
-    var importer = new EpgImport(vdr.restful);
+    var importer = new EpgImport(vdr.restful, 250);
 
     function runImporter () {
         importer.start(function (hadEpg) {
@@ -354,11 +360,23 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
                 });
             }
 
-            var actorDetails = new ActorDetails();
-            actorDetails.fetchAll();
+            var ConfigurationSchema = mongoose.model('Configuration');
 
-            var movieDetails = new MovieDetails();
-            movieDetails.fetchAll();
+            ConfigurationSchema.findOne({}, function (err, data) {
+                if (data.get('fetchTmdbActors')) {
+                    var actorDetails = new ActorDetails();
+                    actorDetails.fetchAll();
+                } else {
+                    log.inf('Tmdb Actors fetching disabled ..');
+                }
+
+                if (data.get('fetchTmdbMovies')) {
+                    var movieDetails = new MovieDetails();
+                    movieDetails.fetchAll();
+                } else {
+                    log.inf('Tmdb Movies fetching disabled ..');
+                }
+            });
         });
     }
 

@@ -9,32 +9,72 @@ var SettingsGuiaView = Backbone.View.extend({
 
     },
 
+    updateConfiguration: function (value) {
+        socket.emit('Configuration:create', value, function (data) {
+            Application.guia[value.key] = value.value;
+        });
+    },
+
     render: function () {
+        var self = this;
+
         this.generateHTML(function (res) {
             $('#settingssection').children().remove();
             $('#settingssection').html(res);
 
-            $('#epgsyncdelay').change(function () {
-                socket.emit('Configuration:create', {
-                    syncdelay: $('#epgsyncdelay option:selected').val()
-                }, function (data) {
-                    console.log(data);
+            $('#epgscandelay').change(function () {
+                self.updateConfiguration({
+                    key: 'epgscandelay',
+                    value: $('#epgscandelay option:selected').val()
                 });
-
-                console.log('Update sync time to: ' + $('#epgsyncdelay option:selected').val());
             });
 
-            socket.emit('Configuration:fetch', {
-                value: 'syncdelay'
-            }, function (data) {
-                if (data.data.value === undefined) {
-                    $('#epgsyncdelay option[value="1"]').attr('selected',true);
-                } else {
-                    $('#epgsyncdelay option[value="' + data.data.value + '"]').attr('selected',true);
-                }
-
-                Application.loadingOverlay('hide');
+            $('#fetchTmdbActors').change(function () {
+                self.updateConfiguration({
+                    key: 'fetchTmdbActors',
+                    value: $('#fetchTmdbActors').is(':checked')
+                });
             });
+
+            $('#fetchTmdbMovies').change(function () {
+                self.updateConfiguration({
+                    key: 'fetchTmdbMovies',
+                    value: $('#fetchTmdbMovies').is(':checked')
+                });
+            });
+
+            $('#fetchThetvdbSeasons').change(function () {
+                self.updateConfiguration({
+                    key: 'fetchThetvdbSeasons',
+                    value: $('#fetchThetvdbSeasons').is(':checked')
+                });
+            });
+
+            if (Application.guia.epgscandelay === undefined) {
+                $('#epgscandelay option[value="1"]').attr('selected', true);
+            } else {
+                $('#epgscandelay option[value="' + Application.guia.epgscandelay + '"]').attr('selected',true);
+            }
+
+            if (Application.guia.fetchTmdbActors === undefined) {
+                $('#fetchTmdbActors').attr('checked', false);
+            } else {
+                $('#fetchTmdbActors').attr('checked', Application.guia.fetchTmdbActors);
+            }
+
+            if (Application.guia.fetchTmdbMovies === undefined) {
+                $('#fetchTmdbMovies').attr('checked', false);
+            } else {
+                $('#fetchTmdbMovies').attr('checked', Application.guia.fetchTmdbMovies);
+            }
+
+            if (Application.guia.fetchThetvdbSeasons === undefined) {
+                $('#fetchThetvdbSeasons').attr('checked', false);
+            } else {
+                $('#fetchThetvdbSeasons').attr('checked', Application.guia.fetchThetvdbSeasons);
+            }
+
+            Application.loadingOverlay('hide');
         });
     },
 

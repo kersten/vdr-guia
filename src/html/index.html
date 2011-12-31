@@ -142,6 +142,8 @@
                     plugins: <%- vdr %>
                 };
 
+                app.guia = <%- guia %>;
+
                 app.initialize();
             });
         </script>
@@ -189,6 +191,20 @@
             <footer id="footer">
                 <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011 - <a href="#/About">About</a></p>
             </footer>
+        </div>
+
+        <div class="modal hide fade" id="fetchTmdbInfo">
+            <div class="modal-header">
+                <a class="close" href="#">×</a>
+                <h3><%= __('Posters') %></h3>
+            </div>
+            <div class="modal-body" style="overflow: auto;">
+                <ul class="media-grid">
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="btn" id="fetchTmdbInfoClose"><%= __('Close') %></a>
+            </div>
         </div>
     </body>
 </html>

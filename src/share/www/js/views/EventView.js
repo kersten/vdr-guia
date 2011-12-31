@@ -4,7 +4,8 @@ var EventView = Backbone.View.extend({
 
     events: {
         'click #showallposters': 'showallposters',
-        'click .lightboxPoster': 'lightboxPoster'
+        'click .lightboxPoster': 'lightboxPoster',
+        'click .recordThis > img': 'recordEvent'
     },
 
     initialize: function () {
@@ -42,6 +43,17 @@ var EventView = Backbone.View.extend({
                 });
             }
         });
+    },
+
+    recordEvent: function (ev) {
+        if (this.event.get('timer_active')) {
+            console.log('Delete timer for: ' + this.event.get('_id'));
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle.png');
+        } else {
+            console.log('Create timer for: ' + this.event.get('_id'));
+            this.event.set({timer_active: true});
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle-2.png');
+        }
     },
 
     generateHTML: function (callback) {
