@@ -16,6 +16,8 @@ function EpgImport (restful, numEvents) {
 
 EpgImport.prototype.start = function (callback) {
     var self = this;
+    this.newEpg = false;
+    
     log.dbg("Starting epg import ...");
 
     this.channelImporter.start(function () {
