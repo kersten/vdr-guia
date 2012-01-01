@@ -18,11 +18,24 @@ Epg.prototype.getPrimetimeEvent = function (channl_id, day, callback) {
     primetimeQuery.where('start').gte(primetime);
     primetimeQuery.sort('start', 1);
 
+    primetimeQuery.populate('actors');
     primetimeQuery.populate('tmdbId');
 
     primetimeQuery.exec(function (err, doc) {
         callback(doc);
     });
+};
+
+Epg.prototype.getEvents = function (channelId) {
+    
+};
+
+Epg.prototype.createTimer = function (eventId) {
+    
+};
+
+Epg.prototype.deleteTimer = function (timerId) {
+    
 };
 
 module.exports = Epg;
