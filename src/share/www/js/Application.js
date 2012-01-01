@@ -263,6 +263,8 @@ var Application = {
         loadedViews: {},
 
         routes: {
+            "/TVGuide": "tvguideRoute",
+            "/TVGuide/:date": "tvguideRoute",
             "/Event/:id": "eventRoute",
             "/Event/:id/posters": "eventPostersRoute",
             "*actions": "defaultRoute"
@@ -276,6 +278,22 @@ var Application = {
                 $('.nav > li.active').removeClass('active');
                 $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
             }
+        },
+
+        tvguideRoute: function (date) {
+            Application.loadingOverlay('show');
+
+            var self = this;
+
+            Application.loadView({
+                view: '/tvguide',
+                params: {
+                    date: date
+                },
+                callback: function (req, original) {
+                    self.render.apply(this, [req, original, self]);
+                }
+            });
         },
 
         eventRoute: function (_id) {

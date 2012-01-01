@@ -26,16 +26,80 @@ Epg.prototype.getPrimetimeEvent = function (channl_id, day, callback) {
     });
 };
 
-Epg.prototype.getEvents = function (channelId) {
-    
+Epg.prototype.getEvent = function (eventId, callback) {
+    var query = events.findOne();
+    query.where('_id', eventId);
+
+    query.populate('channel_id');
+    query.populate('actors');
+    query.populate('tmdbId');
+
+    query.run(function (err, doc) {
+        if (doc == null) {
+            callback(null);
+            return;
+        }
+
+        if (doc.get('tmdbId')) {
+            var details = doc.get('tmdbId');
+
+            details.set('directors', new Array());
+            details.set('writers', new Array());
+            details.set('actors', new Array());
+
+            if (details.get('cast') !== undefined) {
+                details.get('cast').forEach(function (cast) {
+                    switch (cast.department) {
+                        case 'Directing':
+                            details.get('directors').push(cast);
+                            break;
+
+                        case 'Writing':
+                            details.get('writers').push(cast);
+                            break;
+
+                        case 'Actors':
+                            details.get('actors').push(cast);
+                            break;
+
+                        default:
+                            log.dbg('Unknown type for tmdb cast data: ' + cast.department);
+                            break;
+                    }
+                });
+            }
+
+            delete(details.cast);
+
+            doc.set('tmdb', details);
+        }
+
+        callback(doc);
+    });
+};
+
+Epg.prototype.getEvents = function (channelId, start, limit, callback) {
+    var date = new Date();
+
+    var query = events.find({});
+
+    query.where('channel_id', channelId);
+    query.$gt('stop', date.getTime() / 1000);
+    query.sort('start', 1);
+    query.skip(start);
+    query.limit(limit);
+
+    query.exec(function (err, doc) {
+        callback(doc);
+    });
 };
 
 Epg.prototype.createTimer = function (eventId) {
-    
+
 };
 
 Epg.prototype.deleteTimer = function (timerId) {
-    
+
 };
 
 module.exports = Epg;

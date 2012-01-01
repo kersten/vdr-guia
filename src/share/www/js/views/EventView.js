@@ -82,7 +82,7 @@ var EventView = Backbone.View.extend({
                 if (event.get('tmdb') != null) {
                     var tmdb = event.get('tmdb');
 
-                    console.log(tmdb);
+                    //console.log(tmdb);
                     self.eventType = 'tmdb';
 
                     if (tmdb.posters.length > 0) {
@@ -103,11 +103,17 @@ var EventView = Backbone.View.extend({
 
                 }
 
+                var start = new XDate(event.get('start') * 1000);
+
+                event.set({start_formatted: start.toString('HH:mm')})
+
                 switch (self.eventType) {
                     case 'tmdb':
                         self.url = 'event/tmdb.html';
                         break;
                 }
+
+                console.log(event);
 
                 $.ajax({
                     url: "/templates/" + self.url,

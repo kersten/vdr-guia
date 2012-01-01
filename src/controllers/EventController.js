@@ -1,74 +1,16 @@
-var events = mongoose.model('Event');
-var movies = mongoose.model('MovieDetail');
+var Epg = require('../lib/Epg');
 
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
-        data = data.data;
-        var start = (data.page - 1) * 20;
-        var date = new Date();
+        var start = (data.data.page - 1) * 20;
 
-        var query = events.find({});
-
-        query.where('channel_id', data.channel_id);
-        query.$gt('stop', date.getTime() / 1000);
-        query.sort('start', 1);
-        query.skip(start);
-        query.limit(20);
-
-        query.exec(function (err, doc) {
-            callback(doc);
-        });
+        var epg = new Epg();
+        epg.getEvents(data.data.channel_id, start, 20, callback);
     });
 
     socket.on('EventModel:read', function (data, callback) {
-        var query = events.findOne();
-        query.where('_id', data.data._id);
-
-        query.populate('actors');
-        query.populate('tmdbId');
-
-        query.run(function (err, doc) {
-            if (doc == null) {
-                callback(null);
-                return;
-            }
-
-            if (doc.get('tmdbId')) {
-                var details = doc.get('tmdbId');
-
-                details.set('directors', new Array());
-                details.set('writers', new Array());
-                details.set('actors', new Array());
-
-                if (details.get('cast') !== undefined) {
-                    details.get('cast').forEach(function (cast) {
-                        switch (cast.department) {
-                            case 'Directing':
-                                details.get('directors').push(cast);
-                                break;
-
-                            case 'Writing':
-                                details.get('writers').push(cast);
-                                break;
-
-                            case 'Actors':
-                                details.get('actors').push(cast);
-                                break;
-
-                            default:
-                                log.dbg('Unknown type for tmdb cast data: ' + cast.department);
-                                break;
-                        }
-                    });
-                }
-
-                delete(details.cast);
-
-                doc.set('tmdb', details);
-            }
-
-            callback(doc);
-        });
+        var epg = new Epg();
+        epg.getEvent(data.data._id, callback);
     });
 
     socket.on('Event:readOne', function (data, callback) {

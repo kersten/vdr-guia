@@ -86,3 +86,14 @@ Backbone.sync = function (method, model, options) {
         }
     });
 };
+
+XDate.parsers.push(function (str) {
+    var parts = str.split('.');
+    if (parts.length == 3) {
+        return new XDate(
+            parseInt(parts[2]), // year
+            parseInt(parts[1]), // month
+            parseInt(parts[0]) // date
+        );
+    }
+});

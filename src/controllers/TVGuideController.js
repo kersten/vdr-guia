@@ -11,6 +11,8 @@ io.sockets.on('connection', function (socket) {
         var start = (data.page -1) * 4;
 
         var date = new Date();
+        date.setFullYear(data.date.year, data.date.month - 1, data.date.day)
+
         var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
         primetime = primetime.getTime() / 1000;
 
@@ -19,7 +21,7 @@ io.sockets.on('connection', function (socket) {
         var starttime = date;
         starttime = starttime.getTime() / 1000;
 
-        if (date.getHours() < 6) {
+        if (date.getHours() > 6) {
             starttime -= 86400;
             primetime -= 86400;
         }
@@ -54,6 +56,8 @@ io.sockets.on('connection', function (socket) {
             primetimeQuery.sort('start', 1);
 
             primetimeQuery.run(function (err, doc) {
+                console.log(primetime);
+
                 var start_time = new Date();
                 start_time.setTime(doc.start * 1000);
 

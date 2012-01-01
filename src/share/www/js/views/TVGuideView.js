@@ -5,9 +5,21 @@ var TVGuideView = Backbone.View.extend({
         var self = this;
         this.tvguide = new TVGuideCollection();
 
-        this.tvguide.fetch({data: {page: 1},success: function (collection) {
-                console.log(collection);
-            callback.apply(this, [_.template(self.template, {events: collection})]);
+        var d = new XDate();
+        var active = d.toString('dd.MM.yyyy');
+
+        if (self.options.params.date !== undefined) {
+            active = self.options.params.date
+        }
+
+        d = new XDate(active);
+
+        this.tvguide.fetch({data: {page: 1, date: {
+            year: d.toString('yyyy'),
+            month: d.toString('MM'),
+            day: d.toString('dd')
+        }}, success: function (collection) {
+            callback.apply(this, [_.template(self.template, {events: collection, active: active})]);
         }});
     },
 

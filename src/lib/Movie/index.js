@@ -10,7 +10,7 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    movieDetails.findOne({'epg_name': movie.title}, function (err, doc) {
+    movieDetails.findOne({'name': movie.title}, function (err, doc) {
         if (doc == null) {
             log.dbg('Fetching informations for: ' + movie.title);
 
@@ -41,18 +41,30 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 
                         res = res[0];
 
-                        log.dbg('Found movie with name: ' + res.name);
+                        log.dbg('Found movie with name: ' + res.name + ' || ' + res.original_name);
 
-                        if (res.name == movie.title) {
-                            res.tmdbId = tmdbMovie.id;
+                        var title = new RegExp("^" + movie.title + "$", 'ig');
 
-                            var movieDetailsSchema = new movieDetails(res);
-                            movieDetailsSchema.save(function () {
-                                movie.set({tmdbId: movieDetailsSchema._id});
-                                movie.save(function () {
-                                    log.dbg('Movie details saved .. ');
-                                    callback('fin', null);
-                                });
+                        if (title.test(res.original_name) || title.test(res.name)) {
+                            movieDetails.findOne({tmdbId: tmdbMovie.id}, function (err, doc) {
+                                if (doc == null) {
+                                    res.tmdbId = tmdbMovie.id;
+
+                                    var movieDetailsSchema = new movieDetails(res);
+                                    movieDetailsSchema.save(function () {
+                                        movie.set({tmdbId: movieDetailsSchema._id});
+                                        movie.save(function () {
+                                            log.dbg('Movie details saved .. ');
+                                            callback('fin');
+                                        });
+                                    });
+                                } else {
+                                    movie.set({tmdbId: doc._id});
+                                    movie.save(function () {
+                                        log.dbg('Movie details saved .. ');
+                                        callback('fin');
+                                    });
+                                }
                             });
                         } else {
                             callback(null, null);
@@ -72,6 +84,7 @@ Movie.prototype.fetchAll = function () {
     var self = this;
     var query = events.find({tmdbId: {$exists: false}});
 
+    query.sort('title', 1);
     query.where('category', new RegExp('film', 'ig'));
 
     query.each(function (err, movie, next) {

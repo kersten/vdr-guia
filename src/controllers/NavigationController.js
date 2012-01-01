@@ -9,7 +9,7 @@ io.sockets.on('connection', function (socket) {
                 view: 'Highlights'
             }, {
                 title: __('TV Guide'),
-                link: '#/tvguide',
+                link: '#/TVGuide',
                 view: 'TVGuide'
             }, {
                 title: __('Recordings'),

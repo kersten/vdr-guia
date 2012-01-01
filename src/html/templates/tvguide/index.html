@@ -8,6 +8,21 @@
         <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDate() < 10) ? '0' + new Date().getDate(): new Date().getDate() &>. <&= month[new Date().getMonth()] &></small></h1>
         <div>
             <div>
+                <div class="pagination">
+                    <ul>
+                        <& d = new XDate(); &>
+
+                        <li class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>">
+                            <a href="#/TVGuide"><&= d.toString('dd.MM') &></a>
+                        </li>
+
+                        <& for(i = 0; i < 12; i++) { &>
+                        <li class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>">
+                            <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
+                        </li>
+                        <& } &>
+                    </ul>
+                </div>
                 <table class="zebra-striped">
                     <tr>
                         <& events.forEach(function (channel) { &>
