@@ -57,19 +57,22 @@ var TVGuideView = Backbone.View.extend({
                 $(this).parent().find('.slideupTable').slideDown();
             });*/
 
-            $('.eventDetails').hover(function () {
-                console.log($(this).popover('show'));
-                $(this).popover('show');
 
+
+            /*$('.eventDetails').hover(function () {
                 if (!$(this).hasClass('isPrime')) {
-
+                    //$(this).popover('show');
                     $(this).css({textDecoration: 'underline'});
                 }
             }, function () {
                 if (!$(this).hasClass('isPrime')) {
-                    $(this).popover('hide');
+                    //$(this).popover('hide');
                     $(this).css({textDecoration: 'none'});
                 }
+            });*/
+
+            $('.eventDetails').popover({
+                placement: 'above'
             });
 
             $('.eventDetails').click(function () {
