@@ -1,6 +1,20 @@
 var TVGuideView = Backbone.View.extend({
     url: "tvguide",
 
+    events: {
+        'click .slideUp': 'slideUp'
+    },
+
+    slideUp: function (ev) {
+        if ($(ev.currentTarget).hasClass('sectionHidden')) {
+            $('.section_' + $(ev.currentTarget).attr('section')).show();
+            $(ev.currentTarget).removeClass('sectionHidden');
+        } else {
+            $('.section_' + $(ev.currentTarget).attr('section')).hide();
+            $(ev.currentTarget).addClass('sectionHidden');
+        }
+    },
+
     generateHTML: function (callback) {
         var self = this;
         this.tvguide = new TVGuideCollection();
@@ -33,7 +47,7 @@ var TVGuideView = Backbone.View.extend({
 
             Application.loadingOverlay('hide');
 
-            $('.slideup').click(function () {
+            /*$('.slideup').click(function () {
                 $(this).parent().removeClass('slideup').parent().addClass('slidedown');
                 $(this).parent().find('.slideupTable').slideUp();
             });
@@ -41,20 +55,19 @@ var TVGuideView = Backbone.View.extend({
             $('.slidedown').click(function () {
                 $(this).parent().removeClass('slidedown').parent().addClass('slideup');
                 $(this).parent().find('.slideupTable').slideDown();
-            });
-
-            $('.record').hover(function () {
-                $(this).css({color: '#ff0000'});
-            }, function () {
-                $(this).css({color: '#000000'});
-            });
+            });*/
 
             $('.eventDetails').hover(function () {
+                console.log($(this).popover('show'));
+                $(this).popover('show');
+
                 if (!$(this).hasClass('isPrime')) {
+
                     $(this).css({textDecoration: 'underline'});
                 }
             }, function () {
                 if (!$(this).hasClass('isPrime')) {
+                    $(this).popover('hide');
                     $(this).css({textDecoration: 'none'});
                 }
             });

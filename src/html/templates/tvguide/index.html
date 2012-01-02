@@ -6,107 +6,100 @@
         <& var day = new Array('<%= __('SUN') %>', '<%= __('MON') %>', '<%= __('TUE') %>', '<%= __('WED') %>', '<%= __('THU') %>', '<%= __('FRI') %>', '<%= __('SAT') %>'); &>
         <& var month = new Array('<%= __('January') %>', '<%= __('February') %>', '<%= __('March') %>', '<%= __('April') %>', '<%= __('May') %>', '<%= __('June') %>', '<%= __('July') %>', '<%= __('August') %>', '<%= __('September') %>', '<%= __('October') %>', '<%= __('November') %>', '<%= __('December') %>'); &>
         <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDate() < 10) ? '0' + new Date().getDate(): new Date().getDate() &>. <&= month[new Date().getMonth()] &></small></h1>
-        <div>
-            <div>
-                <div class="pagination">
-                    <ul>
-                        <& d = new XDate(); &>
+    </div>
+    <div class="span14">
+        <div class="pagination">
+            <ul>
+                <& d = new XDate(); &>
 
-                        <li class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                            <a href="#/TVGuide"><&= d.toString('dd.MM') &></a>
-                        </li>
+                <li class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>">
+                    <a href="#/TVGuide"><&= d.toString('dd.MM') &></a>
+                </li>
 
-                        <& for(i = 0; i < 12; i++) { &>
-                        <li class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                            <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
-                        </li>
+                <& for(i = 0; i < 12; i++) { &>
+                <li class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>">
+                    <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
+                </li>
+                <& } &>
+            </ul>
+        </div>
+        <table class="zebra-striped">
+            <tr>
+                <& events.forEach(function (channel) { &>
+                <td style="width: 205px">
+                    <div style="text-align: center; background-position: right; background-image: url('/logo/<&= channel.get('channel_name') &>'); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
+                        <h3 style="float: left;"><&= channel.get('channel_name') &></h3>
+                    </div>
+                </td>
+                <& }); &>
+            </tr>
+
+            <tbody class="section_prime">
+            <tr>
+                <& events.forEach(function (channel) { &>
+                <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 205px;" _id="<&= channel.get('primetime').event._id &>">
+                    <div style="background-color: #0064cd; text-align: center; color: #ffffff;" class="eventDetails isPrime">
+                        <strong><&= channel.get('primetime').event.category &></strong>
+                    </div>
+
+                    <div style=" max-height: 263px; overflow: hidden;" class="eventDetails isPrime">
+                        <div>
+                            <span class="label important"><&= channel.get('primetime').event.start_time &></span> <strong><&= channel.get('primetime').event.title &></strong>
+                        </div>
+                        <& if (channel.get('primetime').image) { &>
+                        <div style="width: 205px; height: 100px; background: url(<&= channel.get('primetime').image &>) center no-repeat;">
+
+                        </div>
                         <& } &>
-                    </ul>
-                </div>
-                <table class="zebra-striped">
-                    <tr>
-                        <& events.forEach(function (channel) { &>
-                        <td style="width: 205px">
-                            <div style="text-align: center; background-position: right; background-image: url('/logo/<&= channel.get('channel_name') &>'); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
-                                <h3 style="float: left;"><&= channel.get('channel_name') &></h3>
-                            </div>
-                        </td>
-                        <& }); &>
-                    </tr>
+                        <div>
+                            <&= channel.get('primetime').description &>
+                        </div>
+                    </div>
+                </td>
+                <& }); &>
+            </tr>
 
-                    <& var dayPlus = 0; &>
-                    <& for (var i = 5; i < 29; i++) { &>
-                    <& if (i >= 24) { x = i - 24; dayPlus = 1 } else { x = i; }&>
+            <& var dayPlus = 0; &>
+            <& for (var i = 5; i < 29; i++) { &>
+            <& if (i >= 24) { x = i - 24; dayPlus = 1 } else { x = i; }&>
 
-                    <& if (x == 5 || x == 12 || x == 20) { &>
-                </table>
-            </div>
-        </div>
-        <div>
-            <div class="slideup">
-                + 5-12
-            </div>
-
-            <div class="slideupTable">
-                <table class="zebra-striped">
+            <& if (x == 5 || x == 12 || x == 20) { &>
+            </tbody>
+            <tr>
+                <td colspan="4" style="background-color: #0064cd; font-weight: bold; color: #ffffff;" class="slideUp" section="<&= x &>"><&= x &></td>
+            </tr>
+            <tbody class="section_<&= x &>">
+            <& } &>
+            <tr>
+                <& events.forEach(function (channel) { &>
+                    <& for (var k in channel.get('events')) { &>
+                        <& var day = k.match(/(.*?):/); day = parseInt(day[1]); &>
+                        <& break; &>
                     <& } &>
 
-                    <& if (x == 20) { &>
-                    <tr>
-                        <& events.forEach(function (channel) { &>
-                        <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 205px;" _id="<&= channel.get('primetime').event._id &>">
-                            <div style="background-color: #0064cd; text-align: center; color: #ffffff;" class="eventDetails isPrime">
-                                <strong><&= channel.get('primetime').event.category &></strong>
+                    <& if (!_.isArray(channel.get('events')[(day  + dayPlus) + ':' + x])) { &>
+                    <td  style="width: 205px;">
+                        &nbsp;
+                    </td>
+                    <& } else { &>
+                    <td  style="width: 205px;">
+                        <& _.each(channel.get('events')[(day  + dayPlus) + ':' + x], function (event) { &>
+
+                        <div style="clear: left;" _id="<&= event._id &>">
+                            <div style="float: left; width: 20px; cursor: pointer;" class="record">
+                                <img src="/icons/devine/black/16x16/Circle.png" alt="Record" title="Record" style="cursor: pointer;" />
                             </div>
-
-                            <div style=" max-height: 263px; overflow: hidden;" class="eventDetails isPrime">
-                                <div>
-                                    <span class="label important"><&= channel.get('primetime').event.start_time &></span> <strong><&= channel.get('primetime').event.title &></strong>
-                                </div>
-                                <& if (channel.get('primetime').image) { &>
-                                <div style="width: 205px; height: 100px; background: url(<&= channel.get('primetime').image &>) center no-repeat;">
-
-                                </div>
-                                <& } &>
-                                <div>
-                                    <&= channel.get('primetime').description &>
-                                </div>
+                            <div style="cursor: pointer;" rel="popover" class="eventDetails" data-content="<&= event.short_description &>" data-original-title="<&= event.title &>">
+                                <&= event.start_time &> <&= event.title &>
                             </div>
-                        </td>
+                        </div>
                         <& }); &>
-                    </tr>
+                    </td>
                     <& } &>
-                    <tr>
-                        <& events.forEach(function (channel) { &>
-                            <& for (var k in channel.get('events')) { &>
-                                <& var day = k.match(/(.*?):/); day = parseInt(day[1]); &>
-                                <& break; &>
-                            <& } &>
-
-                            <& if (!_.isArray(channel.get('events')[(day  + dayPlus) + ':' + x])) { &>
-                            <td  style="width: 205px;">
-                                &nbsp;
-                            </td>
-                            <& } else { &>
-                            <td  style="width: 205px;">
-                                <& _.each(channel.get('events')[(day  + dayPlus) + ':' + x], function (event) { &>
-
-                                <div style="clear: left;" _id="<&= event._id &>">
-                                    <div style="float: left; width: 20px; cursor: pointer;" class="record">
-                                        &#9991;
-                                    </div>
-                                    <div style="cursor: pointer;" class="eventDetails">
-                                        <&= event.start_time &> <&= event.title &>
-                                    </div>
-                                </div>
-                                <& }); &>
-                            </td>
-                            <& } &>
-                        <& }); &>
-                    </tr>
-                    <& } &>
-                </table>
-            </div>
-        </div>
+                <& }); &>
+            </tr>
+            <& } &>
+            </tbod>
+        </table>
     </div>
 </div>
