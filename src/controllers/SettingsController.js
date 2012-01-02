@@ -4,10 +4,6 @@ var actors = mongoose.model('Actor');
 var actorDetails = mongoose.model('ActorDetail');
 var movieDetails = mongoose.model('MovieDetail');
 var async = require('async');
-var Recaptcha = require('recaptcha').Recaptcha;
-
-var PUBLIC_KEY  = '6LffpMsSAAAAABZxRaS3M_M-5YThDrD6p5aXROnl',
-    PRIVATE_KEY = '6LffpMsSAAAAAEgqnxpgsnDhmRj4Ty1wCJBsfHga';
 
 io.sockets.on('connection', function (socket) {
     socket.on('ChannelModel:create', function (data, callback) {
@@ -69,10 +65,10 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
-    
+
     socket.on('DatabaseStatistics:fetch', function (data, callback) {
         console.log(JSON.stringify(channels.find()));
-        
+
         async.parallel([
             function (callback) {
                 //console.log(channels);
@@ -89,9 +85,8 @@ io.sockets.on('connection', function (socket) {
             callback({success: true});
         });
     });
-    
+
     socket.on('Database:reset', function (data, callback) {
-        var recaptcha = new Recaptcha(PUBLIC_KEY, PRIVATE_KEY, true);
-        callback({success: true, html: recaptcha.toHTML()});
+        callback({success: true});
     });
 });
