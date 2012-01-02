@@ -6,12 +6,16 @@ var movies = mongoose.model('MovieDetail');
 io.sockets.on('connection', function (socket) {
     socket.on('TVGuideCollection:read', function (data, callback) {
         data = data.data;
+        
         var guideResults = new Array();
-
         var start = (data.page -1) * 4;
-
         var date = new Date();
-        date.setFullYear(data.date.year, data.date.month - 1, data.date.day)
+        
+        date.setFullYear(
+            parseInt(data.date.year, 10),
+            parseInt(data.date.month, 10) -1,
+            parseInt(data.date.day, 10)
+        );
 
         var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
         primetime = primetime.getTime() / 1000;
@@ -56,8 +60,6 @@ io.sockets.on('connection', function (socket) {
             primetimeQuery.sort('start', 1);
 
             primetimeQuery.run(function (err, doc) {
-                console.log(primetime);
-
                 var start_time = new Date();
                 start_time.setTime(doc.start * 1000);
 

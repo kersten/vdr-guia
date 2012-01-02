@@ -80,19 +80,11 @@
         <h3><%= __('Reset database') %></h3>
     </div>
     <div class="modal-body">
-        <div id="captchadiv"></div>
-        <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
-        <script type="text/javascript">
-            function showRecaptcha() {
-                Recaptcha.create("6LffpMsSAAAAABZxRaS3M_M-5YThDrD6p5aXROnl", 'captchadiv', {
-                    theme: "red",
-                    callback: Recaptcha.focus_response_field
-                });
-            }
-        </script>
+        <p>Do you really want to delete the database?</p>
+        <p>If you click "confirm" your EPG data will completely deleted!!</p>
     </div>
     <div class="modal-footer">
-        <button action="resetDialog" class="btn danger"><%= __('Confirm') %></button>
+        <button action="confirmDialog" class="btn danger"><%= __('Confirm') %></button>
         <button action="closeDialog" class="btn"><%= __('Cancel') %></button>
     </div>
 </div>

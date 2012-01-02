@@ -62,7 +62,7 @@
         <& } else { &>
 
         <p style="text-align: right;" class="recordThis">
-            <&= event.get('channel_id').name &> at <&= event.get('start_formatted') &>
+            Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
             <& if (event.get('timer_active') == false) { &>
                 <img src="/icons/devine/black/16x16/Circle.png" alt="Record" title="Record" style="cursor: pointer; vertical-align: sub;" />
             <& } else { &>

@@ -14,24 +14,20 @@ var SettingsDatabaseView = Backbone.View.extend({
     },
     
     resetDatabase: function () {
-        socket.emit('Database:reset', {}, function (data) {
-            //$('#resetDatabaseDialog > .modal-body').append(data.html);
-            showRecaptcha();
-            $('#resetDatabaseDialog > .modal-footer > button').click(function () {
-                if ($(this).attr('action') == 'closeDialog') {
-                    $('#resetDatabaseDialog').modal('hide');
-                }
-                
-                if ($(this).attr('action') == 'confirmDialog') {
-                    //$('#resetDatabaseDialog').modal('hide');
-                }
-            });
+        $('#resetDatabaseDialog > .modal-footer > button').click(function () {
+            if ($(this).attr('action') == 'closeDialog') {
+                $('#resetDatabaseDialog').modal('hide');
+            }
             
-            $('#resetDatabaseDialog').modal({
-                show: true,
-                keyboard: true,
-                backdrop: true
-            });
+            if ($(this).attr('action') == 'confirmDialog') {
+                
+            }
+        });
+        
+        $('#resetDatabaseDialog').modal({
+            show: true,
+            keyboard: true,
+            backdrop: true
         });
     },
 

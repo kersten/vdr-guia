@@ -71,5 +71,8 @@
 	"Reset database": "Reset database",
 	"Cancel": "Cancel",
 	"Reset": "Reset",
-	"Confirm": "Confirm"
+	"Confirm": "Confirm",
+	"Please select the channels that you've want to see in GUIA.": "Please select the channels that you've want to see in GUIA.",
+	"Active": "Active",
+	"Channel": "Channel"
 }

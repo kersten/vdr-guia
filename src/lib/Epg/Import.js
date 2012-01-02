@@ -46,7 +46,7 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
     var query = EventSchema.findOne({});
 
     query.where('channel_id', channel._id);
-    query.sort('_id', -1);
+    query.sort('number', 1);
 
     query.exec(function (err, e) {
         if (e != null) {

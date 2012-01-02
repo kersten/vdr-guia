@@ -19,6 +19,7 @@ var TVGuideView = Backbone.View.extend({
             month: d.toString('MM'),
             day: d.toString('dd')
         }}, success: function (collection) {
+            console.log(collection)
             callback.apply(this, [_.template(self.template, {events: collection, active: active})]);
         }});
     },

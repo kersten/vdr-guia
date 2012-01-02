@@ -5,7 +5,8 @@ var EventView = Backbone.View.extend({
     events: {
         'click #showallposters': 'showallposters',
         'click .lightboxPoster': 'lightboxPoster',
-        'click .recordThis > img': 'recordEvent'
+        'click .recordThis > img': 'recordEvent',
+        'hover .recordThis > img': 'hoverRecordEvent'
     },
 
     initialize: function () {
@@ -48,12 +49,33 @@ var EventView = Backbone.View.extend({
     recordEvent: function (ev) {
         if (this.event.get('timer_active')) {
             console.log('Delete timer for: ' + this.event.get('_id'));
+            this.event.set({timer_active: false});
             $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle.png');
         } else {
             console.log('Create timer for: ' + this.event.get('_id'));
             this.event.set({timer_active: true});
             $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle-2.png');
         }
+    },
+    
+    hoverRecordEvent: function (ev) {
+        var image = '';
+        var image_record = '-2';
+        
+        if (this.event.get('timer_active')) {
+            image = '-2';
+            image_record = '';
+        }
+        
+        switch (ev.type) {
+            case 'mouseenter':
+                $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image_record + '.png');
+                break;
+            
+            case 'mouseleave':
+                $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image + '.png');
+                break;
+        };
     },
 
     generateHTML: function (callback) {
@@ -105,7 +127,8 @@ var EventView = Backbone.View.extend({
 
                 var start = new XDate(event.get('start') * 1000);
 
-                event.set({start_formatted: start.toString('HH:mm')})
+                event.set({start_formatted: start.toString('HH:mm')});
+                event.set({date: start.toString('dd.MM')});
 
                 switch (self.eventType) {
                     case 'tmdb':
