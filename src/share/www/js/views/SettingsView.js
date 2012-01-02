@@ -27,9 +27,7 @@ var SettingsView = Backbone.View.extend({
     loadView: function (section) {
         Application.loadingOverlay('show');
 
-        var view = section;
-
-        Application.loadSubView('Settings/' + view, function (req, original) {
+        Application.loadSubView('Settings/' + section, function (req, original) {
             Application.currentSubView.renderTemplate();
         });
     }

@@ -20,7 +20,8 @@ var Application = {
         },
         settings: {
             channels: SettingsChannelsView,
-            guia: SettingsGuiaView
+            guia: SettingsGuiaView,
+            database: SettingsDatabaseView
         }
     },
     currentView: null,
@@ -395,8 +396,6 @@ var Application = {
 
         _.each(req, function (sub) {
             sub = sub.charAt(0).toLowerCase() + sub.substr(1);
-
-
 
             if (self.subViews[sub] !== undefined && view == null) {
                 view = self.subViews[sub];

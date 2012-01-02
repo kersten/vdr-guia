@@ -1,0 +1,98 @@
+<div class="span14 columns">
+    <p>
+        <%- __('Manage the GUIA database') %>
+    </p>
+    
+    <table class="zebra-striped">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <%- __('Databasestatistics') %>
+                </th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            <tr>
+                <td style="width: 200px;">
+                    <%- __('Size of database') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <%- __('Channels') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <%- __('Events') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <%- __('Actors') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <%- __('Actors from tmdb') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <%- __('Movies from tmdb') %>
+                </td>
+                <td>
+                    #
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="well">
+        <button action="reset" class="btn danger">Reset database</button>
+    </div>
+</div>
+
+<div class="modal hide fade" id="resetDatabaseDialog">
+    <div class="modal-header">
+        <a class="close" href="#">×</a>
+        <h3><%= __('Reset database') %></h3>
+    </div>
+    <div class="modal-body">
+        <div id="captchadiv"></div>
+        <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+        <script type="text/javascript">
+            function showRecaptcha() {
+                Recaptcha.create("6LffpMsSAAAAABZxRaS3M_M-5YThDrD6p5aXROnl", 'captchadiv', {
+                    theme: "red",
+                    callback: Recaptcha.focus_response_field
+                });
+            }
+        </script>
+    </div>
+    <div class="modal-footer">
+        <button action="resetDialog" class="btn danger"><%= __('Confirm') %></button>
+        <button action="closeDialog" class="btn"><%= __('Cancel') %></button>
+    </div>
+</div>
