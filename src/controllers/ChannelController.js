@@ -13,6 +13,10 @@ io.sockets.on('connection', function (socket) {
             query.limit(data.limit);
         }
 
+        if (data !== undefined && data.active !== undefined) {
+            query.where('active', true);
+        }
+
         query.sort('number', 1);
 
         query.exec(function (err, docs) {

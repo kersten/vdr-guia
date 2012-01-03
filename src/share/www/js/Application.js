@@ -266,6 +266,7 @@ var Application = {
         routes: {
             "/TVGuide": "tvguideRoute",
             "/TVGuide/:date": "tvguideRoute",
+            "/TVGuide/:date/:page": "tvguideRoute",
             "/Event/:id": "eventRoute",
             "/Event/:id/posters": "eventPostersRoute",
             "*actions": "defaultRoute"
@@ -281,7 +282,7 @@ var Application = {
             }
         },
 
-        tvguideRoute: function (date) {
+        tvguideRoute: function (date, page) {
             Application.loadingOverlay('show');
 
             var self = this;
@@ -289,7 +290,8 @@ var Application = {
             Application.loadView({
                 view: '/tvguide',
                 params: {
-                    date: date
+                    date: date,
+                    page: page
                 },
                 callback: function (req, original) {
                     self.render.apply(this, [req, original, self]);

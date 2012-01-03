@@ -5,8 +5,11 @@ var NavigationView = Backbone.View.extend({
         var self = this;
 
         this.collection.fetch({success: function (collection, data) {
-             if (!data.loggedIn) {
+            if (!data.loggedIn) {
                 var template = _.template( $("#LoginFormTemplate").html(), {} );
+                self.el.children('div.fill').children('div.container').append(template);
+            } else {
+                var template = _.template( $("#SearchFormTemplate").html(), {} );
                 self.el.children('div.fill').children('div.container').append(template);
             }
 
@@ -86,10 +89,14 @@ var NavigationView = Backbone.View.extend({
                     $('ul.nav').children().remove();
 
                     self.collection.fetch({success: function (collection, data) {
+                        var template = _.template( $("#SearchFormTemplate").html(), {} );
+                        self.el.children('div.fill').children('div.container').append(template);
+
                         data.items.forEach(function (item) {
                             collection.add(item);
                         });
 
+                        $('.pull-right').fadeIn();
                         $('ul.nav').fadeIn();
                     }});
                 });
@@ -105,9 +112,13 @@ var NavigationView = Backbone.View.extend({
         var self = this;
 
         socket.emit('User:logout', {}, function (data) {
+            $('.pull-right').fadeOut()
             $('ul.nav').fadeOut(function () {
                 $('ul.nav').children().remove();
+                $('.pull-right').children().remove();
+
                 window.location.hash = '#';
+
                 self.collection.fetch({success: function (collection, data) {
                     if (!data.loggedIn) {
                         var template = _.template( $("#LoginFormTemplate").html(), {} );

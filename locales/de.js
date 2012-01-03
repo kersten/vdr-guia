@@ -75,5 +75,6 @@
 	"Please select the channels that you've want to see in GUIA.": "Please select the channels that you've want to see in GUIA.",
 	"Active": "Active",
 	"Channel": "Channel",
-	"Reset events": "Reset events"
+	"Reset events": "Reset events",
+	"Select channels for the TVGuide": "Select channels for the TVGuide"
 }
