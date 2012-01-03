@@ -6,21 +6,30 @@ var SettingsDatabaseView = Backbone.View.extend({
     },
 
     destructor: function () {
-        $(this.el).undelegate('button[action*="reset"]', 'click');
+        $(this.el).undelegate('button[action*="resetDatabase"]', 'click');
+        $(this.el).undelegate('button[action*="resetEvents"]', 'click');
+        $(this.el).undelegate('button[action*="refreshStats"]', 'click');
     },
     
     events: {
-        'click button[action*="reset"]': 'resetDatabase'
+        'click button[action*="resetDatabase"]': 'resetDatabase',
+        'click button[action*="resetEvents"]': 'resetEvents',
+        'click button[action*="refreshStats"]': 'updateStats'
     },
     
     resetDatabase: function () {
+        var self = this;
+        
         $('#resetDatabaseDialog > .modal-footer > button').click(function () {
             if ($(this).attr('action') == 'closeDialog') {
                 $('#resetDatabaseDialog').modal('hide');
             }
             
             if ($(this).attr('action') == 'confirmDialog') {
-                
+                socket.emit('Database:reset', {database: true}, function (data) {
+                    self.updateStats();
+                    $('#resetDatabaseDialog').modal('hide');
+                });
             }
         });
         
@@ -30,10 +39,40 @@ var SettingsDatabaseView = Backbone.View.extend({
             backdrop: true
         });
     },
+    
+    resetEvents: function () {
+        var self = this;
+        
+        $('#resetEventsDialog > .modal-footer > button').click(function () {
+            if ($(this).attr('action') == 'closeDialog') {
+                $('#resetEventsDialog').modal('hide');
+            }
+            
+            if ($(this).attr('action') == 'confirmDialog') {
+                socket.emit('Database:reset', {events: true}, function (data) {
+                    self.updateStats();
+                    $('#resetEventsDialog').modal('hide');
+                });
+            }
+        });
+        
+        $('#resetEventsDialog').modal({
+            show: true,
+            keyboard: true,
+            backdrop: true
+        });
+    },
 
-    updateConfiguration: function (value) {
-        socket.emit('Configuration:create', value, function (data) {
-            Application.guia[value.key] = value.value;
+    updateStats: function () {
+        socket.emit('DatabaseStatistics:fetch', {}, function (data) {
+            data = data.data;
+            $('#sizeOfDatabase').text((data.dbstats.dataSize / 1024 / 1024).toFixed(2) + ' MB');
+            
+            $('#channelCount').text(data.channelStats.count);
+            $('#eventCount').text(data.eventStats.count);
+            $('#actorCount').text(data.actorStats.count);
+            $('#actorDetailCount').text(data.actorDetailStats.count);
+            $('#movieDetailCount').text(data.movieDetailStats.count);
         });
     },
 
@@ -44,9 +83,7 @@ var SettingsDatabaseView = Backbone.View.extend({
             $('#settingssection').children().remove();
             $('#settingssection').html(res);
             
-            socket.emit('DatabaseStatistics:fetch', {}, function (data) {
-                Application.guia[value.key] = value.value;
-            });
+            self.updateStats();
 
             Application.loadingOverlay('hide');
         });

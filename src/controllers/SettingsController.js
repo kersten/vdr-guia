@@ -67,26 +67,90 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('DatabaseStatistics:fetch', function (data, callback) {
-        console.log(JSON.stringify(channels.find()));
-
         async.parallel([
             function (callback) {
-                //console.log(channels);
-                /*channels.statics(function () {
-                    callback();
-                });*/
+                mongoose.connection.db.executeDbCommand({dbstats: 1}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {dbstats: result.documents[0]});
+                    } else {
+                        callback();
+                    }
+                });
             }, function (callback) {
-                //console.log(events.statics);
-                /*events.statics(function () {
-                    callback();
-                });*/
+                mongoose.connection.db.executeDbCommand({collstats: 'channels'}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {channelStats: result.documents[0]});
+                    } else {
+                        log.err('Querying stats faild: ' + err);
+                        callback();
+                    }
+                });
+            }, function (callback) {
+                mongoose.connection.db.executeDbCommand({collstats: 'events'}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {eventStats: result.documents[0]});
+                    } else {
+                        log.err('Querying stats faild: ' + err);
+                        callback();
+                    }
+                });
+            }, function (callback) {
+                mongoose.connection.db.executeDbCommand({collstats: 'actors'}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {actorStats: result.documents[0]});
+                    } else {
+                        log.err('Querying stats faild: ' + err);
+                        callback();
+                    }
+                });
+            }, function (callback) {
+                mongoose.connection.db.executeDbCommand({collstats: 'actordetails'}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {actorDetailStats: result.documents[0]});
+                    } else {
+                        log.err('Querying stats faild: ' + err);
+                        callback();
+                    }
+                });
+            }, function (callback) {
+                mongoose.connection.db.executeDbCommand({collstats: 'moviedetails'}, function(err, result) {
+                    if (err == null) {
+                        callback(null, {movieDetailStats: result.documents[0]});
+                    } else {
+                        log.err('Querying stats faild: ' + err);
+                        callback();
+                    }
+                });
             }
-        ], function(err, results){
-            callback({success: true});
+        ], function (err, results) {
+            var stats = {};
+            
+            results.forEach(function (result) {
+                for (var key in result) {
+                    stats[key] = result[key];
+                }
+            });
+            
+            callback({success: true, data: stats});
         });
     });
 
     socket.on('Database:reset', function (data, callback) {
+        if (data.database === undefined && data.events === true) {
+            events.collection.drop();
+            actors.collection.drop();
+            actorDetails.collection.drop();
+            movieDetails.collection.drop();
+        }
+        
+        if (data.database === true && data.events === undefined) {
+            channels.collection.drop();
+            events.collection.drop();
+            actors.collection.drop();
+            actorDetails.collection.drop();
+            movieDetails.collection.drop();
+        }
+        
         callback({success: true});
     });
 });

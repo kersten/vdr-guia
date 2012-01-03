@@ -1,8 +1,61 @@
 var TVGuideView = Backbone.View.extend({
     url: "tvguide",
+    
+    destructor: function () {
+        $('.popover').die('hover');
+        $('.record > img').die('hover');
+        $('.record').die('click');
+    },
 
     events: {
+        'click .eventDetails': 'showEventDetails',
+        'hover .eventDetails': 'showEventPopover',
         'click .slideUp': 'slideUp'
+    },
+    
+    showEventDetails: function (ev) {
+        $('.popover').remove();
+        location.hash = '/Event/' + $(ev.currentTarget).attr('_id');
+    },
+    
+    showEventPopover: function (ev) {
+        var self = this;
+        
+        if (!$(ev.currentTarget).hasClass('isPrime')) {
+            if (ev.type == 'mouseenter') {
+                $(ev.currentTarget).popover('show');
+                $(ev.currentTarget).css({textDecoration: 'underline'});
+            } else {
+                var popover = ev.currentTarget;
+                
+                self.popoverEl = popover;
+                self.popoverId = setTimeout(function () {
+                    $(popover).popover('hide');
+                }, 100);
+                
+                $(ev.currentTarget).css({textDecoration: 'none'});
+            }
+        }
+    },
+    
+    handlePopover: function (ev) {
+        if (ev.type == 'mouseenter') {
+            clearTimeout(ev.data.view.popoverId);
+        } else {
+            $(ev.data.view.popoverEl).popover('hide');
+        }
+    },
+    
+    recordEvent: function (ev) {
+        console.log('Record: ' + $(ev.currentTarget).attr('_id'));
+    },
+    
+    handleRecordIcon: function (ev) {
+        if (ev.type == 'mouseenter') {
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle-2.png');
+        } else {
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle.png');
+        }
     },
 
     slideUp: function (ev) {
@@ -23,7 +76,7 @@ var TVGuideView = Backbone.View.extend({
         var active = d.toString('dd.MM.yyyy');
 
         if (self.options.params.date !== undefined) {
-            active = self.options.params.date
+            active = self.options.params.date;
         }
 
         d = new XDate(active);
@@ -33,7 +86,6 @@ var TVGuideView = Backbone.View.extend({
             month: d.toString('MM'),
             day: d.toString('dd')
         }}, success: function (collection) {
-            console.log(collection)
             callback.apply(this, [_.template(self.template, {events: collection, active: active})]);
         }});
     },
@@ -44,44 +96,18 @@ var TVGuideView = Backbone.View.extend({
         this.generateHTML(function (res) {
             self.el.html(res);
             $(document).attr('title', $('#header_div').attr('title'));
+            
+            $('.eventDetails').popover({
+                placement: 'left',
+                trigger: 'manual',
+                html: true
+            });
+            
+            $('.popover').live('hover', {view: self}, self.handlePopover);
+            $('.record > img').live('hover', self.handleRecordIcon);
+            $('.record').live('click', self.recordEvent);
 
             Application.loadingOverlay('hide');
-
-            /*$('.slideup').click(function () {
-                $(this).parent().removeClass('slideup').parent().addClass('slidedown');
-                $(this).parent().find('.slideupTable').slideUp();
-            });
-
-            $('.slidedown').click(function () {
-                $(this).parent().removeClass('slidedown').parent().addClass('slideup');
-                $(this).parent().find('.slideupTable').slideDown();
-            });*/
-
-
-
-            /*$('.eventDetails').hover(function () {
-                if (!$(this).hasClass('isPrime')) {
-                    //$(this).popover('show');
-                    $(this).css({textDecoration: 'underline'});
-                }
-            }, function () {
-                if (!$(this).hasClass('isPrime')) {
-                    //$(this).popover('hide');
-                    $(this).css({textDecoration: 'none'});
-                }
-            });*/
-
-            $('.eventDetails').popover({
-                placement: 'above'
-            });
-
-            $('.eventDetails').click(function () {
-                location.hash = '/Event/' + $(this).parent().attr('_id');
-            });
-
-            $('.record').click(function () {
-                location.hash = '/Event/' + $(this).parent().attr('_id');
-            });
 
             if (typeof(self.postRender) == 'function') {
                 self.postRender();

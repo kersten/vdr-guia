@@ -74,5 +74,6 @@
 	"Confirm": "Confirm",
 	"Please select the channels that you've want to see in GUIA.": "Please select the channels that you've want to see in GUIA.",
 	"Active": "Active",
-	"Channel": "Channel"
+	"Channel": "Channel",
+	"Reset events": "Reset events"
 }

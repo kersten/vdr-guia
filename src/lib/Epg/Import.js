@@ -42,11 +42,12 @@ EpgImport.prototype.start = function (callback) {
 EpgImport.prototype.fetchEpg = function (channel, next) {
     var self = this;
 
-    var from = new Date().getTime() / 1000 - (3600 * 4);
+    var from = new Date().getTime() / 1000 - (3600 * 24);
     var query = EventSchema.findOne({});
 
     query.where('channel_id', channel._id);
     query.sort('number', 1);
+    query.sort('stop', -1);
 
     query.exec(function (err, e) {
         if (e != null) {
@@ -84,14 +85,14 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
     async.series([
         function (callback) {
             event.event_id = event.id;
-            event.id = event.channel + '_' + event.id;
-
+            delete(event.id);
+            
+            event.channel_id = channel._id;
+            
             if (event.description.match(/\nShow-Id: [0-9]{0,}/)) {
                 var show_id = event.description.match(/\nShow-Id: ([0-9]{0,})/);
                 event.show_id = show_id[1];
             }
-
-            event.channel_id = channel._id;
 
             event.short_description = event.short_text;
             delete(event.short_text);
@@ -224,7 +225,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 EpgImport.prototype.insertEpg = function (event, callback) {
     var eventSchema = new EventSchema(event);
     eventSchema.save(function (err, doc) {
-        callback(err, doc);
+        callback(null, doc);
     });
 };
 
