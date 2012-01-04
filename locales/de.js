@@ -76,5 +76,18 @@
 	"Active": "Active",
 	"Channel": "Channel",
 	"Reset events": "Reset events",
-	"Select channels for the TVGuide": "Select channels for the TVGuide"
+	"Select channels for the TVGuide": "Select channels for the TVGuide",
+	"Morning program": "Morning program",
+	"Afternoon program": "Afternoon program",
+	"Evening program": "Evening program",
+	"Morning program - 5.00 to 12.00 o'clock": "Morning program - 5.00 to 12.00 o'clock",
+	"Afternoon program - 12.00 to 20.00 o'clock": "Afternoon program - 12.00 to 20.00 o'clock",
+	"Evening program - 20.00 to 5.00 o'clock": "Evening program - 20.00 to 5.00 o'clock",
+	"Afternoon program - 12.00 to 18.00 o'clock": "Afternoon program - 12.00 to 18.00 o'clock",
+	"Early evening program - 10.00 to 20.00 o'clock": "Early evening program - 10.00 to 20.00 o'clock",
+	"Evening program - 20.00 to 00.00 o'clock": "Evening program - 20.00 to 00.00 o'clock",
+	"Night program - 00.00 to 5.00 o'clock": "Night program - 00.00 to 5.00 o'clock",
+	"Early evening program - 18.00 to 20.00 o'clock": "Early evening program - 18.00 to 20.00 o'clock",
+	"Evening program - 20.00 to 0.00 o'clock": "Evening program - 20.00 to 0.00 o'clock",
+	"Night program - 0.00 to 5.00 o'clock": "Night program - 0.00 to 5.00 o'clock"
 }

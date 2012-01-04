@@ -4,22 +4,17 @@
 </div>
 <div class="row">
     <div class="span14">
-        <& var day = new Array('<%= __('SUN') %>', '<%= __('MON') %>', '<%= __('TUE') %>', '<%= __('WED') %>', '<%= __('THU') %>', '<%= __('FRI') %>', '<%= __('SAT') %>'); &>
-        <& var month = new Array('<%= __('January') %>', '<%= __('February') %>', '<%= __('March') %>', '<%= __('April') %>', '<%= __('May') %>', '<%= __('June') %>', '<%= __('July') %>', '<%= __('August') %>', '<%= __('September') %>', '<%= __('October') %>', '<%= __('November') %>', '<%= __('December') %>'); &>
-        <h1><&= day[new Date().getDay()] &> <small><&= (new Date().getDate() < 10) ? '0' + new Date().getDate(): new Date().getDate() &>. <&= month[new Date().getMonth()] &></small></h1>
-    </div>
-    <div class="span14">
-        <div class="pagination">
+        <div class="pagination" style="margin-top: -5px;">
             <ul>
                 <& d = new XDate(); &>
 
                 <li class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                    <a href="#/TVGuide"><&= d.toString('dd.MM') &></a>
+                    <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>/<&= page &>"><&= d.toString('dd.MM') &></a>
                 </li>
 
                 <& for(i = 0; i < 12; i++) { &>
                 <li class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                    <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
+                    <a href="#/TVGuide/<&= d.toString('dd.MM.yyyy') &>/<&= page &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
                 </li>
                 <& } &>
             </ul>
@@ -38,6 +33,7 @@
             <tbody class="section_prime">
             <tr>
                 <& events.forEach(function (channel) { &>
+                <& if (channel.has('primetime')) { &>
                 <td style="background-color: #ffffcc; padding: 0px; cursor: pointer; width: 205px;" _id="<&= channel.get('primetime').event._id &>">
                     <div style="background-color: #0064cd; text-align: center; color: #ffffff;" class="eventDetails isPrime">
                         <strong><&= channel.get('primetime').event.category &></strong>
@@ -57,6 +53,7 @@
                         </div>
                     </div>
                 </td>
+                <& } &>
                 <& }); &>
             </tr>
 
@@ -64,12 +61,32 @@
             <& for (var i = 5; i < 29; i++) { &>
             <& if (i >= 24) { x = i - 24; dayPlus = 1 } else { x = i; }&>
 
-            <& if (x == 5 || x == 12 || x == 20) { &>
+            <& if (x == 5 || x == 12 || x == 18 || x == 20 || x == 0) { &>
             </tbody>
             <tr>
-                <td colspan="4" style="background-color: #0064cd; font-weight: bold; color: #ffffff;" class="slideUp" section="<&= x &>"><&= x &></td>
+                <td colspan="4" style="background-color: #0064cd; font-weight: bold; color: #ffffff; text-align: center; cursor: pointer;" class="slideUp <&= (x == 5 || x == 12 || x == 18 || x == 0) ? 'sectionHidden' : '' &>" section="<&= x &>">
+                    <& if (x == 5) { &>
+                        <%- __('Morning program - 5.00 to 12.00 o\'clock') %>
+                    <& } &>
+                    
+                    <& if (x == 12) { &>
+                        <%- __('Afternoon program - 12.00 to 18.00 o\'clock') %>
+                    <& } &>
+                    
+                    <& if (x == 18) { &>
+                        <%- __('Early evening program - 18.00 to 20.00 o\'clock') %>
+                    <& } &>
+                    
+                    <& if (x == 20) { &>
+                        <%- __('Evening program - 20.00 to 0.00 o\'clock') %>
+                    <& } &>
+                    
+                    <& if (x == 0) { &>
+                        <%- __('Night program - 0.00 to 5.00 o\'clock') %>
+                    <& } &>
+                </td>
             </tr>
-            <tbody class="section_<&= x &>">
+            <tbody class="section_<&= x &>" style="<&= (x == 5 || x == 12 || x == 18 || x == 0) ? 'display: none;' : '' &>">
             <& } &>
             <tr>
                 <& events.forEach(function (channel) { &>
@@ -85,12 +102,13 @@
                     <& } else { &>
                     <td  style="width: 205px;">
                         <& _.each(channel.get('events')[(day  + dayPlus) + ':' + x], function (event) { &>
-
+                        <& if (typeof(event._id) != 'undefined') { &>
                         <div style="clear: left;">
-                            <div style="cursor: pointer;" class="eventDetails" _id="<&= event._id &>" data-content="<div style='float: left; width: 20px; cursor: pointer;' class='record' _id='<&= event._id &>'><img src='/icons/devine/black/16x16/Circle.png' alt='Record' title='Record' style='cursor: pointer;' /></div><&= event.short_description.replace(/"/g, "&quot;") &><div style='clear: left;'></div>" data-original-title="<&= event.title.replace(/"/g, "&quot;") &>">
+                            <div style="cursor: pointer;" class="eventDetails" _id="<&= event._id &>" data-content="<div style='float: left; width: 20px; cursor: pointer;' class='record' _id='<&= event._id &>'><img timer_active='<&= event.timer_active &>' src='/icons/devine/black/16x16/Circle<&= (event.timer_active) ? '-2' : '' &>.png' alt='Record' title='Record' style='cursor: pointer;' /></div><&= event.short_description.replace(/"/g, "&quot;") &><div style='clear: left;'></div>" data-original-title="<&= event.title.replace(/"/g, "&quot;") &>">
                                 <&= event.start_time &> <strong><&= event.title &></strong>
                             </div>
                         </div>
+                        <& } &>
                         <& }); &>
                     </td>
                     <& } &>

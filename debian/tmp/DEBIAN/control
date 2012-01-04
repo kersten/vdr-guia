@@ -1,0 +1,12 @@
+Package: vdr-guia
+Version: 0.0.1
+Architecture: amd64
+Maintainer: Kersten Burkhardt <guia@minimal.cc>
+Installed-Size: 32
+Depends: nodejs (>= 0.6), mongodb (>= 1.8)
+Section: video
+Priority: extra
+Homepage: http://guia.minimal.cc
+Description: GUIA - A webinterface to control recordings, vdr and epg
+ GUIA is a complete new webinterface for the VDR (Video Disk Recorder) by Klaus Schmidinger.
+ This piece of software intends to be a fast, lightweight and nice looking GUI

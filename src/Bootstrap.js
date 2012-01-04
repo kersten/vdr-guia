@@ -80,7 +80,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.use(this.express.static(__dirname + '/lib/js'));
     this.app.use(this.express.static(__dirname + '/share/www'));
 
-    this.app.use(this.express.favicon(__dirname + '/share/www/img/favicon.ico'));
+    this.app.use(this.express.favicon(__dirname + '/share/www/icons/favicon.ico'));
     this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
 
     /*
@@ -320,6 +320,7 @@ Bootstrap.prototype.setupVdr = function () {
         }
 
         self.setupEpgImport(vdr.restful, global.mongoose);
+        self.setupTimer(vdr.restful);
     }).on('error', function () {
         log.bad('VDR is not running .. retrying in 5 Minutes');
         log.dbg(JSON.stringify(vdr), true);
@@ -336,7 +337,7 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
     var ActorDetails = require('./lib/Actor');
     var MovieDetails = require('./lib/Movie');
     var SeasonDetails = require('./lib/Season');
-    var importer = new EpgImport(vdr.restful, 250);
+    var importer = new EpgImport(restful, 250);
 
     function runImporter () {
         importer.start(function (hadEpg) {
@@ -381,6 +382,19 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
     }
 
     runImporter();
+};
+
+Bootstrap.prototype.setupTimer = function (restful) {
+    var self = this;
+    var EpgTimer = require('./lib/Epg/Timer');
+    var timerSetup = new EpgTimer(restful);
+    
+    timerSetup.refresh();
+    log.dbg('Delayed new timer scan .. starting in 5 minutes');
+    
+    setTimeout(function () {
+        self.setupTimer(restful);
+    }, 1000 * 60 * 5);
 };
 
 module.exports = Bootstrap;

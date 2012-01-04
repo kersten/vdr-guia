@@ -1,5 +1,5 @@
-function Cleaner () {
+function EpgCleaner () {
 
 }
 
-module.exports = Cleaner;
+module.exports = EpgCleaner;

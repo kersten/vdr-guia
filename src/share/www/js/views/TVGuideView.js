@@ -10,6 +10,9 @@ var TVGuideView = Backbone.View.extend({
     },
 
     destructor: function () {
+        $('#selectChannelsDialog').remove();
+        $('.modal-backdrop').remove();
+        
         $('.popover').die('hover');
         $('.record > img').die('hover');
         $('.record').die('click');
@@ -64,10 +67,18 @@ var TVGuideView = Backbone.View.extend({
     },
 
     handleRecordIcon: function (ev) {
+        var image = '';
+        var image_record = '-2';
+        
+        if ($(ev.currentTarget).attr('timer_active')) {
+            image = '-2';
+            image_record = '';
+        }
+        
         if (ev.type == 'mouseenter') {
-            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle-2.png');
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image_record + '.png');
         } else {
-            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle.png');
+            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image + '.png');
         }
     },
 
@@ -121,7 +132,7 @@ var TVGuideView = Backbone.View.extend({
             day: d.toString('dd')
         }}, success: function (collection) {
             self.channels.fetch({data: {active: true}, success: function (channels) {
-                callback.apply(this, [_.template(self.template, {events: collection, channels: channels, active: active})]);
+                callback.apply(this, [_.template(self.template, {events: collection, channels: channels, active: active, page: page})]);
             }});
         }});
     },

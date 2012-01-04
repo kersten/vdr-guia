@@ -60,6 +60,11 @@ io.sockets.on('connection', function (socket) {
             primetimeQuery.sort('start', 1);
 
             primetimeQuery.run(function (err, doc) {
+                if (doc == null) {
+                    fetchEpg(result.channel_id, result, next);
+                    return;
+                }
+                
                 var start_time = new Date();
                 start_time.setTime(doc.start * 1000);
 
