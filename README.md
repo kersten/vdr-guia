@@ -19,7 +19,7 @@ the parameters to suite your needs.
 [![Donate](http://pledgie.com/campaigns/16319.png)](http://www.pledgie.com/campaigns/16319)
 
 ### License ###
-    Copyright (c) 2011-2012, Kersten Burkhardt and Volker Richert
+    Copyright (c) 2011-2012, Kersten Burkhardt <kerstenk@gmail.com> and Volker Richert
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
