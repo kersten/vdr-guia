@@ -2,9 +2,9 @@
 
 ## Requirements
 
-	- nodejs
-	- mongodb
-	- Active internet connection
+- nodejs
+- mongodb
+- Active internet connection
 
 ## Installation
     git clone git://github.com/kersten/vdr-guia.git ./GUIA
@@ -12,7 +12,7 @@
     npm update
 
 ## Configuration
-    To configure GUIA just start it and point your browser to https://your.ip:8007.
+To configure GUIA just start it and point your browser to https://your.ip:8007.
 
 ## Donate
 [![Donate](http://pledgie.com/campaigns/16319.png)](http://www.pledgie.com/campaigns/16319)
