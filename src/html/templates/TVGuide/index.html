@@ -18,8 +18,8 @@
 
 <div class="row">
     <div class="span14" id="guide">
-        <div style="background-color: #DDD"><%- __('Morning program - 5.00 to 12.00 o\'clock') %></div>
-        <div class="eventsection" data-from="5" data-to="12">
+        <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="morning"><strong><%- __('Morning program - 5.00 to 12.00 o\'clock') %></strong></div>
+        <div class="morning eventsection" data-from="5" data-to="12">
             <& for(x = 0; x < 7; x++) { &>
                 <div class="row" data-hour="<&= x + 5 &>">
                     <& for(i = 0; i < 4; i++) { &>
@@ -28,9 +28,9 @@
                 </div>
             <& } &>
         </div>
-        
-        <%- __('Morning program - 12.00 to 18.00 o\'clock') %>
-        <div class="eventsection" data-from="12" data-to="18">
+
+        <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="afternoon"><strong><%- __('Afternoon program - 12.00 to 18.00 o\'clock') %></strong></div>
+        <div class="afternoon eventsection" data-from="12" data-to="18">
             <& for(x = 0; x < 6; x++) { &>
                 <div class="row" data-hour="<&= x + 12 &>">
                     <& for(i = 0; i < 4; i++) { &>
@@ -39,9 +39,9 @@
                 </div>
             <& } &>
         </div>
-        
-        <%- __('Morning program - 18.00 to 20.00 o\'clock') %>
-        <div class="eventsection" data-from="18" data-to="20">
+
+        <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="earlyevening"><strong><%- __('Early evening program - 18.00 to 20.00 o\'clock') %></strong></div>
+        <div class="earlyevening eventsection" data-from="18" data-to="20">
             <& for(x = 0; x < 3; x++) { &>
                 <div class="row" data-hour="<&= x + 18 &>">
                     <& for(i = 0; i < 4; i++) { &>
@@ -50,9 +50,9 @@
                 </div>
             <& } &>
         </div>
-        
-        <%- __('Morning program - 20.00 to 0.00 o\'clock') %>
-        <div class="eventsection" data-from="20" data-to="24">
+
+        <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="evening"><strong><%- __('Evening program - 20.00 to 0.00 o\'clock') %></strong></div>
+        <div class="evening eventsection" data-from="20" data-to="24">
             <& for(x = 0; x < 4; x++) { &>
                 <div class="row" data-hour="<&= x + 20 &>">
                     <& for(i = 0; i < 4; i++) { &>
@@ -61,9 +61,9 @@
                 </div>
             <& } &>
         </div>
-        
-        <%- __('Morning program - 0.00 to 5.00 o\'clock') %>
-        <div class="eventsection" data-from="0" data-to="5">
+
+        <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="night"><strong><%- __('Night program - 0.00 to 5.00 o\'clock') %></strong></div>
+        <div class="night eventsection" data-from="0" data-to="5">
             <& for(x = 0; x < 5; x++) { &>
                 <div class="row" data-hour="<&= x&>">
                     <& for(i = 0; i < 4; i++) { &>

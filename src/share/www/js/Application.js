@@ -91,6 +91,23 @@ var GUIA = {
             "*actions": "defaultRoute"
         },
 
+        initialize: function () {
+            this.bind('all', function(ev) {
+                if (ev.indexOf('beforeroute:') === 0) {
+                    if (this.currentView != null) {
+                        this.currentView.remove();
+                    }
+                }
+            });
+        },
+
+        route: function(route, name, callback) {
+            return Backbone.Router.prototype.route.call(this, route, name, function() {
+                this.trigger.apply(this, ['beforeroute:' + name].concat(_.toArray(arguments)));
+                callback.apply(this, arguments);
+            });
+        },
+
         updateNavigation: function (req) {
             if (req == "") {
                 $('.nav > li.active').removeClass('active');
@@ -102,28 +119,25 @@ var GUIA = {
         },
 
         tvguideRoute: function (date, page) {
-            //GUIA.loadingOverlay('show');
-            view = new GUIA.views.tvguide({
+            this.currentView = new TVGuideView({
                 date: date,
                 page: page
             });
-            
-            view.render();
+
+            $('#body').html(this.currentView.render().el);
         },
 
         eventRoute: function (_id) {
             GUIA.loadingOverlay('show');
 
-            var self = this;
+            this.currentView = new EventView({
+                _id: _id,
+                model: new EventModel
+            });
 
-            GUIA.loadView({
-                view: '/Event',
-                params: {
-                    _id: _id
-                },
-                callback: function (req, original) {
-                    self.render.apply(this, [req, original, self]);
-                }
+            this.currentView.render(function () {
+                $('#body').html(this.el);
+                GUIA.loadingOverlay('hide');
             });
         },
 
@@ -187,7 +201,7 @@ var GUIA = {
 
         //var viewOptions = {el: $('#body')};
         var viewOptions = {};
-        
+
         if (options.params !== undefined) {
             viewOptions = jQuery.extend(viewOptions, {params: options.params});
         }

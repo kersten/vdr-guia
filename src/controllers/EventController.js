@@ -4,21 +4,21 @@ var events = mongoose.model('Event');
 io.sockets.on('connection', function (socket) {
     socket.on('EventCollection:read', function (data, callback) {
         var date = new Date();
-        
+
         date.setFullYear(
             parseInt(data.date.year, 10),
             parseInt(data.date.month, 10) - 1,
             parseInt(data.date.day, 10)
         );
-        
+
         date.setHours(5);
         date.setMinutes(0);
-        
+
         console.log(date);
-        
+
         var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
         primetime = primetime.getTime() / 1000;
-        
+
         var starttime = date;
         starttime = starttime.getTime() / 1000;
 
@@ -28,20 +28,20 @@ io.sockets.on('connection', function (socket) {
         }*/
 
         var stoptime = starttime + 86400;
-        
+
         var eventsQuery = events.find({});
-        
+
         var check = new Date(starttime * 1000);
         console.log(check);
 
         eventsQuery.where('channel_id', data.channel_id);
         eventsQuery.where('start').gte(starttime).lt(stoptime);
         eventsQuery.sort('start', 1);
-        
+
         eventsQuery.run(function (err, doc) {
             callback(doc);
         });
-        
+
         /*var start = (data.data.page - 1) * 20;
 
         var epg = new Epg();
@@ -50,7 +50,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('EventModel:read', function (data, callback) {
         var epg = new Epg();
-        epg.getEvent(data.data._id, callback);
+        epg.getEvent(data._id, callback);
     });
 
     socket.on('Event:readOne', function (data, callback) {

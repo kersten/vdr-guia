@@ -30,8 +30,10 @@ var NavigationView = Backbone.View.extend({
 
             if (item.get('title') !== undefined && item.get('items') == null) {
                 var href = $('<a></a>').html(item.get('title'));
+                href.data('view', item.get('view'));
+                href.css('cursor', 'pointer');
+
                 var li = $('<li></li>').append(href);
-                li.data('view', item.get('view'));
 
 
                 if (item.get('link') == hash) {
@@ -52,8 +54,10 @@ var NavigationView = Backbone.View.extend({
 
                 item.get('items').forEach(function (item) {
                     var href = $('<a></a>').html(item.title);
+                    href.data('view', item.view);
+                    href.css('cursor', 'pointer');
+
                     var li = $('<li></li>').append(href);
-                    li.data('view', item.view)
 
                     if (typeof(item.id) != 'undefined') {
                         li.attr('id', item.id);
@@ -68,14 +72,16 @@ var NavigationView = Backbone.View.extend({
     },
 
     events: {
-        'click li': 'navigate',
+        'click li > a': 'navigate',
         'click #loginBtn': "login",
         'click #logoutBtn': "logout",
         'keypress #search': 'liveSearch'
     },
-    
+
     navigate: function (ev) {
-        GUIA.router.navigate('!/' + $(ev.currentTarget).data('view'));
+        if ($(ev.currentTarget).data('view') !== undefined) {
+            GUIA.router.navigate('!/' + $(ev.currentTarget).data('view'), true);
+        }
     },
 
     login: function (event) {

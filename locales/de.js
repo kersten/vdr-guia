@@ -96,5 +96,9 @@
 	"Morning program - 12.00 to 18.00 o'clock": "Morning program - 12.00 to 18.00 o'clock",
 	"Morning program - 18.00 to 20.00 o'clock": "Morning program - 18.00 to 20.00 o'clock",
 	"Morning program - 20.00 to 0.00 o'clock": "Morning program - 20.00 to 0.00 o'clock",
-	"Morning program - 0.00 to 5.00 o'clock": "Morning program - 0.00 to 5.00 o'clock"
+	"Morning program - 0.00 to 5.00 o'clock": "Morning program - 0.00 to 5.00 o'clock",
+	"Early morning program - 5.00 to 12.00 o'clock": "Early morning program - 5.00 to 12.00 o'clock",
+	"Early evening program - 5.00 to 12.00 o'clock": "Early evening program - 5.00 to 12.00 o'clock",
+	"Evening program - 5.00 to 12.00 o'clock": "Evening program - 5.00 to 12.00 o'clock",
+	"Night program - 5.00 to 12.00 o'clock": "Night program - 5.00 to 12.00 o'clock"
 }
