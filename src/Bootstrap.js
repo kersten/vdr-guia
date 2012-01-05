@@ -233,19 +233,6 @@ Bootstrap.prototype.setupViews = function () {
         }
     });
 
-    this.app.get('/', function (req, res) {
-        log.dbg('Render index.html ..');
-
-        ConfigurationSchema.findOne({}, function (err, data) {
-            res.render('index', {
-                layout: false,
-                isLoggedIn: req.session.loggedIn,
-                vdr: JSON.stringify(vdr.plugins),
-                guia: JSON.stringify(data)
-            });
-        });
-    });
-
     var self = this;
 
     fs.readdir(__dirname + '/views', function (err, files) {
@@ -256,6 +243,19 @@ Bootstrap.prototype.setupViews = function () {
             var view = require(__dirname + '/views/' + file);
 
             self.app.get(view.url, view.func);
+        });
+        
+        self.app.get('*', function (req, res) {
+            log.dbg('Render index.html ..');
+
+            ConfigurationSchema.findOne({}, function (err, data) {
+                res.render('index', {
+                    layout: false,
+                    isLoggedIn: req.session.loggedIn,
+                    vdr: JSON.stringify(vdr.plugins),
+                    guia: JSON.stringify(data)
+                });
+            });
         });
     });
 };

@@ -5,37 +5,30 @@ io.sockets.on('connection', function (socket) {
         if (hs.session.loggedIn) {
             var menu = [{
                 title: __('Highlights'),
-                link: '#/highlights',
                 view: 'Highlights'
             }, {
                 title: __('TV Guide'),
-                link: '#/TVGuide',
                 view: 'TVGuide'
             }, {
                 title: __('Recordings'),
-                link: '#/recordings',
                 view: 'Recordings'
             }, {
                 title: __('Me'),
                 items: [{
                     title: __('My Profile'),
-                    link: '#/me',
                     view: 'Me'
                 }, {
                     title: __('Help'),
-                    link: '#/help',
                     view: 'Help'
                 }, {
                     title: __('Shortcuts'),
-                    link: '#/shortcuts',
                     view: 'Shortcuts'
                 }, {
                     title: __('Settings'),
-                    link: '#/settings',
                     view: 'Settings'
                 }, {
                     title: __('Logout'),
-                    link: '#/logout',
+                    link: 'logout',
                     view: 'Logout',
                     id: 'logoutBtn'
                 }]
@@ -45,10 +38,10 @@ io.sockets.on('connection', function (socket) {
         } else {
             var menu = [{
                 title: __('Home'),
-                link: '#'
+                link: ''
             }, {
                 title: __('Contact'),
-                link: '#/contact'
+                link: 'contact'
             }];
 
             callback({items: menu, loggedIn: false});

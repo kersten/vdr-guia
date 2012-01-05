@@ -1,0 +1,13 @@
+<ul>
+    <& d = new XDate(); &>
+
+    <li  style="cursor: pointer" class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>" data-date="<&= d.toString('dd.MM.yyyy') &>" data-page="<&= page &>">
+        <a><&= d.toString('dd.MM') &></a>
+    </li>
+
+    <& for(i = 0; i < 12; i++) { &>
+    <li style="cursor: pointer" class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>" data-date="<&= d.toString('dd.MM.yyyy') &>" data-page="<&= page &>">
+        <a style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
+    </li>
+    <& } &>
+</ul>

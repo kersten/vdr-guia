@@ -13,7 +13,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on('TVGuideCollection:read', function (data, callback) {
-        var page = data.page -1 || 0;
+        var page = data.page - 1 || 0;
         var start = page * 4;
         
         var channelQuery = channels.find({});

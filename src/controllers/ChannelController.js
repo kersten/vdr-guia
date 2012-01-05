@@ -2,8 +2,6 @@ var channels = mongoose.model('Channel');
 
 io.sockets.on('connection', function (socket) {
     socket.on('ChannelCollection:read', function (data, callback) {
-        data = data.data;
-
         var query = channels.find({});
 
         if (data !== undefined && data.limit !== undefined) {

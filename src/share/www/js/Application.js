@@ -45,8 +45,8 @@ var GUIA = {
     },
 
     initialize: function () {
-        new this.router();
-        Backbone.history.start();
+        this.router = new this.routerInit();
+        Backbone.history.start({pushState: true});
 
         this.collections.navigationCollection = new NavigationCollection;
         this.navigation = new NavigationView({
@@ -79,7 +79,7 @@ var GUIA = {
         });
     },
 
-    router: Backbone.Router.extend({
+    routerInit: Backbone.Router.extend({
         loadedViews: {},
 
         routes: {
@@ -104,10 +104,8 @@ var GUIA = {
         tvguideRoute: function (date, page) {
             //GUIA.loadingOverlay('show');
             view = new GUIA.views.tvguide({
-                params: {
-                    date: date,
-                    page: page
-                }
+                date: date,
+                page: page
             });
             
             view.render();

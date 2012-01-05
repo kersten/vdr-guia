@@ -24,13 +24,14 @@ var NavigationView = Backbone.View.extend({
         this.collection.bind('add', function (item) {
             var hash = window.location.hash;
 
-            if (window.location.hash == "" || window.location.hash == "#/") {
-                hash = '#';
+            if (window.location.hash == "" || window.location.hash == "!/") {
+                hash = '';
             }
 
             if (item.get('title') !== undefined && item.get('items') == null) {
-                var href = $('<a></a>').attr('href', item.get('link')).html(item.get('title'));
+                var href = $('<a></a>').html(item.get('title'));
                 var li = $('<li></li>').append(href);
+                li.data('view', item.get('view'));
 
 
                 if (item.get('link') == hash) {
@@ -50,8 +51,9 @@ var NavigationView = Backbone.View.extend({
                 var dropdownLi = $('<li></li>').append(dropdownHref).append(dropdownUl).addClass('menu').attr('data-dropdown', 'dropdown');
 
                 item.get('items').forEach(function (item) {
-                    var href = $('<a></a>').attr('href', item.link).html(item.title);
+                    var href = $('<a></a>').html(item.title);
                     var li = $('<li></li>').append(href);
+                    li.data('view', item.view)
 
                     if (typeof(item.id) != 'undefined') {
                         li.attr('id', item.id);
@@ -66,9 +68,14 @@ var NavigationView = Backbone.View.extend({
     },
 
     events: {
+        'click li': 'navigate',
         'click #loginBtn': "login",
         'click #logoutBtn': "logout",
         'keypress #search': 'liveSearch'
+    },
+    
+    navigate: function (ev) {
+        GUIA.router.navigate('!/' + $(ev.currentTarget).data('view'));
     },
 
     login: function (event) {

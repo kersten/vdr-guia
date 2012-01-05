@@ -9,7 +9,7 @@ var TVGuideEventView = Backbone.View.extend({
     
     showEventDetails: function (ev) {
         //$('.popover').remove();
-        location.hash = '!/Event/' + $(ev.currentTarget).attr('_id');
+        GUIA.router.navigate('!/Event/' + $(ev.currentTarget).attr('_id'), true);
     },
 
     showEventPopover: function (ev) {

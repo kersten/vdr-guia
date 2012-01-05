@@ -96,6 +96,8 @@
         <script type="text/javascript" src="/js/views/Program/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/ChannelView.js"></script>
+        <script type="text/javascript" src="/js/views/TVGuide/PaginationView.js"></script>
+        <script type="text/javascript" src="/js/views/Channel/Select/DialogView.js"></script>
 
         <!-- Include models -->
         <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
@@ -139,6 +141,10 @@
         <script type="text/javascript" src="/js/Application.js"></script>
 
         <!-- Include templates -->
+        <script type="text/template" id="WelcomeTemplate">
+            <%- partial('templates/Welcome') %>
+        </script>
+        
         <script type="text/template" id="LoginFormTemplate">
             <%- partial('templates/LoginForm') %>
         </script>
@@ -169,6 +175,14 @@
         
         <script type="text/template" id="TVGuideChannelTemplate">
             <%- partial('templates/TVGuide/Channel') %>
+        </script>
+        
+        <script type="text/template" id="TVGuidePaginationTemplate">
+            <%- partial('templates/TVGuide/Pagination') %>
+        </script>
+        
+        <script type="text/template" id="ChannelSelectDialogTemplate">
+            <%- partial('templates/Channel/Select/Dialog') %>
         </script>
     </head>
 
@@ -208,6 +222,8 @@
                 <a class="btn" id="fetchTmdbInfoClose"><%= __('Close') %></a>
             </div>
         </div>
+        
+        <div id="modal"></div>
         
         <!-- Start application -->
         <script type="text/javascript">

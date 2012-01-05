@@ -5,19 +5,6 @@
 <div class="row">
     <div class="span14">
         <div class="pagination" style="margin-top: -5px;">
-            <ul>
-                <& d = new XDate(); &>
-
-                <li class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                    <a href="#!/TVGuide/<&= d.toString('dd.MM.yyyy') &>/<&= page &>"><&= d.toString('dd.MM') &></a>
-                </li>
-
-                <& for(i = 0; i < 12; i++) { &>
-                <li class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>">
-                    <a href="#!/TVGuide/<&= d.toString('dd.MM.yyyy') &>/<&= page &>" style="width: 34.08px;"><&= d.toString('dd.MM') &></a>
-                </li>
-                <& } &>
-            </ul>
         </div>
     </div>
 </div>
