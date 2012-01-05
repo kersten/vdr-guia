@@ -1,7 +1,43 @@
 var TVGuideView = Backbone.View.extend({
     url: "tvguide",
+    template: 'TVGuideTemplate',
+    el: '#body',
 
     initialize: function () {
+        var d = new XDate();
+        var active = d.toString('dd.MM.yyyy');
+        var page = 1;
+
+        if (this.options.params.date !== undefined) {
+            active = this.options.params.date;
+        }
+
+        this.active = active;
+
+        d = new XDate(active);
+
+        if (this.options.params.page !== undefined) {
+            page = this.options.params.page;
+        }
+        
+        this.date = d;
+        
+        this.templateVars = {
+            active: active,
+            page: page
+        };
+        
+        var self = this;
+        
+        this.tvguide = new TVGuideCollection();
+        this.tvguide.fetch({
+            data: {
+                page: this.page,
+            }, success: function () {
+                self.getEvents();
+            }
+        });
+        
         $('.popover').live('hover', {view: this}, this.handlePopover);
         $('.record > img').live('hover', this.handleRecordIcon);
         $('.record').live('click', this.recordEvent);
@@ -24,33 +60,8 @@ var TVGuideView = Backbone.View.extend({
     },
 
     events: {
-        'click .eventDetails': 'showEventDetails',
-        'hover .eventDetails': 'showEventPopover',
         'click .slideUp': 'slideUp',
         'click .selectChannels': 'showChannelsDialog'
-    },
-
-    showEventDetails: function (ev) {
-        $('.popover').remove();
-        location.hash = '/Event/' + $(ev.currentTarget).attr('_id');
-    },
-
-    showEventPopover: function (ev) {
-        if (!$(ev.currentTarget).hasClass('isPrime')) {
-            if (ev.type == 'mouseenter') {
-                $(ev.currentTarget).popover('show');
-                $(ev.currentTarget).css({textDecoration: 'underline'});
-            } else {
-                var popover = ev.currentTarget;
-
-                this.popoverEl = popover;
-                this.popoverId = setTimeout(function () {
-                    $(popover).popover('hide');
-                }, 100);
-
-                $(ev.currentTarget).css({textDecoration: 'none'});
-            }
-        }
     },
 
     handlePopover: function (ev) {
@@ -62,7 +73,17 @@ var TVGuideView = Backbone.View.extend({
     },
 
     recordEvent: function (ev) {
-        location.hash = '/TVGuide/' + $(ev.currentTarget).attr('_id');
+        var image = '-2';
+        var timer_active = true;
+        
+        if ($(ev.currentTarget).find('img').attr('timer_active') == "true") {
+            image = '';
+            timer_active = false;
+        }
+        
+        $(ev.currentTarget).find('img').attr('src', '/icons/devine/black/16x16/Circle' + image + '.png');
+        $(ev.currentTarget).find('img').attr('timer_active', timer_active);
+        
         console.log('Record: ' + $(ev.currentTarget).attr('_id'));
     },
 
@@ -70,7 +91,7 @@ var TVGuideView = Backbone.View.extend({
         var image = '';
         var image_record = '-2';
         
-        if ($(ev.currentTarget).attr('timer_active')) {
+        if ($(ev.currentTarget).attr('timer_active') == "true") {
             image = '-2';
             image_record = '';
         }
@@ -105,7 +126,7 @@ var TVGuideView = Backbone.View.extend({
         }
     },
 
-    generateHTML: function (callback) {
+    /*generateHTML: function (callback) {
         var self = this;
         this.tvguide = new TVGuideCollection();
         this.channels = new ChannelCollection();
@@ -131,13 +152,85 @@ var TVGuideView = Backbone.View.extend({
             month: d.toString('MM'),
             day: d.toString('dd')
         }}, success: function (collection) {
+            
             self.channels.fetch({data: {active: true}, success: function (channels) {
                 callback.apply(this, [_.template(self.template, {events: collection, channels: channels, active: active, page: page})]);
             }});
         }});
+    },*/
+    
+    getEvents: function () {
+        var self = this;
+        
+        this.tvguide.forEach(function (channel, index) {
+            channel.events.fetch({
+                data: {
+                    date: {
+                        year: self.date.toString('yyyy'),
+                        month: self.date.toString('MM'),
+                        day: self.date.toString('dd')
+                    }
+                }, success: function (events) {
+                    self.renderEvents(channel, events, index);
+                }
+            });
+        });
+    },
+    
+    renderEvents: function (channel, events, index) {
+        var d = this.date.clone();
+        
+        var channelView = new TVGuideChannelView({
+            model: channel
+        });
+            
+        $('#channels :nth-child(' + (index + 1) + ')').html(channelView.render());
+        
+        $('#guide > .eventsection').each(function () {
+            var el = this;
+            var sectionDiv = $(el).children(':nth-child(' + (index + 1) + ')');
+            
+            d.setHours($(el).data('from'));
+            var starttime = d.getTime() / 1000;
+            
+            d.setHours($(el).data('to'));
+            var stoptime = d.getTime() / 1000;
+            
+            events.forEach(function (event) {
+                if (event.get('start') >= starttime && event.get('start') < stoptime) {
+                    var sectionDiv = $(el).children('div[data-hour=\'' + parseInt(event.start_time().split(':')[0]) +'\']');
+                    var eventDiv = $(sectionDiv).children(':nth-child(' + (index + 1) + ')');
+                    
+                    var eventView = new TVGuideEventView({
+                        model: event,
+                        el: eventDiv
+                    });
+                    
+                    eventView.render();
+                    
+                    //eventDiv.append(eventView.render());
+                }
+            });
+        });   
+        
+        return;
+        
+        
+        events.forEach(function (event) {
+            var eventView = new TVGuideEventView({
+                model: event
+            });
+        });
     },
 
     render: function () {
+        var template = _.template( $('#' + this.template).html(), this.templateVars );
+        $(this.el).html( template );
+        
+        GUIA.loadingOverlay('hide');
+        
+        return;
+        
         var self = this;
 
         this.generateHTML(function (res) {

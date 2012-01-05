@@ -1,7 +1,7 @@
 var EventCollection = Backbone.Collection.extend({
     url: "EventCollection",
-    model: EventModel,
-    parse: function (response) {
+    model: EventModel
+    /*parse: function (response) {
         response.forEach(function (item, index) {
             item.start_time = item.start;
 
@@ -130,5 +130,5 @@ var EventCollection = Backbone.Collection.extend({
         });
 
         return response;
-    }
+    }*/
 });

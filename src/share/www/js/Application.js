@@ -1,4 +1,4 @@
-var Application = {
+var GUIA = {
     navigation: null,
     views: {
         contact: ContactView,
@@ -44,187 +44,6 @@ var Application = {
         open: false
     },
 
-    showEvent: function (event) {
-        var self = this;
-        this.originalDiv = $(event.currentTarget);
-        this.eventDiv = $(event.currentTarget).clone();
-
-        this.eventDiv.children('.eventbody').css('padding', "");
-
-        this.eventDiv.css({
-            position: 'fixed',
-            left: $(event.currentTarget).offset().left - 35,
-            top: $(event.currentTarget).offset().top - 5,
-            zIndex: 100001,
-            backgroundColor: '#FFFFFF',
-            cursor: 'auto',
-            backgroundClip: 'padding-box',
-            borderRadius: '6px 6px 6px 6px',
-            overflow: 'hidden',
-            '-webkit-border-radius': '6px',
-            '-moz-border-radius': '6px',
-            'border-radius': '6px',
-            '-webkit-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
-            '-moz-box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
-            'box-shadow': '0 3px 7px rgba(0, 0, 0, 0.3)',
-            '-webkit-background-clip': 'padding-box',
-            '-moz-background-clip': 'padding-box',
-            'background-clip': 'padding-box',
-            height: this.originalDiv.outerHeight()
-        }).removeClass('eventitem').addClass('span13 modalevent');
-
-        $(event.currentTarget).css('opacity', 0);
-        $('body').append(this.eventDiv);
-
-        var modalHeader = this.eventDiv.children('.eventheader');
-        modalHeader.addClass('modal-header').css({
-            'background-color': '#F5F5F5',
-            '-webkit-border-radius': '6px 6px 0 0',
-            '-moz-border-radius': '6px 6px 0 0',
-            'border-radius': '6px 6px 0 0'
-        });
-
-        var recordBtn = $('<a></a>');
-        recordBtn.addClass('btn error recordevent').text('Seriestimer');
-
-        if (this.eventDiv.attr('timer_exists') == "true") {
-            recordBtn.addClass('disabled');
-        }
-
-        var modalFooter = $('<div></div>').addClass('modal-footer').append($('<a></a>').addClass('btn primary closeevent').text('Close').click(function () {
-            self.closeEvent();
-        })).append(recordBtn);
-        this.eventDiv.append(modalFooter);
-
-        var modalHeaderHeight = modalHeader.height();
-        modalHeaderHeight += parseInt(modalHeader.css("padding-top"), 10) + parseInt(modalHeader.css("padding-bottom"), 10); //Total Padding Width
-        modalHeaderHeight += parseInt(modalHeader.css("margin-top"), 10) + parseInt(modalHeader.css("margin-bottom"), 10); //Total Margin Width
-        modalHeaderHeight += parseInt(modalHeader.css("borderTopWidth"), 10) + parseInt(modalHeader.css("borderBottomWidth"), 10);
-
-        var modalFooterHeight = modalFooter.height();
-        modalFooterHeight += parseInt(modalFooter.css("padding-top"), 10) + parseInt(modalFooter.css("padding-bottom"), 10); //Total Padding Width
-        modalFooterHeight += parseInt(modalFooter.css("margin-top"), 10) + parseInt(modalFooter.css("margin-bottom"), 10); //Total Margin Width
-        modalFooterHeight += parseInt(modalFooter.css("borderTopWidth"), 10) + parseInt(modalFooter.css("borderBottomWidth"), 10);
-
-        var elementWidth, elementHeight, windowWidth, windowHeight, X2, Y2;
-            elementWidth = this.eventDiv.outerWidth();
-            elementHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight >= 500) ? 500 : this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight;
-            windowWidth = jQuery(window).width();
-            windowHeight = jQuery(window).height();
-            X2 = (windowWidth/2 - elementWidth/2) + "px";
-            Y2 = (windowHeight/2 - elementHeight/2) + "px";
-
-        var maxHeight = (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500 - (30 + modalFooterHeight + modalHeaderHeight)) ? 500 - (30 + modalFooterHeight + modalHeaderHeight) : this.originalDiv.children('.eventbody')[0].scrollHeight;
-
-        var modalBody = this.eventDiv.children('.eventbody');
-        modalBody.addClass('modal-body').css({
-            height: maxHeight,
-            maxHeight: maxHeight,
-            overflow: 'auto',
-            position: 'relative'
-        });
-
-        this.eventDiv.animate({
-            left: X2,
-            top: Y2,
-            height: (this.originalDiv.children('.eventbody')[0].scrollHeight >= 500  - (modalFooterHeight + modalHeaderHeight)) ? 500 : 30 + this.originalDiv.children('.eventbody')[0].scrollHeight + modalHeaderHeight + modalFooterHeight
-        }, function () {
-            //modalBody.lionbarsRelative();
-
-            Application.shortcuts[114] = function (event) {
-                event.preventDefault();
-
-                if (self.eventDiv.attr('timer_exists') == "true") {
-                    Application.deleteEventTimer(self.eventDiv.attr('timer_id'), {
-                        success: function (data) {
-                            self.eventDiv.attr('timer_exists', "false");
-                            self.originalDiv.attr('timer_exists', "false");
-
-                            self.eventDiv.attr('timer_id', '');
-                            self.originalDiv.attr('timer_id', '');
-
-                            self.eventDiv.find('.timer_exists').fadeOut();
-                            self.originalDiv.find('.timer_exists').fadeOut();
-                        }
-                    });
-                } else {
-                    Application.recordEvent(self.eventDiv.attr('channel_id'), self.eventDiv.attr('event_id'), {
-                        success: function (data) {
-                            self.eventDiv.attr('timer_exists', "true");
-                            self.originalDiv.attr('timer_exists', "true");
-                            self.eventDiv.attr('timer_id', data.id);
-                            self.originalDiv.attr('timer_id', data.id);
-
-                            var timerSpan = $('<span></span>').css("display", "none").addClass("label important timer_exists").html('Timer active');
-                            var timerSpan2 = timerSpan.clone();
-
-                            self.originalDiv.find('.informationlabels').append(timerSpan);
-                            self.eventDiv.find('.informationlabels').append(timerSpan2);
-                            timerSpan.fadeIn();
-                            timerSpan2.fadeIn();
-                        }
-                    });
-                }
-            };
-        });
-
-        this.eventDiv.children('.eventbody').find('.transoverlay').fadeOut();
-
-        modalHeader.children('div').find('.timer_active').css('opacity', 1).blinky();
-
-        Application.overlay('show');
-
-        $('.siteoverlay').bind('click', function () {
-            self.closeEvent();
-        });
-    },
-
-    closeEvent: function () {
-        delete(Application.shortcuts[114]);
-
-        var self = this;
-
-        this.eventDiv.children('.eventbody').find('.transoverlay').fadeIn();
-
-        this.eventDiv.animate({
-            left: this.originalDiv.offset().left - 30,
-            top: this.originalDiv.offset().top,
-            height: this.originalDiv.height(),
-            borderRadius: 'none',
-            backgroundClip: 'none'
-        }, function () {
-            $(this).remove();
-            self.originalDiv.css('opacity', 1);
-        });
-
-        Application.overlay('hide');
-    },
-
-    recordEvent: function (channel_id, event_id, options) {
-        socket.emit('Event:record', {
-            channel_id: channel_id,
-            event_id: event_id
-        }, function (data) {
-            if (typeof(data.error) != 'undefined') {
-                options.error(data);
-            } else {
-                options.success(data);
-            }
-        });
-    },
-
-    deleteEventTimer: function (timer_id, options) {
-        socket.emit('Event:deleteTimer', {
-            timer_id: timer_id
-        }, function (data) {
-            if (typeof(data) != 'undefined' && typeof(data.error) != 'undefined') {
-                options.error(data);
-            } else {
-                options.success(data);
-            }
-        });
-    },
-
     initialize: function () {
         new this.router();
         Backbone.history.start();
@@ -232,7 +51,7 @@ var Application = {
         this.collections.navigationCollection = new NavigationCollection;
         this.navigation = new NavigationView({
             el: $('.topbar'),
-            collection: Application.collections.navigationCollection
+            collection: GUIA.collections.navigationCollection
         });
 
         function setClock() {
@@ -264,11 +83,11 @@ var Application = {
         loadedViews: {},
 
         routes: {
-            "/TVGuide": "tvguideRoute",
-            "/TVGuide/:date": "tvguideRoute",
-            "/TVGuide/:date/:page": "tvguideRoute",
-            "/Event/:id": "eventRoute",
-            "/Event/:id/posters": "eventPostersRoute",
+            "!/TVGuide": "tvguideRoute",
+            "!/TVGuide/:date": "tvguideRoute",
+            "!/TVGuide/:date/:page": "tvguideRoute",
+            "!/Event/:id": "eventRoute",
+            "!/Event/:id/posters": "eventPostersRoute",
             "*actions": "defaultRoute"
         },
 
@@ -283,28 +102,23 @@ var Application = {
         },
 
         tvguideRoute: function (date, page) {
-            Application.loadingOverlay('show');
-
-            var self = this;
-
-            Application.loadView({
-                view: '/tvguide',
+            //GUIA.loadingOverlay('show');
+            view = new GUIA.views.tvguide({
                 params: {
                     date: date,
                     page: page
-                },
-                callback: function (req, original) {
-                    self.render.apply(this, [req, original, self]);
                 }
             });
+            
+            view.render();
         },
 
         eventRoute: function (_id) {
-            Application.loadingOverlay('show');
+            GUIA.loadingOverlay('show');
 
             var self = this;
 
-            Application.loadView({
+            GUIA.loadView({
                 view: '/Event',
                 params: {
                     _id: _id
@@ -316,11 +130,11 @@ var Application = {
         },
 
         eventPostersRoute: function (_id) {
-            Application.loadingOverlay('show');
+            GUIA.loadingOverlay('show');
 
             var self = this;
 
-            Application.loadView({
+            GUIA.loadView({
                 view: '/Event',
                 params: {
                     _id: _id,
@@ -333,11 +147,11 @@ var Application = {
         },
 
         defaultRoute: function (req) {
-            Application.loadingOverlay('show');
+            GUIA.loadingOverlay('show');
 
             var self = this;
 
-            Application.loadView({
+            GUIA.loadView({
                 view: req,
                 callback: function (req, original) {
                     self.render.apply(this, [req, original, self]);
@@ -373,13 +187,14 @@ var Application = {
             this.currentSubView = null;
         }
 
-        var viewOptions = {el: $('#body')};
-
+        //var viewOptions = {el: $('#body')};
+        var viewOptions = {};
+        
         if (options.params !== undefined) {
             viewOptions = jQuery.extend(viewOptions, {params: options.params});
         }
 
-        this.currentView = new Application.views[options.view](viewOptions);
+        this.currentView = new GUIA.views[options.view](viewOptions);
 
         options.callback.apply(this, [options.view, original]);
     },
@@ -480,7 +295,7 @@ var Application = {
 
                 this.overlayTimeout = setTimeout(function () {
                     alert('An error occured, please try again.');
-                    Application.loadingOverlay('hide');
+                    GUIA.loadingOverlay('hide');
                 }, 10000);
             }
         } else {

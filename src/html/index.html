@@ -94,6 +94,8 @@
         <script type="text/javascript" src="/js/views/Settings/DatabaseView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/GuiaView.js"></script>
         <script type="text/javascript" src="/js/views/Program/EventView.js"></script>
+        <script type="text/javascript" src="/js/views/TVGuide/EventView.js"></script>
+        <script type="text/javascript" src="/js/views/TVGuide/ChannelView.js"></script>
 
         <!-- Include models -->
         <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
@@ -136,26 +138,37 @@
         <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/Application.js"></script>
 
-        <!-- Start application -->
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var app = Application;
-                app.vdr = {
-                    plugins: <%- vdr %>
-                };
-
-                app.guia = <%- guia %>;
-
-                app.initialize();
-            });
-        </script>
-
+        <!-- Include templates -->
         <script type="text/template" id="LoginFormTemplate">
             <%- partial('templates/LoginForm') %>
         </script>
 
         <script type="text/template" id="SearchFormTemplate">
             <%- partial('templates/SearchForm') %>
+        </script>
+        
+        <script type="text/template" id="ContactTemplate">
+            <%- partial('templates/Contact') %>
+        </script>
+        
+        <script type="text/template" id="EventTemplate">
+            <%- partial('templates/Event') %>
+        </script>
+        
+        <script type="text/template" id="EventTmdbTemplate">
+            <%- partial('templates/Event/Tmdb') %>
+        </script>
+        
+        <script type="text/template" id="TVGuideTemplate">
+            <%- partial('templates/TVGuide') %>
+        </script>
+        
+        <script type="text/template" id="TVGuideEventTemplate">
+            <%- partial('templates/TVGuide/Event') %>
+        </script>
+        
+        <script type="text/template" id="TVGuideChannelTemplate">
+            <%- partial('templates/TVGuide/Channel') %>
         </script>
     </head>
 
@@ -195,5 +208,19 @@
                 <a class="btn" id="fetchTmdbInfoClose"><%= __('Close') %></a>
             </div>
         </div>
+        
+        <!-- Start application -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var app = GUIA;
+                app.vdr = {
+                    plugins: <%- vdr %>
+                };
+
+                app.guia = <%- guia %>;
+
+                app.initialize();
+            });
+        </script>
     </body>
 </html>

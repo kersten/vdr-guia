@@ -46,6 +46,7 @@ Backbone.View.prototype.renderTemplate = function () {
             }
         });
     } else {
+        this.template = $('#' + this.template);
         this.render();
     }
 };
@@ -68,7 +69,7 @@ Backbone.sync = function (method, model, options) {
 
     var params = _.extend({
         req: namespace + ':' + method
-    }, options);
+    }, options.data, model.params);
 
     params.model = model.toJSON() || {};
 

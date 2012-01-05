@@ -89,5 +89,12 @@
 	"Night program - 00.00 to 5.00 o'clock": "Night program - 00.00 to 5.00 o'clock",
 	"Early evening program - 18.00 to 20.00 o'clock": "Early evening program - 18.00 to 20.00 o'clock",
 	"Evening program - 20.00 to 0.00 o'clock": "Evening program - 20.00 to 0.00 o'clock",
-	"Night program - 0.00 to 5.00 o'clock": "Night program - 0.00 to 5.00 o'clock"
+	"Night program - 0.00 to 5.00 o'clock": "Night program - 0.00 to 5.00 o'clock",
+	"Contact <small>us</small>": "Contact <small>us</small>",
+	"Details": "Details",
+	"Select channels": "Select channels",
+	"Morning program - 12.00 to 18.00 o'clock": "Morning program - 12.00 to 18.00 o'clock",
+	"Morning program - 18.00 to 20.00 o'clock": "Morning program - 18.00 to 20.00 o'clock",
+	"Morning program - 20.00 to 0.00 o'clock": "Morning program - 20.00 to 0.00 o'clock",
+	"Morning program - 0.00 to 5.00 o'clock": "Morning program - 0.00 to 5.00 o'clock"
 }
