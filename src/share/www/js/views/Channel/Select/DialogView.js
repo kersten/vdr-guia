@@ -1,5 +1,8 @@
 var ChannelSelectDialogView = Backbone.View.extend({
     template: 'ChannelSelectDialogTemplate',
+    
+    tagName: 'div',
+    className: 'modal hide fade',
 
     events: {
         'click .selectChannel': 'switchChannel'
@@ -7,7 +10,7 @@ var ChannelSelectDialogView = Backbone.View.extend({
 
     switchChannel: function (ev) {
         GUIA.router.navigate('!/TVGuide/' + this.options.date + '/' + $(ev.currentTarget).data('page'), true);
-        $(this.el).find(">:first-child").first().modal('hide');
+        $(this.el).modal('hide');
     },
 
     render: function (callback) {

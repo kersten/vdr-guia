@@ -119,12 +119,12 @@ var GUIA = {
         },
 
         tvguideRoute: function (date, page) {
+            GUIA.loadingOverlay('show');
+            
             this.currentView = new TVGuideView({
                 date: date,
                 page: page
             });
-
-            $('#body').html(this.currentView.render().el);
         },
 
         eventRoute: function (_id) {
