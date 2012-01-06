@@ -1,13 +1,6 @@
 var SettingsGuiaView = Backbone.View.extend({
-    url: "settings/guia",
-
-    initialize: function () {
-
-    },
-
-    destructor: function () {
-
-    },
+    template: 'SettingsGuiaTemplate',
+    className: 'span14 columns',
 
     updateConfiguration: function (value) {
         socket.emit('Configuration:create', value, function (data) {
@@ -16,6 +9,10 @@ var SettingsGuiaView = Backbone.View.extend({
     },
 
     render: function () {
+        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
+        
+        return this;
+        
         var self = this;
 
         this.generateHTML(function (res) {

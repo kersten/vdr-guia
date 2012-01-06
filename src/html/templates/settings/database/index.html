@@ -1,55 +1,53 @@
-<div class="span14 columns">
-    <p>
-        <%- __('Manage the GUIA database') %>
-    </p>
-    
-    <table class="zebra-striped">
-        <thead>
-            <tr>
-                <th colspan="2">
-                    <%- __('Databasestatistics') %>
-                </th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            <tr>
-                <td style="width: 200px;"><%- __('Size of database') %></td>
-                <td id="sizeOfDatabase"></td>
-            </tr>
-            
-            <tr>
-                <td><%- __('Channels') %></td>
-                <td id="channelCount"></td>
-            </tr>
-            
-            <tr>
-                <td><%- __('Events') %></td>
-                <td id="eventCount"></td>
-            </tr>
-            
-            <tr>
-                <td><%- __('Actors') %></td>
-                <td id="actorCount"></td>
-            </tr>
-            
-            <tr>
-                <td><%- __('Actors from tmdb') %></td>
-                <td id="actorDetailCount"></td>
-            </tr>
-            
-            <tr>
-                <td><%- __('Movies from tmdb') %></td>
-                <td id="movieDetailCount"></td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <div class="well">
-    <button action="refreshStats" class="btn success">Refresh</button>
-        <button action="resetEvents" class="btn danger">Reset events</button>
-        <button action="resetDatabase" class="btn danger">Reset entire database</button>
-    </div>
+<p>
+    <%- __('Manage the GUIA database') %>
+</p>
+
+<table class="zebra-striped">
+    <thead>
+        <tr>
+            <th colspan="2">
+                <%- __('Databasestatistics') %>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td style="width: 200px;"><%- __('Size of database') %></td>
+            <td id="sizeOfDatabase"></td>
+        </tr>
+        
+        <tr>
+            <td><%- __('Channels') %></td>
+            <td id="channelCount"></td>
+        </tr>
+        
+        <tr>
+            <td><%- __('Events') %></td>
+            <td id="eventCount"></td>
+        </tr>
+        
+        <tr>
+            <td><%- __('Actors') %></td>
+            <td id="actorCount"></td>
+        </tr>
+        
+        <tr>
+            <td><%- __('Actors from tmdb') %></td>
+            <td id="actorDetailCount"></td>
+        </tr>
+        
+        <tr>
+            <td><%- __('Movies from tmdb') %></td>
+            <td id="movieDetailCount"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="well">
+<button action="refreshStats" class="btn success">Refresh</button>
+    <button action="resetEvents" class="btn danger">Reset events</button>
+    <button action="resetDatabase" class="btn danger">Reset entire database</button>
 </div>
 
 <div class="modal hide fade" id="resetDatabaseDialog">

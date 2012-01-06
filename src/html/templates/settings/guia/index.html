@@ -1,43 +1,41 @@
-<div class="span14 columns">
-    <p>
-        <%- __('Set your default options for GUIA') %>
-    </p>
+<p>
+    <%- __('Set your default options for GUIA') %>
+</p>
 
-    <form class="form-stacked">
-        <fieldset>
-            <div class="clearfix">
-                <label for="epgscandelay"><%- __('Pause between epg update') %></label>
-                <div class="input">
-                    <select class="medium" name="epgscandelay" id="epgscandelay">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
+<form class="form-stacked">
+    <fieldset>
+        <div class="clearfix">
+            <label for="epgscandelay"><%- __('Pause between epg update') %></label>
+            <div class="input">
+                <select class="medium" name="epgscandelay" id="epgscandelay">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
             </div>
+        </div>
 
-            <div class="clearfix">
-                <label for="fetchTmdbActors"><%- __('Fetch TMDb actors') %></label>
-                <div class="input">
-                    <input type="checkbox" id="fetchTmdbActors" checked="checked" />
-                </div>
+        <div class="clearfix">
+            <label for="fetchTmdbActors"><%- __('Fetch TMDb actors') %></label>
+            <div class="input">
+                <input type="checkbox" id="fetchTmdbActors" checked="checked" />
             </div>
+        </div>
 
-            <div class="clearfix">
-                <label for="fetchTmdbMovies"><%- __('Fetch TMDb movies') %></label>
-                <div class="input">
-                    <input type="checkbox" id="fetchTmdbMovies" checked="checked" />
-                </div>
+        <div class="clearfix">
+            <label for="fetchTmdbMovies"><%- __('Fetch TMDb movies') %></label>
+            <div class="input">
+                <input type="checkbox" id="fetchTmdbMovies" checked="checked" />
             </div>
+        </div>
 
-            <div class="clearfix">
-                <label for="fetchThetvdbSeasons"><%- __('Fetch thetvdb seasons') %></label>
-                <div class="input">
-                    <input type="checkbox" id="fetchThetvdbSeasons" checked="checked" />
-                </div>
+        <div class="clearfix">
+            <label for="fetchThetvdbSeasons"><%- __('Fetch thetvdb seasons') %></label>
+            <div class="input">
+                <input type="checkbox" id="fetchThetvdbSeasons" checked="checked" />
             </div>
-        </fieldset>
-    </form>
-</div>
+        </div>
+    </fieldset>
+</form>

@@ -1,20 +1,16 @@
 var SettingsDatabaseView = Backbone.View.extend({
-    url: "settings/database",
-
-    initialize: function () {
-
-    },
-
-    destructor: function () {
-        $(this.el).undelegate('button[action*="resetDatabase"]', 'click');
-        $(this.el).undelegate('button[action*="resetEvents"]', 'click');
-        $(this.el).undelegate('button[action*="refreshStats"]', 'click');
-    },
+    template: 'SettingsDatabaseTemplate',
+    className: 'span14 columns',
     
     events: {
         'click button[action*="resetDatabase"]': 'resetDatabase',
         'click button[action*="resetEvents"]': 'resetEvents',
         'click button[action*="refreshStats"]': 'updateStats'
+    },
+    
+    initialize: function () {
+        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
+        this.updateStats();
     },
     
     resetDatabase: function () {
@@ -64,44 +60,21 @@ var SettingsDatabaseView = Backbone.View.extend({
     },
 
     updateStats: function () {
+        var self = this;
+        
         socket.emit('DatabaseStatistics:fetch', {}, function (data) {
             data = data.data;
-            $('#sizeOfDatabase').text((data.dbstats.dataSize / 1024 / 1024).toFixed(2) + ' MB');
+            $('#sizeOfDatabase', self.el).text((data.dbstats.dataSize / 1024 / 1024).toFixed(2) + ' MB');
             
-            $('#channelCount').text(data.channelStats.count);
-            $('#eventCount').text(data.eventStats.count);
-            $('#actorCount').text(data.actorStats.count);
-            $('#actorDetailCount').text(data.actorDetailStats.count);
-            $('#movieDetailCount').text(data.movieDetailStats.count);
+            $('#channelCount', self.el).text(data.channelStats.count);
+            $('#eventCount', self.el).text(data.eventStats.count);
+            $('#actorCount', self.el).text(data.actorStats.count);
+            $('#actorDetailCount', self.el).text(data.actorDetailStats.count);
+            $('#movieDetailCount', self.el).text(data.movieDetailStats.count);
         });
     },
 
     render: function () {
-        var self = this;
-
-        this.generateHTML(function (res) {
-            $('#settingssection').children().remove();
-            $('#settingssection').html(res);
-            
-            self.updateStats();
-
-            Application.loadingOverlay('hide');
-        });
-    },
-
-    renderTemplate: function () {
-        var self = this;
-
-        if (this.template == null) {
-            $.ajax({
-                url: "/templates/" + self.url,
-                success: function (res) {
-                    self.template = res;
-                    self.render();
-                }
-            });
-        } else {
-            this.render();
-        }
+        return this;
     }
 });

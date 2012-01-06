@@ -1,5 +1,4 @@
 var TVGuideView = Backbone.View.extend({
-    url: "tvguide",
     template: 'TVGuideTemplate',
     tagName: 'div',
 

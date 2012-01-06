@@ -88,6 +88,8 @@ var GUIA = {
             "!/TVGuide/:date/:page": "tvguideRoute",
             "!/Event/:id": "eventRoute",
             "!/Event/:id/posters": "eventPostersRoute",
+            "!/Settings": "settingsRoute",
+            "!/Settings/:section": "settingsRoute",
             "*actions": "defaultRoute"
         },
 
@@ -156,6 +158,17 @@ var GUIA = {
                     self.render.apply(this, [req, original, self]);
                 }
             });
+        },
+        
+        settingsRoute: function (section) {
+            GUIA.loadingOverlay('show');
+
+            this.currentView = new SettingsView({
+                section: section
+            });
+
+            $('#body').html(this.currentView.render().el);
+            GUIA.loadingOverlay('hide');
         },
 
         defaultRoute: function (req) {

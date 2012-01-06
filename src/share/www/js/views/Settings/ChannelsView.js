@@ -1,21 +1,13 @@
 var SettingsChannelsView = Backbone.View.extend({
-    url: "settings/channels",
-
+    template: 'SettingsChannelsTemplate',
+    className: 'span14 columns',
+    
     initialize: function () {
-
-    },
-
-    destructor: function () {
+        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
         
-    },
-
-    generateHTML: function (callback) {
-        var self = this;
-
-        callback.apply(this, [_.template(self.template)]);
-
         this.channellist = new ChannelCollection();
 
+        var self = this;
         this.channellist.fetch({
             success: function (collection) {
                 collection.forEach(function (channel) {
@@ -43,35 +35,14 @@ var SettingsChannelsView = Backbone.View.extend({
                     row.append($('<td></td>').html(active));
                     row.append($('<td></td>').html(channel.get('name')));
 
-                    $('#channels > tbody').append(row);
+                    $('#channels > tbody', self.el).append(row);
                 });
-
-                Application.loadingOverlay('hide');
             }
         });
     },
 
     render: function () {
-        this.generateHTML(function (res) {
-            $('#settingssection').children().remove();
-            $('#settingssection').html(res);
-        });
-    },
-
-    renderTemplate: function () {
-        var self = this;
-
-        if (this.template == null) {
-            $.ajax({
-                url: "/templates/" + self.url,
-                success: function (res) {
-                    self.template = res;
-                    self.render();
-                }
-            });
-        } else {
-            this.render();
-        }
+        return this;
     }
 });
 
