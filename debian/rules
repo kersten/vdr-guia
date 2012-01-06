@@ -10,11 +10,13 @@
 #export DH_VERBOSE=1
 
 build:
-	# nothing
+	$(MAKE)
 
 clean:
 	dh_testdir
 	dh_testroot
+
+    $(MAKE) clean
 
 	dh_clean
 
@@ -23,6 +25,8 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+	
+	DESTDIR=$(CURDIR)/debian/vdr-guia $(MAKE) install
 
 # Build architecture-independent files here.
 binary-indep: build install
