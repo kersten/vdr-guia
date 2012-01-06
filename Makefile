@@ -6,6 +6,7 @@ install:
 	
 	@npm config set registry http://registry.npmjs.org/
 	@npm install --prefix $(CURDIR)
+	cat /build/buildd/*/npm-debug.log
 
 	cp -r node_modules $(DESTDIR)/usr/share/vdr-guia/
 
