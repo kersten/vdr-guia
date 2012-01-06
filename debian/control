@@ -2,7 +2,7 @@ Source: vdr-guia
 Section: video
 Priority: extra
 Maintainer: Kersten Burkhardt <guia@minimal.cc>
-Build-Depends: debhelper (>= 8.0.0), nodejs (>= 0.6), npm (>= 1.0)
+Build-Depends: debhelper (>= 8.0.0), nodejs (>= 0.6.6)
 Standards-Version: 3.9.2
 Homepage: http://guia.minimal.cc
 #Vcs-Git: git://git.debian.org/collab-maint/vdr-guia.git
@@ -10,7 +10,7 @@ Homepage: http://guia.minimal.cc
 
 Package: vdr-guia
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, nodejs (>= 0.6), mongodb (>= 1.8)
+Depends: ${shlibs:Depends}, ${misc:Depends}, nodejs (>= 0.6.6), mongodb (>= 1.8)
 Description: GUIA - A webinterface to control recordings, vdr and epg
  GUIA is a complete new webinterface for the VDR (Video Disk Recorder) by Klaus Schmidinger.
  This piece of software intends to be a fast, lightweight and nice looking GUI
