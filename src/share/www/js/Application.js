@@ -122,7 +122,7 @@ var GUIA = {
 
         tvguideRoute: function (date, page) {
             GUIA.loadingOverlay('show');
-            
+
             this.currentView = new TVGuideView({
                 date: date,
                 page: page
@@ -159,7 +159,7 @@ var GUIA = {
                 }
             });
         },
-        
+
         settingsRoute: function (section) {
             GUIA.loadingOverlay('show');
 

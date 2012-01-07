@@ -2,41 +2,36 @@ var TVGuideView = Backbone.View.extend({
     template: 'TVGuideTemplate',
     tagName: 'div',
 
+    events: {
+        // Bind clicks on the section (eg 5.00 - 12.00 o'clock)
+        'click #guide > div.slideUp': 'slideUp',
+
+        // Bind click on the select channels button
+        'click .selectChannels': 'showChannelsDialog',
+
+        'TVGuidePagination:dateSwitched': 'load'
+    },
+
     initialize: function () {
-        // Create new XDate object and set date defaults
+        var self = this;
+
+        this.bind('TVGuidePagination:dateSwitched', function () {
+            console.log('load new events');
+        });
+
+        // Create new XDate object
         var d = new XDate();
+
+        // Write date to options, if it is not set create one
         this.options.date = this.options.date || d.toString('dd.MM.yyyy');
+
+        // Set current page, if it is not set set to 1
         this.options.page = this.options.page || 1;
 
         // Parse date string to XDate object
         this.options.date = new XDate(this.options.date);
 
-        // Reference current view
-        var self = this;
-
-        // Load collection for channels
-        this.tvguide = new TVGuideCollection();
-        
-        // Fetch channels for current page
-        this.tvguide.fetch({
-            data: {
-                page: this.options.page
-            }, success: function () {
-                // Render template
-                var template = _.template( $('#' + self.template).html(), {} );
-                $(self.el).html( template );
-                
-                // Get events
-                self.getEvents(function () {
-                    this.render();
-                });
-            }
-        });
-    },
-
-    events: {
-        'click #guide > div.slideUp': 'slideUp',
-        'click .selectChannels': 'showChannelsDialog'
+        this.load();
     },
 
     showChannelsDialog: function () {
@@ -57,7 +52,7 @@ var TVGuideView = Backbone.View.extend({
                 backdrop: true,
                 show: true
             });
-            
+
             $(this.el).bind('hidden', function () {
                 channelSelect.remove();
             });
@@ -75,6 +70,30 @@ var TVGuideView = Backbone.View.extend({
             $('.' + $(ev.currentTarget).data('section')).slideDown();
             $(ev.currentTarget).removeClass('sectionHidden');
         }
+    },
+
+    load: function () {
+        // Reference current view
+        var self = this;
+
+        // Load collection for channels
+        this.tvguide = new TVGuideCollection();
+
+        // Fetch channels for current page
+        this.tvguide.fetch({
+            data: {
+                page: this.options.page
+            }, success: function () {
+                // Render template
+                var template = _.template( $('#' + self.template).html(), {} );
+                $(self.el).html( template );
+
+                // Get events
+                self.getEvents(function () {
+                    this.render();
+                });
+            }
+        });
     },
 
     getEvents: function (callback) {
@@ -99,12 +118,12 @@ var TVGuideView = Backbone.View.extend({
         }, function (err, result) {
             // Set index to 0
             var index = 0;
-            
+
             // Map (sync) over fetched channels
             async.mapSeries(self.tvguide, function (channel, callback) {
                 // Increment index by 1
                 index++;
-                
+
                 // render current channel and events
                 self.renderEvents(channel, index, callback);
             }, function (err, result) {
@@ -117,27 +136,27 @@ var TVGuideView = Backbone.View.extend({
     renderEvents: function (channel, index, callback) {
         // Clone the current date for manipulation
         var d = this.options.date.clone();
-        
+
         // Load the channel view
         var channelView = new TVGuideChannelView({
             model: channel
         });
 
         // Attach the channel to the event guide
-        $(this.el).find('#channels :nth-child(' + index + ')').html(channelView.render());
-        
+        $('#channels :nth-child(' + index + ')', this.el).html(channelView.render());
+
         // Get event sections and attach events
-        $(this.el).find(' #guide > .eventsection').each(function () {
+        $(' #guide > .eventsection', this.el).each(function () {
             // Copy current section
             var el = this;
-            
+
             // Get section time and set it to the date
             d.setHours($(el).data('from'));
             var starttime = d.getTime() / 1000;
-            
+
             d.setHours($(el).data('to'));
             var stoptime = d.getTime() / 1000;
-            
+
             // Iterate over every fetched event
             channel.events.forEach(function (event) {
                 // Check if events start and stoptime matching the current section time
@@ -157,7 +176,7 @@ var TVGuideView = Backbone.View.extend({
                 }
             });
         });
-        
+
         // Finished generating events and channel, return to getEvents
         callback(null, null);
     },
@@ -167,7 +186,8 @@ var TVGuideView = Backbone.View.extend({
         var pagination = new TVGuidePaginationView({
             el: $(this.el).find('.pagination'),
             date: this.options.date.toString('dd.MM.yyyy'),
-            page: this.options.page
+            page: this.options.page,
+            parent: this
         });
 
         // Render the pagination (date) element
@@ -175,10 +195,10 @@ var TVGuideView = Backbone.View.extend({
 
         // Append the generate HTML to the #body div
         $('#body').html(this.el);
-        
+
         // Hide the loading spinner animation
         GUIA.loadingOverlay('hide');
-        
+
         return this;
     }
 });
