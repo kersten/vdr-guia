@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Peter Siering <ps@ctmagazin.de>, 10/2/2003
+
+ACTION=$1
+
+# Upgrade <= 1.2.6-26 to a more FHS-conform directory structure
+#
+
+if [ "$ACTION" = "configure" ] ; then
+	# ensure that user and group 'vdr' exist
+	USER=vdr
+	GROUP=vdr
+	if ! getent group | grep -q "^$GROUP:" ; then
+		echo -n "Adding group $GROUP.."
+		addgroup --quiet --gid 666 --system $GROUP
+		echo "..done"
+	fi
+	if ! getent passwd | grep -q "^$USER:"; then
+		echo -n "Adding user $USER.."
+		adduser --system --uid 666 --home /var/lib/vdr --shell /bin/false \
+			--gecos "VDR user" --no-create-home \
+			--disabled-login --disabled-password \
+			--ingroup $GROUP \
+			$USER
+		echo "...done"
+	fi
+	
+	if [ -e /var/lib/vdr ] ; then
+		chown -R $USER:$GROUP /usr/share/vdr-guia
+		chown $USER:$GROUP /usr/share/vdr-guia/* > /dev/null 2>&1 || true
+	fi
+fi
+
+#DEBHELPER#
+
+exit 0
