@@ -9,8 +9,8 @@ ACTION=$1
 
 if [ "$ACTION" = "configure" ] ; then
 	# ensure that user and group 'vdr' exist
-	USER=vdr
-	GROUP=vdr
+	USER=www-data
+	GROUP=www-data
 	if ! getent group | grep -q "^$GROUP:" ; then
 		exit 0
 	fi
@@ -21,6 +21,7 @@ if [ "$ACTION" = "configure" ] ; then
 	if [ -e /usr/share/vdr-guia ] ; then
 		chown -R $USER:$GROUP /usr/share/vdr-guia
 		chown $USER:$GROUP /usr/share/vdr-guia/* > /dev/null 2>&1 || true
+        	chown -r $USER:$GROUP /var/log/guia
 	fi
 fi
 
