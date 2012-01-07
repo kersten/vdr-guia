@@ -57,6 +57,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.use(i18n.init);
 
     i18n.configure({
+        directory: __dirname + '/share/locales',
         // setup some locales - other locales default to en silently
         locales:['en', 'de'],
 
