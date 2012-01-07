@@ -1,5 +1,5 @@
 var fs = require('fs');
-var asyncSrc = fs.readFileSync('node_modules/async/lib/async.js');
+var asyncSrc = fs.readFileSync(require.resolve('async/lib/async'));
 
 var TemplateView = {
     url: '/js/async.js',

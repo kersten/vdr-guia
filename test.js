@@ -1,3 +1,6 @@
+console.log(require.resolve('async/lib/async'));
+process.exit();
+
 var Thetvdb = require('./src/lib/Media/Scraper/Thetvdb');
 
 var tvdb = new Thetvdb('3258B04D58376067', 'de');
