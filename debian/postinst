@@ -20,8 +20,10 @@ if [ "$ACTION" = "configure" ] ; then
 
 	if [ -e /usr/share/vdr-guia ] ; then
 		chown -R $USER:$GROUP /usr/share/vdr-guia
-		chown $USER:$GROUP /usr/share/vdr-guia/* > /dev/null 2>&1 || true
-        	chown -r $USER:$GROUP /var/log/guia
+	fi
+
+	if [ -e /var/log/guia ] ; then
+        	chown -R $USER:$GROUP /var/log/guia
 	fi
 fi
 
