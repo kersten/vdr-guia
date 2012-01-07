@@ -25,8 +25,8 @@ if [ "$ACTION" = "configure" ] ; then
 			$USER
 		echo "...done"
 	fi
-	
-	if [ -e /var/lib/vdr ] ; then
+
+	if [ -e /usr/share/vdr-guia ] ; then
 		chown -R $USER:$GROUP /usr/share/vdr-guia
 		chown $USER:$GROUP /usr/share/vdr-guia/* > /dev/null 2>&1 || true
 	fi

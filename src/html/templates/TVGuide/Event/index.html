@@ -1,5 +1,3 @@
-<div style="cursor: pointer;" class="eventDetails" _id="<&= event.get('_id') &>" data-content="<div style='float: left; width: 20px; cursor: pointer;' class='record' _id='<&= event.get('_id') &>'><img timer_active='<&= event.get('timer_active') &>' src='/icons/devine/black/16x16/Circle<&= (event.get('timer_active')) ? '-2' : '' &>.png' alt='Record' title='Record' style='cursor: pointer;' /></div><&= event.get('short_description').replace(/"/g, "&quot;") &><div style='clear: left;'></div>" data-original-title="<&= event.get('title').replace(/"/g, "&quot;") &>">
-    <div>
-        <&= event.start_time() &> - <strong><&= event.get('title') &></strong>
-    </div>
+<div>
+    <&= event.start_time() &> - <strong><&= event.get('title') &></strong>
 </div>

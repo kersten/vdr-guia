@@ -1,12 +1,17 @@
 var TVGuideEventView = Backbone.View.extend({
     url: "tvguide/event",
     template: 'TVGuideEventTemplate',
-    
+    tagName: 'div',
+
     events: {
-        'click .eventDetails': 'showEventDetails',
-        'hover .eventDetails': 'showEventPopover'
+        'click div': 'showEventDetails',
+        'hover div': 'showEventPopover'
     },
-    
+
+    initialize: function () {
+        console.log(this.model.get('_id'));
+    },
+
     handlePopover: function (ev) {
         if (ev.type == 'mouseenter') {
             clearTimeout(ev.data.view.popoverId);
@@ -14,7 +19,7 @@ var TVGuideEventView = Backbone.View.extend({
             $(ev.data.view.popoverEl).popover('hide');
         }
     },
-    
+
     recordEvent: function (ev) {
         var image = '-2';
         var timer_active = true;
@@ -45,15 +50,16 @@ var TVGuideEventView = Backbone.View.extend({
             $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image + '.png');
         }
     },
-    
+
     showEventDetails: function (ev) {
-        //$('.popover').remove();
-        GUIA.router.navigate('!/Event/' + $(ev.currentTarget).attr('_id'), true);
+        console.log(ev);
+        console.log(this.model.get('_id'));
+        //GUIA.router.navigate('!/Event/' + $(ev.currentTarget).attr('_id'), true);
     },
 
     showEventPopover: function (ev) {
         console.log('DAMN');
-        
+
         if (!$(ev.currentTarget).hasClass('isPrime')) {
             if (ev.type == 'mouseenter') {
                 $(ev.currentTarget).popover('show');
@@ -70,7 +76,7 @@ var TVGuideEventView = Backbone.View.extend({
             }
         }
     },
-    
+
     render: function () {
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
