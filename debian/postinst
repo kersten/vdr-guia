@@ -12,18 +12,10 @@ if [ "$ACTION" = "configure" ] ; then
 	USER=vdr
 	GROUP=vdr
 	if ! getent group | grep -q "^$GROUP:" ; then
-		echo -n "Adding group $GROUP.."
-		addgroup --quiet --gid 666 --system $GROUP
-		echo "..done"
+		exit 0
 	fi
 	if ! getent passwd | grep -q "^$USER:"; then
-		echo -n "Adding user $USER.."
-		adduser --system --uid 666 --home /var/lib/vdr --shell /bin/false \
-			--gecos "VDR user" --no-create-home \
-			--disabled-login --disabled-password \
-			--ingroup $GROUP \
-			$USER
-		echo "...done"
+		exit 0
 	fi
 
 	if [ -e /usr/share/vdr-guia ] ; then
