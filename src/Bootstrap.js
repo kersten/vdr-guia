@@ -11,7 +11,7 @@ function Bootstrap (app, express) {
     this.setup();
 }
 
-Bootstrap.prototype.setup = function () {
+Bootstrap.prototype.setup = function (callback) {
     var self = this;
     
     this.setupExpress(function () {
@@ -38,6 +38,8 @@ Bootstrap.prototype.setup = function () {
                 self.setupControllers();
                 self.setupViews();
             }
+            
+            callback();
         });
     });
 };

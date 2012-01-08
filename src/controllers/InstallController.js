@@ -32,8 +32,8 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on('Install:redirect', function (data, callback) {
-        GUIA.setup();
-        
-        callback();
+        GUIA.setup(function () {
+            callback();
+        });
     });
 });
