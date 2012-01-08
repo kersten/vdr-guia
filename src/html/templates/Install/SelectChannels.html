@@ -2,7 +2,7 @@
     <h1><%- __('Your Channels') %></h1>
 </div>
 <div class="row">
-    <div class="span8">
+    <div class="span8" style="height: 400px; overflow: auto;">
         <p>
             <%- __('Please select the channels that you\'ve want to see in GUIA.') %>
         </p>
@@ -25,5 +25,14 @@
 
             </tbody>
         </table>
+    </div>
+</div>
+<div class="row">
+    <div class="span8">
+        <div class="span14">
+            <div class="actions">
+                <button class="btn disabled" id="previous" next="InstallView"><%- __('Back') %></button>&nbsp;<button class="btn primary disabled" id="next" next="StepOne"><%- __('Next step') %></button>
+            </div>
+        </div>
     </div>
 </div>

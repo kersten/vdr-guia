@@ -12,3 +12,4 @@ app.listen(config.web.port);
 var Bootstrap = require('./Bootstrap');
 
 var GUIA = new Bootstrap(app, express);
+global.GUIA = GUIA;

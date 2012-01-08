@@ -9,7 +9,10 @@ var InstallStepThreeView = Backbone.View.extend({
     },
 
     loadNextSite: function () {
-
+        socket.emit('Install:redirect', {}, function () {
+            location.reload(true);
+        });
+        
         return;
     },
 

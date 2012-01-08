@@ -29,9 +29,11 @@ io.sockets.on('connection', function (socket) {
             console.log('ERROR');
             callback({reachable: false});
         });
-
-        /*var checkReachable = setTimeout(function () {
-            callback({reachable: false});
-        }, 2000);*/
+    });
+    
+    socket.on('Install:redirect', function (data, callback) {
+        GUIA.setup();
+        
+        callback();
     });
 });

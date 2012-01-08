@@ -7,8 +7,13 @@ function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
     this.logging = require('node-logging');
-    var self = this;
+    
+    this.setup();
+}
 
+Bootstrap.prototype.setup = function () {
+    var self = this;
+    
     this.setupExpress(function () {
         log.dbg('Express setup complete ..');
 
@@ -35,7 +40,7 @@ function Bootstrap (app, express) {
             }
         });
     });
-}
+};
 
 Bootstrap.prototype.setupExpress = function (cb) {
     var SessionMongoose = require("session-mongoose");
