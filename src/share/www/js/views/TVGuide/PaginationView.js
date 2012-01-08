@@ -2,14 +2,14 @@ var TVGuidePaginationView = Backbone.View.extend({
     template: 'TVGuidePaginationTemplate',
 
     events: {
-        'click li:not(.active)': 'switchDate',
+        'click li:not(.active)': 'switchDate'
     },
 
     switchDate: function (ev) {
         $('li.active', this.el).removeClass('active');
         $(ev.currentTarget).addClass('active');
 
-        GUIA.router.navigate('!/TVGuide/' + $(ev.currentTarget).data('date') + '/' + $(ev.currentTarget).data('page'));
+        GUIA.router.navigate('!/TVGuide/' + $(ev.currentTarget).data('date') + '/' + $(ev.currentTarget).data('page'), true);
 
         this.options.parent.trigger('TVGuidePagination:dateSwitched');
     },

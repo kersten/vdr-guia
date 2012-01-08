@@ -7,17 +7,23 @@ function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
     this.logging = require('node-logging');
-    
-    this.setup();
+
+    var self = this;
+
+    global.io = require('socket.io').listen(this.app);
+    self.setupSocketIo();
+
+    this.setup(function () {
+        self.setupControllers();
+        self.setupViews();
+    });
 }
 
 Bootstrap.prototype.setup = function (callback) {
     var self = this;
-    
+
     this.setupExpress(function () {
         log.dbg('Express setup complete ..');
-
-        self.setupSocketIo();
 
         self.setupDatabase(function (data) {
             log.dbg('Database setup complete ..');
@@ -30,47 +36,74 @@ Bootstrap.prototype.setup = function (callback) {
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
 
                 self.setupLogos();
-                self.setupControllers();
-                self.setupViews();
-
                 self.setupVdr();
-            } else {
-                self.setupControllers();
-                self.setupViews();
             }
-            
-            callback();
+
+            if (callback !== undefined) {
+                callback();
+            }
         });
     });
 };
 
 Bootstrap.prototype.setupExpress = function (cb) {
+    var app = this.app;
+    var express = this.express;
+    var logging = this.logging;
+
     var SessionMongoose = require("session-mongoose");
     global.mongooseSessionStore = new SessionMongoose({
         url: "mongodb://127.0.0.1/GUIAsession"
     });
 
-    this.app.use(this.express.bodyParser());
-    this.app.use(this.express.cookieParser());
-    this.app.use(this.logging.requestLogger);
-    this.app.use(this.express.session({
-        store: mongooseSessionStore,
-        secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
-        key: 'guia.id',
-        cookie: {
-            maxAge: 60000 * 60 * 24
-        }
-    }));
+    app.configure(function () {
+        app.use(express.bodyParser());
+        app.use(express.cookieParser());
 
-    this.app.use(i18n.init);
+        app.use(express.session({
+            store: mongooseSessionStore,
+            secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
+            key: 'guia.id',
+            cookie: {
+                maxAge: 60000 * 60 * 24
+            }
+        }));
 
-    i18n.configure({
-        directory: __dirname + '/share/locales',
-        // setup some locales - other locales default to en silently
-        locales:['en', 'de'],
+        app.use(i18n.init);
 
-        // where to register __() and __n() to, might be "global" if you know what you are doing
-        register: global
+        i18n.configure({
+            directory: __dirname + '/share/locales',
+            // setup some locales - other locales default to en silently
+            locales:['en', 'de'],
+
+            // where to register __() and __n() to, might be "global" if you know what you are doing
+            register: global
+        });
+
+        /*
+         * Set public directory for directly serving files
+         */
+        app.use(express.static(__dirname + '/lib/js'));
+        app.use(express.static(__dirname + '/share/www'));
+
+        app.use(express.favicon(__dirname + '/share/www/icons/favicon.ico'));
+
+        /*
+         * Register Template engine with .html and .js
+         */
+        app.register('.html', require('ejs'));
+        app.register('.js', require('ejs'));
+
+        /*
+         * Register view directory
+         */
+        app.set('views', __dirname + '/html');
+        app.set('view engine', 'html');
+    });
+
+    app.configure('development', function () {
+        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+        app.use(logging.requestLogger);
     });
 
     global.rest = rest;
@@ -83,26 +116,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
 
     global.log = this.logging;
 
-    /*
-     * Set public directory for directly serving files
-     */
-    this.app.use(this.express.static(__dirname + '/lib/js'));
-    this.app.use(this.express.static(__dirname + '/share/www'));
 
-    this.app.use(this.express.favicon(__dirname + '/share/www/icons/favicon.ico'));
-    this.app.use(this.express.errorHandler({dumpExceptions: true, showStack: true}));
-
-    /*
-     * Register Template engine with .html and .js
-     */
-    this.app.register('.html', require('ejs'));
-    this.app.register('.js', require('ejs'));
-
-    /*
-     * Register view directory
-     */
-    this.app.set('views', __dirname + '/html');
-    this.app.set('view engine', 'html');
 
     cb.call();
 };
@@ -118,56 +132,45 @@ Bootstrap.prototype.setupDatabase = function (cb) {
         throw e;
     });
 
-    mongoose.connection.on('open', function () {
-        var schemas = fs.readdirSync(__dirname + '/schemas');
+    var schemas = fs.readdirSync(__dirname + '/schemas');
 
-        schemas.forEach(function (schema) {
-            schema = schema.replace('.js', '');
-            require(__dirname + '/schemas/' + schema);
-        });
+    schemas.forEach(function (schema) {
+        schema = schema.replace('.js', '');
+        require(__dirname + '/schemas/' + schema);
+    });
 
-        var ConfigurationSchema = mongoose.model('Configuration');
+    var ConfigurationSchema = mongoose.model('Configuration');
 
-        ConfigurationSchema.count({}, function (err, cnt) {
-            if (cnt == 0) {
-                log.dbg('Not installed! Delivering installation');
+    ConfigurationSchema.count({}, function (err, cnt) {
+        if (cnt == 0) {
+            log.dbg('Not installed! Delivering installation');
 
-                require(__dirname + '/controllers/InstallController');
+            require(__dirname + '/controllers/InstallController');
+
+            cb.apply(this, [{
+                installed: false
+            }]);
+        } else {
+            log.dbg('GUIA installed! Getting configuration ..');
+
+            ConfigurationSchema.findOne({}, function (err, data) {
+                global.guia = data;
 
                 cb.apply(this, [{
-                    installed: false
+                    installed: true,
+                    vdrHost: data.vdrHost,
+                    restfulPort: data.restfulPort
                 }]);
-            } else {
-                log.dbg('GUIA installed! Getting configuration ..');
-
-                ConfigurationSchema.findOne({}, function (err, data) {
-                    global.guia = data;
-
-                    cb.apply(this, [{
-                        installed: true,
-                        vdrHost: data.vdrHost,
-                        restfulPort: data.restfulPort
-                    }]);
-                });
-            }
-        });
+            });
+        }
     });
 };
 
 Bootstrap.prototype.setupSocketIo = function () {
-    /*
-     * Create socket
-     */
-    log.dbg('Setting up socket.io ..');
-
-    global.io = require('socket.io').listen(this.app);
-
     var parseCookie = require('express/node_modules/connect').utils.parseCookie;
     var Session = require('express/node_modules/connect').middleware.session.Session;
 
     io.configure(function (){
-        io.set('transports', ['websocket']);
-
         io.set('authorization', function (data, accept) {
             if (data.headers.cookie) {
                 data.cookie = parseCookie(data.headers.cookie);
@@ -191,6 +194,26 @@ Bootstrap.prototype.setupSocketIo = function () {
                 return accept('No cookie transmitted.', false);
             }
         });
+    });
+
+    io.configure('production', function(){
+        io.set('log level', 1);
+
+        io.set('transports', [
+            'websocket'
+            , 'flashsocket'
+            , 'htmlfile'
+            , 'xhr-polling'
+            , 'jsonp-polling'
+        ]);
+
+        io.enable('browser client minification');
+        io.enable('browser client etag');
+        io.enable('browser client gzip');
+    });
+
+    io.configure('development', function(){
+        io.set('transports', ['websocket']);
     });
 };
 

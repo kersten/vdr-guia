@@ -83,7 +83,7 @@ var TVGuideEventView = Backbone.View.extend({
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
 
-        console.log(this.model.get('title'));
+        //console.log(this.model.get('title'));
 
         $(this.el).popover({
             title: this.model.get('title'),

@@ -1,8 +1,6 @@
 io.sockets.on('connection', function (socket) {
-    var hs = socket.handshake;
-
     socket.on('NavigationCollection:read', function (data, callback) {
-        if (hs.session.loggedIn) {
+        if (socket.handshake.session.loggedIn) {
             var menu = [{
                 title: __('Highlights'),
                 view: 'Highlights'

@@ -15,9 +15,9 @@ var TVGuideView = Backbone.View.extend({
     initialize: function () {
         var self = this;
 
-        this.bind('TVGuidePagination:dateSwitched', function () {
+        /*this.bind('TVGuidePagination:dateSwitched', function () {
             console.log('load new events');
-        });
+        });*/
 
         // Create new XDate object
         var d = new XDate();

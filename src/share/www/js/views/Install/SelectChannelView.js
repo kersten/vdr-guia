@@ -3,7 +3,7 @@ var InstallSelectChannelView = Backbone.View.extend({
 
     initialize: function () {
         $(this.el).html(_.template( $('#' + this.template).html(), {} ));
-        
+
         $('#next', this.el).button('loading');
 
         this.channellist = new ChannelCollection();
@@ -19,11 +19,11 @@ var InstallSelectChannelView = Backbone.View.extend({
                     $('#next', self.el).button('reset');
                     $('#next', self.el).removeClass('disabled');
                     $('#previous', self.el).removeClass('disabled');
-                    
+
                     var row = $('<tr></tr>').attr('_id', channel.get('_id'));
                     row.append($('<td></td>').html(channel.get('number')));
 
-                    var active = $('<input></input>').attr('type', 'checkbox');
+                    var active = $('<input></input>').attr('type', 'checkbox').addClass('channels');
 
                     active.bind('change', function () {
                         if ($(this).is(':checked')) {
@@ -57,13 +57,13 @@ var InstallSelectChannelView = Backbone.View.extend({
 
     loadNextSite: function () {
         var channelsSelected = false;
-        
-        $('input[type=checkbox]', this.el).each(function () {
+
+        $('input.channels[type=checkbox]', this.el).each(function () {
             if ($(this).is(':checked')) {
                 channelsSelected = true;
             }
         });
-        
+
         if (channelsSelected) {
             var view = new InstallStepThreeView({
                 model: this.model

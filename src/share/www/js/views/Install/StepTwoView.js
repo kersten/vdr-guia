@@ -27,6 +27,13 @@ var InstallStepTwoView = Backbone.View.extend({
 
                 self.model.save();
 
+                $('#VDRHost').parent().parent().removeClass('error');
+                $('#VDRHost').removeClass('error');
+                $('#VDRHost').parent().children('span').remove();
+
+                $('#restfulPort').parent().parent().removeClass('error');
+                $('#restfulPort').removeClass('error');
+
                 $('#next', self.el).button('reset');
 
                 var view = new InstallSelectChannelView({
@@ -37,15 +44,13 @@ var InstallStepTwoView = Backbone.View.extend({
             } else {
                 $('#next', self.el).button('reset');
 
-                $.ajax({
-                    url: "/templates/install/dialogs/restfulCheck",
-                    success: function (res) {
-                        var template = _.template(res, {});
-                        $('body').append(template);
+                $('#VDRHost').parent().parent().addClass('error');
+                $('#VDRHost').addClass('error');
 
-                        $('#restfulCheck').modal('show');
-                    }
-                });
+                $('#restfulPort').parent().parent().addClass('error');
+                $('#restfulPort').addClass('error');
+
+                $('#VDRHost').parent().append($('<span></span>').addClass('help-inline').html('Host or port is not reachable, please check!'));
             }
         });
     },
