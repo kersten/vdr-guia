@@ -7,15 +7,15 @@ io.sockets.on('connection', function (socket) {
         data = data.model;
 
         var configuration = new ConfigurationModel({
-            socalizeKey: data.socalizeKey,
-            socalize: data.socalize,
             vdrHost: data.vdrhost,
             restfulPort: data.restfulport
         });
 
         var user = new UserModel({
             user: data.username,
-            password: data.password
+            password: data.password,
+            socializeKey: data.socializeKey,
+            socialize: data.socialize
         });
 
         user.save();

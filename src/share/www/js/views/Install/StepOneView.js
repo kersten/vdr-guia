@@ -51,7 +51,7 @@ var InstallStepOneView = Backbone.View.extend({
             this.model.set({password: $('#password').val()});
         }
 
-        this.model.set({socalize: $('#transmit').is(':checked')});
+        this.model.set({socialize: $('#transmit').is(':checked')});
 
         if ($('#transmit').is(':checked')) {
             this.model.set({socializeKey: socializeKey});
@@ -85,8 +85,6 @@ var InstallStepOneView = Backbone.View.extend({
         $('#username', this.el).val(this.model.get('username'));
         $('#password', this.el).val(this.model.get('password'));
         $('#transmit', this.el).attr('checked', this.model.get('socalize'));
-
-        console.log(socializeKey);
 
         $('#socializeKey', this.el).text(socializeKey);
 
