@@ -1,9 +1,12 @@
-var channels = mongoose.model('Channel');
 var Channel = require('../lib/Channel');
 
 io.sockets.on('connection', function (socket) {
     socket.on('ChannelCollection:read', function (data, callback) {
-        var channel = new Channel();
+        var channels = new Channel();
+
+        channels.getAll(function (channels) {
+            callback(channels);
+        });
 
         if (data.install !== undefined) {
             var ChannelImport = require('../lib/Channel/Import');
