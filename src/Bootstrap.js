@@ -102,26 +102,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
     this.app.set('views', __dirname + '/html');
     this.app.set('view engine', 'html');
 
-    /*
-     * Create browserify array for included modules to web interface
-     */
-    //var browserify = new Array();
-
-    /*fs.readdirSync(__dirname + '/models').forEach(function (file) {
-        browserify.push(__dirname + '/models/' + file);
-    });*/
-
-    //browserify.push('node-uuid');
-
-    /*
-     * Use browserify in our express app
-     */
-    /*this.app.use(require('browserify')({
-        require: browserify,
-        mount: '/browserify.js',
-        filter: require('uglify-js')
-    }));*/
-
     cb.call();
 };
 
