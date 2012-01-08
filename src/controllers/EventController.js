@@ -13,9 +13,6 @@ io.sockets.on('connection', function (socket) {
 
         date.setHours(5);
         date.setMinutes(0);
-
-        console.log(date);
-
         var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
         primetime = primetime.getTime() / 1000;
 
@@ -32,7 +29,6 @@ io.sockets.on('connection', function (socket) {
         var eventsQuery = events.find({});
 
         var check = new Date(starttime * 1000);
-        console.log(check);
 
         eventsQuery.where('channel_id', data.channel_id);
         eventsQuery.where('start').gte(starttime).lt(stoptime);

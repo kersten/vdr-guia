@@ -222,8 +222,6 @@ Bootstrap.prototype.setupViews = function () {
     log.dbg('Setting up views ..');
 
     this.app.all('*', function (req, res, next) {
-        log.dbg('Incoming request ..');
-
         if (!installed && !req.url.match(/^\/templates\/install/)) {
             log.dbg('serving installation ..');
             res.render('install', {
@@ -231,13 +229,8 @@ Bootstrap.prototype.setupViews = function () {
                 socializeKey: uuid.v4()
             });
         } else {
-            log.dbg('Process request ..');
-
             mongooseSessionStore.get(req.sessionID, function (err, session) {
-                if (session == null) {
-                    log.dbg('Not loggedin ..');
-                } else {
-                    log.dbg('Loggedin ..');
+                if (session != null) {
                     req.session.loggedIn = session.loggedIn;
                 }
 
@@ -259,8 +252,6 @@ Bootstrap.prototype.setupViews = function () {
         });
 
         self.app.get('*', function (req, res) {
-            log.dbg('Render index.html ..');
-
             ConfigurationSchema.findOne({}, function (err, data) {
                 res.render('index', {
                     layout: false,
