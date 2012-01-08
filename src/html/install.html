@@ -85,9 +85,12 @@
         <script type="text/javascript" src="/js/views/Install/SocializeView.js"></script>
         <script type="text/javascript" src="/js/views/Install/StepOneView.js"></script>
         <script type="text/javascript" src="/js/views/Install/StepTwoView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/SelectChannelView.js"></script>
         <script type="text/javascript" src="/js/views/Install/StepThreeView.js"></script>
 
         <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
+        <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
+        <script type="text/javascript" src="/js/collections/ChannelCollection.js"></script>
 
         <!-- Include templates -->
         <script type="text/template" id="InstallTemplate">
@@ -104,6 +107,10 @@
 
         <script type="text/template" id="InstallStepTwoTemplate">
             <%- partial('templates/Install/StepTwo') %>
+        </script>
+
+        <script type="text/template" id="InstallSelectChannelsTemplate">
+            <%- partial('templates/Install/SelectChannels') %>
         </script>
 
         <script type="text/template" id="InstallStepThreeTemplate">

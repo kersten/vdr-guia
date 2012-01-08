@@ -70,5 +70,8 @@
 	"Make comments": "Make comments",
 	"Rate movies, actors and shows": "Rate movies, actors and shows",
 	"Back": "Back",
-	"Next step": "Next step"
+	"Next step": "Next step",
+	"Home": "Home",
+	"Contact": "Contact",
+	"Your Channels": "Your Channels"
 }

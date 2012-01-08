@@ -29,7 +29,7 @@ var InstallStepTwoView = Backbone.View.extend({
 
                 $('#next', self.el).button('reset');
 
-                var view = new InstallStepThreeView({
+                var view = new InstallSelectChannelView({
                     model: self.model
                 });
 

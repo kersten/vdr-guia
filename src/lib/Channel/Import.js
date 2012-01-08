@@ -2,9 +2,8 @@ var rest = require('restler');
 var ChannelSchema =  mongoose.model('Channel');
 var async = require('async');
 
-function ChannelImport (restful, mongoConnection) {
+function ChannelImport (restful) {
     this.restful = restful;
-    this.mongo = mongoConnection;
 }
 
 ChannelImport.prototype.start = function (callback) {
@@ -16,9 +15,7 @@ ChannelImport.prototype.start = function (callback) {
             var channelSchema = new ChannelSchema(channel);
             channelSchema.save(function (err) {
                 if (err) {
-                    ChannelSchema.find({'channel_id': channel.channel_id}, function (err, c) {
-                        c = c[0];
-
+                    ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
                         c.name = channel.name;
                         c.number = channel.number;
                         c.channel_id = channel.channel_id;

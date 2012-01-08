@@ -25,6 +25,8 @@ if [ "$ACTION" = "configure" ] ; then
 	if [ -e /var/log/guia ] ; then
         	chown -R $USER:$GROUP /var/log/guia
 	fi
+
+	/usr/bin/service vdr-guia restart || /bin/true
 fi
 
 #DEBHELPER#
