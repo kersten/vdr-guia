@@ -167,12 +167,11 @@ var TVGuideView = Backbone.View.extend({
 
                     // Load the event view
                     var eventView = new TVGuideEventView({
-                        model: event,
-                        el: eventDiv
+                        model: event
                     });
 
                     // Render the event
-                    eventView.render();
+                    eventDiv.html(eventView.render().el);
                 }
             });
         });

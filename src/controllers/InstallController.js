@@ -1,12 +1,10 @@
 var net = require('net');
+var ConfigurationModel = mongoose.model('Configuration');
+var UserModel = mongoose.model('User');
 
 io.sockets.on('connection', function (socket) {
     socket.on('ConfigurationModel:create', function (data) {
-        console.log(data.model);
         data = data.model;
-
-        var ConfigurationModel = require('../schemas/ConfigurationSchema');
-        var UserModel = require('../schemas/UserSchema');
 
         var configuration = new ConfigurationModel({
             socalizeKey: data.socalizeKey,
@@ -21,22 +19,19 @@ io.sockets.on('connection', function (socket) {
         });
 
         user.save();
-
         configuration.save();
     });
 
-    socket.on('Install:checkrestful', function (data) {
+    socket.on('Install:checkrestful', function (data, callback) {
         rest.get('http://' + data.vdrhost + ':' + data.restfulport + '/info.json').on('success', function(data) {
-            socket.emit('Install:checkrestful', {reachable: true});
-            clearTimeout(checkReachable);
+            callback({reachable: true});
         }).on('error', function () {
             console.log('ERROR');
-            socket.emit('Install:checkrestful', {reachable: false});
-            clearTimeout(checkReachable);
+            callback({reachable: false});
         });
 
-        var checkReachable = setTimeout(function () {
-            socket.emit('Install:checkrestful', {reachable: false});
-        }, 2000);
+        /*var checkReachable = setTimeout(function () {
+            callback({reachable: false});
+        }, 2000);*/
     });
 });

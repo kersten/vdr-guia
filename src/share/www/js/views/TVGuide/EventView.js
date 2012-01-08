@@ -8,10 +8,6 @@ var TVGuideEventView = Backbone.View.extend({
         'hover div': 'showEventPopover'
     },
 
-    initialize: function () {
-        console.log(this.model.get('_id'));
-    },
-
     handlePopover: function (ev) {
         if (ev.type == 'mouseenter') {
             clearTimeout(ev.data.view.popoverId);
@@ -52,15 +48,21 @@ var TVGuideEventView = Backbone.View.extend({
     },
 
     showEventDetails: function (ev) {
-        console.log(ev);
-        console.log(this.model.get('_id'));
         //GUIA.router.navigate('!/Event/' + $(ev.currentTarget).attr('_id'), true);
     },
 
     showEventPopover: function (ev) {
-        console.log('DAMN');
+        var el = this.el;
 
-        if (!$(ev.currentTarget).hasClass('isPrime')) {
+        if (ev.type == 'mouseenter') {
+            $(el).popover('show');
+        } else {
+            this.popoverId = setTimeout(function () {
+                $(el).popover('hide');
+            }, 100);
+        }
+
+        /*if (!$(ev.currentTarget).hasClass('isPrime')) {
             if (ev.type == 'mouseenter') {
                 $(ev.currentTarget).popover('show');
                 $(ev.currentTarget).css({textDecoration: 'underline'});
@@ -74,11 +76,22 @@ var TVGuideEventView = Backbone.View.extend({
 
                 $(ev.currentTarget).css({textDecoration: 'none'});
             }
-        }
+        }*/
     },
 
     render: function () {
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
+
+        console.log(this.model.get('title'));
+
+        $(this.el).popover({
+            title: this.model.get('title'),
+            content: this.model.get('short_description'),
+            trigger: 'manual',
+            placement: 'above'
+        });
+
+        return this
     }
 });

@@ -1,6 +1,7 @@
 var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
+var uuid = require('node-uuid');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -216,7 +217,8 @@ Bootstrap.prototype.setupViews = function () {
         if (!installed && !req.url.match(/^\/templates\/install/)) {
             log.dbg('serving installation ..');
             res.render('install', {
-                layout: false
+                layout: false,
+                socializeKey: uuid.v4()
             });
         } else {
             log.dbg('Process request ..');
@@ -245,7 +247,7 @@ Bootstrap.prototype.setupViews = function () {
 
             self.app.get(view.url, view.func);
         });
-        
+
         self.app.get('*', function (req, res) {
             log.dbg('Render index.html ..');
 
@@ -389,10 +391,10 @@ Bootstrap.prototype.setupTimer = function (restful) {
     var self = this;
     var EpgTimer = require('./lib/Epg/Timer');
     var timerSetup = new EpgTimer(restful);
-    
+
     timerSetup.refresh();
     log.dbg('Delayed new timer scan .. starting in 5 minutes');
-    
+
     setTimeout(function () {
         self.setupTimer(restful);
     }, 1000 * 60 * 5);
