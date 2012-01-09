@@ -49,13 +49,13 @@
       var content
        , $e = this.$element
        , o = this.options
-
+       
       if (typeof this.options.content == 'string') {
         content = $e.attr(this.options.content)
       } else if (typeof this.options.content == 'function') {
         content = this.options.content.call(this.$element[0])
       }
-
+      
       return content
     }
 

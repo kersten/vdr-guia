@@ -73,5 +73,6 @@
 	"Next step": "Next step",
 	"Home": "Home",
 	"Contact": "Contact",
-	"Your Channels": "Your Channels"
+	"Your Channels": "Your Channels",
+	"VDR options": "VDR options"
 }

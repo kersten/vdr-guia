@@ -1,5 +1,5 @@
-var WelcomeView = Backbone.View.extend({
-    template: 'WelcomeTemplate',
+var ProfileView = Backbone.View.extend({
+    template: 'ProfileTemplate',
     
     render: function () {
         $(this.el).html(_.template( $('#' + this.template).html(), {} ));

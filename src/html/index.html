@@ -64,7 +64,10 @@
             }
 
         </style>
+        
+        <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js?mode=auto"></script>
 
+        <% if (env == 'developement') { %>
         <!-- Include jquery, backbone and underscore -->
         <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
         <script type="text/javascript" src="/js/backbone/underscore.js"></script>
@@ -138,9 +141,19 @@
         <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/lionbars.min.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/jquery.fancybox.pack.js"></script>
-
+        
         <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/Application.js"></script>
+        <% } else { %>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/js/async.js"></script>
+        
+        <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
+        <script type="text/javascript" src="/js/backbone/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone/backbone.js"></script>
+        
+        <script type="text/javascript" src="/app.js"></script>
+        <% } %>
 
         <!-- Include templates -->
         <script type="text/template" id="WelcomeTemplate">
@@ -227,7 +240,8 @@
 
             </div>
             <footer id="footer">
-                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011 - <a href="#/About">About</a></p>
+                <p>&copy; <a href="http://githu.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011 - <a href="/!/About">About</a></p>
+                <div style="float: right; margin-top: -50px;"><div id="flattr"></div></div>
             </footer>
         </div>
 
@@ -258,6 +272,13 @@
                 app.guia = <%- guia %>;
 
                 app.initialize();
+                
+                FlattrLoader.render({
+                    'uid': 'GOTTMODUS',
+                    'url': 'https://github.com/kersten/vdr-guia',
+                    'title': 'VDR  GUIA',
+                    'description': 'Webinterface for controlling the vdr'
+                }, 'flattr', 'replace');
             });
         </script>
     </body>

@@ -48,7 +48,9 @@ var TVGuideEventView = Backbone.View.extend({
     },
 
     showEventDetails: function (ev) {
-        //GUIA.router.navigate('!/Event/' + $(ev.currentTarget).attr('_id'), true);
+        $(this.el).popover('hide');
+        $('#body').scrollTop();
+        GUIA.router.navigate('!/Event/' + this.model.get('_id'), true);
     },
 
     showEventPopover: function (ev) {
@@ -56,38 +58,35 @@ var TVGuideEventView = Backbone.View.extend({
 
         if (ev.type == 'mouseenter') {
             $(el).popover('show');
+            $(el).css({
+                textDecoration: 'underline',
+                cursor: 'pointer'
+            });
         } else {
             this.popoverId = setTimeout(function () {
                 $(el).popover('hide');
             }, 100);
+            
+            $(el).css({
+                textDecoration: 'none',
+                cursor: 'none'
+            });
         }
-
-        /*if (!$(ev.currentTarget).hasClass('isPrime')) {
-            if (ev.type == 'mouseenter') {
-                $(ev.currentTarget).popover('show');
-                $(ev.currentTarget).css({textDecoration: 'underline'});
-            } else {
-                var popover = ev.currentTarget;
-
-                this.popoverEl = popover;
-                this.popoverId = setTimeout(function () {
-                    $(popover).popover('hide');
-                }, 100);
-
-                $(ev.currentTarget).css({textDecoration: 'none'});
-            }
-        }*/
     },
 
     render: function () {
+        var self = this;
+        
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
 
-        //console.log(this.model.get('title'));
-
         $(this.el).popover({
-            title: this.model.get('title'),
-            content: this.model.get('short_description'),
+            title: function () {
+                return self.model.get('title');
+            },
+            content: function () {
+                return self.model.get('short_description');
+            },
             trigger: 'manual',
             placement: 'above'
         });

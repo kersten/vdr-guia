@@ -1,29 +1,5 @@
 var GUIA = {
     navigation: null,
-    views: {
-        contact: ContactView,
-        event: EventView,
-        tvguide: TVGuideView,
-        logout: LogoutView,
-        navigation: NavigationView,
-        program: ProgramView,
-        recordings: RecordingsView,
-        search: SearchView,
-        searchresults: SearchresultsView,
-        settings: SettingsView,
-        timer: TimerView,
-        welcome: WelcomeView
-    },
-    subViews: {
-        program: {
-            event: ProgramEventView
-        },
-        settings: {
-            channels: SettingsChannelsView,
-            guia: SettingsGuiaView,
-            database: SettingsDatabaseView
-        }
-    },
     currentView: null,
     currentSubView: null,
     models: {},
@@ -83,14 +59,23 @@ var GUIA = {
         loadedViews: {},
 
         routes: {
+            "": "welcomeRoute",
+            "!/Welcome": "welcomeRoute",
+            "!/Highlights": "highlightsRoute",
             "!/TVGuide": "tvguideRoute",
             "!/TVGuide/:date": "tvguideRoute",
             "!/TVGuide/:date/:page": "tvguideRoute",
             "!/Event/:id": "eventRoute",
             "!/Event/:id/posters": "eventPostersRoute",
+            "!/Event/:id/cast": "eventCastRoute",
+            "!/Recordings": "recordingsRoute",
+            "!/Me": "profileRoute",
+            "!/Help": "helpRoute",
+            "!/Help/Shortcuts": "helpShortcutsRoute",
             "!/Settings": "settingsRoute",
             "!/Settings/:section": "settingsRoute",
-            "*actions": "defaultRoute"
+            "!/About": "aboutRoute",
+            "*actions": "notfoundRoute"
         },
 
         initialize: function () {
@@ -118,6 +103,16 @@ var GUIA = {
                 $('.nav > li.active').removeClass('active');
                 $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
             }
+        },
+        
+        welcomeRoute: function () {
+            this.currentView = new WelcomeView();
+            $('#body').html(this.currentView.render().el);
+        },
+        
+        highlightsRoute: function () {
+            this.currentView = new HighlightsView();
+            $('#body').html(this.currentView.render().el);
         },
 
         tvguideRoute: function (date, page) {
@@ -159,6 +154,43 @@ var GUIA = {
                 }
             });
         },
+        
+        eventCastRoute: function (_id) {
+            GUIA.loadingOverlay('show');
+
+            var self = this;
+
+            GUIA.loadView({
+                view: '/Event',
+                params: {
+                    _id: _id,
+                    action: 'posters'
+                },
+                callback: function (req, original) {
+                    self.render.apply(this, [req, original, self]);
+                }
+            });
+        },
+        
+        recordingsRoute: function () {
+            this.currentView = new RecordingsView();
+            $('#body').html(this.currentView.render().el);
+        },
+        
+        profileRoute: function () {
+            this.currentView = new ProfileView();
+            $('#body').html(this.currentView.render().el);
+        },
+        
+        helpRoute: function () {
+            this.currentView = new HelpView();
+            $('#body').html(this.currentView.render().el);
+        },
+        
+        helpShortcutsRoute: function () {
+            this.currentView = new HelpShortcutsView();
+            $('#body').html(this.currentView.render().el);
+        },
 
         settingsRoute: function (section) {
             GUIA.loadingOverlay('show');
@@ -170,18 +202,15 @@ var GUIA = {
             $('#body').html(this.currentView.render().el);
             GUIA.loadingOverlay('hide');
         },
+        
+        aboutRoute: function () {
+            this.currentView = new AboutView();
+            $('#body').html(this.currentView.render().el);
+        },
 
-        defaultRoute: function (req) {
-            GUIA.loadingOverlay('show');
-
-            var self = this;
-
-            GUIA.loadView({
-                view: req,
-                callback: function (req, original) {
-                    self.render.apply(this, [req, original, self]);
-                }
-            });
+        notfoundRoute: function (req) {
+            this.currentView = new NotFoundView();
+            $('#body').html(this.currentView.render().el);
         },
 
         render: function (req, nav, router) {

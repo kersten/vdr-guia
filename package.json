@@ -34,7 +34,9 @@
         "session-mongoose": ">= 0.0.1",
         "dnode": ">= 0.9.3",
         "node-uuid": ">= 1.2.0",
-        "MQTTClient": ">= 0.0.1"
+        "MQTTClient": ">= 0.0.1",
+        "connect-assetmanager": "*",
+        "connect-assetmanager-handlers": "*"
     },
     "licenses":[{
         "type" : "MIT",

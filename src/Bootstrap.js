@@ -2,6 +2,8 @@ var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
 var uuid = require('node-uuid');
+var assetManager = require('connect-assetmanager');
+var assetHandler = require('connect-assetmanager-handlers');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -50,6 +52,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     var app = this.app;
     var express = this.express;
     var logging = this.logging;
+    var self = this;
 
     var SessionMongoose = require("session-mongoose");
     global.mongooseSessionStore = new SessionMongoose({
@@ -57,6 +60,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
     });
 
     app.configure(function () {
+        self.env = 'production';
+        
         app.use(express.bodyParser());
         app.use(express.cookieParser());
 
@@ -80,12 +85,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
             register: global
         });
 
-        /*
-         * Set public directory for directly serving files
-         */
-        app.use(express.static(__dirname + '/lib/js'));
-        app.use(express.static(__dirname + '/share/www'));
-
         app.use(express.favicon(__dirname + '/share/www/icons/favicon.ico'));
 
         /*
@@ -102,8 +101,93 @@ Bootstrap.prototype.setupExpress = function (cb) {
     });
 
     app.configure('development', function () {
+        self.env = 'developement';
+        logging.setLevel('debug');
+        
+        app.use(express.static(__dirname + '/share/www'));
         app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
         app.use(logging.requestLogger);
+    });
+    
+    app.configure('production', function () {
+        logging.setLevel('error');
+        
+        var assets = {
+            js: {
+                route: /\/app.js/,
+                path: __dirname + '/share/www/js/',
+                dataType: 'javascript',
+                files: [
+                    //'jquery/jquery-1.7.js',
+                    'jquery-plugins/blinky.js',
+                    'jquery-plugins/bootstrap-buttons.js',
+                    //'jquery-plugins/bootstrap-dropdown.js',
+                    'jquery-plugins/bootstrap-modal.js',
+                    'jquery-plugins/bootstrap-twipsy.js',
+                    'jquery-plugins/bootstrap-popover.js',
+                    'jquery-plugins/bootstrap-scrollspy.js',
+                    'jquery-plugins/bootstrap-tabs.js',
+                    'jquery-plugins/jquery.fancybox.js',
+                    'jquery-plugins/spin.min.js',
+                    //'backbone/backbone.js',
+                    //'backbone/underscore.js',
+                    'models/ChannelModel.js',
+                    'models/ConfigurationModel.js',
+                    'models/EventModel.js',
+                    'models/LogoModel.js',
+                    'models/NavigationModel.js',
+                    'models/RawEventModel.js',
+                    'models/RecordingModel.js',
+                    'models/SearchresultModel.js',
+                    'models/SearchtimerModel.js',
+                    'models/TimerModel.js',
+                    'models/TVGuideModel.js',
+                    'utils/sha512.js',
+                    'utils/xdate.js',
+                    'collections/ChannelCollection.js',
+                    'collections/EventCollection.js',
+                    'collections/LogoCollection.js',
+                    'collections/NavigationCollection.js',
+                    'collections/RecordingCollection.js',
+                    'collections/SearchresultCollection.js',
+                    'collections/SearchtimerCollection.js',
+                    'collections/TimerCollection.js',
+                    'collections/TVGuideCollection.js',
+                    'views/AboutView.js',
+                    'views/ContactView.js',
+                    'views/EventView.js',
+                    'views/HelpView.js',
+                    'views/LogoutView.js',
+                    'views/NavigationView.js',
+                    'views/ProfileView.js',
+                    'views/RecordingsView.js',
+                    'views/SearchView.js',
+                    'views/SettingsView.js',
+                    'views/TVGuideView.js',
+                    'views/WelcomeView.js',
+                    'views/Channel/Select/DialogView.js',
+                    'views/Help/ShortcutsView.js',
+                    'views/Settings/ChannelsView.js',
+                    'views/Settings/DatabaseView.js',
+                    'views/Settings/GuiaView.js',
+                    'views/TVGuide/ChannelView.js',
+                    'views/TVGuide/EventView.js',
+                    'views/TVGuide/PaginationView.js',
+                    'bootstrap.js',
+                    'Application.js'
+                ],
+                postManipulate: {
+                    '^': [
+                        //assetHandler.uglifyJsOptimize
+                    ]
+                }
+            }
+        };
+        
+        var assetsManagerMiddleware = assetManager(assets);
+        
+        app.use(express.static(__dirname + '/share/www'));
+        app.use(assetsManagerMiddleware);
     });
 
     global.rest = rest;
@@ -257,7 +341,8 @@ Bootstrap.prototype.setupViews = function () {
                     layout: false,
                     isLoggedIn: req.session.loggedIn,
                     vdr: JSON.stringify(vdr.plugins),
-                    guia: JSON.stringify(data)
+                    guia: JSON.stringify(data),
+                    env: self.env
                 });
             });
         });

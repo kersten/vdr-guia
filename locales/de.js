@@ -100,5 +100,6 @@
 	"Early morning program - 5.00 to 12.00 o'clock": "Early morning program - 5.00 to 12.00 o'clock",
 	"Early evening program - 5.00 to 12.00 o'clock": "Early evening program - 5.00 to 12.00 o'clock",
 	"Evening program - 5.00 to 12.00 o'clock": "Evening program - 5.00 to 12.00 o'clock",
-	"Night program - 5.00 to 12.00 o'clock": "Night program - 5.00 to 12.00 o'clock"
+	"Night program - 5.00 to 12.00 o'clock": "Night program - 5.00 to 12.00 o'clock",
+	"VDR options": "VDR options"
 }
