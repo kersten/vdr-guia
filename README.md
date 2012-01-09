@@ -1,5 +1,7 @@
 # GUIA
 
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=kersten&url=https://github.com/kersten/vdr-guia&title=vdr-guia&language=&tags=github&category=software)
+
 ## Requirements
 
 - nodejs
