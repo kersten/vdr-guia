@@ -10,73 +10,67 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    movieDetails.findOne({'name': movie.title}, function (err, doc) {
-        if (doc == null) {
             log.dbg('Fetching informations for: ' + movie.title);
 
-            tmdb.Movie.search({
-                //query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
-                query: movie.title,
+    tmdb.Movie.search({
+        //query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
+        query: movie.title,
+        lang: 'de'
+    }, function (err, res) {
+        if(typeof(err) != 'undefined') {
+            callback.call();
+            return;
+        }
+
+        async.map(res, function (tmdbMovie, callback) {
+            if (tmdbMovie == "Nothing found.") {
+                callback.call();
+                return;
+            }
+
+            tmdb.Movie.getInfo({
+                query: tmdbMovie.id.toString(),
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
-                    callback.call();
+                    callback(null, null);
                     return;
                 }
 
-                async.map(res, function (tmdbMovie, callback) {
-                    if (tmdbMovie == "Nothing found.") {
-                        callback.call();
-                        return;
-                    }
+                res = res[0];
 
-                    tmdb.Movie.getInfo({
-                        query: tmdbMovie.id.toString(),
-                        lang: 'de'
-                    }, function (err, res) {
-                        if(typeof(err) != 'undefined') {
-                            callback(null, null);
-                            return;
-                        }
+                log.dbg('Found movie with name: ' + res.name + ' || ' + res.original_name);
 
-                        res = res[0];
+                var title = new RegExp("^" + movie.title + "$", 'ig');
 
-                        log.dbg('Found movie with name: ' + res.name + ' || ' + res.original_name);
+                if (title.test(res.original_name) || title.test(res.name)) {
+                    movieDetails.findOne({tmdbId: tmdbMovie.id}, function (err, doc) {
+                        if (doc == null) {
+                            res.tmdbId = tmdbMovie.id;
 
-                        var title = new RegExp("^" + movie.title + "$", 'ig');
-
-                        if (title.test(res.original_name) || title.test(res.name)) {
-                            movieDetails.findOne({tmdbId: tmdbMovie.id}, function (err, doc) {
-                                if (doc == null) {
-                                    res.tmdbId = tmdbMovie.id;
-
-                                    var movieDetailsSchema = new movieDetails(res);
-                                    movieDetailsSchema.save(function () {
-                                        movie.set({tmdbId: movieDetailsSchema._id});
-                                        movie.save(function () {
-                                            log.dbg('Movie details saved .. ');
-                                            callback('fin');
-                                        });
-                                    });
-                                } else {
-                                    movie.set({tmdbId: doc._id});
-                                    movie.save(function () {
-                                        log.dbg('Movie details saved .. ');
-                                        callback('fin');
-                                    });
-                                }
+                            var movieDetailsSchema = new movieDetails(res);
+                            movieDetailsSchema.save(function () {
+                                movie.set({tmdbId: movieDetailsSchema._id});
+                                movie.save(function () {
+                                    log.dbg('Movie details saved .. ');
+                                    callback('fin');
+                                });
                             });
                         } else {
-                            callback(null, null);
+                            movie.set({tmdbId: doc._id});
+                            movie.save(function () {
+                                log.dbg('Movie details saved .. ');
+                                callback('fin');
+                            });
                         }
                     });
-                }, function (err, results) {
-                    callback.call();
-                });
+                } else {
+                    callback(null, null);
+                }
             });
-        } else {
+        }, function (err, results) {
             callback.call();
-        }
+        });
     });
 };
 
