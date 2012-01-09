@@ -81,24 +81,20 @@
         <script type="text/javascript" src="/js/async.js"></script>
 
         <!-- Include views -->
+        <script type="text/javascript" src="/js/views/AboutView.js"></script>
         <script type="text/javascript" src="/js/views/ContactView.js"></script>
-        <script type="text/javascript" src="/js/views/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuideView.js"></script>
         <script type="text/javascript" src="/js/views/LogoutView.js"></script>
         <script type="text/javascript" src="/js/views/NavigationView.js"></script>
-        <script type="text/javascript" src="/js/views/ProgramView.js"></script>
         <script type="text/javascript" src="/js/views/RecordingsView.js"></script>
         <script type="text/javascript" src="/js/views/SearchView.js"></script>
-        <script type="text/javascript" src="/js/views/SearchresultsView.js"></script>
         <script type="text/javascript" src="/js/views/SettingsView.js"></script>
-        <script type="text/javascript" src="/js/views/TimerView.js"></script>
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
 
         <!-- subviews -->
         <script type="text/javascript" src="/js/views/Settings/ChannelsView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/DatabaseView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/GuiaView.js"></script>
-        <script type="text/javascript" src="/js/views/Program/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/ChannelView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/PaginationView.js"></script>
@@ -159,6 +155,10 @@
         <!-- Include templates -->
         <script type="text/template" id="WelcomeTemplate">
             <%- partial('templates/Welcome') %>
+        </script>
+        
+        <script type="text/template" id="AboutTemplate">
+            <%- partial('templates/About') %>
         </script>
 
         <script type="text/template" id="LoginFormTemplate">
@@ -226,7 +226,7 @@
         <div class="topbar">
             <div class="fill">
                 <div class="container">
-                    <a href="#" class="brand">GUIA</a>
+                    <a href="/!/Welcome" class="brand">GUIA</a>
 
                     <ul class="nav" style="display: none;">
                     </ul>

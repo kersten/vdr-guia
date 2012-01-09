@@ -74,5 +74,10 @@
 	"Home": "Home",
 	"Contact": "Contact",
 	"Your Channels": "Your Channels",
-	"VDR options": "VDR options"
+	"VDR options": "VDR options",
+	"About GUIA": "About GUIA",
+	"Thanks to": "Thanks to",
+	"Why GUIA?": "Why GUIA?",
+	"Donate": "Donate",
+	"About me": "About me"
 }
