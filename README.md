@@ -15,7 +15,7 @@
 To configure GUIA just start it and point your browser to https://your.ip:8007.
 
 ## Donate
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=kersten&url=https://github.com/kersten/vdr-guia&title=vdr-guia&language=&tags=github&category=software)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=GOTTMODUS&url=https://github.com/kersten/vdr-guia&title=vdr-guia&language=&tags=github&category=software) 
 [![Donate](http://pledgie.com/campaigns/16319.png)](http://www.pledgie.com/campaigns/16319)
 
 ### License ###
