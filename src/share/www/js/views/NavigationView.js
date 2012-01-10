@@ -48,7 +48,7 @@ var NavigationView = Backbone.View.extend({
             }
 
             if (item.get('items')) {
-                var dropdownHref = $('<a></a>').html(item.get('title')).addClass('menu');
+                var dropdownHref = $('<a></a>').html(item.get('title')).addClass('menu').css('cursor', 'pointer');
                 var dropdownUl = $('<ul></ul>').addClass('menu-dropdown');
                 var dropdownLi = $('<li></li>').append(dropdownHref).append(dropdownUl).addClass('menu').attr('data-dropdown', 'dropdown');
 
@@ -112,10 +112,17 @@ var NavigationView = Backbone.View.extend({
 
                         $('.pull-right').fadeIn();
                         $('ul.nav').fadeIn();
+
+                        console.log(socket);
+
+                        socket.on('disconnect', function () {
+                            socket = io.connect(location.origin, {'connect timeout': 5000});
+                            console.log(socket);
+                        });
+
+                        socket.disconnect();
                     }});
                 });
-
-                window.location.hash = '#';
             }
         });
 

@@ -8,45 +8,35 @@ var movies = mongoose.model('MovieDetail');
  */
 
 io.sockets.on('connection', function (socket) {
-    socket.on('TVGuideCollection:create', function (data, callback) {
-        
-    });
-    
-    socket.on('TVGuideCollection:read', function (data, callback) {
-        var page = data.page - 1 || 0;
-        var start = page * 4;
-        
-        var channelQuery = channels.find({});
+    if (socket.handshake.session.loggedIn) {
+        socket.on('TVGuideCollection:read', function (data, callback) {
+            var page = data.page - 1 || 0;
+            var start = page * 4;
 
-        channelQuery.where('active', true);
-        channelQuery.sort('number', 1);
-        channelQuery.skip(start);
-        channelQuery.limit(4);
+            var channelQuery = channels.find({});
 
-        channelQuery.run(function (err, channels) {
-            callback(channels);
+            channelQuery.where('active', true);
+            channelQuery.sort('number', 1);
+            channelQuery.skip(start);
+            channelQuery.limit(4);
+
+            channelQuery.run(function (err, channels) {
+                callback(channels);
+            });
         });
-    });
-    
-    socket.on('TVGuideCollection:update', function (data, callback) {
-        
-    });
-    
-    socket.on('TVGuideCollection:delete', function (data, callback) {
-        
-    });
+    }
 });
 /*
 io.sockets.on('connection', function (socket) {
     socket.on('TVGuideCollection:read', function (data, callback) {
         console.log(data);
-        
+
         data = data.data;
-        
+
         var guideResults = new Array();
         var start = (data.page -1) * 4;
         var date = new Date();
-        
+
         date.setFullYear(
             parseInt(data.date.year, 10),
             parseInt(data.date.month, 10) -1,
@@ -100,7 +90,7 @@ io.sockets.on('connection', function (socket) {
                     fetchEpg(result.channel_id, result, next);
                     return;
                 }
-                
+
                 var start_time = new Date();
                 start_time.setTime(doc.start * 1000);
 

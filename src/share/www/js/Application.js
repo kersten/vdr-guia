@@ -96,6 +96,10 @@ var GUIA = {
 
                 socket.emit('loggedIn', function (loggedIn) {
                     if (!loggedIn && (route != '!/Welcome' && route != '!/About')) {
+                        if (route == '*actions') {
+                            route = '!/Welcome';
+                        }
+
                         GUIA.router.navigate(route, true);
                     } else {
                         callback.apply(self, func_args);

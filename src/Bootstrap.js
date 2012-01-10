@@ -16,6 +16,7 @@ function Bootstrap (app, express) {
     self.setupSocketIo();
 
     this.setup(function () {
+        self.setupControllers();
         self.setupViews();
     });
 }
@@ -117,10 +118,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
                 path: __dirname + '/share/www/js/',
                 dataType: 'javascript',
                 files: [
-                    //'jquery/jquery-1.7.js',
                     'jquery-plugins/blinky.js',
                     'jquery-plugins/bootstrap-buttons.js',
-                    //'jquery-plugins/bootstrap-dropdown.js',
                     'jquery-plugins/bootstrap-modal.js',
                     'jquery-plugins/bootstrap-twipsy.js',
                     'jquery-plugins/bootstrap-popover.js',
@@ -128,8 +127,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
                     'jquery-plugins/bootstrap-tabs.js',
                     'jquery-plugins/jquery.fancybox.js',
                     'jquery-plugins/spin.min.js',
-                    //'backbone/backbone.js',
-                    //'backbone/underscore.js',
                     'models/ChannelModel.js',
                     'models/ConfigurationModel.js',
                     'models/EventModel.js',
@@ -273,13 +270,6 @@ Bootstrap.prototype.setupSocketIo = function () {
                         // just acquired session data
                         data.session = new Session(data, session);
 
-                        require(__dirname + '/controllers/AuthenticationController');
-                        require(__dirname + '/controllers/NavigationController');
-
-                        if (session.loggedIn !== undefined && session.loggedIn === true) {
-                            self.setupControllers();
-                        }
-
                         accept(null, true);
                     }
                 });
@@ -366,7 +356,7 @@ Bootstrap.prototype.setupControllers = function () {
         files.forEach(function (file) {
             file = file.replace('.js', '');
 
-            if (file != 'InstallController' && file != 'NavigationController' && file != "AuthenticationController") {
+            if (file != 'InstallController') {
                 require('./controllers/' + file);
             }
         });
