@@ -63,8 +63,21 @@
                 width: 260px;
             }
 
+            .topbar .brand:hover {
+                background-color: #222;
+                background-color: #222222;
+                background-repeat: repeat-x;
+                background-image: -khtml-gradient(linear, left top, left bottom, from(#333333), to(#222222));
+                background-image: -moz-linear-gradient(top, #333333, #222222);
+                background-image: -ms-linear-gradient(top, #333333, #222222);
+                background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #333333), color-stop(100%, #222222));
+                background-image: -webkit-linear-gradient(top, #333333, #222222);
+                background-image: -o-linear-gradient(top, #333333, #222222);
+                background-image: linear-gradient(top, #333333, #222222);
+            }
+
         </style>
-        
+
         <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js?mode=auto"></script>
 
         <% if (env == 'developement') { %>
@@ -85,7 +98,6 @@
         <script type="text/javascript" src="/js/views/ContactView.js"></script>
         <script type="text/javascript" src="/js/views/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuideView.js"></script>
-        <script type="text/javascript" src="/js/views/LogoutView.js"></script>
         <script type="text/javascript" src="/js/views/NavigationView.js"></script>
         <script type="text/javascript" src="/js/views/RecordingsView.js"></script>
         <script type="text/javascript" src="/js/views/SearchView.js"></script>
@@ -138,17 +150,17 @@
         <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/lionbars.min.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/jquery.fancybox.pack.js"></script>
-        
+
         <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/Application.js"></script>
         <% } else { %>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/js/async.js"></script>
-        
+
         <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
         <script type="text/javascript" src="/js/backbone/underscore.js"></script>
         <script type="text/javascript" src="/js/backbone/backbone.js"></script>
-        
+
         <script type="text/javascript" src="/app.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/bootstrap-dropdown.js"></script>
         <% } %>
@@ -157,7 +169,7 @@
         <script type="text/template" id="WelcomeTemplate">
             <%- partial('templates/Welcome') %>
         </script>
-        
+
         <script type="text/template" id="AboutTemplate">
             <%- partial('templates/About') %>
         </script>
@@ -201,23 +213,23 @@
         <script type="text/template" id="ChannelSelectDialogTemplate">
             <%- partial('templates/Channel/Select/Dialog') %>
         </script>
-        
+
         <script type="text/template" id="SettingsTemplate">
             <%- partial('templates/Settings') %>
         </script>
-        
+
         <script type="text/template" id="SettingsChannelsTemplate">
             <%- partial('templates/Settings/Channels') %>
         </script>
-        
+
         <script type="text/template" id="SettingsGuiaTemplate">
             <%- partial('templates/Settings/Guia') %>
         </script>
-        
+
         <script type="text/template" id="SettingsSocialTemplate">
             <%- partial('templates/Settings/Social') %>
         </script>
-        
+
         <script type="text/template" id="SettingsDatabaseTemplate">
             <%- partial('templates/Settings/Database') %>
         </script>
@@ -227,7 +239,7 @@
         <div class="topbar">
             <div class="fill">
                 <div class="container">
-                    <a href="/!/Welcome" class="brand">GUIA</a>
+                    <a style="cursor: pointer;" class="brand" data-view="Welcome">GUIA</a>
 
                     <ul class="nav" style="display: none;">
                     </ul>
@@ -274,12 +286,12 @@
                 app.guia = <%- guia %>;
 
                 app.initialize();
-                
+
                 FlattrLoader.render({
-                    'uid': 'GOTTMODUS',
-                    'url': 'https://github.com/kersten/vdr-guia',
-                    'title': 'VDR  GUIA',
-                    'description': 'Webinterface for controlling the vdr'
+                    uid: 'GOTTMODUS',
+                    url: 'https://github.com/kersten/vdr-guia',
+                    title: 'VDR  GUIA',
+                    description: 'Webinterface for controlling the vdr'
                 }, 'flattr', 'replace');
             });
         </script>

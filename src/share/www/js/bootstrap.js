@@ -56,7 +56,8 @@ Backbone.View.prototype.destructor = function () {
     $(this.el).unbind();
 }
 
-var socket = io.connect();
+
+var socket = io.connect(location.origin, {'connect timeout': 5000});
 
 Backbone.sync = function (method, model, options) {
     var getUrl = function (object) {

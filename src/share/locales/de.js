@@ -79,5 +79,6 @@
 	"Thanks to": "Thanks to",
 	"Why GUIA?": "Why GUIA?",
 	"Donate": "Donate",
-	"About me": "About me"
+	"About me": "About me",
+	"About": "About"
 }

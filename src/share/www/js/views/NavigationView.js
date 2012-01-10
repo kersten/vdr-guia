@@ -72,6 +72,7 @@ var NavigationView = Backbone.View.extend({
     },
 
     events: {
+        'click a.brand': 'navigate',
         'click li > a': 'navigate',
         'click #loginBtn': "login",
         'click #logoutBtn': "logout",
@@ -130,8 +131,6 @@ var NavigationView = Backbone.View.extend({
                 $('ul.nav').children().remove();
                 $('.pull-right').children().remove();
 
-                window.location.hash = '#';
-
                 self.collection.fetch({success: function (collection, data) {
                     if (!data.loggedIn) {
                         var template = _.template( $("#LoginFormTemplate").html(), {} );
@@ -144,6 +143,8 @@ var NavigationView = Backbone.View.extend({
 
                     $('.pull-right').fadeIn();
                     $('ul.nav').fadeIn();
+
+                    GUIA.router.navigate('!/Welcome', true);
                 }});
             });
         });

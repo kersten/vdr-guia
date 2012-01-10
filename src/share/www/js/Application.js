@@ -91,7 +91,16 @@ var GUIA = {
         route: function(route, name, callback) {
             return Backbone.Router.prototype.route.call(this, route, name, function() {
                 this.trigger.apply(this, ['beforeroute:' + name].concat(_.toArray(arguments)));
-                callback.apply(this, arguments);
+                var self = this;
+                var func_args = arguments;
+
+                socket.emit('loggedIn', function (loggedIn) {
+                    if (!loggedIn && (route != '!/Welcome' && route != '!/About')) {
+                        GUIA.router.navigate(route, true);
+                    } else {
+                        callback.apply(self, func_args);
+                    }
+                });
             });
         },
 
@@ -104,12 +113,12 @@ var GUIA = {
                 $('.nav > li > a[href="#' + req + '"]').parent().addClass('active');
             }
         },
-        
+
         welcomeRoute: function () {
             this.currentView = new WelcomeView();
             $('#body').html(this.currentView.render().el);
         },
-        
+
         highlightsRoute: function () {
             this.currentView = new HighlightsView();
             $('#body').html(this.currentView.render().el);
@@ -154,7 +163,7 @@ var GUIA = {
                 }
             });
         },
-        
+
         eventCastRoute: function (_id) {
             GUIA.loadingOverlay('show');
 
@@ -171,22 +180,22 @@ var GUIA = {
                 }
             });
         },
-        
+
         recordingsRoute: function () {
             this.currentView = new RecordingsView();
             $('#body').html(this.currentView.render().el);
         },
-        
+
         profileRoute: function () {
             this.currentView = new ProfileView();
             $('#body').html(this.currentView.render().el);
         },
-        
+
         helpRoute: function () {
             this.currentView = new HelpView();
             $('#body').html(this.currentView.render().el);
         },
-        
+
         helpShortcutsRoute: function () {
             this.currentView = new HelpShortcutsView();
             $('#body').html(this.currentView.render().el);
@@ -202,7 +211,7 @@ var GUIA = {
             $('#body').html(this.currentView.render().el);
             GUIA.loadingOverlay('hide');
         },
-        
+
         aboutRoute: function () {
             this.currentView = new AboutView();
             $('#body').html(this.currentView.render().el);
