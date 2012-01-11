@@ -53,33 +53,40 @@ var TVGuideEventView = Backbone.View.extend({
     },
 
     showEventPopover: function (ev) {
+        var self = this;
         var el = this.el;
 
         if (ev.type == 'mouseenter') {
-            this.popoverView = new TVGuidePopoverView({
-                el: el,
-                model: this.model
-            });
-            
-            this.popoverView.render().show();
-            
+            if (this.popoverView === undefined) {
+                this.popoverView = new TVGuidePopoverView({
+                    popoverEl: el,
+                    model: this.model
+                });
+
+                $(this.el).append(this.popoverView.render().el);
+            }
+
+            this.popoverView.show();
+
             $(el).css({
                 textDecoration: 'underline',
                 cursor: 'pointer'
             });
         } else {
-            this.popoverView.hide();
-            
             $(el).css({
                 textDecoration: 'none',
                 cursor: 'none'
+            });
+
+            this.popoverView.hide(function () {
+                self.popoverView.remove();
             });
         }
     },
 
     render: function () {
         var self = this;
-        
+
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
 

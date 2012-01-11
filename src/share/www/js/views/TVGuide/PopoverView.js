@@ -1,11 +1,16 @@
 var TVGuidePopoverView = Backbone.View.extend({
     template: 'TVGuidePopoverTemplate',
-    
+
+    events: {
+        'hover .popover > div': 'handlePopover',
+        'click img': 'recordEvent'
+    },
+
     initialize: function () {
         var self = this;
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
-        
-        $(this.el).popover({
+
+        $(this.options.popoverEl).popover({
             title: function () {
                 return self.model.get('title');
             },
@@ -14,24 +19,54 @@ var TVGuidePopoverView = Backbone.View.extend({
             },
             trigger: 'manual',
             placement: 'above',
-            html: true
+            html: true,
+            el: this.el
         });
-        
-        console.log(this.model);
     },
-    
+
+    handlePopover: function (ev) {
+        console.log(ev);
+        return;
+
+        if (ev.type == 'mouseenter') {
+            console.log('RAVE');
+            clearTimeout(this.timerId);
+        } else {
+            this.hide();
+        }
+    },
+
+    recordEvent: function () {
+        console.log('test');
+    },
+
     show: function () {
-        $(this.el).popover('show');
+        $(this.options.popoverEl).popover('show');
     },
-    
-    hide: function () {
+
+    hide: function (callback) {
         var self = this;
-        
+
         this.timerId = setTimeout(function () {
-            $(self.el).popover('hide');
+            if ( $.support.transition ) {
+              transitionEnd = "TransitionEnd"
+              if ( $.browser.webkit ) {
+                transitionEnd = "webkitTransitionEnd"
+              } else if ( $.browser.mozilla ) {
+                transitionEnd = "transitionend"
+              } else if ( $.browser.opera ) {
+                transitionEnd = "oTransitionEnd"
+              }
+            }
+
+            $(self.options.popoverEl).bind(transitionEnd, function () {
+                callback.call();
+            });
+
+            $(self.options.popoverEl).popover('hide');
         }, 100);
     },
-    
+
     render: function () {
         return this;
     }
