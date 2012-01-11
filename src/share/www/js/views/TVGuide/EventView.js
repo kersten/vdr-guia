@@ -1,5 +1,4 @@
 var TVGuideEventView = Backbone.View.extend({
-    url: "tvguide/event",
     template: 'TVGuideEventTemplate',
     tagName: 'div',
 
@@ -57,15 +56,19 @@ var TVGuideEventView = Backbone.View.extend({
         var el = this.el;
 
         if (ev.type == 'mouseenter') {
-            $(el).popover('show');
+            this.popoverView = new TVGuidePopoverView({
+                el: el,
+                model: this.model
+            });
+            
+            this.popoverView.render().show();
+            
             $(el).css({
                 textDecoration: 'underline',
                 cursor: 'pointer'
             });
         } else {
-            this.popoverId = setTimeout(function () {
-                $(el).popover('hide');
-            }, 100);
+            this.popoverView.hide();
             
             $(el).css({
                 textDecoration: 'none',
@@ -79,17 +82,6 @@ var TVGuideEventView = Backbone.View.extend({
         
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
-
-        $(this.el).popover({
-            title: function () {
-                return self.model.get('title');
-            },
-            content: function () {
-                return self.model.get('short_description');
-            },
-            trigger: 'manual',
-            placement: 'above'
-        });
 
         return this
     }
