@@ -124,7 +124,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 event.tip = {
                     genre: tip[1],
                     style: 'genre'
-                }
+                };
 
                 event.description = event.description.replace(/\[Genretipp .*?\] /, '');
             }
@@ -134,7 +134,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 event.tip = {
                     genre: tip[1],
                     style: 'sparte'
-                }
+                };
 
                 event.description = event.description.replace(/\[Spartentipp .*?\] /, '');
             }
@@ -166,7 +166,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 }
             });
 
-            callback(null, null)
+            callback(null, null);
         }, function (callback) {
             if (event.details === undefined) {
                 callback(null, null);

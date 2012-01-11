@@ -8,23 +8,25 @@ var movies = mongoose.model('MovieDetail');
  */
 
 io.sockets.on('connection', function (socket) {
-    if (socket.handshake.session.loggedIn) {
-        socket.on('TVGuideCollection:read', function (data, callback) {
-            var page = data.page - 1 || 0;
-            var start = page * 4;
+    socket.on('TVGuideCollection:read', function (data, callback) {
+        if (!socket.handshake.session.loggedIn) {
+            return false;
+        }
+        
+        var page = data.page - 1 || 0;
+        var start = page * 4;
 
-            var channelQuery = channels.find({});
+        var channelQuery = channels.find({});
 
-            channelQuery.where('active', true);
-            channelQuery.sort('number', 1);
-            channelQuery.skip(start);
-            channelQuery.limit(4);
+        channelQuery.where('active', true);
+        channelQuery.sort('number', 1);
+        channelQuery.skip(start);
+        channelQuery.limit(4);
 
-            channelQuery.run(function (err, channels) {
-                callback(channels);
-            });
+        channelQuery.run(function (err, channels) {
+            callback(channels);
         });
-    }
+    });
 });
 /*
 io.sockets.on('connection', function (socket) {

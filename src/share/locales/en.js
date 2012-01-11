@@ -1,1 +1,4 @@
-{}
+{
+	"Home": "Home",
+	"About": "About"
+}

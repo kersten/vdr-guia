@@ -80,5 +80,7 @@
 	"Why GUIA?": "Why GUIA?",
 	"Donate": "Donate",
 	"About me": "About me",
-	"About": "About"
+	"About": "About",
+	"Todays Highlights": "Todays Highlights",
+	"Highlights <small>Today</small>": "Highlights <small>Today</small>"
 }

@@ -153,6 +153,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
                     'views/ContactView.js',
                     'views/EventView.js',
                     'views/HelpView.js',
+                    'views/HighlightsView.js',
                     'views/LogoutView.js',
                     'views/NavigationView.js',
                     'views/ProfileView.js',

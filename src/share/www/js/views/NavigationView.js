@@ -112,15 +112,6 @@ var NavigationView = Backbone.View.extend({
 
                         $('.pull-right').fadeIn();
                         $('ul.nav').fadeIn();
-
-                        console.log(socket);
-
-                        socket.on('disconnect', function () {
-                            socket = io.connect(location.origin, {'connect timeout': 5000});
-                            console.log(socket);
-                        });
-
-                        socket.disconnect();
                     }});
                 });
             }

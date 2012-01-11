@@ -10,10 +10,9 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-            log.dbg('Fetching informations for: ' + movie.title);
+    log.dbg('Fetching informations for: ' + movie.title);
 
     tmdb.Movie.search({
-        //query: movie.title + ((movie.year !== undefined) ? ' ' + movie.year : ''),
         query: movie.title,
         lang: 'de'
     }, function (err, res) {
@@ -69,6 +68,14 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                 }
             });
         }, function (err, results) {
+            if (err == null) {
+                movie.set({
+                    tmdbSearched: new Date().getTime()
+                });
+                
+                movie.save();
+            }
+            
             callback.call();
         });
     });
@@ -76,7 +83,10 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 
 Movie.prototype.fetchAll = function () {
     var self = this;
-    var query = events.find({tmdbId: {$exists: false}});
+    var query = events.find({
+        tmdbId: {$exists: false},
+        tmdbSearched: {$exists: false}
+    });
 
     query.sort('title', 1);
     query.where('category', new RegExp('film', 'ig'));
