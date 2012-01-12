@@ -17,7 +17,7 @@ var EventView = Backbone.View.extend({
             break;
             
         case 'person':
-            GUIA.router.navigate('!/Peson/' + $(ev.currentTarget).data('personId'), true);
+            GUIA.router.navigate('!/Peson/' + $(ev.currentTarget).data('personid'));
             break;
             
         case 'posters':

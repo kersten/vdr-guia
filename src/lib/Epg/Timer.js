@@ -49,12 +49,12 @@ EpgTimer.prototype.create = function (event, callback) {
     }).on('success', function (data) {
         console.log(data);
         
-        events.update({_id: event._id}, {timer_active: true}, null, function () {
-            callback(data.events[0]);
+        events.update({_id: event._id}, {timer_active: true, timer_id: data.timers[0].id}, null, function () {
+            callback(data.timers[0]);
         });
     }).on('error', function () {
         events.update({_id: event._id}, {timer_active: true}, null, function () {
-            callback(data.events[0]);
+            callback(data.timers[0]);
         });
     });
 };
@@ -64,27 +64,16 @@ EpgTimer.prototype.del = function (event, callback) {
     
     if (event.timer_id != null && event.timer_id != '') {
         rest.del(this.restful + '/timers/' + event.timer_id).on('success', function () {
-            doc.set({timer_active: false, timer_id: null});
-            doc.save(function () {
-                callback({
-                    data: "timerdeleted"
-                });
+            events.update({_id: event._id}, {timer_active: false, timer_id: null}, null, function () {
+                callback({success: true});
             });
         }).on('error', function () {
-            doc.set({timer_active: false});
-            doc.save(function () {
-                callback({
-                    error: true,
-                    data: "vdrnotreachable"
-                });
+            events.update({_id: event._id}, {timer_active: false, timer_id: null}, null, function () {
             });
         });
     } else {
-        doc.set({timer_active: false});
-        doc.save(function () {
-            callback({
-                data: "timerdeleted"
-            });
+        events.update({_id: event._id}, {timer_active: false, timer_id: null}, null, function () {
+            callback();
         });
     }
 };
