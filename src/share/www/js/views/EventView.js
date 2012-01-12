@@ -3,52 +3,79 @@ var EventView = Backbone.View.extend({
     eventType: 'epg',
 
     events: {
-        'click #showallposters': 'showallposters',
-        'click .lightboxPoster': 'lightboxPoster',
+        'click a.showDetails': 'showDetails',
         'click .recordThis > img': 'recordEvent',
         'hover .recordThis > img': 'hoverRecordEvent'
     },
-
-    showallposters: function () {
-        var mediaGrid = $('#showallpostersDialog').find('ul.media-grid');
-
-        _.each(this.event.get('tmdb').posters, function (poster) {
-            if (poster.image.size == 'thumb') {
-                mediaGrid.append('<li><a><img class="thumbnail" src="' + poster.image.url + '"/></a></li>');
-            }
-        });
-
-        $('#showallpostersDialog').modal({
-            backdrop: true,
-            keyboard: true,
-            show: true
-        });
+    
+    showDetails: function (ev) {
+        switch ($(ev.currentTarget).data('view')) {
+        case 'cast':
+            this.showCast();
+            GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/cast');
+            
+            break;
+            
+        case 'person':
+            GUIA.router.navigate('!/Peson/' + $(ev.currentTarget).data('personId'), true);
+            break;
+            
+        case 'posters':
+            this.showPosters();
+            GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/posters');
+            break;
+            
+        case 'event':
+            this.showDescription();
+            GUIA.router.navigate('!/Event/' + this.model.get('_id'));
+            break;
+        }
+    },
+    
+    showDescription: function () {
+        if (this.descriptionView === undefined) {
+            this.descriptionView = new EventDescriptionView({
+                model: this.model,
+                el: $('.eventDescription', this.el)
+            });
+        }
+        
+        this.descriptionView.render();
     },
 
-    lightboxPoster: function (ev) {
-        var id = $(ev.currentTarget).attr('id').split('_');
-        id = id[1];
-
-        _.each(this.event.get('tmdb').posters, function (poster) {
-            if (poster.image.size == 'mid' && poster.image.id == id) {
-                $('#a_' + $(ev.currentTarget).attr('id')).fancybox({
-                    openEffect: 'elastic',
-                    closeEffect: 'elastic',
-                    href: poster.image.url
-                });
-            }
-        });
+    showPosters: function () {
+        if (this.postersView === undefined) {
+            this.postersView = new EventPostersView({
+                model: this.model.get('tmdb').posters,
+                el: $('.eventDescription', this.el)
+            });
+        }
+        
+        this.postersView.render();
+    },
+    
+    showCast: function () {
+        if (this.castView === undefined) {
+            this.postersView = new EventCastView({
+                model: this.model.get('tmdb'),
+                el: $('.eventDescription', this.el)
+            });
+        }
+        
+        this.postersView.render();
     },
 
     recordEvent: function (ev) {
-        if (this.event.get('timer_active')) {
-            console.log('Delete timer for: ' + this.event.get('_id'));
-            this.event.set({timer_active: false});
-            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle.png');
+        if (this.model.get('timer_active')) {
+            console.log('Delete timer for: ' + this.model.get('_id'));
+            this.model.set({timer_active: false});
+            
+            this.model.save();
         } else {
-            console.log('Create timer for: ' + this.event.get('_id'));
-            this.event.set({timer_active: true});
-            $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle-2.png');
+            console.log('Create timer for: ' + this.model.get('_id'));
+            this.model.set({timer_active: true});
+            
+            this.model.save();
         }
     },
 
@@ -56,7 +83,7 @@ var EventView = Backbone.View.extend({
         var image = '';
         var image_record = '-2';
 
-        if (this.event.get('timer_active')) {
+        if (this.model.get('timer_active')) {
             image = '-2';
             image_record = '';
         }
@@ -117,6 +144,21 @@ var EventView = Backbone.View.extend({
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
+                
+                switch (self.options.view) {
+                case 'posters':
+                    self.showPosters();
+                    break;
+                    
+                case 'cast':
+                    self.showCast();
+                    break;
+                
+                default:
+                    self.showDescription();
+                    break;
+                }
+                
                 callback.apply(self, []);
             }
         });

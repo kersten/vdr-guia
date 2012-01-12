@@ -66,8 +66,7 @@ var GUIA = {
             "!/TVGuide/:date": "tvguideRoute",
             "!/TVGuide/:date/:page": "tvguideRoute",
             "!/Event/:id": "eventRoute",
-            "!/Event/:id/posters": "eventPostersRoute",
-            "!/Event/:id/cast": "eventCastRoute",
+            "!/Event/:id/:view": "eventRoute",
             "!/Recordings": "recordingsRoute",
             "!/Me": "profileRoute",
             "!/Help": "helpRoute",
@@ -137,51 +136,18 @@ var GUIA = {
             });
         },
 
-        eventRoute: function (_id) {
+        eventRoute: function (_id, _view) {
             GUIA.loadingOverlay('show');
 
             this.currentView = new EventView({
                 _id: _id,
+                view: _view,
                 model: new EventModel
             });
 
             this.currentView.render(function () {
                 $('#body').html(this.el);
                 GUIA.loadingOverlay('hide');
-            });
-        },
-
-        eventPostersRoute: function (_id) {
-            GUIA.loadingOverlay('show');
-
-            var self = this;
-
-            GUIA.loadView({
-                view: '/Event',
-                params: {
-                    _id: _id,
-                    action: 'posters'
-                },
-                callback: function (req, original) {
-                    self.render.apply(this, [req, original, self]);
-                }
-            });
-        },
-
-        eventCastRoute: function (_id) {
-            GUIA.loadingOverlay('show');
-
-            var self = this;
-
-            GUIA.loadView({
-                view: '/Event',
-                params: {
-                    _id: _id,
-                    action: 'posters'
-                },
-                callback: function (req, original) {
-                    self.render.apply(this, [req, original, self]);
-                }
             });
         },
 

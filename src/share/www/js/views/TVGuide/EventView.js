@@ -3,8 +3,8 @@ var TVGuideEventView = Backbone.View.extend({
     tagName: 'div',
 
     events: {
-        'click div': 'showEventDetails',
-        'hover div': 'showEventPopover'
+        'click div.event': 'showEventDetails',
+        'hover div.event': 'showEventPopover'
     },
 
     handlePopover: function (ev) {
@@ -55,32 +55,31 @@ var TVGuideEventView = Backbone.View.extend({
     showEventPopover: function (ev) {
         var self = this;
         var el = this.el;
-
+        
         if (ev.type == 'mouseenter') {
-            if (this.popoverView === undefined) {
-                this.popoverView = new TVGuidePopoverView({
-                    popoverEl: el,
-                    model: this.model
-                });
+            this.popoverView = new TVGuidePopoverView({
+                popoverEl: el,
+                callback: function () {
+                    self.popoverView.remove();
+                },
+                model: this.model
+            });
 
-                $(this.el).append(this.popoverView.render().el);
-            }
-
+            $(this.el).append(this.popoverView.render().el);
+            
             this.popoverView.show();
 
-            $(el).css({
+            $('.event', el).css({
                 textDecoration: 'underline',
                 cursor: 'pointer'
             });
         } else {
-            $(el).css({
+            $('.event', el).css({
                 textDecoration: 'none',
                 cursor: 'none'
             });
-
-            this.popoverView.hide(function () {
-                self.popoverView.remove();
-            });
+            
+            this.popoverView.hide();
         }
     },
 

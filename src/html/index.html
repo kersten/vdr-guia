@@ -107,6 +107,9 @@
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
 
         <!-- subviews -->
+        <script type="text/javascript" src="/js/views/Event/CastView.js"></script>
+        <script type="text/javascript" src="/js/views/Event/DescriptionView.js"></script>
+        <script type="text/javascript" src="/js/views/Event/PostersView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/ChannelsView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/DatabaseView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/GuiaView.js"></script>
@@ -152,7 +155,7 @@
         <script type="text/javascript" src="/js/jquery-plugins/spin.min.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/jquery.endless-scroll.js"></script>
         <script type="text/javascript" src="/js/jquery-plugins/lionbars.min.js"></script>
-        <script type="text/javascript" src="/js/jquery-plugins/jquery.fancybox.pack.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/jquery.fancybox.js"></script>
 
         <!-- Incldue bootstrap and application -->
         <script type="text/javascript" src="/js/Application.js"></script>
@@ -195,6 +198,18 @@
 
         <script type="text/template" id="EventTmdbTemplate">
             <%- partial('templates/Event/Tmdb') %>
+        </script>
+        
+        <script type="text/template" id="EventCastTemplate">
+            <%- partial('templates/Event/Cast') %>
+        </script>
+        
+        <script type="text/template" id="EventDescriptionTemplate">
+            <%- partial('templates/Event/Description') %>
+        </script>
+        
+        <script type="text/template" id="EventPostersTemplate">
+            <%- partial('templates/Event/Posters') %>
         </script>
 
         <script type="text/template" id="TVGuideTemplate">

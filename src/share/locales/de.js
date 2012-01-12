@@ -81,5 +81,10 @@
 	"Donate": "Donate",
 	"About me": "About me",
 	"About": "About",
-	"Highlights <small>Today</small>": "Highlights <small>Today</small>"
+	"Highlights <small>Today</small>": "Highlights <small>Today</small>",
+	"1 Hour": "1 Hour",
+	"2 Hours": "2 Hours",
+	"3 Hours": "3 Hours",
+	"4 Hours": "4 Hours",
+	"5 Hours": "5 Hours"
 }

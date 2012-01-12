@@ -1,0 +1,17 @@
+<p style="cursor: pointer;">
+    <a style="cursor: pointer;" class="showDetails" data-view="event">
+        Back to description
+    </a>
+</p>
+
+<ul class="media-grid">
+<& _.each(posters, function (poster) { &>
+    <& if (poster.image.size == 'thumb') { &>
+    <li>
+        <a>
+            <img height="138px" src="<&= poster.image.url &>" class="lightboxPoster" data-id="<&= poster.image.id &>" />
+        </a>
+    </li>
+    <& } &>
+<& }); &>
+</ul>
