@@ -10,6 +10,8 @@ function Actor () {
 }
 
 Actor.prototype.fetchInformation = function (actor, callback) {
+    log.dbg('Fetching informations for: ' + actor.name);
+    
     tmdb.Person.search({
         query: actor.name,
         lang: 'de'
@@ -21,7 +23,13 @@ Actor.prototype.fetchInformation = function (actor, callback) {
 
         for(var x in res) {
             if (res[x] == "Nothing found.") {
-                callback.call();
+                log.dbg('Nothing found for: ' + actor.name);
+                
+                actor.set({tmdbSearched: new Date().getTime()});
+                actor.save(function () {
+                    callback.call();
+                });
+                
                 return;
             }
 
@@ -30,6 +38,13 @@ Actor.prototype.fetchInformation = function (actor, callback) {
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
+                    log.dbg('some error: ' + err);
+
+                    actor.set({tmdbSearched: new Date().getTime()});
+                    actor.save(function () {
+                        callback.call();
+                    });
+                    
                     return;
                 }
 
@@ -41,6 +56,7 @@ Actor.prototype.fetchInformation = function (actor, callback) {
                     actor.set({tmdbId: actorDetailsSchema._id});
 
                     actor.save(function () {
+                        log.dbg('Details saved for: ' + actor.name);
                         callback.call();
                     });
                 });
@@ -53,10 +69,14 @@ Actor.prototype.fetchInformation = function (actor, callback) {
 
 Actor.prototype.fetchAll = function () {
     var self = this;
-    var query = actors.find({tmdbId: {$exists: false}});
+    var query = actors.find({
+        tmdbId: {$exists: false},
+        tmdbSearched: {$exists: false}
+    });
 
     query.each(function (err, actor, next) {
         if (actor == null) {
+            log.dbg('Fetching actors finished ..');
             return;
         }
 

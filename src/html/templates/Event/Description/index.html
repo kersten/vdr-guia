@@ -28,17 +28,17 @@
         <a style="cursor: pointer;" class="showDetails" data-view="cast">Show all</a>
         <& } &>
     
-        <& _.each(event.get('tmdb').actors, function (actor, index) {
+        <& _.each(event.get('tmdbId').actors, function (actor, index) {
         if (index > 3) {
             return;
         } &>
     
         <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
             <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
-                <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor.id &>"><img src="<&= actor.profile &>" width="45"></a>
+                <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>"><img src="<&= actor.profile[0].image.url &>" width="45"></a>
             </span>
             <span class="text" style="float: left;">
-                <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor.id &>"><&= actor.name &></a><br>
+                <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>"><&= actor.name &></a><br>
                 as <&= actor.character &>
             </span>
         </div>

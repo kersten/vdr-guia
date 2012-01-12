@@ -22,6 +22,7 @@ EpgTimer.prototype.refresh = function () {
                 }
                 
                 doc.set({
+                    timer_id: timer.id,
                     timer_active: timer.is_active,
                     timer_exists: timer.is_active
                 });
@@ -68,11 +69,11 @@ EpgTimer.prototype.del = function (event, callback) {
                 callback({success: true});
             });
         }).on('error', function () {
-            events.update({_id: event._id}, {timer_active: false, timer_id: null}, null, function () {
+            events.update({_id: event._id}, {timer_active: false}, null, function () {
             });
         });
     } else {
-        events.update({_id: event._id}, {timer_active: false, timer_id: null}, null, function () {
+        events.update({_id: event._id}, {timer_active: false}, null, function () {
             callback();
         });
     }

@@ -1,5 +1,6 @@
 var events =  mongoose.model('Event');
 var movieDetails =  mongoose.model('MovieDetail');
+var actors =  mongoose.model('Actor');
 var async = require('async');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
@@ -45,16 +46,46 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                 if (title.test(res.original_name) || title.test(res.name)) {
                     movieDetails.findOne({tmdbId: tmdbMovie.id}, function (err, doc) {
                         if (doc == null) {
-                            res.tmdbId = tmdbMovie.id;
+                            var tmpMovie = res;
+                            var cast = tmpMovie.cast;
+                            tmpMovie.actors = new Array();
+                            tmpMovie.cast = new Array();
+                            
+                            tmpMovie.tmdbId = tmdbMovie.id;
+                            
+                            async.map(cast, function (a, callback) {
+                                if (a.character == '') {
+                                    tmpMovie.cast.push(a);
+                                    callback(null, null);
+                                    return;
+                                }
+                                
+                                actors.findOne({name: a.name, character: a.character}, function (err, doc) {
+                                    if (doc == null) {
+                                        var actor = new actors({
+                                            name: a.name,
+                                            character: a.character
+                                        });
 
-                            var movieDetailsSchema = new movieDetails(res);
-                            movieDetailsSchema.save(function () {
-                                movie.set({tmdbId: movieDetailsSchema._id});
-                                movie.save(function () {
-                                    log.dbg('Movie details saved .. ');
-                                    callback('fin');
+                                        actor.save(function () {
+                                            tmpMovie.actors.push(actor._id);
+                                            callback(null, null);
+                                        });
+                                    } else {
+                                        tmpMovie.actors.push(doc._id);
+                                        callback(null, null);
+                                    }
                                 });
-                            });
+                            }, function (err, result) {
+                                var movieDetailsSchema = new movieDetails(tmpMovie);
+                                movieDetailsSchema.save(function () {
+                                    movie.set({tmdbId: movieDetailsSchema._id});
+                                    movie.save(function () {
+                                        log.dbg('Movie details saved .. ');
+                                        callback('fin');
+                                    });
+                                });
+                            });                            
                         } else {
                             movie.set({tmdbId: doc._id});
                             movie.save(function () {

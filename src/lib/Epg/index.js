@@ -2,6 +2,7 @@ var async = require('async');
 var channels = mongoose.model('Channel');
 var events = mongoose.model('Event');
 var movies = mongoose.model('MovieDetail');
+var actors = mongoose.model('ActorDetail');
 
 function Epg () {
 
@@ -33,6 +34,8 @@ Epg.prototype.getEvent = function (eventId, callback) {
     query.populate('channel_id');
     query.populate('actors');
     query.populate('tmdbId');
+    query.populate('tmdbId.actors');
+    query.populate('tmdbId.actors.tmdbId');
 
     query.run(function (err, doc) {
         if (doc == null) {
@@ -45,36 +48,53 @@ Epg.prototype.getEvent = function (eventId, callback) {
 
             details.set('directors', new Array());
             details.set('writers', new Array());
+            var tmpActors = details.get('actors');
             details.set('actors', new Array());
-
-            if (details.get('cast') !== undefined) {
-                details.get('cast').forEach(function (cast) {
-                    switch (cast.department) {
-                        case 'Directing':
-                            details.get('directors').push(cast);
-                            break;
-
-                        case 'Writing':
-                            details.get('writers').push(cast);
-                            break;
-
-                        case 'Actors':
-                            details.get('actors').push(cast);
-                            break;
-
-                        default:
-                            log.dbg('Unknown type for tmdb cast data: ' + cast.department);
-                            break;
+            
+            async.map(tmpActors, function (actor, callback) {
+                var query = actors.findOne({});
+                
+                query.populate('tmdbId', null, {_id: actor});
+                query.run(function (err, doc) {
+                    if (err == null) {
+                        details.get('actors').push(doc);
+                        callback(null, null);
+                    } else {
+                        callback(null, null);
                     }
                 });
-            }
+            }, function (err, actorsResult) {
+                if (details.get('cast') !== undefined) {
+                    details.get('cast').forEach(function (cast) {
+                        switch (cast.department) {
+                            case 'Directing':
+                                details.get('directors').push(cast);
+                                break;
 
-            delete(details.cast);
+                            case 'Writing':
+                                details.get('writers').push(cast);
+                                break;
 
-            doc.set('tmdb', details);
-        }
+                            case 'Actors':
+                                //details.get('actors').push(cast);
+                                break;
 
-        callback(doc);
+                            default:
+                                log.dbg('Unknown type for tmdb cast data: ' + cast.department);
+                                break;
+                        }
+                    });
+                }
+
+                delete(details.cast);
+
+                doc.set('tmdb', details);
+                callback(doc);
+            });
+            //details.set('actors', new Array());
+        } else {
+            callback(doc);
+        }        
     });
 };
 

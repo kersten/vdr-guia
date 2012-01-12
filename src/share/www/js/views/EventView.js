@@ -141,6 +141,8 @@ var EventView = Backbone.View.extend({
                         self.template = 'EventTmdbTemplate';
                         break;
                 }
+                
+                console.log(event);
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
