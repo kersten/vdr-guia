@@ -111,6 +111,7 @@
         <script type="text/javascript" src="/js/views/Event/DescriptionView.js"></script>
         <script type="text/javascript" src="/js/views/Event/PostersView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/ChannelsView.js"></script>
+        <script type="text/javascript" src="/js/views/Settings/Channels/ChannelView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/DatabaseView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/GuiaView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/EventView.js"></script>
@@ -199,15 +200,15 @@
         <script type="text/template" id="EventTmdbTemplate">
             <%- partial('templates/Event/Tmdb') %>
         </script>
-        
+
         <script type="text/template" id="EventCastTemplate">
             <%- partial('templates/Event/Cast') %>
         </script>
-        
+
         <script type="text/template" id="EventDescriptionTemplate">
             <%- partial('templates/Event/Description') %>
         </script>
-        
+
         <script type="text/template" id="EventPostersTemplate">
             <%- partial('templates/Event/Posters') %>
         </script>
@@ -242,6 +243,10 @@
 
         <script type="text/template" id="SettingsChannelsTemplate">
             <%- partial('templates/Settings/Channels') %>
+        </script>
+
+        <script type="text/template" id="SettingsChannelsChannelTemplate">
+            <%- partial('templates/Settings/Channels/Channel') %>
         </script>
 
         <script type="text/template" id="SettingsGuiaTemplate">
