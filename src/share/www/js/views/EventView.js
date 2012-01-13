@@ -43,7 +43,7 @@ var EventView = Backbone.View.extend({
     renderPosters: function () {
         if (this.postersView === undefined) {
             this.postersView = new EventPostersView({
-                model: this.model.get('tmdb').posters,
+                model: this.model.get('posters'),
                 el: $('.eventDescription', this.el)
             });
         }
@@ -54,7 +54,7 @@ var EventView = Backbone.View.extend({
     renderCast: function () {
         if (this.castView === undefined) {
             this.postersView = new EventCastView({
-                model: this.model.get('tmdb'),
+                model: this.model,
                 el: $('.eventDescription', this.el)
             });
         }

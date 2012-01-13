@@ -9,10 +9,12 @@
 </div>
 <div class="row">
     <div class="span4">
-        <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
+        <& if (event.get('image')) { &>
+            <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
 
-        <p style="cursor: pointer;"><a style="cursor: pointer;" class="showDetails" data-view="posters">Show all posters</a></p>
-
+            <p style="cursor: pointer;"><a style="cursor: pointer;" class="showDetails" data-view="posters">Show all posters</a></p>
+            
+        <& } &>
         <div style="border-bottom: 1px solid #DDD;">
             <h6>Details</h6>
             <dl>
