@@ -11,7 +11,7 @@ var ActorSchema = new Schema({
 
     tmdbId: {
         type: Schema.ObjectId,
-        ref: 'MovieDetail',
+        ref: 'ActorDetail',
         required: false
     }
 });

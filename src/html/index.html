@@ -24,7 +24,7 @@
                 text-align: center; /* center align it with the container */
             }
             .container {
-                width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+                width: 940px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
             }
 
             /* The white background content wrapper */
@@ -110,6 +110,8 @@
         <script type="text/javascript" src="/js/views/Event/CastView.js"></script>
         <script type="text/javascript" src="/js/views/Event/DescriptionView.js"></script>
         <script type="text/javascript" src="/js/views/Event/PostersView.js"></script>
+        <script type="text/javascript" src="/js/views/Event/Posters/PosterView.js"></script>
+        <script type="text/javascript" src="/js/views/Event/Record/ButtonView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/ChannelsView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/Channels/ChannelView.js"></script>
         <script type="text/javascript" src="/js/views/Settings/DatabaseView.js"></script>
@@ -197,10 +199,6 @@
             <%- partial('templates/Event') %>
         </script>
 
-        <script type="text/template" id="EventTmdbTemplate">
-            <%- partial('templates/Event/Tmdb') %>
-        </script>
-
         <script type="text/template" id="EventCastTemplate">
             <%- partial('templates/Event/Cast') %>
         </script>
@@ -211,6 +209,14 @@
 
         <script type="text/template" id="EventPostersTemplate">
             <%- partial('templates/Event/Posters') %>
+        </script>
+        
+        <script type="text/template" id="EventPostersPosterTemplate">
+            <%- partial('templates/Event/Posters/Poster') %>
+        </script>
+        
+        <script type="text/template" id="EventRecordButtonTemplate">
+            <%- partial('templates/Event/Record/Button') %>
         </script>
 
         <script type="text/template" id="TVGuideTemplate">

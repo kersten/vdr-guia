@@ -9,14 +9,20 @@ var TVGuidePopoverView = Backbone.View.extend({
 
     initialize: function () {
         var self = this;
-        var template = _.template( $('#' + this.template).html(), {event: this.model} );
+        
+        var recordView = new EventRecordButtonView({
+            model: this.model
+        });
 
+        var template = _.template($('#' + this.template).html(), {event: this.model});
+        
         $(this.el).popover({
             title: function () {
                 return self.model.get('title');
             },
             content: function () {
-                return template;
+                $('.eventInfos', template).prepend(recordView.render().el);
+                return recordView.render().el;
             },
             trigger: 'manual',
             placement: 'right',

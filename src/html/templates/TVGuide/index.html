@@ -3,27 +3,27 @@
     <h1><%- __('TV Guide <small>What\'s up today ..</small>') %></h1>
 </div>
 <div class="row">
-    <div class="span14">
-        <div class="pagination" style="margin-top: -5px;">
+    <div class="span16">
+        <div class="pagination" style="margin-top: -5px; text-align: center;">
         </div>
     </div>
 </div>
 
 <div class="row" id="channels">
-    <div class="span4" style="width: 185px;"></div>
-    <div class="span4" style="width: 185px;"></div>
-    <div class="span4" style="width: 185px;"></div>
-    <div class="span4" style="width: 185px;"></div>
+    <div class="span4"></div>
+    <div class="span4"></div>
+    <div class="span4"></div>
+    <div class="span4"></div>
 </div>
 
 <div class="row">
-    <div class="span14" id="guide">
+    <div class="span16" id="guide">
         <div class="slideUp" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="morning"><strong><%- __('Morning program - 5.00 to 12.00 o\'clock') %></strong></div>
         <div class="morning eventsection" data-from="5" data-to="12">
             <& for(x = 0; x < 7; x++) { &>
                 <div class="row" data-hour="<&= x + 5 &>">
                     <& for(i = 0; i < 4; i++) { &>
-                        <div class="span4" style="width: 185px; height: 100%;">&nbsp;</div>
+                        <div class="span4" style="height: 100%;">&nbsp;</div>
                     <& } &>
                 </div>
             <& } &>
@@ -34,7 +34,7 @@
             <& for(x = 0; x < 6; x++) { &>
                 <div class="row" data-hour="<&= x + 12 &>">
                     <& for(i = 0; i < 4; i++) { &>
-                        <div class="span4" style="width: 185px; height: 100%;">&nbsp;</div>
+                        <div class="span4" style="height: 100%;">&nbsp;</div>
                     <& } &>
                 </div>
             <& } &>
@@ -45,7 +45,7 @@
             <& for(x = 0; x < 3; x++) { &>
                 <div class="row" data-hour="<&= x + 18 &>">
                     <& for(i = 0; i < 4; i++) { &>
-                        <div class="span4" style="width: 185px; height: 100%;">&nbsp;</div>
+                        <div class="span4" style="height: 100%;">&nbsp;</div>
                     <& } &>
                 </div>
             <& } &>
@@ -56,7 +56,7 @@
             <& for(x = 0; x < 4; x++) { &>
                 <div class="row" data-hour="<&= x + 20 &>">
                     <& for(i = 0; i < 4; i++) { &>
-                        <div class="span4" style="width: 185px; height: 100%;">&nbsp;</div>
+                        <div class="span4" style="height: 100%;">&nbsp;</div>
                     <& } &>
                 </div>
             <& } &>
@@ -67,7 +67,7 @@
             <& for(x = 0; x < 5; x++) { &>
                 <div class="row" data-hour="<&= x&>">
                     <& for(i = 0; i < 4; i++) { &>
-                        <div class="span4" style="width: 185px; height: 100%;">&nbsp;</div>
+                        <div class="span4" style="height: 100%;">&nbsp;</div>
                     <& } &>
                 </div>
             <& } &>

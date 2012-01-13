@@ -2,7 +2,27 @@ var async = require('async');
 var channels = mongoose.model('Channel');
 var events = mongoose.model('Event');
 var movies = mongoose.model('MovieDetail');
-var actors = mongoose.model('ActorDetail');
+var actorSchema = mongoose.model('Actor');
+
+function fetchActorDetails (actors, callback) {
+    var result = new Array();
+    
+    async.map(actors, function (actor, callback) {
+        var query = actorSchema.findOne({_id: actor});
+        
+        query.populate('tmdbId', ['profile']);
+        query.run(function (err, doc) {
+            if (doc != null) {
+                result.push(doc);
+                callback(null, null);
+            } else {
+                callback(null, null);
+            }
+        });
+    }, function (err, actorsResult) {
+        callback(result);
+    });
+}
 
 function Epg () {
 
@@ -35,7 +55,6 @@ Epg.prototype.getEvent = function (eventId, callback) {
     query.populate('actors');
     query.populate('tmdbId');
     query.populate('tmdbId.actors');
-    query.populate('tmdbId.actors.tmdbId');
 
     query.run(function (err, doc) {
         if (doc == null) {
@@ -44,57 +63,49 @@ Epg.prototype.getEvent = function (eventId, callback) {
         }
 
         if (doc.get('tmdbId')) {
-            var details = doc.get('tmdbId');
-
-            details.set('directors', new Array());
-            details.set('writers', new Array());
-            var tmpActors = details.get('actors');
-            details.set('actors', new Array());
+            if (doc.get('tmdbId').get('translated') === true) {
+                doc.set({description: doc.get('tmdbId').get('overview')});
+            }
             
-            async.map(tmpActors, function (actor, callback) {
-                var query = actors.findOne({});
-                
-                query.populate('tmdbId', null, {_id: actor});
-                query.run(function (err, doc) {
-                    if (err == null) {
-                        details.get('actors').push(doc);
-                        callback(null, null);
-                    } else {
-                        callback(null, null);
-                    }
+            if (doc.get('tmdbId').get('rating') !== undefined) {
+                doc.set({
+                    rating: doc.get('tmdbId').get('rating'),
+                    votes: doc.get('tmdbId').get('votes')
                 });
-            }, function (err, actorsResult) {
-                if (details.get('cast') !== undefined) {
-                    details.get('cast').forEach(function (cast) {
-                        switch (cast.department) {
-                            case 'Directing':
-                                details.get('directors').push(cast);
-                                break;
-
-                            case 'Writing':
-                                details.get('writers').push(cast);
-                                break;
-
-                            case 'Actors':
-                                //details.get('actors').push(cast);
-                                break;
-
-                            default:
-                                log.dbg('Unknown type for tmdb cast data: ' + cast.department);
-                                break;
-                        }
-                    });
-                }
-
-                delete(details.cast);
-
-                doc.set('tmdb', details);
+            }
+            
+            if (doc.get('tmdbId').get('posters') !== undefined) {
+                doc.set({posters: doc.get('tmdbId').get('posters')});
+            }
+            
+            if (doc.get('tmdbId').get('backdrops') !== undefined) {
+                doc.set({backdrops: doc.get('tmdbId').get('backdrops')});
+            }
+            
+            if (doc.get('tmdbId').get('cast') !== undefined) {
+                doc.set({crew: doc.get('tmdbId').get('cast')});
+            }
+            
+            var tmpActors = doc.get('tmdbId').get('actors');
+            
+            fetchActorDetails(tmpActors, function (actors) {
+                doc.set({actorsFetched: actors});
+                doc.set({tmdbId: null});
+                
+                console.log(doc);
+                
                 callback(doc);
             });
-            //details.set('actors', new Array());
         } else {
-            callback(doc);
-        }        
+            if (doc.get('actors') != null && doc.get('actors').length > 0) {
+                fetchActorDetails(doc.get('actors'), function (actors) {
+                    doc.set({actorsFetched: actors});
+                    callback(doc);
+                });
+            } else {
+                callback(doc);
+            }
+        }
     });
 };
 

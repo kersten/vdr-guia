@@ -1,18 +1,80 @@
 <div class="page-header">
+    <div style="float:right;">
+        <img src="/icons/amazon.png" style="height: 16px; vertical-align: sub;" /> Buy it from <a style="cursor: pointer;" href="http://www.amazon.de/gp/search?index=aps&url=search-alias%3Ddvd&tag=meiblo05-21&keywords=<&= escape(event.get('title')) &>">Amazon</a>
+    </div>
     <h1 id="title"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+    <& if (event.get('short_description')) { &>
     <p><&= event.get('short_description') &></p>
+    <& } &>
 </div>
-
 <div class="row">
-    <div class="span14">
-        <p>
-            <&= event.get('description') &>
-        </p>
+    <div class="span4">
+        <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
+
+        <p style="cursor: pointer;"><a style="cursor: pointer;" class="showDetails" data-view="posters">Show all posters</a></p>
+
+        <div style="border-bottom: 1px solid #DDD;">
+            <h6>Details</h6>
+            <dl>
+                <dt>
+                    Movie Facts
+                </dt>
+                <dd>
+                    <strong>Part of the:</strong> Test
+                </dd>
+                <dd>
+                    <strong>Status:</strong> Test
+                </dd>
+                <dd>
+                    <strong>Runtime:</strong> Test
+                </dd>
+                <dd>
+                    <strong>Budget:</strong> Test
+                </dd>
+                <dd>
+                    <strong>Revenue:</strong> Test
+                </dd>
+                <dd>
+                    <strong>Language(s):</strong> Test
+                </dd>
+                <dd>
+                    <strong>Webpage:</strong> Test
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="row eventDetails">
+        <div class="span12 eventInfos">
+            <p style="text-align: right;" class="recordThis">
+                Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
+            </p>
+    
+            <& if (event.get('rating')) { &>
+            <p>
+                <& for (var i = 1; i < 11; i++) {
+                    if (event.get('rating') > i) { &>
+                        <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_full.png" />
+                    <& } else { &>
+                        <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_gray.png" />
+                    <& }
+                } &>
+                <& if (event.get('votes')) { &>
+                    <&= event.get('rating') &> / 10 (<&= event.get('votes') &> Votes)
+                <& } &>
+            </p>
+            <& } &>
+        </div>
+
+        <div class="span12 eventDescription">
+        </div>
     </div>
 </div>
 
+<& if (event.get('url')) { &>
 <div class="row">
-    <div class="span14" style="font-size: 9px; text-align: right;">
-        <a class="fetchTmdbInfos" _id="<&= event.get('_id') &>" href="javascript: false;">Fetch data from tmdb.org</a>
+    <div class="span16" style="font-size: 9px; text-align: right;">
+        <a href="<&= event.get('url') &>" target="_blank">Open in tmdb.org</a>
     </div>
 </div>
+<& } &>

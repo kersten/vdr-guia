@@ -1,17 +1,14 @@
 var EventView = Backbone.View.extend({
     template: 'EventTemplate',
-    eventType: 'epg',
 
     events: {
         'click a.showDetails': 'showDetails',
-        'click .recordThis > img': 'recordEvent',
-        'hover .recordThis > img': 'hoverRecordEvent'
     },
     
     showDetails: function (ev) {
         switch ($(ev.currentTarget).data('view')) {
         case 'cast':
-            this.showCast();
+            this.renderCast();
             GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/cast');
             
             break;
@@ -21,18 +18,18 @@ var EventView = Backbone.View.extend({
             break;
             
         case 'posters':
-            this.showPosters();
+            this.renderPosters();
             GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/posters');
             break;
             
         case 'event':
-            this.showDescription();
+            this.renderDescription();
             GUIA.router.navigate('!/Event/' + this.model.get('_id'));
             break;
         }
     },
     
-    showDescription: function () {
+    renderDescription: function () {
         if (this.descriptionView === undefined) {
             this.descriptionView = new EventDescriptionView({
                 model: this.model,
@@ -43,7 +40,7 @@ var EventView = Backbone.View.extend({
         this.descriptionView.render();
     },
 
-    showPosters: function () {
+    renderPosters: function () {
         if (this.postersView === undefined) {
             this.postersView = new EventPostersView({
                 model: this.model.get('tmdb').posters,
@@ -54,7 +51,7 @@ var EventView = Backbone.View.extend({
         this.postersView.render();
     },
     
-    showCast: function () {
+    renderCast: function () {
         if (this.castView === undefined) {
             this.postersView = new EventCastView({
                 model: this.model.get('tmdb'),
@@ -63,40 +60,6 @@ var EventView = Backbone.View.extend({
         }
         
         this.postersView.render();
-    },
-
-    recordEvent: function (ev) {
-        if (this.model.get('timer_active')) {
-            console.log('Delete timer for: ' + this.model.get('_id'));
-            this.model.set({timer_active: false});
-            
-            this.model.save();
-        } else {
-            console.log('Create timer for: ' + this.model.get('_id'));
-            this.model.set({timer_active: true});
-            
-            this.model.save();
-        }
-    },
-
-    hoverRecordEvent: function (ev) {
-        var image = '';
-        var image_record = '-2';
-
-        if (this.model.get('timer_active')) {
-            image = '-2';
-            image_record = '';
-        }
-
-        switch (ev.type) {
-            case 'mouseenter':
-                $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image_record + '.png');
-                break;
-
-            case 'mouseleave':
-                $(ev.currentTarget).attr('src', '/icons/devine/black/16x16/Circle' + image + '.png');
-                break;
-        };
     },
 
     render: function (callback) {
@@ -135,29 +98,30 @@ var EventView = Backbone.View.extend({
 
                 event.set({start_formatted: start.toString('HH:mm')});
                 event.set({date: start.toString('dd.MM')});
-
-                switch (self.eventType) {
-                    case 'tmdb':
-                        self.template = 'EventTmdbTemplate';
-                        break;
-                }
                 
                 console.log(event);
+                
+                var recordView = new EventRecordButtonView({
+                    model: event
+                });
+                
+                recordView.render();
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
+                $('.recordThis', self.el).append(recordView.el);
                 
                 switch (self.options.view) {
                 case 'posters':
-                    self.showPosters();
+                    self.renderPosters();
                     break;
                     
                 case 'cast':
-                    self.showCast();
+                    self.renderCast();
                     break;
                 
                 default:
-                    self.showDescription();
+                    self.renderDescription();
                     break;
                 }
                 

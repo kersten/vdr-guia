@@ -4,31 +4,39 @@
     </a>
 </p>
 
-<& if (cast.directors.length > 0) { &>
-<h5>Crew</h5>
-<p>
-    <table>
-    <& _.each(cast.directors, function (director) { &>
-        <tr>
-            <td>Director:</td>
-            <td><a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= director.id &>"><&= director.name &></a></td>
-        </tr>
-    <& }); &>
-    </table>
-</p>
-<& } &>
-
-<h5>Cast</h5>
-<p>
-    <& _.each(cast.actors, function (actor, index) { &>
-    <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
-        <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
-            <a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= actor.id &>"><img src="<&= actor.profile &>" width="45"></a>
-        </span>
-        <span class="text" style="float: left;">
-            <a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= actor.id &>"><&= actor.name &></a><br>
-            as <&= actor.character &>
-        </span>
+<div class="row">
+    <div class="span12">
+        <h5>Actors</h5>
+        <p>
+            <& _.each(cast.actors, function (actor, index) { &>
+            <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
+                <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= actor._id &>"><img src="<&= actor.tmdbId.profile[0].image.url &>" width="45"></a>
+                </span>
+                <span class="text" style="float: left;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= actor._id &>"><&= actor.name &></a><br>
+                    as <&= actor.character &>
+                </span>
+            </div>
+            <& }); &>
+        </p>
     </div>
-    <& }); &>
-</p>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <& if (cast.cast.length > 0) { &>
+        <h5>Crew</h5>
+        <p>
+            <table>
+            <& _.each(cast.cast, function (director) { &>
+                <tr>
+                    <td><&= director.job &>:</td>
+                    <td><a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= director.id &>"><&= director.name &></a></td>
+                </tr>
+            <& }); &>
+            </table>
+        </p>
+        <& } &>
+    </div>
+</div>

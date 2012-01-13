@@ -73,6 +73,8 @@ Actor.prototype.fetchAll = function () {
         tmdbId: {$exists: false},
         tmdbSearched: {$exists: false}
     });
+    
+    query.sort('name', 1);
 
     query.each(function (err, actor, next) {
         if (actor == null) {
