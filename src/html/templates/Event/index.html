@@ -47,7 +47,10 @@
     </div>
 
     <div class="row eventDetails">
-        <div class="span12 eventInfos">
+        <div class="span2">
+            <a style="cursor: pointer;" class="goback"><%= __('Back to TVGuide') %></a>
+        </div>
+        <div class="span10 eventInfos">
             <p style="text-align: right;" class="recordThis">
                 Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
             </p>

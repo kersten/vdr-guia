@@ -40,7 +40,7 @@
         <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
             <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
                 <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>">
-                    <& if (actor.tmdbId.profile.length != 0) { &>
+                    <& if (actor.tmdbId !== undefined && actor.tmdbId.profile.length != 0) { &>
                     <img src="<&= actor.tmdbId.profile[0].image.url &>" width="45">
                     <& } else { &>
                     <img src="http://placehold.it/45x55&text=No+Photo" width="45">

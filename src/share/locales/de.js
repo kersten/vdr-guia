@@ -86,5 +86,6 @@
 	"2 Hours": "2 Hours",
 	"3 Hours": "3 Hours",
 	"4 Hours": "4 Hours",
-	"5 Hours": "5 Hours"
+	"5 Hours": "5 Hours",
+	"Back to TVGuide": "Back to TVGuide"
 }
