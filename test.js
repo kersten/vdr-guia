@@ -48,9 +48,13 @@ mongoose.connection.on('error', function (e) {
     throw e;
 });
 
-var events = mongoose.model('Event');
+var EmpgImport = require('./src/lib/Epg/Import');
 
-var date = new Date();
+var importer = new EpgImport();
+
+importer.evaluateType();
+
+/*var date = new Date();
 date.setHours(0, 0, 0);
 
 var start = parseInt(date.getTime() / 1000);
@@ -63,4 +67,4 @@ events.find({tip: {$exists: true}, start: {$gt: start, $lt: stop}}, function (er
     console.log(docs);
     console.log(start, stop);
     process.exit();
-});
+});*/

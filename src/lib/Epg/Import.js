@@ -10,7 +10,7 @@ function EpgImport (restful, numEvents) {
     this.restful = restful;
     this.numEvents = numEvents || 100;
 
-    var ChannelImport = require('../Channel/Import');
+    var ChannelImport = require(__dirname + '/../Channel/Import');
     this.channelImporter = new ChannelImport(restful);
 }
 
@@ -220,6 +220,24 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
     ], function (err, results) {
         callback(event);
     });
+};
+
+EpgImport.prototype.evaluateType = function () {
+    mongoose.connection.db.executeDbCommand({
+        'group' : {
+           'ns' : 'events',
+           'cond' : {duration: {$lt: 65 * 60}},
+           'initial': {'count': 0},
+           '$reduce' : 'function(doc, out){ out.count++ }',
+           'key' : {'title': 1}
+        }}, function(err, dbres) {
+            //If you need to alert users, etc. that the mapreduce has been run, enter code here
+            dbres.documents[0].retval.forEach(function (doc) {
+                if (doc.count > 3) {
+                    console.log(doc.title);
+                }
+            });
+        });
 };
 
 EpgImport.prototype.insertEpg = function (event, callback) {

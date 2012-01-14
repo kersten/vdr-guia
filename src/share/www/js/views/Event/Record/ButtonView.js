@@ -7,17 +7,21 @@ var EventRecordButtonView = Backbone.View.extend({
     },
     
     initialize: function () {
-        var image = '';
+        var image = 'Circle';
+
+        if (this.model.get('type') == 'series') {
+            image += 'Series'
+        }
 
         if (this.model.get('timer_active')) {
-            image = '-2';
+            image += '-2';
         }
         
         $(this.el).css({
             cursor: 'pointer',
             verticalAlign: 'sub'
         }).attr({
-            src: '/icons/devine/black/16x16/Circle' + image + '.png',
+            src: '/icons/devine/black/16x16/' + image + '.png',
             title: !this.model.get('timer_active') ? 'Record' : 'Delete timer'
         });
     },
