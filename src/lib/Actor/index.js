@@ -1,6 +1,7 @@
 var events =  mongoose.model('Event');
 var actors =  mongoose.model('Actor');
 var actorDetails =  mongoose.model('ActorDetail');
+var async = require('async');
 
 var tmdb = require('../Media/Scraper/Tmdb').init({
     apikey:'5a6a0d5a56395c2e497ebc7c889ca88d'
@@ -10,8 +11,8 @@ function Actor () {
 }
 
 Actor.prototype.fetchInformation = function (actor, callback) {
-    log.dbg('Fetching informations for: ' + actor.name);
-    
+    log.dbg('Fetching actor informations for: ' + actor.name);
+
     tmdb.Person.search({
         query: actor.name,
         lang: 'de'
@@ -24,45 +25,56 @@ Actor.prototype.fetchInformation = function (actor, callback) {
         for(var x in res) {
             if (res[x] == "Nothing found.") {
                 log.dbg('Nothing found for: ' + actor.name);
-                
+
                 actor.set({tmdbSearched: new Date().getTime()});
                 actor.save(function () {
                     callback.call();
                 });
-                
+
                 return;
             }
 
-            tmdb.Person.getInfo({
-                query: res[x].id.toString(),
-                lang: 'de'
-            }, function (err, res) {
-                if(typeof(err) != 'undefined') {
-                    log.dbg('some error: ' + err);
+            async.mapSeries(res, function (tmdbActor, callback) {
+                tmdb.Person.getInfo({
+                    query: tmdbActor.id.toString(),
+                    lang: 'de'
+                }, function (err, res) {
+                    if(typeof(err) != 'undefined') {
+                        log.dbg('some error: ' + err);
 
-                    actor.set({tmdbSearched: new Date().getTime()});
-                    actor.save(function () {
-                        callback.call();
-                    });
-                    
-                    return;
-                }
+                        actor.set({tmdbSearched: new Date().getTime()});
+                        actor.save(function () {
+                            callback('Fin');
+                        });
 
-                res[0].tmdbId = res[x].id;
-                //res[0].actorID = actorId;
+                        return;
+                    }
 
-                var actorDetailsSchema = new actorDetails(res[0]);
-                actorDetailsSchema.save(function () {
-                    actor.set({tmdbId: actorDetailsSchema._id});
+                    var name = new RegExp("^" + actor.name + "$", 'ig');
 
-                    actor.save(function () {
-                        log.dbg('Details saved for: ' + actor.name);
-                        callback.call();
-                    });
+                    if (name.test(res[0].name)) {
+                        res[0].tmdbId = tmdbActor.id;
+                        //res[0].actorID = actorId;
+
+                        var actorDetailsSchema = new actorDetails(res[0]);
+                        actorDetailsSchema.save(function () {
+                            actor.set({tmdbId: actorDetailsSchema._id});
+
+                            actor.save(function () {
+                                log.dbg('Details saved for: ' + actor.name);
+                                callback('Fin');
+                            });
+                        });
+                    } else {
+                        callback(null, null);
+                    }
+                });
+            }, function (err, result) {
+                actor.set({tmdbSearched: new Date().getTime()});
+                actor.save(function () {
+                    callback();
                 });
             });
-
-            return;
         }
     });
 };
@@ -73,7 +85,7 @@ Actor.prototype.fetchAll = function () {
         tmdbId: {$exists: false},
         tmdbSearched: {$exists: false}
     });
-    
+
     query.sort('name', 1);
 
     query.each(function (err, actor, next) {

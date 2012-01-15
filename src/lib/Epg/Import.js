@@ -222,21 +222,30 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
     });
 };
 
-EpgImport.prototype.evaluateType = function () {
+EpgImport.prototype.evaluateType = function (callback) {
     mongoose.connection.db.executeDbCommand({
         group : {
            ns: 'events',
-           cond: {duration: {$lt: 65 * 60}},
+           cond: {},
            initial: {'count': 0},
-           $reduce: function(doc, out){ out.count++ },
-           key: {'title': 1}
+           $reduce: 'function(doc, out){ out.count++ }',
+           key: {title: 1, channel_id: 1}
         }}, function(err, dbres) {
+            console.log(dbres.documents[0].retval);
+
             //If you need to alert users, etc. that the mapreduce has been run, enter code here
             dbres.documents[0].retval.forEach(function (doc) {
                 if (doc.count > 3) {
-                    events.update({title: doc.title}, {type: 'series'});
+                    log.dbg('Set as series: ' + doc.title + ' :: ' + doc.channel_id);
+                    EventSchema.update({title: doc.title, channel_id: doc.channel_id}, {type: 'series'}, {multi: true}, function () {
+                        console.log(arguments);
+                    });
                 }
             });
+
+            log.dbg('Type evaluation done ..');
+
+            callback();
         });
 };
 

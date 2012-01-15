@@ -25,6 +25,24 @@ var TVGuideView = Backbone.View.extend({
         // Write date to options, if it is not set create one
         this.options.date = this.options.date || d.toString('dd.MM.yyyy');
 
+        if (this.options.date == d.toString('dd.MM.yyyy')) {
+            var showSection = parseInt(d.toString('HH'));
+
+            if (showSection >= 5 && showSection <= 12) {
+                this.options.showSection = 'morning';
+            } else if (showSection >= 12 && showSection <= 18) {
+                this.options.showSection = 'afternoon';
+            } else if (showSection >= 18 && showSection <= 20) {
+                this.options.showSection = 'earlyevening';
+            } else if (showSection >= 20 && showSection <= 24) {
+                this.options.showSection = 'evening';
+            } else if (showSection >= 0 && showSection <= 5) {
+                this.options.showSection = 'night';
+            }
+        } else {
+            this.options.showSection = 'all';
+        }
+
         // Set current page, if it is not set set to 1
         this.options.page = this.options.page || 1;
 
@@ -85,7 +103,7 @@ var TVGuideView = Backbone.View.extend({
                 page: this.options.page
             }, success: function () {
                 // Render template
-                var template = _.template( $('#' + self.template).html(), {} );
+                var template = _.template( $('#' + self.template).html(), {show: self.options.showSection} );
                 $(self.el).html( template );
 
                 // Get events

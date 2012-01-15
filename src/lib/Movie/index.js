@@ -11,19 +11,22 @@ function Movie () {
 }
 
 Movie.prototype.fetchInformation = function (movie, callback) {
-    log.dbg('Fetching informations for: ' + movie.title);
+    log.dbg('Fetching movie informations for: ' + movie.title);
 
     tmdb.Movie.search({
         query: movie.title,
         lang: 'de'
     }, function (err, res) {
         if(typeof(err) != 'undefined') {
+            log.dbg('Errors fetching ' + movie.title + ' with error: ' + err);
+
             callback.call();
             return;
         }
 
-        async.map(res, function (tmdbMovie, callback) {
+        async.mapSeries(res, function (tmdbMovie, callback) {
             if (tmdbMovie == "Nothing found.") {
+                log.dbg('Nothing found for ' + movie.title);
                 callback.call();
                 return;
             }
@@ -33,6 +36,8 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                 lang: 'de'
             }, function (err, res) {
                 if(typeof(err) != 'undefined') {
+                    log.dbg('Errors fetching ' + movie.title + ' with error: ' + err);
+
                     callback(null, null);
                     return;
                 }

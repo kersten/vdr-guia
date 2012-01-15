@@ -466,6 +466,15 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
                 } else {
                     log.inf('Tmdb Movies fetching disabled ..');
                 }
+
+                importer.evaluateType(function () {
+                    if (data.get('fetchThetvdbSeasons')) {
+                        var seasonDetails = new SeasonDetails();
+                        seasonDetails.fetchAll();
+                    } else {
+                        log.inf('Tmdb Movies fetching disabled ..');
+                    }
+                });
             });
         });
     }
