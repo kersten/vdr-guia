@@ -102,6 +102,7 @@
         <script type="text/javascript" src="/js/views/TVGuideView.js"></script>
         <script type="text/javascript" src="/js/views/NavigationView.js"></script>
         <script type="text/javascript" src="/js/views/RecordingsView.js"></script>
+        <script type="text/javascript" src="/js/views/PersonView.js"></script>
         <script type="text/javascript" src="/js/views/SearchView.js"></script>
         <script type="text/javascript" src="/js/views/SettingsView.js"></script>
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
@@ -128,6 +129,7 @@
         <script type="text/javascript" src="/js/models/EventModel.js"></script>
         <script type="text/javascript" src="/js/models/LogoModel.js"></script>
         <script type="text/javascript" src="/js/models/NavigationModel.js"></script>
+        <script type="text/javascript" src="/js/models/PersonModel.js"></script>
         <script type="text/javascript" src="/js/models/RawEventModel.js"></script>
         <script type="text/javascript" src="/js/models/RecordingModel.js"></script>
         <script type="text/javascript" src="/js/models/SearchresultModel.js"></script>
@@ -210,13 +212,17 @@
         <script type="text/template" id="EventPostersTemplate">
             <%- partial('templates/Event/Posters') %>
         </script>
-        
+
         <script type="text/template" id="EventPostersPosterTemplate">
             <%- partial('templates/Event/Posters/Poster') %>
         </script>
-        
+
         <script type="text/template" id="EventRecordButtonTemplate">
             <%- partial('templates/Event/Record/Button') %>
+        </script>
+
+        <script type="text/template" id="PersonTemplate">
+            <%- partial('templates/Person') %>
         </script>
 
         <script type="text/template" id="TVGuideTemplate">

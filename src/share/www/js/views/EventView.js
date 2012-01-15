@@ -4,31 +4,31 @@ var EventView = Backbone.View.extend({
     events: {
         'click a.showDetails': 'showDetails',
     },
-    
+
     showDetails: function (ev) {
         switch ($(ev.currentTarget).data('view')) {
         case 'cast':
             this.renderCast();
             GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/cast');
-            
+
             break;
-            
+
         case 'person':
-            GUIA.router.navigate('!/Peson/' + $(ev.currentTarget).data('personid'));
+            GUIA.router.navigate('!/Person/' + $(ev.currentTarget).data('personid'), true);
             break;
-            
+
         case 'posters':
             this.renderPosters();
             GUIA.router.navigate('!/Event/' + this.model.get('_id') + '/posters');
             break;
-            
+
         case 'event':
             this.renderDescription();
             GUIA.router.navigate('!/Event/' + this.model.get('_id'));
             break;
         }
     },
-    
+
     renderDescription: function () {
         if (this.descriptionView === undefined) {
             this.descriptionView = new EventDescriptionView({
@@ -36,7 +36,7 @@ var EventView = Backbone.View.extend({
                 el: $('.eventDescription', this.el)
             });
         }
-        
+
         this.descriptionView.render();
     },
 
@@ -47,10 +47,10 @@ var EventView = Backbone.View.extend({
                 el: $('.eventDescription', this.el)
             });
         }
-        
+
         this.postersView.render();
     },
-    
+
     renderCast: function () {
         if (this.castView === undefined) {
             this.postersView = new EventCastView({
@@ -58,7 +58,7 @@ var EventView = Backbone.View.extend({
                 el: $('.eventDescription', this.el)
             });
         }
-        
+
         this.postersView.render();
     },
 
@@ -98,33 +98,33 @@ var EventView = Backbone.View.extend({
 
                 event.set({start_formatted: start.toString('HH:mm')});
                 event.set({date: start.toString('dd.MM')});
-                
+
                 console.log(event);
-                
+
                 var recordView = new EventRecordButtonView({
                     model: event
                 });
-                
+
                 recordView.render();
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
                 $('.recordThis', self.el).append(recordView.el);
-                
+
                 switch (self.options.view) {
                 case 'posters':
                     self.renderPosters();
                     break;
-                    
+
                 case 'cast':
                     self.renderCast();
                     break;
-                
+
                 default:
                     self.renderDescription();
                     break;
                 }
-                
+
                 callback.apply(self, []);
             }
         });

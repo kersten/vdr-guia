@@ -1,17 +1,19 @@
-var PersonView = var EventView = Backbone.View.extend({
+var PersonView = Backbone.View.extend({
     template: 'PersonTemplate',
-    
-    events: {
-        
-    },
-    
-    initialize: function () {
-        this.model.fetch({data: {_id: this.options._id}, success: function (data) {
-            console.log(data);
-        }});
-    },
-    
-    render: function () {
-        return this;
+
+    render: function (callback) {
+        var self = this;
+
+        var person = new PersonModel();
+        person.fetch({
+            data: {
+                _id: this.options._id
+            }, success: function (data) {
+                console.log(data);
+                self.model = person;
+                $(self.el).html(_.template( $('#' + self.template).html(), {person: self.model} ));
+                callback(self.el);
+            }
+        });
     }
 });

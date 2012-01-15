@@ -15,6 +15,11 @@ var EventSchema = new Schema({
         required: true
     },
 
+    type: {
+        type: String,
+        required: false
+    },
+
     short_description: {
         type: String,
         required: false

@@ -6,10 +6,10 @@ var actorSchema = mongoose.model('Actor');
 
 function fetchActorDetails (actors, callback) {
     var result = new Array();
-    
+    console.log(actors);
     async.map(actors, function (actor, callback) {
         var query = actorSchema.findOne({_id: actor});
-        
+
         query.populate('tmdbId', ['profile']);
         query.run(function (err, doc) {
             if (doc != null) {
@@ -66,14 +66,14 @@ Epg.prototype.getEvent = function (eventId, callback) {
             if (doc.get('tmdbId').get('translated') === true) {
                 doc.set({description: doc.get('tmdbId').get('overview')});
             }
-            
+
             if (doc.get('tmdbId').get('rating') !== undefined) {
                 doc.set({
                     rating: doc.get('tmdbId').get('rating'),
                     votes: doc.get('tmdbId').get('votes')
                 });
             }
-            
+
             if (doc.get('tmdbId').get('posters') !== undefined) {
                 if (doc.get('tmdbId').get('posters').length > 0) {
                     doc.get('tmdbId').get('posters').forEach(function (poster) {
@@ -83,33 +83,35 @@ Epg.prototype.getEvent = function (eventId, callback) {
                         }
                     });
                 }
-                
+
                 doc.set({posters: doc.get('tmdbId').get('posters')});
             }
-            
+
             if (doc.get('tmdbId').get('backdrops') !== undefined) {
                 doc.set({backdrops: doc.get('tmdbId').get('backdrops')});
             }
-            
+
             if (doc.get('tmdbId').get('cast') !== undefined) {
                 doc.set({crew: doc.get('tmdbId').get('cast')});
             }
-            
+
             var tmpActors = doc.get('tmdbId').get('actors');
-            
+
+            console.log(doc.get('tmdbId'));
+
             fetchActorDetails(tmpActors, function (actors) {
                 doc.set({actorsFetched: actors});
                 doc.set({tmdbId: null});
-                
+
                 console.log(doc);
-                
+
                 callback(doc);
             });
         } else {
             if (doc.get('rating') != null) {
                 doc.set({rating: doc.get('rating') * 2})
             }
-            
+
             if (doc.get('actors') != null && doc.get('actors').length > 0) {
                 fetchActorDetails(doc.get('actors'), function (actors) {
                     doc.set({actorsFetched: actors});

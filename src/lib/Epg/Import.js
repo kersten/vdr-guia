@@ -17,7 +17,7 @@ function EpgImport (restful, numEvents) {
 EpgImport.prototype.start = function (callback) {
     var self = this;
     this.newEpg = false;
-    
+
     log.dbg("Starting epg import ...");
 
     this.channelImporter.start(function () {
@@ -86,9 +86,9 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
         function (callback) {
             event.event_id = event.id;
             delete(event.id);
-            
+
             event.channel_id = channel._id;
-            
+
             if (event.description.match(/\nShow-Id: [0-9]{0,}/)) {
                 var show_id = event.description.match(/\nShow-Id: ([0-9]{0,})/);
                 event.show_id = show_id[1];
@@ -224,17 +224,17 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 
 EpgImport.prototype.evaluateType = function () {
     mongoose.connection.db.executeDbCommand({
-        'group' : {
-           'ns' : 'events',
-           'cond' : {duration: {$lt: 65 * 60}},
-           'initial': {'count': 0},
-           '$reduce' : 'function(doc, out){ out.count++ }',
-           'key' : {'title': 1}
+        group : {
+           ns: 'events',
+           cond: {duration: {$lt: 65 * 60}},
+           initial: {'count': 0},
+           $reduce: function(doc, out){ out.count++ },
+           key: {'title': 1}
         }}, function(err, dbres) {
             //If you need to alert users, etc. that the mapreduce has been run, enter code here
             dbres.documents[0].retval.forEach(function (doc) {
                 if (doc.count > 3) {
-                    console.log(doc.title);
+                    events.update({title: doc.title}, {type: 'series'});
                 }
             });
         });

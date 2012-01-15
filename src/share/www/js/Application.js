@@ -59,22 +59,23 @@ var GUIA = {
         loadedViews: {},
 
         routes: {
-            "": "welcomeRoute",
-            "!/Welcome": "welcomeRoute",
-            "!/Highlights": "highlightsRoute",
-            "!/TVGuide": "tvguideRoute",
-            "!/TVGuide/:date": "tvguideRoute",
-            "!/TVGuide/:date/:page": "tvguideRoute",
-            "!/Event/:id": "eventRoute",
-            "!/Event/:id/:view": "eventRoute",
-            "!/Recordings": "recordingsRoute",
-            "!/Me": "profileRoute",
-            "!/Help": "helpRoute",
-            "!/Help/Shortcuts": "helpShortcutsRoute",
-            "!/Settings": "settingsRoute",
-            "!/Settings/:section": "settingsRoute",
-            "!/About": "aboutRoute",
-            "*actions": "notfoundRoute"
+            '': 'welcomeRoute',
+            '!/Welcome': 'welcomeRoute',
+            '!/Highlights': 'highlightsRoute',
+            '!/TVGuide': 'tvguideRoute',
+            '!/TVGuide/:date': 'tvguideRoute',
+            '!/TVGuide/:date/:page': 'tvguideRoute',
+            '!/Event/:id': 'eventRoute',
+            '!/Event/:id/:view': 'eventRoute',
+            '!/Person/:id': 'personRoute',
+            '!/Recordings': 'recordingsRoute',
+            '!/Me': 'profileRoute',
+            '!/Help': 'helpRoute',
+            '!/Help/Shortcuts': 'helpShortcutsRoute',
+            '!/Settings': 'settingsRoute',
+            '!/Settings/:section': 'settingsRoute',
+            '!/About': 'aboutRoute',
+            '*actions': 'notfoundRoute'
         },
 
         initialize: function () {
@@ -147,6 +148,17 @@ var GUIA = {
 
             this.currentView.render(function () {
                 $('#body').html(this.el);
+                GUIA.loadingOverlay('hide');
+            });
+        },
+
+        personRoute: function (_id) {
+            GUIA.loadingOverlay('show');
+            this.currentView = new PersonView({
+                _id: _id
+            });
+            this.currentView.render(function (el) {
+                $('#body').html(el);
                 GUIA.loadingOverlay('hide');
             });
         },

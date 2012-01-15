@@ -34,6 +34,105 @@ actor.scrapeAll();
 //movie.scrapeAll();
 }); */
 
+var title = 'Mission: Impossible 2';
+
+var numberedTitle = new RegExp(' (\\d+|I|II|III|IV|V|VI|VII|VIII|IX)$', 'g');
+var numberedTitle = numberedTitle.exec(title);
+
+var movieRoman = '';
+
+if (numberedTitle != null && numberedTitle.length > 0) {
+    var number = numberedTitle[1];
+    console.log(number);
+    switch (number) {
+        case '2':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' II');
+            break;
+
+        case '3':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' III');
+            break;
+
+        case '4':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' IV');
+            break;
+
+        case '5':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' V');
+            break;
+
+        case '6':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' VI');
+            break;
+
+        case '7':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' VII');
+            break;
+
+        case '8':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' VIII');
+            break;
+
+
+        case '9':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' IX');
+            break;
+
+        case '10':
+            movieRoman = movie.title.replace(/ [0-9]{1,2}$/, ' X');
+            break;
+
+        case 'I':
+            movieRoman = movie.title.replace(/ I$/, ' 1');
+            break;
+
+        case 'II':
+            movieRoman = movie.title.replace(/ II$/, ' 2');
+            break;
+
+        case 'III':
+            movieRoman = movie.title.replace(/ III$/, ' 3');
+            break;
+
+        case 'IV':
+            movieRoman = movie.title.replace(/ IV$/, ' 4');
+            break;
+
+        case 'V':
+            movieRoman = movie.title.replace(/ V$/, ' 5');
+            break;
+
+        case 'VI':
+            movieRoman = movie.title.replace(/ VI$/, ' 6');
+            break;
+
+        case 'VII':
+            movieRoman = movie.title.replace(/ VII$/, ' 7');
+            break;
+
+        case 'VIII':
+            movieRoman = movie.title.replace(/ VIII$/, ' 8');
+            break;
+
+        case 'IX':
+            movieRoman = movie.title.replace(/ IX$/, ' 9');
+            break;
+
+        case 'X':
+            movieRoman = movie.title.replace(/ X$/, ' 10');
+            break;
+    }
+}
+
+var romanTitle = new RegExp("^" + movieRoman + "$", 'ig');
+
+console.log(movieRoman);
+//numberedTitle.exec(title);
+
+//console.log(numberedTitle.exec(title));
+
+process.exit();
+
 global.mongoose = require('mongoose');
 global.Schema = mongoose.Schema;
 

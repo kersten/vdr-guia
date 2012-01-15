@@ -32,7 +32,7 @@ var SettingsChannelsView = Backbone.View.extend({
             $('input.channel', this.el).attr('checked', false);
         }
 
-        $('input.channel', this.el).trigger('change')
+        $('input.channel', this.el).trigger('change');
     },
 
     render: function () {
