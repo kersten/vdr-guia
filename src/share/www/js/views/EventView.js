@@ -53,13 +53,13 @@ var EventView = Backbone.View.extend({
 
     renderCast: function () {
         if (this.castView === undefined) {
-            this.postersView = new EventCastView({
+            this.castView = new EventCastView({
                 model: this.model,
                 el: $('.eventDescription', this.el)
             });
         }
 
-        this.postersView.render();
+        this.castView.render();
     },
 
     render: function (callback) {
