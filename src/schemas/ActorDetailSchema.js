@@ -1,5 +1,5 @@
 var ActorDetailSchema = new Schema({
-    tmdbid: {
+    tmdbId: {
         type: Number,
         required: true,
         unique: true

@@ -24,57 +24,67 @@ Actor.prototype.fetchInformation = function (actor, callback) {
             return;
         }
 
-        for(var x in res) {
-            if (res[x] == "Nothing found.") {
+        async.mapSeries(res, function (tmdbActor, callback) {
+            if (tmdbActor == "Nothing found.") {
                 log.dbg('Nothing found for: ' + actor.name);
 
                 actor.set({tmdbSearched: new Date().getTime()});
                 actor.save(function () {
-                    callback.call();
+                    callback('Fin');
                 });
 
                 return;
             }
+            
+            tmdb.Person.getInfo({
+                query: tmdbActor.id.toString(),
+                lang: 'de'
+            }, function (err, res) {
+                if(typeof(err) != 'undefined') {
+                    log.dbg('Errors fetching ' + actor.name + ' with error: ' + err);
 
-            async.mapSeries(res, function (tmdbActor, callback) {
-                tmdb.Person.getInfo({
-                    query: tmdbActor.id.toString(),
-                    lang: 'de'
-                }, function (err, res) {
-                    if(typeof(err) != 'undefined') {
-                        log.dbg('Errors fetching ' + actor.name + ' with error: ' + err);
+                    callback(null, null);
+                    return;
+                }
 
-                        callback(null, null);
+                var name = new RegExp("^" + actor.name + "$", 'ig');
 
-                        return;
-                    }
+                if (name.test(res[0].name)) {
+                    actorDetails.findOne({tmdbId: tmdbActor.id}, function (err, doc) {
+                        if (doc == null) {
+                            res[0].tmdbId = tmdbActor.id;
 
-                    var name = new RegExp("^" + actor.name + "$", 'ig');
+                            var actorDetailsSchema = new actorDetails(res[0]);
+                            actorDetailsSchema.save(function (err) {
+                                if (err == null) {
+                                    actor.set({tmdbId: actorDetailsSchema._id});
 
-                    if (name.test(res[0].name)) {
-                        res[0].tmdbId = tmdbActor.id;
-                        //res[0].actorID = actorId;
-
-                        var actorDetailsSchema = new actorDetails(res[0]);
-                        actorDetailsSchema.save(function () {
-                            actor.set({tmdbId: actorDetailsSchema._id});
-
+                                    actor.save(function () {
+                                        log.dbg('Details saved for: ' + actor.name);
+                                        callback('Fin');
+                                    });
+                                } else {
+                                    callback('Fin');
+                                }
+                            });
+                        } else {
+                            actor.set({tmdbId: doc._id});
                             actor.save(function () {
                                 log.dbg('Details saved for: ' + actor.name);
-                                callback('Fin');
+                                callback('fin');
                             });
-                        });
-                    } else {
-                        callback(null, null);
-                    }
-                });
-            }, function (err, result) {
-                actor.set({tmdbSearched: new Date().getTime()});
-                actor.save(function () {
-                    callback();
-                });
+                        }
+                    });
+                } else {
+                    callback(null, null);
+                }
             });
-        }
+        }, function (err, result) {
+            actor.set({tmdbSearched: new Date().getTime()});
+            actor.save(function () {
+                callback();
+            });
+        });
     });
 };
 
