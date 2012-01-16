@@ -18,6 +18,8 @@ Actor.prototype.fetchInformation = function (actor, callback) {
         lang: 'de'
     }, function (err, res) {
         if(typeof(err) != 'undefined') {
+            log.dbg('Errors fetching ' + actor.name + ' with error: ' + err);
+            
             callback.call();
             return;
         }
@@ -40,12 +42,9 @@ Actor.prototype.fetchInformation = function (actor, callback) {
                     lang: 'de'
                 }, function (err, res) {
                     if(typeof(err) != 'undefined') {
-                        log.dbg('some error: ' + err);
+                        log.dbg('Errors fetching ' + actor.name + ' with error: ' + err);
 
-                        actor.set({tmdbSearched: new Date().getTime()});
-                        actor.save(function () {
-                            callback('Fin');
-                        });
+                        callback(null, null);
 
                         return;
                     }

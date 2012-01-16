@@ -1,9 +1,9 @@
 var ActorDetailSchema = new Schema({
-    actors: {
-        type: Schema.ObjectId,
-        ref: 'Actor',
-        required: false
-    },
+    tmdbid: {
+        type: Number,
+        required: true,
+        unique: true
+    }
 });
 
 mongoose.model('ActorDetail', ActorDetailSchema);

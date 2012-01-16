@@ -469,10 +469,10 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
 
                 importer.evaluateType(function () {
                     if (data.get('fetchThetvdbSeasons')) {
-                        var seasonDetails = new SeasonDetails();
-                        seasonDetails.fetchAll();
+                        //var seasonDetails = new SeasonDetails();
+                        //seasonDetails.fetchAll();
                     } else {
-                        log.inf('Tmdb Movies fetching disabled ..');
+                        log.inf('Thetvdb Seasons fetching disabled ..');
                     }
                 });
             });
