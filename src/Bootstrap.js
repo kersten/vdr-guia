@@ -5,6 +5,7 @@ var uuid = require('node-uuid');
 var assetManager = require('connect-assetmanager');
 var assetHandler = require('connect-assetmanager-handlers');
 var async = require('async');
+var file = require('file');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -305,6 +306,48 @@ Bootstrap.prototype.setupSocketIo = function () {
 Bootstrap.prototype.setupViews = function () {
     var ConfigurationSchema = mongoose.model('Configuration');
     log.dbg('Setting up views ..');
+    
+    var templates = new Array();
+    var jsFiles = new Array();
+    
+    file.walkSync(__dirname + '/html/templates', function (path, subDirs, files) {
+        if (!path.match('Install')) {
+            files.forEach(function (file) {
+                file = file.replace('index.html', '').replace('.html', '');
+                
+                var template = path + '/' + file;
+                var templateId = template.replace(__dirname + '/html/templates', '').replace(/\//g, '');
+                
+                log.dbg('Select template: ' + template + ' :: ' + templateId);
+                templates.push({
+                    id: templateId,
+                    path: path + '/' + file
+                });
+            });
+        }
+    });
+    
+    var walkThroughJs = new Array(
+        __dirname + '/share/www/js/jquery',
+        __dirname + '/share/www/js/jquery-plugins',
+        __dirname + '/share/www/js/backbone',
+        __dirname + '/share/www/js/models',
+        __dirname + '/share/www/js/collections',
+        __dirname + '/share/www/js/views'
+    );
+    
+    walkThroughJs.forEach(function (dir) {
+        file.walkSync(dir, function (path, subDirs, files) {
+            if (!path.match('Install')) {
+                files.forEach(function (file) {
+                    var jsFile = (path + '/' + file).replace(__dirname + '/share/www', '');
+                
+                    log.dbg('Select js: ' + jsFile);
+                    jsFiles.push(jsFile);
+                });
+            }
+        });
+    });
 
     this.app.all('*', function (req, res, next) {
         if (!installed && !req.url.match(/^\/templates\/install/)) {
@@ -343,7 +386,9 @@ Bootstrap.prototype.setupViews = function () {
                     isLoggedIn: req.session.loggedIn,
                     vdr: JSON.stringify(vdr.plugins),
                     guia: JSON.stringify(data),
-                    env: self.env
+                    env: self.env,
+                    templates: templates,
+                    jsFiles: jsFiles
                 });
             });
         });

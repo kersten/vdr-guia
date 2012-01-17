@@ -36,7 +36,8 @@
         "node-uuid": ">= 1.2.0",
         "MQTTClient": ">= 0.0.1",
         "connect-assetmanager": "*",
-        "connect-assetmanager-handlers": "*"
+        "connect-assetmanager-handlers": "*",
+		"file": "*"
     },
     "licenses":[{
         "type" : "MIT",
