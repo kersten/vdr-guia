@@ -1,36 +1,17 @@
 <div class="page-header" id="header_div" title="GUIA // <%= __('Recordings') %>">
-    <h1><%- __('Recordings <small>What\'s up today ..</small>') %></h1>
+    <h1><%- __('Recordings') %></h1>
 </div>
+
 <div class="row">
-    <div class="span16 columns" id="recordingslist" style="overflow: auto;">
-        <table class="zebra-striped bordered-table">
-            <tbody>
-                <& recordings.each(function (recording) { &>
-                    <& if (recording.has('directory') && recording.get('directory') == true) { &>
-                    <tr channelid="<&= recording.get('channel_id') &>" channel_name="<&= recording.get('name') &>" hasimage="<&= recording.get('image') &>" style="cursor: pointer;">
-                        <td><&= recording.get('name') &><span>+</span></td>
-                    </tr>
-                    <& } else { &>
-                    <tr number="<&= recording.get('number') &>" title="<&= recording.get('event_title') &>" isNew="<&= recording.get('is_new') &>" isFile="true" style="cursor: pointer;">
-                        <td><&= recording.get('event_title') &></td>
-                    </tr>
-                    <& } &>
-                <& }); &>
-            </tbody>
-        </table>
+    <div class="span16 columns">
+        <ul class="tabs" data-tabs="tabs">
+            <li style="cursor: pointer;" data-section="Recordings"><a><%- __('Recordings') %></a></li>
+            <li style="cursor: pointer;" data-section="Scheduled"><a><%- __('Scheduled') %></a></li>
+            <li style="cursor: pointer;" data-section="Cutting"><a><%- __('Cutting') %></a></li>
+        </ul>
     </div>
 </div>
 
-<div id="recording_details" class="modal hide fade" style="display: none; ">
-    <div class="modal-header">
-        <a href="#" class="close">×</a>
-        <h3></h3>
-    </div>
-    <div class="modal-body">
-        <p></p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn"><%= __('Close') %></button>
-        <button class="btn danger"><%= __('Delete') %></button>
-    </div>
+<div class="row" id="recordingssection">
+
 </div>

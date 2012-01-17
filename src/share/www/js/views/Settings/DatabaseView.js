@@ -1,6 +1,6 @@
 var SettingsDatabaseView = Backbone.View.extend({
     template: 'SettingsDatabaseTemplate',
-    className: 'span14 columns',
+    className: 'span16 columns',
     
     events: {
         'click button[action*="resetDatabase"]': 'resetDatabase',

@@ -43,13 +43,5 @@ var SettingsView = Backbone.View.extend({
         $('#settingssection', this.el).html(this.subView.render().el);
         
         GUIA.router.navigate('!/Settings/' + this.options.section);
-    },
-
-    loadView: function (section) {
-        Application.loadingOverlay('show');
-
-        Application.loadSubView('Settings/' + section, function (req, original) {
-            Application.currentSubView.renderTemplate();
-        });
     }
 });

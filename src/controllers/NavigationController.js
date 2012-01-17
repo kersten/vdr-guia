@@ -20,7 +20,7 @@ io.sockets.on('connection', function (socket) {
                     view: 'Help'
                 }, {
                     title: __('Shortcuts'),
-                    view: 'Help/Shortcuts'
+                    view: 'Shortcuts'
                 }, {
                     title: __('Settings'),
                     view: 'Settings'

@@ -1,48 +1,63 @@
 var SearchView = Backbone.View.extend({
-    url: "search",
+    template: 'SearchTemplate',
     
-    events: {
-        'click #showAdvancedSearchoptions': 'showAdvancedSearchoptions',
-        'keypress #searchinputfield': 'search'
+    events: {},
+    
+    initialize: function () {
+        /*if (this.options.query !== undefined) {
+            $('#search').val(this.options.query);
+            this.liveSearch();
+        } else {
+            this.options.query = '';
+        }*/
+        
+        var self = this;
+        
+        $('#search').live('keydown', function () {
+            self.options.query = $(this).val();
+            self.liveSearch.apply(self);
+        });
     },
     
-    showAdvancedSearchoptions: function (event) {
-        switch ($(event.currentTarget).text()) {
-        case '+':
-            $(event.currentTarget).text('-');
-            $('#advancedSearchoptions').slideDown();
-            $('#searchinputfield').focus();
-            break;
-            
-        case '-':
-            $(event.currentTarget).text('+');
-            $('#advancedSearchoptions').slideUp();
-            $('#searchinputfield').focus();
-            break;
+    render: function () {
+        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
+        return this;
+    },
+    
+    liveSearch: function () {
+        if (this.timeoutId !== undefined) {
+            clearTimeout(this.timeoutId);
         }
-    },
-    
-    postRender: function () {
-        $('#searchinputfield').focus();
-    },
-    
-    search: function (event) {
-        if (event.keyCode == 13) {
-            $('#showAdvancedSearchoptions').text('+');
-            $('#advancedSearchoptions').slideUp();
-            
-            $(event.currentTarget).attr('disabled', true);
-            $(event.currentTarget).blur();
-            
-            Application.loadingOverlay('show');
-            
-            Application.loadSubView('/Searchresults', function (req, original) {
-                Application.currentSubView.renderTemplate($(event.currentTarget).val(), 1, function () {
-                    $(event.currentTarget).attr('disabled', false);
-                });
+        
+        if (this.options.query == '') {
+            return;
+        }
+        
+        var self = this;
+
+        this.timeoutId = setTimeout(function () {
+            var searchresult = new SearchresultModel();
+            searchresult.fetch({
+                data: {
+                    query: self.options.query
+                }, success: function () {
+                    var eventsView = new SearchEventsView({
+                        el: $('#searchevents', self.el),
+                        model: searchresult.get('events')
+                    });
+                    
+                    eventsView.render();
+                    
+                    var actorsView = new SearchActorsView({
+                        el: $('#searchactors', self.el),
+                        model: searchresult.get('actors')
+                    });
+                    
+                    actorsView.render();
+                    
+                    GUIA.router.navigate('!/Search/' + $('#search').val());
+                }
             });
-            
-            return false;
-        }
+        }, 300);
     }
 });

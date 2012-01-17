@@ -10,10 +10,11 @@ function Season (title, episode) {
     this.episode = episode;
 }
 
-Season.prototype.fetchInformation = function () {
-    var self = this;
+Season.prototype.fetchInformation = function (season, next) {
+    log.dbg('Fetching season informations for: ' + season.title);
+    next();
 
-    seasonDetails.findOne({'epg_name': self.title}, function (err, doc) {
+    /*seasonDetails.findOne({'epg_name': self.title}, function (err, doc) {
         if (doc == null) {
             tmdb.Movie.search({
                 query: self.title,
@@ -44,6 +45,33 @@ Season.prototype.fetchInformation = function () {
                 }
             });
         }
+    });*/
+};
+
+Season.prototype.fetchAll = function (callback) {
+    var self = this;
+    
+    var query = events.find({
+        themoviedbId: {$exists: false},
+        themoviedbSearched: {$exists: false}
+    });
+
+    query.or([{ category: new RegExp('serie', 'ig') }, { type: new RegExp('serie', 'ig') }]);
+    query.sort('title', 1);
+
+    query.each(function (err, season, next) {
+        if (season == null) {
+            log.dbg('Fetching Seasons finished ..');
+            callback();
+            return;
+        }
+
+        if (season.title === undefined) {
+            next();
+            return;
+        }
+
+        self.fetchInformation(season, next);
     });
 };
 

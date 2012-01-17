@@ -68,10 +68,13 @@ var GUIA = {
             '!/Event/:id': 'eventRoute',
             '!/Event/:id/:view': 'eventRoute',
             '!/Person/:id': 'personRoute',
+            '!/Search': 'searchRoute',
+            '!/Search/:q': 'searchRoute',
             '!/Recordings': 'recordingsRoute',
+            '!/Recordings/:section': 'recordingsRoute',
             '!/Me': 'profileRoute',
             '!/Help': 'helpRoute',
-            '!/Help/Shortcuts': 'helpShortcutsRoute',
+            '!/Shortcuts': 'shortcutsRoute',
             '!/Settings': 'settingsRoute',
             '!/Settings/:section': 'settingsRoute',
             '!/About': 'aboutRoute',
@@ -160,9 +163,20 @@ var GUIA = {
                 GUIA.loadingOverlay('hide');
             });
         },
+        
+        searchRoute: function (q) {
+            this.currentView = new SearchView({
+                query: q
+            });
+            
+            $('#body').html(this.currentView.render().el);
+        },
 
-        recordingsRoute: function () {
-            this.currentView = new RecordingsView();
+        recordingsRoute: function (section) {
+            this.currentView = new RecordingsView({
+                section: section
+            });
+            
             $('#body').html(this.currentView.render().el);
         },
 
@@ -176,8 +190,8 @@ var GUIA = {
             $('#body').html(this.currentView.render().el);
         },
 
-        helpShortcutsRoute: function () {
-            this.currentView = new HelpShortcutsView();
+        shortcutsRoute: function () {
+            this.currentView = new ShortcutsView();
             $('#body').html(this.currentView.render().el);
         },
 

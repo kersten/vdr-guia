@@ -4,6 +4,7 @@ var rest = require('restler');
 var uuid = require('node-uuid');
 var assetManager = require('connect-assetmanager');
 var assetHandler = require('connect-assetmanager-handlers');
+var async = require('async');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -110,7 +111,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
     });
 
     app.configure('production', function () {
-        logging.setLevel('error');
+        logging.setLevel('info');
 
         var assets = {
             js: {
@@ -417,15 +418,16 @@ Bootstrap.prototype.setupVdr = function () {
         setTimeout(function () {
             self.setupVdr();
         }, 300000);
+        
+        self.setupExtendedDetails();
     });
 };
 
 Bootstrap.prototype.setupEpgImport = function (restful) {
+    var self = this;
+    
     var config = mongoose.model('Configuration');
     var EpgImport = require('./lib/Epg/Import');
-    var ActorDetails = require('./lib/Actor');
-    var MovieDetails = require('./lib/Movie');
-    var SeasonDetails = require('./lib/Season');
     var importer = new EpgImport(restful, 250);
 
     function runImporter () {
@@ -448,38 +450,79 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
                         }, (1000 * 60 * 60) * doc.epgscandelay);
                     }
                 });
+                
+                self.setupExtendedDetails();
             }
-
-            var ConfigurationSchema = mongoose.model('Configuration');
-
-            ConfigurationSchema.findOne({}, function (err, data) {
-                if (data.get('fetchTmdbActors')) {
-                    var actorDetails = new ActorDetails();
-                    actorDetails.fetchAll();
-                } else {
-                    log.inf('Tmdb Actors fetching disabled ..');
-                }
-
-                if (data.get('fetchTmdbMovies')) {
-                    var movieDetails = new MovieDetails();
-                    movieDetails.fetchAll();
-                } else {
-                    log.inf('Tmdb Movies fetching disabled ..');
-                }
-
-                importer.evaluateType(function () {
-                    if (data.get('fetchThetvdbSeasons')) {
-                        //var seasonDetails = new SeasonDetails();
-                        //seasonDetails.fetchAll();
-                    } else {
-                        log.inf('Thetvdb Seasons fetching disabled ..');
-                    }
-                });
-            });
         });
     }
 
     runImporter();
+};
+
+Bootstrap.prototype.setupExtendedDetails = function () {
+    if (this.extendedDetailsRunning === true) {
+        return;
+    }
+    
+    this.extendedDetailsRunning = true;
+    
+    var self = this;
+    var config = mongoose.model('Configuration');
+    var ActorDetails = require('./lib/Actor');
+    var MovieDetails = require('./lib/Movie');
+    var SeasonDetails = require('./lib/Season');
+    var EpgImport = require('./lib/Epg/Import');
+    var importer = new EpgImport();
+    
+    var ConfigurationSchema = mongoose.model('Configuration');
+
+    ConfigurationSchema.findOne({}, function (err, data) {
+        async.parallel([function (callback) {
+            importer.evaluateType(function () {
+                if (data.get('fetchThetvdbSeasons')) {
+                    log.inf('Thetvdb Seasons fetching started ..');
+                    
+                    var seasonDetails = new SeasonDetails();
+                    seasonDetails.fetchAll(function () {
+                        log.inf('Thetvdb Seasons fetching finished ..');
+                        callback(null, null);
+                    });
+                } else {
+                    log.inf('Thetvdb Seasons fetching disabled ..');
+                    callback(null, null);
+                }
+            });
+        }, function (callback) {
+            if (data.get('fetchTmdbMovies')) {
+                log.inf('Tmdb Movies fetching started ..');
+                
+                var movieDetails = new MovieDetails();
+                movieDetails.fetchAll(function () {
+                    log.inf('Tmdb Movies fetching finished ..');
+                    callback(null, null);
+                });
+            } else {
+                log.inf('Tmdb Movies fetching disabled ..');
+                callback(null, null);
+            }
+        }, function (callback) {
+            if (data.get('fetchTmdbActors')) {
+                log.inf('Tmdb Actors fetching started ..');
+                
+                var actorDetails = new ActorDetails();
+                actorDetails.fetchAll(function () {
+                    log.inf('Tmdb Actors fetching finished ..');
+                    callback(null, null);
+                });
+            } else {
+                log.inf('Tmdb Actors fetching disabled ..');
+                callback(null, null);
+            }
+        }], function (err, result) {
+            log.inf('Extended details fetching finished ..');
+            self.extendedDetailsRunning = false;
+        });
+    });
 };
 
 Bootstrap.prototype.setupTimer = function (restful) {

@@ -1,48 +1,47 @@
 var RecordingsView = Backbone.View.extend({
-    url: "recordings",
+    template: "RecordingsTemplate",
     
     events: {
-        'click tr[isFile="true"]': "showEvent"
+        'click .tabs > li': 'switchSection'
     },
     
-    showEvent: function (event) {
-        console.log($(event.currentTarget));
-        socket.emit('Recording:readOne', {
-            number: $(event.currentTarget).attr('number')
-        }, function (data) {
-            $('#recording_details > .modal-header > h3').text(data.event_title);
-            $('#recording_details > .modal-body > p').text(data.event_description);
-            $('#recording_details').modal({backdrop: true, keyboard: true, show: true});
-            
-            $('#recording_details > .modal-footer > button:first-child').click(function () {
-                $('#recording_details').modal('hide');
-            });
-            
-            $('#recording_details > .modal-footer > button:nth-child(2)').click(function () {
-                $(this).button('loading');
-                alert('Delete This Recording');
-                $('#recording_details').modal('hide');
-            });
-        });
+    initialize: function () {
+        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
+        
+        if (this.options.section === undefined) {
+            this.options.section = 'Recordings';
+        }
+        
+        $('.tabs > li[data-section="' + this.options.section + '"]', this.el).addClass('active');
+        
+        this.loadSection();
     },
-    
-    generateHTML: function (callback) {
-        var self = this;
-        this.recordings = new RecordingCollection();
 
-        this.recordings.fetch({success: function (collection) {
-            callback.apply(this, [_.template(self.template, {recordings: collection})]);
-        }});
+    render: function () {
+        return this;
     },
     
-    postRender: function () {
-        var diff = $('#content').height() - $('#recordingslist').parent().height() - $('#header_div').height();
+    switchSection: function (ev) {
+        if ($(ev.currentTarget).hasClass('active')) {
+            return;
+        }
+
+        $('.tabs').find('li.active').removeClass('active');
+        $(ev.currentTarget).addClass('active');
         
-        $('#recordingslist').parent().css('height', $(window).height() - $('#recordingslist').parent().offset().top - diff).data({
-            height: $(window).height() - $('#recordingslist').offset().top,
-            top: $('#recordingslist').offset().top
-        });
+        this.options.section = $(ev.currentTarget).data('section');
         
-        $('#recordingslist').css('height', '100%');
+        this.loadSection();
+    },
+
+    loadSection: function () {
+        if (this.subView != null) {
+            this.subView.remove();
+        }
+        
+        this.subView = new window['Recordings' + this.options.section + 'View']({});
+        $('#settingssection', this.el).html(this.subView.render().el);
+        
+        GUIA.router.navigate('!/Recordings/' + this.options.section);
     }
 });

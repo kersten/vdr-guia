@@ -138,7 +138,13 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 
                 var romanTitle = new RegExp("^" + movieRoman + "$", 'ig');
 
-                if (title.test(res.original_name) || title.test(res.name) || romanTitle.test(res.name) || romanTitle.test(res.original_name)) {
+                if (title.test(res.original_name)
+                    || title.test(res.name)
+                    || title.test(res.alternative_name)
+                    || romanTitle.test(res.name)
+                    || romanTitle.test(res.original_name)
+                    || romanTitle.test(res.alternative_name)
+                ) {
                     movieDetails.findOne({tmdbId: tmdbMovie.id}, function (err, doc) {
                         if (doc == null) {
                             var tmpMovie = res;
@@ -207,7 +213,7 @@ Movie.prototype.fetchInformation = function (movie, callback) {
     });
 };
 
-Movie.prototype.fetchAll = function () {
+Movie.prototype.fetchAll = function (callback) {
     var self = this;
     var query = events.find({
         tmdbId: {$exists: false},
@@ -220,6 +226,7 @@ Movie.prototype.fetchAll = function () {
     query.each(function (err, movie, next) {
         if (movie == null) {
             log.dbg('Fetching movies finished ..');
+            callback();
             return;
         }
 

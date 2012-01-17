@@ -212,6 +212,35 @@ var TVGuideView = Backbone.View.extend({
 
         // Append the generate HTML to the #body div
         $('#body').html(this.el);
+        
+        var top = $('#channels').offset().top - 40;
+        var floating = false;
+        
+        $(window).scroll(function (event) {
+            var y = $(this).scrollTop();
+            
+            if (y >= top) {
+                if (!floating) {
+                    floating = true;
+                    $('#channels').clone().attr('id', 'channels_tmp').insertBefore($('#channels'));
+                    
+                    $('#channels').css({
+                        position: 'fixed',
+                        top: 40,
+                        zIndex: 100000000000
+                    });
+                }
+            } else {
+                floating = false;
+                $('#channels').css({
+                    position: 'relative',
+                    top: 0,
+                    zIndex: '0'
+                });
+                
+                $('#channels_tmp').remove();
+            }
+        });
 
         // Hide the loading spinner animation
         GUIA.loadingOverlay('hide');

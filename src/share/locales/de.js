@@ -87,5 +87,13 @@
 	"3 Hours": "3 Hours",
 	"4 Hours": "4 Hours",
 	"5 Hours": "5 Hours",
-	"Back to TVGuide": "Back to TVGuide"
+	"Back to TVGuide": "Back to TVGuide",
+	"Recordings <small>What's up today ..</small>": "Recordings <small>What's up today ..</small>",
+	"Delete": "Delete",
+	"Planned": "Planned",
+	"Searchtimer": "Searchtimer",
+	"Cutting": "Cutting",
+	"Scheduled": "Scheduled",
+	"My profile": "My profile",
+	"Search": "Search"
 }

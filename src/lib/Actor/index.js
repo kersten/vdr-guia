@@ -88,7 +88,7 @@ Actor.prototype.fetchInformation = function (actor, callback) {
     });
 };
 
-Actor.prototype.fetchAll = function () {
+Actor.prototype.fetchAll = function (callback) {
     var self = this;
     var query = actors.find({
         tmdbId: {$exists: false},
@@ -100,6 +100,7 @@ Actor.prototype.fetchAll = function () {
     query.each(function (err, actor, next) {
         if (actor == null) {
             log.dbg('Fetching actors finished ..');
+            callback();
             return;
         }
 

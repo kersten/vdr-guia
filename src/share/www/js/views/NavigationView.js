@@ -1,6 +1,14 @@
 var NavigationView = Backbone.View.extend({
     template: null,
 
+    events: {
+        'click a.brand': 'navigate',
+        'click li > a': 'navigate',
+        'click #loginBtn': "login",
+        'click #logoutBtn': "logout",
+        'keypress #search': 'loadSearch'
+    },
+
     initialize: function () {
         var self = this;
 
@@ -71,18 +79,18 @@ var NavigationView = Backbone.View.extend({
         });
     },
 
-    events: {
-        'click a.brand': 'navigate',
-        'click li > a': 'navigate',
-        'click #loginBtn': "login",
-        'click #logoutBtn': "logout",
-        'keypress #search': 'liveSearch'
-    },
-
     navigate: function (ev) {
         if ($(ev.currentTarget).data('view') !== undefined) {
             GUIA.router.navigate('!/' + $(ev.currentTarget).data('view'), true);
         }
+    },
+    
+    loadSearch: function () {
+        if (location.href.match(/\!\/Search/)) {
+            return;
+        }
+        
+        GUIA.router.navigate('!/Search', true);
     },
 
     login: function (event) {
@@ -146,31 +154,5 @@ var NavigationView = Backbone.View.extend({
                 }});
             });
         });
-    },
-
-    liveSearch: function (ev) {
-        if (this.timeoutId !== undefined) {
-            clearTimeout(this.timeoutId);
-        }
-
-        this.timeoutId = setTimeout(function () {
-            var searchresult = new SearchresultModel();
-            searchresult.fetch({
-                data: {
-                    query: $(ev.currentTarget).val()
-                }, success: function () {
-                    _.each(searchresult.get('events'), function (event) {
-                        var start = new Date();
-                        start.setTime(event.start);
-
-                        console.log(event.title + '(' + start.getHours() + ':' + start.getMinutes() + ')');
-                    });
-
-                    _.each(searchresult.get('actors'), function (actor) {
-                        console.log(actor.name + ' as ' + actor.character);
-                    });
-                }
-            });
-        }, 300);
     }
 });

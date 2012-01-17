@@ -97,14 +97,17 @@
         <!-- Include views -->
         <script type="text/javascript" src="/js/views/AboutView.js"></script>
         <script type="text/javascript" src="/js/views/ContactView.js"></script>
+        <script type="text/javascript" src="/js/views/HelpView.js"></script>
         <script type="text/javascript" src="/js/views/HighlightsView.js"></script>
         <script type="text/javascript" src="/js/views/EventView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuideView.js"></script>
         <script type="text/javascript" src="/js/views/NavigationView.js"></script>
         <script type="text/javascript" src="/js/views/RecordingsView.js"></script>
         <script type="text/javascript" src="/js/views/PersonView.js"></script>
+        <script type="text/javascript" src="/js/views/ProfileView.js"></script>
         <script type="text/javascript" src="/js/views/SearchView.js"></script>
         <script type="text/javascript" src="/js/views/SettingsView.js"></script>
+        <script type="text/javascript" src="/js/views/ShortcutsView.js"></script>
         <script type="text/javascript" src="/js/views/WelcomeView.js"></script>
 
         <!-- subviews -->
@@ -122,6 +125,11 @@
         <script type="text/javascript" src="/js/views/TVGuide/PaginationView.js"></script>
         <script type="text/javascript" src="/js/views/TVGuide/PopoverView.js"></script>
         <script type="text/javascript" src="/js/views/Channel/Select/DialogView.js"></script>
+        <script type="text/javascript" src="/js/views/Search/EventsView.js"></script>
+        <script type="text/javascript" src="/js/views/Search/ActorsView.js"></script>
+        <script type="text/javascript" src="/js/views/Recordings/CuttingView.js"></script>
+        <script type="text/javascript" src="/js/views/Recordings/RecordingsView.js"></script>
+        <script type="text/javascript" src="/js/views/Recordings/ScheduledView.js"></script>
 
         <!-- Include models -->
         <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
@@ -224,6 +232,18 @@
         <script type="text/template" id="PersonTemplate">
             <%- partial('templates/Person') %>
         </script>
+        
+        <script type="text/template" id="SearchTemplate">
+            <%- partial('templates/Search') %>
+        </script>
+        
+        <script type="text/template" id="SearchEventsTemplate">
+            <%- partial('templates/Search/Events') %>
+        </script>
+        
+        <script type="text/template" id="SearchActorsTemplate">
+            <%- partial('templates/Search/Actors') %>
+        </script>
 
         <script type="text/template" id="TVGuideTemplate">
             <%- partial('templates/TVGuide') %>
@@ -247,6 +267,34 @@
 
         <script type="text/template" id="ChannelSelectDialogTemplate">
             <%- partial('templates/Channel/Select/Dialog') %>
+        </script>
+        
+        <script type="text/template" id="RecordingsTemplate">
+            <%- partial('templates/Recordings') %>
+        </script>
+        
+        <script type="text/template" id="RecordingsCuttingTemplate">
+            <%- partial('templates/Recordings/Cutting') %>
+        </script>
+        
+        <script type="text/template" id="RecordingsRecordingsTemplate">
+            <%- partial('templates/Recordings/Recordings') %>
+        </script>
+        
+        <script type="text/template" id="RecordingsScheduledTemplate">
+            <%- partial('templates/Recordings/Scheduled') %>
+        </script>
+        
+        <script type="text/template" id="ProfileTemplate">
+            <%- partial('templates/Profile') %>
+        </script>
+        
+        <script type="text/template" id="HelpTemplate">
+            <%- partial('templates/Help') %>
+        </script>
+        
+        <script type="text/template" id="ShortcutsTemplate">
+            <%- partial('templates/Shortcuts') %>
         </script>
 
         <script type="text/template" id="SettingsTemplate">
@@ -293,7 +341,7 @@
 
             </div>
             <footer id="footer">
-                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011 - <a href="/!/About">About</a></p>
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011/2012 - <a href="/!/About">About</a></p>
                 <div style="float: right; margin-top: -50px;"><div id="flattr"></div></div>
             </footer>
         </div>

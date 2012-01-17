@@ -1,6 +1,6 @@
 var SettingsChannelsView = Backbone.View.extend({
     template: 'SettingsChannelsTemplate',
-    className: 'span14 columns',
+    className: 'span16 columns',
 
     events: {
         'change #selectAllChannels': 'changeAllStates'

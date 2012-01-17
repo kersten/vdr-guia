@@ -55,7 +55,7 @@ EpgTimer.prototype.create = function (event, callback) {
         });
     }).on('error', function () {
         events.update({_id: event._id}, {timer_active: true}, null, function () {
-            callback(data.timers[0]);
+            callback();
         });
     });
 };
@@ -70,6 +70,7 @@ EpgTimer.prototype.del = function (event, callback) {
             });
         }).on('error', function () {
             events.update({_id: event._id}, {timer_active: false}, null, function () {
+                callback();
             });
         });
     } else {

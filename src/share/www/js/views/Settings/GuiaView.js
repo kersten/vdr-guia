@@ -1,6 +1,6 @@
 var SettingsGuiaView = Backbone.View.extend({
     template: 'SettingsGuiaTemplate',
-    className: 'span14 columns',
+    className: 'span16 columns',
 
     initialize: function () {
         $(this.el).html(_.template( $('#' + this.template).html(), {} ));

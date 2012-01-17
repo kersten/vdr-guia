@@ -9,14 +9,17 @@
     </div>
 </div>
 
-<div class="row" id="channels">
+<div class="row" id="channels" style="background-color: #FFFFFF">
     <div class="span4"></div>
     <div class="span4"></div>
     <div class="span4"></div>
     <div class="span4"></div>
 </div>
 
-<div class="row">
+<div class="row" style="height: auto; position: raltive;">
+    <div style="position: absolute; float: left; margin-left: 0px; width: 20px; height: 100%;">
+        &lt;
+    </div>
     <div class="span16" id="guide">
         <div class="slideUp <&= (show != 'morning' && show != 'all') ? 'sectionHidden' : '' &>" style="background-color: whiteSmoke; padding: 5px; text-align: center; cursor: pointer;" data-section="morning"><strong><%- __('Morning program - 5.00 to 12.00 o\'clock') %></strong></div>
         <div class="morning eventsection <&= (show != 'morning' && show != 'all') ? 'hide' : '' &>" data-from="5" data-to="12">
