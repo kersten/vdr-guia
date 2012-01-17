@@ -80,23 +80,10 @@
 
         <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js?mode=auto"></script>
 
-        <% if (env == 'developement') { %>
-        <% } else { %>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/js/async.js"></script>
-
-        <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
-        <script type="text/javascript" src="/js/backbone/underscore.js"></script>
-        <script type="text/javascript" src="/js/backbone/backbone.js"></script>
-
-        <script type="text/javascript" src="/app.js"></script>
-        <script type="text/javascript" src="/js/jquery-plugins/bootstrap-dropdown.js"></script>
-        <% } %>
-        
         <% jsFiles.forEach(function (file) { %>
             <script type="text/javascript" src="<%= file %>"></script>
         <% }); %>
-        
+
         <% templates.forEach(function (template) { %>
             <script type="text/template" id="<%= template.id %>Template">
                 <%- partial(template.path) %>

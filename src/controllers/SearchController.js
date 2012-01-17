@@ -1,4 +1,4 @@
-var events = mongoose.model('Event');
+var Epg = require('../lib/Epg');
 var actors = mongoose.model('Actor');
 var async = require('async');
 
@@ -17,20 +17,13 @@ io.sockets.on('connection', function (socket) {
 
         async.parallel([
             function (callback) {
-                var i = 0;
-                var query = events.find({});
-                
-                query.or([{title: new RegExp(data.query, "ig")}, {description: new RegExp(data.query, "ig")}]);
+                var epg = new Epg();
+                epg.searchEvents(data.query, 10, function (docs) {
+                    console.log(docs);
 
-                query.sort('start', 1);
-                query.populate('tmdbId');
-                query.limit(10);
-
-                query.exec(function (err, docs) {
                     docs.forEach(function (doc) {
                         if (result.events[doc.title] === undefined) {
                             result.events[doc.title] = doc;
-                            i++;
                         }
                     });
 

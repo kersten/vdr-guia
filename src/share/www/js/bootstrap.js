@@ -98,4 +98,6 @@ XDate.parsers.unshift(function (str) {
             parseInt(parts[0], 10) // date
         );
     }
+
+    return false;
 });

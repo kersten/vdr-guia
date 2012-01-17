@@ -2,8 +2,6 @@ var fs = require("fs");
 var i18n = require('i18n');
 var rest = require('restler');
 var uuid = require('node-uuid');
-var assetManager = require('connect-assetmanager');
-var assetHandler = require('connect-assetmanager-handlers');
 var async = require('async');
 var file = require('file');
 
@@ -87,6 +85,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
             register: global
         });
 
+        app.use(express.static(__dirname + '/share/www'));
         app.use(express.favicon(__dirname + '/share/www/icons/favicon.ico'));
 
         /*
@@ -106,87 +105,12 @@ Bootstrap.prototype.setupExpress = function (cb) {
         self.env = 'developement';
         logging.setLevel('debug');
 
-        app.use(express.static(__dirname + '/share/www'));
         app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
         app.use(logging.requestLogger);
     });
 
     app.configure('production', function () {
         logging.setLevel('info');
-
-        var assets = {
-            js: {
-                route: /\/app.js/,
-                path: __dirname + '/share/www/js/',
-                dataType: 'javascript',
-                files: [
-                    'jquery-plugins/blinky.js',
-                    'jquery-plugins/bootstrap-buttons.js',
-                    'jquery-plugins/bootstrap-modal.js',
-                    'jquery-plugins/bootstrap-twipsy.js',
-                    'jquery-plugins/bootstrap-popover.js',
-                    'jquery-plugins/bootstrap-scrollspy.js',
-                    'jquery-plugins/bootstrap-tabs.js',
-                    'jquery-plugins/jquery.fancybox.js',
-                    'jquery-plugins/spin.min.js',
-                    'models/ChannelModel.js',
-                    'models/ConfigurationModel.js',
-                    'models/EventModel.js',
-                    'models/LogoModel.js',
-                    'models/NavigationModel.js',
-                    'models/RawEventModel.js',
-                    'models/RecordingModel.js',
-                    'models/SearchresultModel.js',
-                    'models/SearchtimerModel.js',
-                    'models/TimerModel.js',
-                    'models/TVGuideModel.js',
-                    'utils/sha512.js',
-                    'utils/xdate.js',
-                    'collections/ChannelCollection.js',
-                    'collections/EventCollection.js',
-                    'collections/LogoCollection.js',
-                    'collections/NavigationCollection.js',
-                    'collections/RecordingCollection.js',
-                    'collections/SearchresultCollection.js',
-                    'collections/SearchtimerCollection.js',
-                    'collections/TimerCollection.js',
-                    'collections/TVGuideCollection.js',
-                    'views/AboutView.js',
-                    'views/ContactView.js',
-                    'views/EventView.js',
-                    'views/HelpView.js',
-                    'views/HighlightsView.js',
-                    'views/LogoutView.js',
-                    'views/NavigationView.js',
-                    'views/ProfileView.js',
-                    'views/RecordingsView.js',
-                    'views/SearchView.js',
-                    'views/SettingsView.js',
-                    'views/TVGuideView.js',
-                    'views/WelcomeView.js',
-                    'views/Channel/Select/DialogView.js',
-                    'views/Help/ShortcutsView.js',
-                    'views/Settings/ChannelsView.js',
-                    'views/Settings/DatabaseView.js',
-                    'views/Settings/GuiaView.js',
-                    'views/TVGuide/ChannelView.js',
-                    'views/TVGuide/EventView.js',
-                    'views/TVGuide/PaginationView.js',
-                    'bootstrap.js',
-                    'Application.js'
-                ],
-                postManipulate: {
-                    '^': [
-                        //assetHandler.uglifyJsOptimize
-                    ]
-                }
-            }
-        };
-
-        var assetsManagerMiddleware = assetManager(assets);
-
-        app.use(express.static(__dirname + '/share/www'));
-        app.use(assetsManagerMiddleware);
     });
 
     global.rest = rest;
@@ -306,18 +230,22 @@ Bootstrap.prototype.setupSocketIo = function () {
 Bootstrap.prototype.setupViews = function () {
     var ConfigurationSchema = mongoose.model('Configuration');
     log.dbg('Setting up views ..');
-    
+
     var templates = new Array();
     var jsFiles = new Array();
-    
+
     file.walkSync(__dirname + '/html/templates', function (path, subDirs, files) {
         if (!path.match('Install')) {
             files.forEach(function (file) {
+                if (file.match(/^\./)) {
+                    return;
+                }
+
                 file = file.replace('index.html', '').replace('.html', '');
-                
+
                 var template = path + '/' + file;
                 var templateId = template.replace(__dirname + '/html/templates', '').replace(/\//g, '');
-                
+
                 log.dbg('Select template: ' + template + ' :: ' + templateId);
                 templates.push({
                     id: templateId,
@@ -326,28 +254,42 @@ Bootstrap.prototype.setupViews = function () {
             });
         }
     });
-    
+
     var walkThroughJs = new Array(
         __dirname + '/share/www/js/jquery',
         __dirname + '/share/www/js/jquery-plugins',
         __dirname + '/share/www/js/backbone',
+        __dirname + '/share/www/js/utils',
         __dirname + '/share/www/js/models',
         __dirname + '/share/www/js/collections',
         __dirname + '/share/www/js/views'
     );
-    
+
     walkThroughJs.forEach(function (dir) {
         file.walkSync(dir, function (path, subDirs, files) {
             if (!path.match('Install')) {
-                files.forEach(function (file) {
-                    var jsFile = (path + '/' + file).replace(__dirname + '/share/www', '');
-                
+                if (path.match('js/backbone') || path.match('js/jquery-plugins')) {
+                    files = files.reverse();
+                }
+
+                files.forEach(function (jsFile) {
+                    if (jsFile.match(/^\./)) {
+                        return;
+                    }
+
+                    jsFile = (path + '/' + jsFile).replace(__dirname + '/share/www', '');
+
                     log.dbg('Select js: ' + jsFile);
                     jsFiles.push(jsFile);
                 });
             }
         });
     });
+
+    jsFiles.push('/socket.io/socket.io.js');
+    jsFiles.push('/js/async.js');
+    jsFiles.push('/js/bootstrap.js');
+    jsFiles.push('/js/Application.js');
 
     this.app.all('*', function (req, res, next) {
         if (!installed && !req.url.match(/^\/templates\/install/)) {
@@ -463,14 +405,14 @@ Bootstrap.prototype.setupVdr = function () {
         setTimeout(function () {
             self.setupVdr();
         }, 300000);
-        
+
         self.setupExtendedDetails();
     });
 };
 
 Bootstrap.prototype.setupEpgImport = function (restful) {
     var self = this;
-    
+
     var config = mongoose.model('Configuration');
     var EpgImport = require('./lib/Epg/Import');
     var importer = new EpgImport(restful, 250);
@@ -495,7 +437,7 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
                         }, (1000 * 60 * 60) * doc.epgscandelay);
                     }
                 });
-                
+
                 self.setupExtendedDetails();
             }
         });
@@ -508,9 +450,9 @@ Bootstrap.prototype.setupExtendedDetails = function () {
     if (this.extendedDetailsRunning === true) {
         return;
     }
-    
+
     this.extendedDetailsRunning = true;
-    
+
     var self = this;
     var config = mongoose.model('Configuration');
     var ActorDetails = require('./lib/Actor');
@@ -518,7 +460,7 @@ Bootstrap.prototype.setupExtendedDetails = function () {
     var SeasonDetails = require('./lib/Season');
     var EpgImport = require('./lib/Epg/Import');
     var importer = new EpgImport();
-    
+
     var ConfigurationSchema = mongoose.model('Configuration');
 
     ConfigurationSchema.findOne({}, function (err, data) {
@@ -526,7 +468,7 @@ Bootstrap.prototype.setupExtendedDetails = function () {
             importer.evaluateType(function () {
                 if (data.get('fetchThetvdbSeasons')) {
                     log.inf('Thetvdb Seasons fetching started ..');
-                    
+
                     var seasonDetails = new SeasonDetails();
                     seasonDetails.fetchAll(function () {
                         log.inf('Thetvdb Seasons fetching finished ..');
@@ -540,7 +482,7 @@ Bootstrap.prototype.setupExtendedDetails = function () {
         }, function (callback) {
             if (data.get('fetchTmdbMovies')) {
                 log.inf('Tmdb Movies fetching started ..');
-                
+
                 var movieDetails = new MovieDetails();
                 movieDetails.fetchAll(function () {
                     log.inf('Tmdb Movies fetching finished ..');
@@ -553,7 +495,7 @@ Bootstrap.prototype.setupExtendedDetails = function () {
         }, function (callback) {
             if (data.get('fetchTmdbActors')) {
                 log.inf('Tmdb Actors fetching started ..');
-                
+
                 var actorDetails = new ActorDetails();
                 actorDetails.fetchAll(function () {
                     log.inf('Tmdb Actors fetching finished ..');

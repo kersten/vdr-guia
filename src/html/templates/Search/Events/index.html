@@ -1,0 +1,16 @@
+<& _.each(events, function (event) { &>
+<div class="row">
+    <div class="span3">
+        <& console.log(event); &>
+        <& if (event.image) { &>
+            <img src="<&= event.image &>" style="width 150px;" />
+        <& } &>
+    </div>
+    <div class="span13">
+        <h5><&= event.title &> - <&= event.year ? event.year : '' &></h5>
+        <p>
+            (<&= event.duration / 60 &> min) - <&= event.channel_id.name &>
+        </p>
+    </div>
+</div>
+<& }); &>
