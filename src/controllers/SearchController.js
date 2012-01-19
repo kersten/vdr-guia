@@ -19,8 +19,6 @@ io.sockets.on('connection', function (socket) {
             function (callback) {
                 var epg = new Epg();
                 epg.searchEvents(data.query, 10, function (docs) {
-                    console.log(docs);
-
                     docs.forEach(function (doc) {
                         if (result.events[doc.title] === undefined) {
                             result.events[doc.title] = doc;
@@ -30,7 +28,6 @@ io.sockets.on('connection', function (socket) {
                     callback(null, null);
                 });
             }, function (callback) {
-                var i = 0;
                 var query = actors.find();
 
                 query.or([{name: new RegExp(data.query, "ig")}, {character: new RegExp(data.query, "ig")}]);
@@ -38,12 +35,9 @@ io.sockets.on('connection', function (socket) {
                 query.limit(10);
 
                 query.exec(function (err, docs) {
-                    console.log(arguments);
-
                     docs.forEach(function (doc) {
                         if (result.actors[doc.name] === undefined) {
                             result.actors[doc.name] = doc;
-                            i++;
                         }
                     });
 

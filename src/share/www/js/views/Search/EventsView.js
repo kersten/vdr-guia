@@ -2,7 +2,8 @@ var SearchEventsView = Backbone.View.extend({
     template: 'SearchEventsTemplate',
     
     events: {
-        'hover .row': 'hoverEvent'
+        'hover .row': 'hoverEvent',
+        'click .row': 'showEvent'
     },
     
     hoverEvent: function (ev) {
@@ -15,6 +16,10 @@ var SearchEventsView = Backbone.View.extend({
                 backgroundColor: ''
             });
         }
+    },
+    
+    showEvent: function (ev) {
+        GUIA.router.navigate('!/Event/' + $(ev.currentTarget).data('id'), true);
     },
 
     render: function () {

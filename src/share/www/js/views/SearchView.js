@@ -11,18 +11,21 @@ var SearchView = Backbone.View.extend({
             this.options.query = '';
         }*/
         
+        this.options.query = '';
+        
         var self = this;
         
-        $('#search').live('keydown', function (e) {
+        /*$('#search').live('keydown', function (e) {
             var char = String.fromCharCode(e.keyCode|e.charCode);
+            console.log(":"+char+":");
             
-            if (!char.match(/ /ig) && self.options.query != $(this).val() && $(this).val().length > 2) {
-                console.log(":"+char+":");
+            if (!char.match(/ /ig) && $(this).val().length > 2) {
+                GUIA.router.navigate('!/Search/' + $(this).val());
                 
                 self.options.query = $(this).val();
                 self.liveSearch.apply(self);
             }
-        });
+        });*/
     },
     
     render: function () {
@@ -60,8 +63,6 @@ var SearchView = Backbone.View.extend({
                     });
                     
                     actorsView.render();
-                    
-                    GUIA.router.navigate('!/Search/' + $('#search').val());
                 }
             });
         }, 300);

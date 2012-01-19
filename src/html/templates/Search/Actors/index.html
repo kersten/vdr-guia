@@ -1,13 +1,15 @@
 <& _.each(actors, function (actor) { &>
-<div class="row">
-    <div class="span2">
-        <& console.log(actor); &>
-        <& if (actor.tmdbId.profile) { &>
-            <img src="<&= actor.tmdbId.profile[1].image.url &>" style="width: 75px;" />
-        <& } &>
-    </div>
-    <div class="span14">
-        <h5><&= actor.name &></h5>
+<div class="span8">
+    <div class="row" data-id="<&= actor._id &>">
+        <div class="span2">
+            <& console.log(actor); &>
+            <& if (actor.tmdbId !== undefined && actor.tmdbId.profile != null) { &>
+                <img src="<&= actor.tmdbId.profile[1].image.url &>" style="width: 75px;" />
+            <& } &>
+        </div>
+        <div class="span6">
+            <h5><&= actor.name &></h5>
+        </div>
     </div>
 </div>
 <& }); &>

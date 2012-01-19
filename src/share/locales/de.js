@@ -96,5 +96,6 @@
 	"Scheduled": "Scheduled",
 	"My profile": "My profile",
 	"Search": "Search",
-	"Next recordings": "Next recordings"
+	"Next recordings": "Next recordings",
+	"Todays highlight": "Todays highlight"
 }

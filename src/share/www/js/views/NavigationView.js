@@ -17,8 +17,9 @@ var NavigationView = Backbone.View.extend({
                 var template = _.template( $("#LoginFormTemplate").html(), {} );
                 self.el.children('div.fill').children('div.container').append(template);
             } else {
-                var template = _.template( $("#SearchFormTemplate").html(), {} );
-                self.el.children('div.fill').children('div.container').append(template);
+                var SearchView = new NavigationSearchView({});
+                
+                self.el.children('div.fill').children('div.container').append(SearchView.render().el);
             }
 
             data.items.forEach(function (item) {

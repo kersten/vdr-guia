@@ -1,16 +1,18 @@
 <& _.each(events, function (event) { &>
-<div class="row">
-    <div class="span2">
-        <& console.log(event); &>
-        <& if (event.image) { &>
-            <img src="<&= event.image &>" style="width: 75px;" />
-        <& } &>
-    </div>
-    <div class="span14">
-        <h5><&= event.title &> - <&= event.year ? event.year : '' &></h5>
-        <p>
-            (<&= event.duration / 60 &> min) - <&= event.channel_id.name &>
-        </p>
+<div class="span8">
+    <div class="row" data-id="<&= event._id &>">
+        <div class="span2">
+            <& console.log(event); &>
+            <& if (event.image !== undefined) { &>
+                <img src="<&= event.image &>" style="width: 75px;" />
+            <& } &>
+        </div>
+        <div class="span6">
+            <h5><&= event.title &> - <&= event.year ? event.year : '' &></h5>
+            <p>
+                <&= event.channel_id.name &> - <&= event.date &> <&= event.start_formatted &> (<&= Math.round(event.duration / 60) &> min) 
+            </p>
+        </div>
     </div>
 </div>
 <& }); &>

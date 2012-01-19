@@ -30,13 +30,13 @@ var TVGuideView = Backbone.View.extend({
 
             if (showSection >= 5 && showSection <= 12) {
                 this.options.showSection = 'morning';
-            } else if (showSection >= 12 && showSection <= 18) {
+            } else if (showSection >= 12 && showSection < 18) {
                 this.options.showSection = 'afternoon';
-            } else if (showSection >= 18 && showSection <= 20) {
+            } else if (showSection >= 18 && showSection < 20) {
                 this.options.showSection = 'earlyevening';
-            } else if (showSection >= 20 && showSection <= 24) {
+            } else if (showSection >= 20 && showSection < 24) {
                 this.options.showSection = 'evening';
-            } else if (showSection >= 0 && showSection <= 5) {
+            } else if (showSection >= 0 && showSection < 5) {
                 this.options.showSection = 'night';
             }
         } else {

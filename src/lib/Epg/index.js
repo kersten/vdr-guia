@@ -6,7 +6,6 @@ var actorSchema = mongoose.model('Actor');
 
 function fetchActorDetails (actors, callback) {
     var result = new Array();
-    console.log(actors);
     async.map(actors, function (actor, callback) {
         var query = actorSchema.findOne({_id: actor});
 

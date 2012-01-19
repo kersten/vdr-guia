@@ -2,7 +2,8 @@ var SearchActorsView = Backbone.View.extend({
     template: 'SearchActorsTemplate',
     
     events: {
-        'hover .row': 'hoverActor'
+        'hover .row': 'hoverActor',
+        'click .row': 'showActor'
     },
     
     hoverActor: function (ev) {
@@ -15,6 +16,10 @@ var SearchActorsView = Backbone.View.extend({
                 backgroundColor: ''
             });
         }
+    },
+
+    showActor: function () {
+        GUIA.router.navigate('!/Person/' + $(ev.currentTarget).data('id'), true);
     },
 
     render: function () {
