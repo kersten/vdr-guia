@@ -20,8 +20,8 @@ io.sockets.on('connection', function (socket) {
                 var epg = new Epg();
                 epg.searchEvents(data.query, 10, function (docs) {
                     docs.forEach(function (doc) {
-                        if (result.events[doc.title] === undefined) {
-                            result.events[doc.title] = doc;
+                        if (result.events[doc.channel_id + doc.title] === undefined) {
+                            result.events[doc.channel_id + doc.title] = doc;
                         }
                     });
 

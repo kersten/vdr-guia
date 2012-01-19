@@ -155,20 +155,22 @@ var GUIA = {
 
         personRoute: function (_id) {
             GUIA.loadingOverlay('show');
+
             this.currentView = new PersonView({
                 _id: _id
             });
+            
             this.currentView.render(function (el) {
                 $('#body').html(el);
                 GUIA.loadingOverlay('hide');
             });
         },
-        
+
         searchRoute: function (q) {
             this.currentView = new SearchView({
                 query: q
             });
-            
+
             $('#body').html(this.currentView.render().el);
         },
 
@@ -176,7 +178,7 @@ var GUIA = {
             this.currentView = new RecordingsView({
                 section: section
             });
-            
+
             $('#body').html(this.currentView.render().el);
         },
 

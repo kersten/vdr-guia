@@ -1,11 +1,11 @@
 var SearchActorsView = Backbone.View.extend({
     template: 'SearchActorsTemplate',
-    
+
     events: {
         'hover .row': 'hoverActor',
         'click .row': 'showActor'
     },
-    
+
     hoverActor: function (ev) {
         if (ev.type == 'mouseenter') {
             $(ev.currentTarget).css({
@@ -18,7 +18,7 @@ var SearchActorsView = Backbone.View.extend({
         }
     },
 
-    showActor: function () {
+    showActor: function (ev) {
         GUIA.router.navigate('!/Person/' + $(ev.currentTarget).data('id'), true);
     },
 

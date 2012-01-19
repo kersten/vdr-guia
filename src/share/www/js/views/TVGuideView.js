@@ -9,6 +9,7 @@ var TVGuideView = Backbone.View.extend({
         // Bind click on the select channels button
         'click .selectChannels': 'showChannelsDialog',
 
+        // Bind click for changing date
         'TVGuidePagination:dateSwitched': 'load'
     },
 
@@ -24,6 +25,17 @@ var TVGuideView = Backbone.View.extend({
 
         // Write date to options, if it is not set create one
         this.options.date = this.options.date || d.toString('dd.MM.yyyy');
+
+        if (parseInt(d.toString('HH')) >= 0 && parseInt(d.toString('HH')) < 5) {
+            var checkNext = new XDate(this.options.date).addDays(-1).toString('dd.MM.yyyy');
+            var yesterday = d.clone().addDays(-1).toString('dd.MM.yyyy');
+
+            console.log(checkNext, yesterday)
+
+            if (checkNext == yesterday) {
+                this.options.date = yesterday;
+            }
+        }
 
         if (this.options.date == d.toString('dd.MM.yyyy')) {
             var showSection = parseInt(d.toString('HH'));
@@ -212,18 +224,18 @@ var TVGuideView = Backbone.View.extend({
 
         // Append the generate HTML to the #body div
         $('#body').html(this.el);
-        
+
         var top = $('#channels').offset().top - 40;
         var floating = false;
-        
+
         $(window).scroll(function (event) {
             var y = $(this).scrollTop();
-            
+
             if (y >= top) {
                 if (!floating) {
                     floating = true;
                     $('#channels').clone().attr('id', 'channels_tmp').insertBefore($('#channels'));
-                    
+
                     $('#channels').css({
                         position: 'fixed',
                         top: 40,
@@ -237,7 +249,7 @@ var TVGuideView = Backbone.View.extend({
                     top: 0,
                     zIndex: '0'
                 });
-                
+
                 $('#channels_tmp').remove();
             }
         });
