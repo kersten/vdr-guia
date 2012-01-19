@@ -95,5 +95,6 @@
 	"Cutting": "Cutting",
 	"Scheduled": "Scheduled",
 	"My profile": "My profile",
-	"Search": "Search"
+	"Search": "Search",
+	"Next recordings": "Next recordings"
 }

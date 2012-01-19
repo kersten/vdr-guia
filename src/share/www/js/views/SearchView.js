@@ -13,9 +13,15 @@ var SearchView = Backbone.View.extend({
         
         var self = this;
         
-        $('#search').live('keydown', function () {
-            self.options.query = $(this).val();
-            self.liveSearch.apply(self);
+        $('#search').live('keydown', function (e) {
+            var char = String.fromCharCode(e.keyCode|e.charCode);
+            
+            if (!char.match(/ /ig) && self.options.query != $(this).val() && $(this).val().length > 2) {
+                console.log(":"+char+":");
+                
+                self.options.query = $(this).val();
+                self.liveSearch.apply(self);
+            }
         });
     },
     
@@ -59,5 +65,12 @@ var SearchView = Backbone.View.extend({
                 }
             });
         }, 300);
+    },
+    
+    remove: function () {
+        $('#search').die('keydown');
+        
+        $(this.el).remove();
+        return this;
     }
 });

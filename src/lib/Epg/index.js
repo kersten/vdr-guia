@@ -47,6 +47,23 @@ Epg.prototype.getPrimetimeEvent = function (channl_id, day, callback) {
     });
 };
 
+Epg.prototype.getTodaysHighlight = function (channel_id) {
+    var query = events.findOne({'tmdbId.rating': {$exists: true}});
+    
+    if (channel_id !== undefined) {
+        query.where('channel_id', channel_id);
+    }
+    
+    query.populate('tmdbId');
+    
+    //query.or([{'tmdbId.rating': {$exists: true}}]);
+    query.sort('tmdbId.rating', -1);
+    
+    query.run(function (err, result) {
+        console.log(arguments);
+    });
+};
+
 Epg.prototype._buildEvent = function (doc, callback) {
     if (doc.get('tmdbId')) {
         if (doc.get('tmdbId').get('translated') === true) {

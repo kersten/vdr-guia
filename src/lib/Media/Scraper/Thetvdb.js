@@ -1,5 +1,6 @@
 var request = require('request');
-var parser = require('xml2json');
+var util = require('util');
+var DomJS = require("dom-js").DomJS;
 
 function Thetvdb (apiKey, language) {
     this.apikey = apiKey;
@@ -37,6 +38,16 @@ Thetvdb.prototype.getMirror = function (callback) {
     var self = this;
     // http://www.thetvdb.com/api/<apikey>/mirrors.xml
     request({uri: encodeURI('http://www.thetvdb.com/api/' + this.apikey + '/mirrors.xml')}, function (error, response, body) {
+        var domjs = new DomJS();
+        domjs.parse(body, function(err, dom) {
+            if (dom.children) {
+                console.log(dom.children[1]);
+            }
+            
+            process.exit();
+        });
+        
+        return;
         var res = JSON.parse(parser.toJson(body));
         
         if (res.Mirrors.length === undefined) {
@@ -66,8 +77,9 @@ Thetvdb.prototype.query = function (url, callback) {
     }
     
     request({uri: encodeURI(this.mirror + '/api/' + ((useApiKey) ? this.apikey + '/' : '') + url)}, function (error, response, body) {
-        var json = JSON.parse(parser.toJson(body));
-        callback(json);
+        console.log(body);
+        //var json = JSON.parse(parser.toJson(body));
+        //callback(json);
     });
 };
 

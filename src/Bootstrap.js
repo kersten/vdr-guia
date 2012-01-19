@@ -174,8 +174,6 @@ Bootstrap.prototype.setupDatabase = function (cb) {
 };
 
 Bootstrap.prototype.setupSocketIo = function () {
-    var self = this;
-
     var parseCookie = require('express/node_modules/connect').utils.parseCookie;
     var Session = require('express/node_modules/connect').middleware.session.Session;
 
@@ -254,11 +252,28 @@ Bootstrap.prototype.setupViews = function () {
             });
         }
     });
+    
+    jsFiles.push('/js/jquery/jquery-1.7.js');
+    
+    jsFiles.push('/js/jquery-plugins/blinky.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-alerts.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-buttons.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-dropdown.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-modal.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-scrollspy.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-tabs.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-twipsy.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap-popover.js');
+    jsFiles.push('/js/jquery-plugins/jquery.endless-scroll.js');
+    jsFiles.push('/js/jquery-plugins/jquery.fancybox.js');
+    jsFiles.push('/js/jquery-plugins/lionbars.min.js');
+    jsFiles.push('/js/jquery-plugins/mousewheel.js');
+    jsFiles.push('/js/jquery-plugins/spin.min.js');
+
+    jsFiles.push('/js/backbone/underscore.js');
+    jsFiles.push('/js/backbone/backbone.js');
 
     var walkThroughJs = new Array(
-        __dirname + '/share/www/js/jquery',
-        __dirname + '/share/www/js/jquery-plugins',
-        __dirname + '/share/www/js/backbone',
         __dirname + '/share/www/js/utils',
         __dirname + '/share/www/js/models',
         __dirname + '/share/www/js/collections',
@@ -285,7 +300,7 @@ Bootstrap.prototype.setupViews = function () {
             }
         });
     });
-
+    
     jsFiles.push('/socket.io/socket.io.js');
     jsFiles.push('/js/async.js');
     jsFiles.push('/js/bootstrap.js');

@@ -26,6 +26,7 @@
         "express": ">= 2.5.0",
         "sprintf" : ">=0.1.1",
         "i18n": "git://github.com/mashpie/i18n-node.git",
+        "dom-js": "git://github.com/teknopaul/dom-js.git",
         "request": ">= 2.1.1",
         "restler": ">= 0.2.1",
         "socket.io": ">= 0.8.4",
