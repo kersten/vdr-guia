@@ -239,14 +239,14 @@ Bootstrap.prototype.setupViews = function () {
                     return;
                 }
 
-                file = file.replace('index.html', '').replace('.html', '');
+                file = file.replace('.html', '');
 
                 var template = path + '/' + file;
                 var templateId = template.replace(__dirname + '/html/templates', '').replace(/\//g, '');
 
                 log.dbg('Select template: ' + template + ' :: ' + templateId);
                 templates.push({
-                    id: templateId,
+                    id: templateId.replace(/index$/, ''),
                     path: path + '/' + file
                 });
             });
@@ -420,8 +420,6 @@ Bootstrap.prototype.setupVdr = function () {
         setTimeout(function () {
             self.setupVdr();
         }, 300000);
-
-        self.setupExtendedDetails();
     });
 };
 

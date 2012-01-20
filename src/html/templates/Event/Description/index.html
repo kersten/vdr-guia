@@ -6,7 +6,7 @@
     <& if (event.get('crew') != null) { &>
     <h5>Crew</h5>
     <p>
-        <& if (event.get('actorsFetched').length > 3) { &>
+        <& if (event.get('actors').length > 3) { &>
         <a style="cursor: pointer;" class="showDetails" data-view="cast">Show all</a>
         <& } &>
         
@@ -25,14 +25,14 @@
     </p>
     <& } &>
     
-    <& if (event.get('actorsFetched')) { &>
+    <& if (event.get('actors')) { &>
     <h5>Actors</h5>
     <p>
-        <& if (event.get('actorsFetched').length > 3) { &>
+        <& if (event.get('actors').length > 3) { &>
         <a style="cursor: pointer;" class="showDetails" data-view="cast">Show all</a>
         <& } &>
     
-        <& _.each(event.get('actorsFetched'), function (actor, index) {
+        <& _.each(event.get('actors'), function (actor, index) {
         if (index > 3) {
             return;
         } &>

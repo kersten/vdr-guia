@@ -31,31 +31,39 @@
     </div>
 
     <div class="row eventDetails">
-        <div class="span2">
-            <a style="cursor: pointer;" class="goback"><%= __('Back to TVGuide') %></a>
-        </div>
-        <div class="span10 eventInfos">
-            <p style="text-align: right;" class="recordThis">
-                Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
-            </p>
-        </div>
-
-        <& if (event.get('rating')) { &>
-        <div class="span12 eventRating">
-                <& for (var i = 1; i < 11; i++) {
-                    if (event.get('rating') > i) { &>
-                        <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_full.png" />
-                    <& } else { &>
-                        <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_gray.png" />
-                    <& }
-                } &>
-                <& if (event.get('votes')) { &>
-                    <&= event.get('rating') &> / 10 (<&= event.get('votes') &> Votes)
-                <& } &>
-        </div>
-        <& } &>
-
-        <div class="span12 eventDescription">
+        <div class="span12">
+            <div class="row">
+                <div class="span2">
+                    <a style="cursor: pointer;" class="goback"><%= __('Back to TVGuide') %></a>
+                </div>
+                <div class="span10 eventInfos">
+                    <p style="text-align: right;" class="recordThis">
+                        Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
+                    </p>
+                </div>
+            </div>
+    
+            <& if (event.get('rating')) { &>
+            <div class="row">
+                <div class="span12 eventRating">
+                        <& for (var i = 1; i < 11; i++) {
+                            if (event.get('rating') > i) { &>
+                                <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_full.png" />
+                            <& } else { &>
+                                <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_gray.png" />
+                            <& }
+                        } &>
+                        <& if (event.get('votes')) { &>
+                            <&= event.get('rating') &> / 10 (<&= event.get('votes') &> Votes)
+                        <& } &>
+                </div>
+            </div>
+            <& } &>
+    
+            <div class="row">
+                <div class="span12 eventDescription">
+                </div>
+            </div>
         </div>
     </div>
 </div>

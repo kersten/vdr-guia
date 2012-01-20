@@ -2,7 +2,7 @@ var EventModel = Backbone.Model.extend({
     url: 'EventModel',
 
     initialize: function () {
-        if (this.get('short_description') == "" && this.get('description') != "") {
+        if (this.get('short_description') == "" && this.get('description') != "" && this.get('description') != null) {
             this.set({short_description: cutwords(this.get('description'), 140)});
         }
     },

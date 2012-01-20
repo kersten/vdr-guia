@@ -1,5 +1,5 @@
 <& _.each(events, function (event) { &>
-<div class="span8">
+<div class="span8" style="height: 117px; max-height: 117px;">
     <div class="row" style="cursor: pointer;" data-id="<&= event._id &>">
         <div class="span2">
             <& console.log(event); &>
@@ -12,7 +12,7 @@
         <div class="span6">
             <h5><&= event.title &></h5>
             <p>
-                <&= event.channel_id.name &> - <&= event.date &> <&= event.start_formatted &> (<&= Math.round(event.duration / 60) &> min)
+                <&= event.channel_id.name &> - <&= event.date &> <&= Math.round(event.duration / 60) &> min
             </p>
         </div>
     </div>

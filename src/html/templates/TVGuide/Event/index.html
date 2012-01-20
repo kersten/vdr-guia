@@ -3,7 +3,7 @@
         <tr>
             <td style="width: 47px;">
                 <&= event.start_time() &><br />
-                <&= event.get('duration') / 60 &> min
+                <&= parseInt(event.get('duration') / 60) &> min
             </td>
             <td>
                 <&= event.get('title') &>

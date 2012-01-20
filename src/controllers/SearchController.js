@@ -19,6 +19,7 @@ io.sockets.on('connection', function (socket) {
             function (callback) {
                 var epg = new Epg();
                 epg.searchEvents(data.query, 10, function (docs) {
+                    docs = docs instanceof Array ? docs : new Array(docs);
                     docs.forEach(function (doc) {
                         if (result.events[doc.channel_id + doc.title] === undefined) {
                             result.events[doc.channel_id + doc.title] = doc;
@@ -30,7 +31,7 @@ io.sockets.on('connection', function (socket) {
             }, function (callback) {
                 var query = actors.find();
 
-                query.or([{name: new RegExp(data.query, "ig")}, {character: new RegExp(data.query, "ig")}]);
+                query.or([{name:  new RegExp('(^| )' + data.query, "ig")}, {character: new RegExp('(^| )' + data.query, "ig")}]);
                 query.populate('tmdbId');
                 query.limit(10);
 

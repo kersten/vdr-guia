@@ -142,8 +142,13 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 
                 event.description = event.description.replace(/\[Spartentipp .*?\] /, '');
             }
-
-            event.genre = event.contents;
+            
+            event.genre = new Array();
+            
+            event.contents.forEach(function (content) {
+                event.genre.push(content.split('/'));
+            });
+            
             delete(event.contents);
 
             callback(null, null);
