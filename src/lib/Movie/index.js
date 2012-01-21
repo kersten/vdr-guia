@@ -182,7 +182,7 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                                 movieDetailsSchema.save(function () {
                                     movie.set({tmdbId: movieDetailsSchema._id});
                                     movie.save(function () {
-                                        log.dbg('Movie details saved .. ');
+                                        log.dbg('Movie details saved for .. ');
                                         callback('fin');
                                     });
                                 });
@@ -190,7 +190,7 @@ Movie.prototype.fetchInformation = function (movie, callback) {
                         } else {
                             movie.set({tmdbId: doc._id});
                             movie.save(function () {
-                                log.dbg('Movie details saved .. ');
+                                log.dbg('Movie details saved for ' + movie.title);
                                 callback('fin');
                             });
                         }

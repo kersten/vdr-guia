@@ -46,9 +46,21 @@ io.sockets.on('connection', function (socket) {
                     };
                     break;
 
-               case 'fetchThetvdbSeasons':
+                case 'fetchThetvdbSeasons':
                     values = {
                         fetchThetvdbSeasons: data.value
+                    };
+                    break;
+                
+                case 'vdrHost':
+                    values = {
+                        vdrHost: data.value
+                    };
+                    break;
+                        
+                case 'restfulPort':
+                    values = {
+                        restfulPort: data.value
                     };
                     break;
             }

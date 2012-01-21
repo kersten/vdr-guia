@@ -8,6 +8,7 @@ function fetchActorDetails (actors, callback) {
     var result = new Array();
     
     async.map(actors, function (actor, callback) {
+        console.log(actor);
         var query = actorSchema.findOne({_id: actor});
 
         query.populate('tmdbId', ['profile']);
@@ -149,6 +150,8 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
                     event.rating = doc.get('rating') * 2;
                 }
             }
+            
+            console.log(event.actors);
 
             if (event.actors !== undefined && event.actors.length != 0) {
                 fetchActorDetails(event.actors, function (actors) {

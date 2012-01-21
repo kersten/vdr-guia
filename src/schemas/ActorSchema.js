@@ -16,6 +16,11 @@ var ActorSchema = new Schema({
     }
 });
 
-ActorSchema.index({name: 1, character: -1}, {unique: true});
+ActorSchema.index({
+    name: 1,
+    character: 1
+}, {
+    unique: true
+});
 
 mongoose.model('Actor', ActorSchema);

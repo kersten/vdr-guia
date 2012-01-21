@@ -97,5 +97,8 @@
 	"My profile": "My profile",
 	"Search": "Search",
 	"Next recordings": "Next recordings",
-	"Todays highlight": "Todays highlight"
+	"Todays highlight": "Todays highlight",
+	"Change VDR settings": "Change VDR settings",
+	"VDR IP": "VDR IP",
+	"restful Port": "restful Port"
 }

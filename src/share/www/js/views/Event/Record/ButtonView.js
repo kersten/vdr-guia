@@ -24,9 +24,18 @@ var EventRecordButtonView = Backbone.View.extend({
             src: '/icons/devine/black/16x16/' + image + '.png',
             title: !this.model.get('timer_active') ? 'Record' : 'Delete timer'
         });
+        
+        if (parseInt(this.model.get('stop')) < parseInt(new Date().getTime() / 1000)) {
+            console.log(this.model.get('stop'));
+            $(this.el).css({opacity: .5, filter: 'alpha(opacity=50)', cursor: 'auto'});
+        }
     },
 
     switchImg: function (ev) {
+        if (parseInt(this.model.get('stop')) < parseInt(new Date().getTime() / 1000)) {
+            return;
+        }
+        
         var image = 'Circle';
 
         if (this.model.get('type') == 'series') {
@@ -61,6 +70,10 @@ var EventRecordButtonView = Backbone.View.extend({
     },
 
     record: function () {
+        if (parseInt(this.model.get('stop')) < parseInt(new Date().getTime() / 1000)) {
+            return;
+        }
+        
         if (this.model.get('timer_active')) {
             console.log('Delete timer for: ' + this.model.get('_id'));
             this.model.set({timer_active: false});

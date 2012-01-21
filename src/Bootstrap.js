@@ -162,6 +162,25 @@ Bootstrap.prototype.setupDatabase = function (cb) {
 
             ConfigurationSchema.findOne({}, function (err, data) {
                 global.guia = data;
+                
+                if (data.get('dbversion') != '0.1') {
+                    var events = mongoose.model('Event');
+                    events.collection.drop();
+                    
+                    var actors = mongoose.model('Actor');
+                    actors.collection.drop();
+                    
+                    var actorDetails = mongoose.model('ActorDetail');
+                    actorDetails.collection.drop();
+                    
+                    var movieDetails = mongoose.model('MovieDetail');
+                    movieDetails.collection.drop();
+                    
+                    data.set({dbversion: '0.1'});
+                    data.save();
+                    
+                    process.exit();
+                }
 
                 cb.apply(this, [{
                     installed: true,
