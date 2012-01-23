@@ -151,7 +151,7 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
                 }
             }
             
-            console.log(event.actors);
+            event.event_id = doc.get('event_id');
 
             if (event.actors !== undefined && event.actors.length != 0) {
                 fetchActorDetails(event.actors, function (actors) {

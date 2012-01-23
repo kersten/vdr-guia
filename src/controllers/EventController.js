@@ -1,5 +1,4 @@
 var Epg = require('../lib/Epg');
-var EpgTimer = require('../lib/Epg/Timer');
 var events = mongoose.model('Event');
 
 io.sockets.on('connection', function (socket) {

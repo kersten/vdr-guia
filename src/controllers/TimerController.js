@@ -1,3 +1,5 @@
+var EpgTimer = require('../lib/Epg/Timer');
+
 io.sockets.on('connection', function (socket) {
     socket.on('TimerCollection:read', function (data, callback) {
         if (!socket.handshake.session.loggedIn) {
