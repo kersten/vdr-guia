@@ -275,5 +275,11 @@ var TVGuideView = Backbone.View.extend({
         GUIA.loadingOverlay('hide');
 
         return this;
+    },
+    
+    remove: function () {
+        $(window).unbind('scroll');
+        $(this.el).remove();
+        return this;
     }
 });
