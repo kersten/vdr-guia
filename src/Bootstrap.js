@@ -129,6 +129,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
 };
 
 Bootstrap.prototype.setupDatabase = function (cb) {
+    var self = this;
+    
     global.mongoose = require('mongoose');
     global.Schema = mongoose.Schema;
 
@@ -179,7 +181,9 @@ Bootstrap.prototype.setupDatabase = function (cb) {
                     data.set({dbversion: '0.1'});
                     data.save();
                     
-                    process.exit();
+                    mongoose.disconnect();
+                    self.setupDatabase(cb);
+                    return;
                 }
 
                 cb.apply(this, [{
