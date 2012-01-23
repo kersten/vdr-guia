@@ -130,7 +130,7 @@ Bootstrap.prototype.setupExpress = function (cb) {
 
 Bootstrap.prototype.setupDatabase = function (cb) {
     var self = this;
-    
+
     global.mongoose = require('mongoose');
     global.Schema = mongoose.Schema;
 
@@ -164,23 +164,39 @@ Bootstrap.prototype.setupDatabase = function (cb) {
 
             ConfigurationSchema.findOne({}, function (err, data) {
                 global.guia = data;
-                
-                if (data.get('dbversion') != '0.1') {
+
+                if (data.get('dbversion') != '0.1.1') {
                     var events = mongoose.model('Event');
-                    events.collection.drop();
-                    
+                    events.find({}, function (err, docs) {
+                        docs.forEach(function (doc) {
+                            doc.remove();
+                        })
+                    });
+
                     var actors = mongoose.model('Actor');
-                    actors.collection.drop();
-                    
+                    actors.find({}, function (err, docs) {
+                        docs.forEach(function (doc) {
+                            doc.remove();
+                        })
+                    });
+
                     var actorDetails = mongoose.model('ActorDetail');
-                    actorDetails.collection.drop();
-                    
+                    actorDetails.find({}, function (err, docs) {
+                        docs.forEach(function (doc) {
+                            doc.remove();
+                        })
+                    });
+
                     var movieDetails = mongoose.model('MovieDetail');
-                    movieDetails.collection.drop();
-                    
-                    data.set({dbversion: '0.1'});
+                    movieDetails.find({}, function (err, docs) {
+                        docs.forEach(function (doc) {
+                            doc.remove();
+                        })
+                    });
+
+                    data.set({dbversion: '0.1.1'});
                     data.save();
-                    
+
                     mongoose.disconnect();
                     self.setupDatabase(cb);
                     return;
@@ -275,9 +291,9 @@ Bootstrap.prototype.setupViews = function () {
             });
         }
     });
-    
+
     jsFiles.push('/js/jquery/jquery-1.7.js');
-    
+
     jsFiles.push('/js/jquery-plugins/blinky.js');
     jsFiles.push('/js/jquery-plugins/bootstrap-alerts.js');
     jsFiles.push('/js/jquery-plugins/bootstrap-buttons.js');
@@ -323,7 +339,7 @@ Bootstrap.prototype.setupViews = function () {
             }
         });
     });
-    
+
     jsFiles.push('/socket.io/socket.io.js');
     jsFiles.push('/js/async.js');
     jsFiles.push('/js/bootstrap.js');

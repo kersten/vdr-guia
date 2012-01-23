@@ -7,7 +7,7 @@ io.sockets.on('connection', function (socket) {
         if (!socket.handshake.session.loggedIn) {
             return false;
         }
-        
+
         var date = new Date();
 
         date.setFullYear(
@@ -33,25 +33,6 @@ io.sockets.on('connection', function (socket) {
     socket.on('EventModel:read', function (data, callback) {
         var epg = new Epg();
         epg.getEvent(data._id, callback);
-    });
-    
-    socket.on('EventModel:create', function (data, callback) {
-        if (!socket.handshake.session.loggedIn) {
-            return false;
-        }
-        
-        var event = data.model;
-        var timer = new EpgTimer(vdr.restful);
-        
-        if (event.timer_active === true) {
-            timer.create(event, function () {
-                callback();
-            });
-        } else if (event.timer_active === false) {
-            timer.del(event, function () {
-                callback();
-            });
-        }
     });
 
     socket.on('Event:readOne', function (data, callback) {
