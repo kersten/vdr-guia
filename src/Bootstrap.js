@@ -165,40 +165,63 @@ Bootstrap.prototype.setupDatabase = function (cb) {
             ConfigurationSchema.findOne({}, function (err, data) {
                 global.guia = data;
 
-                if (data.get('dbversion') != '0.1.1') {
-                    var events = mongoose.model('Event');
-                    events.find({}, function (err, docs) {
-                        docs.forEach(function (doc) {
-                            doc.remove();
-                        })
-                    });
+                if (data.get('dbversion') != '0.1') {
+                    async.parallel([
+                        function (callback) {
+                            var events = mongoose.model('Event');
+                            events.find({}, function (err, docs) {
+                                async.map(docs, function (doc, callback) {
+                                    doc.remove(function () {
+                                        callback(null, null);
+                                    });
+                                }, function () {
+                                    callback(null, null);
+                                });
+                            });
+                        }, function (callback) {
+                            var actors = mongoose.model('Actor');
+                            actors.find({}, function (err, docs) {
+                                async.map(docs, function (doc, callback) {
+                                    doc.remove(function () {
+                                        callback(null, null);
+                                    });
+                                }, function () {
+                                    callback(null, null);
+                                });
+                            });
+                        }, function (callback) {
+                            var actorDetails = mongoose.model('ActorDetail');
+                            actorDetails.find({}, function (err, docs) {
+                                async.map(docs, function (doc, callback) {
+                                    doc.remove(function () {
+                                        callback(null, null);
+                                    });
+                                }, function () {
+                                    callback(null, null);
+                                });
+                            });
+                        }, function (callback) {
+                            var movieDetails = mongoose.model('MovieDetail');
+                            movieDetails.find({}, function (err, docs) {
+                                async.map(docs, function (doc, callback) {
+                                    doc.remove(function () {
+                                        callback(null, null);
+                                    });
+                                }, function () {
+                                    callback(null, null);
+                                });
+                            });
+                        }, function (callback) {
+                            data.set({dbversion: '0.1'});
+                            data.save(function () {
+                                callback(null, null);
+                            });
+                        }], function () {
+                            mongoose.disconnect();
+                            self.setupDatabase(cb);
+                        }
+                    );
 
-                    var actors = mongoose.model('Actor');
-                    actors.find({}, function (err, docs) {
-                        docs.forEach(function (doc) {
-                            doc.remove();
-                        })
-                    });
-
-                    var actorDetails = mongoose.model('ActorDetail');
-                    actorDetails.find({}, function (err, docs) {
-                        docs.forEach(function (doc) {
-                            doc.remove();
-                        })
-                    });
-
-                    var movieDetails = mongoose.model('MovieDetail');
-                    movieDetails.find({}, function (err, docs) {
-                        docs.forEach(function (doc) {
-                            doc.remove();
-                        })
-                    });
-
-                    data.set({dbversion: '0.1.1'});
-                    data.save();
-
-                    mongoose.disconnect();
-                    self.setupDatabase(cb);
                     return;
                 }
 
