@@ -138,6 +138,18 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
 
                 if (doc.get('tmdbId').get('backdrops') !== undefined) {
                     event.backdrops = doc.get('tmdbId').get('backdrops');
+                    
+                    var rndBackdrop = new Array();
+                    
+                    event.backdrops.forEach(function (backdrop) {
+                        if (980 <= backdrop.image.width && 1280 >= backdrop.image.width) {
+                            rndBackdrop.push(backdrop.image);
+                        }
+                    });
+                    
+                    if (rndBackdrop.length != 0) {
+                        event.randomBackdrop = rndBackdrop[Math.floor(Math.random() * rndBackdrop.length)];
+                    }
                 }
 
                 if (doc.get('tmdbId').get('cast') !== undefined) {
