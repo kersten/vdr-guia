@@ -1,23 +1,32 @@
-<div style="left: 40px; right: 40px; top: 40px; background-size: 100%; background: url('<&= event.get('randomBackdrop').url &>') no-repeat; height: 560px; max-height: 560px; position: absolute;"></div>
+<div style="left: 40px; right: 40px; top: 40px; background-size: 100%; background-color: ##EEE; background: url('<&= event.get('randomBackdrop').url &>') no-repeat; height: 560px; max-height: 560px; position: absolute; min-width: 980px;">
+    <div style="line-height: 12px; border-radius: 5px; position: absolute; top: 20px; color: #FFFFFF; right: -20px; height: 124px; width: 300px;">
+        <img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
+        <img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
+    </div>
+</div>
 <div style="background-color: #000000; opacity: 0.8; padding: 20px; top: 410px; left: 0px; right: 0px; height: 150px; position: absolute;"></div>
 <div style="margin: -20px; height: 560px; max-height: 560px; position: relative;">
     <div style="padding: 20px; position: absolute; bottom: 0px; left: 0px; right: 0px; height: 150px;">
-        <h1 id="title" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px;"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+        <h1 id="title" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px; overflow: hidden; width: 550px;"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
         
-        <div class="eventDescription" style="color: #FFFFFF; margin-left: 160px; max-height: 86px; overflow: hidden;">
+        <div class="eventDescription" style="color: #FFFFFF; margin-left: 160px; max-height: 68px; overflow: hidden; width: 550px;">
         </div>
         
-        <div style="opacity: 1.0; margin-left: 160px;">
-            <span class="label" style="color: #000;">
+        <div class="eventInfos" style="padding: 10px; border-radius: 5px; margin-left: 720px; background-color: #EEE; opacity: 0.5; position: absolute; top: 20px; color: #000; right: 20px; height: 124px; width: 200px;">
+            Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
+        </div>
+        
+        <div style="margin-left: 160px; top: 18px; position: relative;">
+            <span class="label" style="color: #000; cursor: pointer;">
                 Cast
             </span>
             &nbsp;
-            <span class="label important" style="color: #000;">
+            <span class="label success recordThis" style="color: #000; cursor: pointer;">
                 Record
             </span>
             &nbsp;
-            <span class="label notice" style="color: #000;">
-                <img src="/icons/amazon.png" style="height: 11px; vertical-align: sub;" />
+            <span class="label notice amazonbuy" style="color: #000; cursor: pointer;">
+                <img src="/icons/amazon.png" style="position: relative; left: -3px; top: 1px; height: 16px; vertical-align: sub;" />
                 Buy on Amazon
             </span>
         </div>

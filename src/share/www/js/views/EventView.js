@@ -4,7 +4,10 @@ var EventView = Backbone.View.extend({
     events: {
         'click a.showDetails': 'showDetails',
         'hover .isSeries': 'highlightNextBroadcast',
-        'click .isSeries': 'showNextBroadcast'
+        'click .isSeries': 'showNextBroadcast',
+        'click .showcast': 'showCast',
+        'hover .recordThis': 'recordThis',
+        'click .amazonbuy': 'buyOnAmazon'
     },
 
     showDetails: function (ev) {
@@ -45,6 +48,35 @@ var EventView = Backbone.View.extend({
 
     showNextBroadcast: function (ev) {
         GUIA.router.navigate('!/Event/' + $(ev.currentTarget).data('id'), true);
+    },
+    
+    showCast: function () {
+        
+    },
+    
+    recordThis: function (ev) {
+        if (ev.type == 'mouseenter') {
+            if (this.model.get('timer_exists') == true) {
+                $(ev.currentTarget).addClass('success');
+                $(ev.currentTarget).removeClass('important');
+            } else {
+                $(ev.currentTarget).addClass('important');
+                $(ev.currentTarget).removeClass('success');
+            }
+        } else {
+            if (this.model.get('timer_exists') == true) {
+                $(ev.currentTarget).addClass('important');
+                $(ev.currentTarget).removeClass('success');
+            } else {
+                $(ev.currentTarget).addClass('success');
+                $(ev.currentTarget).removeClass('important');
+            }
+        }
+    },
+    
+    buyOnAmazon: function () {
+        // http://www.amazon.de/gp/search?index=aps&url=search-alias%3Ddvd&tag=meiblo05-21&keywords=
+        location.href = 'http://www.amazon.de/gp/search?index=aps&url=search-alias%3Ddvd&tag=meiblo05-21&keywords=' + this.model.get('title')
     },
 
     renderDescription: function () {
@@ -104,12 +136,8 @@ var EventView = Backbone.View.extend({
                     }
 
                     if (event.get('image') == null) {
-                        event.set({'image': 'http://placehold.it/210x150&text=No%20Picture'});
+                        event.set({'image': ''});
                     }
-                }
-
-                if (event.get('description') != null) {
-
                 }
 
                 var start = new XDate(event.get('start') * 1000);
@@ -119,15 +147,19 @@ var EventView = Backbone.View.extend({
 
                 console.log(event);
 
-                var recordView = new EventRecordButtonView({
-                    model: event
-                });
+                //var recordView = new EventRecordButtonView({
+                //    model: event
+                //});
 
-                recordView.render();
+                //recordView.render();
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
-                $('.recordThis', self.el).append(recordView.el);
+                //$('.recordThis', self.el).append(recordView.el);
+                
+                if (event.get('stop') * 1000 < new Date().getTime()) {
+                    $('.recordThis', self.el).remove();
+                }
 
                 switch (self.options.view) {
                 case 'posters':
