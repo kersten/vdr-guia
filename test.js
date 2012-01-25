@@ -1,11 +1,35 @@
 global.log = require('node-logging');
+var utils = require('util');
 
-var Thetvdb = require('./src/lib/Media/Scraper/Thetvdb');
+var trakt = require('trakt').Client;
+var user = require('trakt/user');
+var search = require('trakt/search');
+
+var client = new trakt('08792ab79fda9119a2d18dcefeaa594f');
+
+//client.extend('user', new user());
+client.extend('search', new search());
+
+utils.debug(utils.inspect(client.search,true, null));
+
+/*client.user.shows({username: 'GOTTMODUS'}, function (data) {
+    console.log(data);
+});*/
+
+client.search.shows({query: 'How+I+Met+Your+Mother'}, function (data) {
+    console.log(data);
+});
+
+client.search.users({query: 'How+I+Met+Your+Mother'}, function (data) {
+    console.log(data);
+});
+
+/*var Thetvdb = require('./src/lib/Media/Scraper/Thetvdb');
 
 var tvdb = new Thetvdb('3258B04D58376067', 'de');
 tvdb.getSeries('Dexter', function (result) {
     console.log(result);
-});
+});*/
 
 /*global.mongoose = require('mongoose');
 global.Schema = mongoose.Schema;
