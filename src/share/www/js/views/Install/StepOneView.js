@@ -26,6 +26,16 @@ var InstallStepOneView = Backbone.View.extend({
         } else {
             this.model.set({username: $('#username').val()});
         }
+        
+        if ($('#email').val() == '') {
+            $('#email').parent().parent().addClass('error');
+            $('#email').addClass('error');
+            $('#email').parent().append($('<span></span>').addClass('help-inline').html('Email is empty'));
+
+            validationFailed = true;
+        } else {
+            this.model.set({email: $('#email').val()});
+        }
 
         if ($('#password').parent().parent().hasClass('error')) {
             $('#password').parent().parent().removeClass('error');
@@ -46,8 +56,6 @@ var InstallStepOneView = Backbone.View.extend({
 
             validationFailed = true;
         } else {
-            //var password = hex_sha512($('#password').val());
-
             this.model.set({password: $('#password').val()});
         }
 

@@ -2,12 +2,20 @@ global.log = require('node-logging');
 var utils = require('util');
 var dnode = require('dnode');
 
-dnode.connect('guia-server.yavdr.tv', 8080, function (remote) {
-    remote.getUUID(function (data) {
+dnode.connect('guia-server.yavdr.tv', 80, function (remote) {
+    /*remote.registerUser('kersten', 'peter', 'kerstenk@gmail.com', function (data) {
         console.log(data);
+    });*/
+    
+    remote.loginUser('kersten', 'peter', '$2a$10$Y/kHr9RLqMuf39ab5Jcq6e', function (sid) {
+        this.sid = sid;
+        console.log(this.sid);
+        
+        remote.getRating(this.sid, 'X-Men', function (result) {
+            console.log(result);
+        });
     });
 });
-
 
 /* var trakt = require('trakt').Client;
 var user = require('trakt/user');
