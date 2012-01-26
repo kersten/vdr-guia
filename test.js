@@ -1,7 +1,15 @@
 global.log = require('node-logging');
 var utils = require('util');
+var dnode = require('dnode');
 
-var trakt = require('trakt').Client;
+dnode.connect('guia-server.yavdr.tv', 8080, function (remote) {
+    remote.getUUID(function (data) {
+        console.log(data);
+    });
+});
+
+
+/* var trakt = require('trakt').Client;
 var user = require('trakt/user');
 var search = require('trakt/search');
 
@@ -14,7 +22,7 @@ utils.debug(utils.inspect(client.search,true, null));
 
 /*client.user.shows({username: 'GOTTMODUS'}, function (data) {
     console.log(data);
-});*/
+});
 
 client.search.shows({query: 'How+I+Met+Your+Mother'}, function (data) {
     console.log(data);
@@ -22,7 +30,7 @@ client.search.shows({query: 'How+I+Met+Your+Mother'}, function (data) {
 
 client.search.users({query: 'How+I+Met+Your+Mother'}, function (data) {
     console.log(data);
-});
+}); */
 
 /*var Thetvdb = require('./src/lib/Media/Scraper/Thetvdb');
 
