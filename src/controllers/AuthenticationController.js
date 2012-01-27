@@ -3,7 +3,7 @@ var fs = require('fs');
 
 io.sockets.on('connection', function (socket) {
     var hs = socket.handshake;
-
+    
     socket.on('loggedIn', function (callback) {
         if (hs.session.loggedIn) {
             callback(true);
@@ -13,14 +13,13 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('User:login', function (data, callback) {
-        user.count({user: data.username, password: data.password}, function (err, count) {
+        user.findOne({user: data.username, password: data.password}, function (err, doc) {
             var loggedIn = false;
 
-            if (count != 0) {
+            if (doc) {
                 mongooseSessionStore.set(hs.sessionID, {loggedIn: true});
                 loggedIn = true;
                 hs.session.loggedIn = true;
-
                 hs.session.touch().save();
 
                 log.dbg('Setting up controllers ..');
@@ -34,9 +33,9 @@ io.sockets.on('connection', function (socket) {
                             require(__dirname + '/' + file);
                         }
                     });
-
-                    callback({loggedIn: loggedIn});
                 });
+                
+                callback({loggedIn: loggedIn});
             } else {
                 callback({loggedIn: loggedIn});
             }

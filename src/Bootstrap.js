@@ -4,6 +4,7 @@ var rest = require('restler');
 var uuid = require('node-uuid');
 var async = require('async');
 var file = require('file');
+global.Dnode = require('dnode');
 
 function Bootstrap (app, express) {
     this.app = app;
@@ -11,7 +12,7 @@ function Bootstrap (app, express) {
     this.logging = require('node-logging');
 
     var self = this;
-
+    
     global.io = require('socket.io').listen(this.app);
     self.setupSocketIo();
 
@@ -37,8 +38,10 @@ Bootstrap.prototype.setup = function (callback) {
                 vdr.restfulPort = data.restfulPort;
                 vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
 
-                self.setupLogos();
-                self.setupVdr();
+                self.setupDnode(function () {
+                    self.setupLogos();
+                    self.setupVdr();
+                });
             }
 
             if (callback !== undefined) {
@@ -122,8 +125,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
     };
 
     global.log = this.logging;
-
-
 
     cb.call();
 };
@@ -284,6 +285,28 @@ Bootstrap.prototype.setupSocketIo = function () {
 
     io.configure('development', function(){
         io.set('transports', ['websocket']);
+    });
+};
+
+Bootstrap.prototype.setupDnode = function (callback) {
+    var user = mongoose.model('User');
+    
+    user.findOne({}, function (err, doc) {
+        if (doc.get('socialize') === true) {
+            log.dbg('Setting up dnode ..');
+            
+            Dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
+                remote.authenticate(doc.get('user'), doc.get('password'), doc.get('salt'), function (session) {
+                    if (session) {
+                        global.dnode = session;
+                    }
+                    
+                    callback();
+                });
+            });
+        } else {
+            callback();
+        }
     });
 };
 

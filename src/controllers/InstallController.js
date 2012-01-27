@@ -1,9 +1,12 @@
-var net = require('net');
 var ConfigurationModel = mongoose.model('Configuration');
 var UserModel = mongoose.model('User');
 
+
+
 io.sockets.on('connection', function (socket) {
-    socket.on('ConfigurationModel:create', function (data) {
+    socket.on('ConfigurationModel:create', function (data, callback) {
+        console.log(arguments);
+        
         data = data.model;
 
         var configuration = new ConfigurationModel({
@@ -15,15 +18,44 @@ io.sockets.on('connection', function (socket) {
             fetchThetvdbSeasons: true
         });
 
-        var user = new UserModel({
-            user: data.username,
-            password: data.password,
-            socializeKey: data.socializeKey,
-            socialize: data.socialize
-        });
+        if (data.socialize) {
+            var user = new UserModel({
+                user: data.username,
+                password: data.password,
+                email: data.email,
+                salt: data.salt,
+                socializeKey: data.uuid,
+                socialize: data.socialize
+            });
 
-        user.save();
+            user.save(function () {
+                callback();
+            });
+        } else {
+            var user = new UserModel({
+                user: data.username,
+                password: data.password,
+                socialize: false
+            });
+
+            user.save();
+            
+            callback();
+        }
+        
         configuration.save();
+    });
+    
+    socket.on('Install:CheckUser', function (data, callback) {
+        data = data.model;
+        
+        Dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
+            log.inf('Try to register user on GUIA server');
+            
+            remote.register(data.username, data.password, data.email, function (registrationData) {
+                callback(registrationData);
+            });
+        });
     });
 
     socket.on('Install:checkrestful', function (data, callback) {

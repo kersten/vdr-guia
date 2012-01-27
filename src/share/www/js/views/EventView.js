@@ -51,7 +51,13 @@ var EventView = Backbone.View.extend({
     },
     
     showCast: function () {
-        
+        if (!this.castIsVisible) {
+            this.castIsVisible = true;
+            $('.cast').slideDown();
+        } else {
+            this.castIsVisible = false;
+            $('.cast').slideUp();
+        }
     },
     
     recordThis: function (ev) {

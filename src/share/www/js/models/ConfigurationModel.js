@@ -3,6 +3,7 @@ var ConfigurationModel = Backbone.Model.extend({
     
     defaults: {
         vdrhost: '127.0.0.1',
-        restfulport: 8002
+        restfulport: 8002,
+        socialize: true
     }
 });

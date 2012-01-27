@@ -17,6 +17,7 @@ io.sockets.on('connection', function (socket) {
 
         date.setHours(5);
         date.setMinutes(0);
+        
         var primetime = new Date(date.getFullYear() + '-' + ((date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth()) + 1) + '-' + ((date.getDate() < 10) ? '0' + date.getDate() : date.getDate()) + ' 20:13:00');
         primetime = primetime.getTime() / 1000;
 

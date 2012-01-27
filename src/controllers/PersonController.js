@@ -13,6 +13,6 @@ io.sockets.on('connection', function (socket) {
 
         query.run(function (err, doc) {
             callback(doc);
-       })
+        });
     });
 });

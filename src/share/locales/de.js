@@ -100,5 +100,6 @@
 	"Todays highlight": "Todays highlight",
 	"Change VDR settings": "Change VDR settings",
 	"VDR IP": "VDR IP",
-	"restful Port": "restful Port"
+	"restful Port": "restful Port",
+	"Please select the channels that you want to see in GUIA.": "Please select the channels that you want to see in GUIA."
 }

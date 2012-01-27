@@ -1,11 +1,41 @@
-<div style="left: 40px; right: 40px; top: 40px; background-size: 100%; background-color: ##EEE; background: url('<&= event.get('randomBackdrop').url &>') no-repeat; height: 560px; max-height: 560px; position: absolute; min-width: 980px;">
-    <div style="line-height: 12px; border-radius: 5px; position: absolute; top: 20px; color: #FFFFFF; right: -20px; height: 124px; width: 300px;">
+<div style="left: 0px; right: 0px; top: 40px; background-size: 100%; background-color: #EEE; background: url('<&= event.get('randomBackdrop').url &>') no-repeat; height: 560px; max-height: 560px; position: absolute; min-width: 940px;">
+    <div style="line-height: 12px; border-radius: 5px; position: absolute; top: 20px; color: #FFFFFF; right: 20px; height: 124px; width: 300px; z-index: 2;">
         <img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
         <img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
     </div>
 </div>
+
+<div style="left: 0px; top: 40px; background-color: #EEE; height: 560px; max-height: 560px; position: absolute; width: 40px; min-width: 40px;"></div>
+<div style="right: 0px; top: 40px; background-color: #EEE; height: 560px; max-height: 560px; position: absolute; width: 40px; min-width: 40px;"></div>
+
 <div style="background-color: #000000; opacity: 0.8; padding: 20px; top: 410px; left: 0px; right: 0px; height: 150px; position: absolute;"></div>
 <div style="margin: -20px; height: 560px; max-height: 560px; position: relative;">
+    <div class="cast" style="position: absolute; top: 0px; left: 0px; right: 0px; max-height: 250px; height: 250px; background-color: #000000; opacity: 0.8; padding: 20px; overflow: hidden; display: none;"></div>
+    <div class="cast" style="position: absolute; top: 0px; left: 0px; right: 0px; max-height: 250px; padding: 20px; overflow: hidden; display: none;">
+        <& if (event.get('actors').length != 0) { &>
+        <h5 style="color: #FFF;">Actors</h5>
+        <p>
+            <& _.each(event.get('actors'), function (actor, index) { &>
+            <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
+                <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>">
+                        <& if (actor.tmdbId != null && actor.tmdbId.profile != null && actor.tmdbId.profile.length != 0) { &>
+                        <img src="<&= actor.tmdbId.profile[0].image.url &>" width="45">
+                        <& } else { &>
+                        <img src="http://placehold.it/45x55&text=No+Photo" width="45">
+                        <& } &>
+                    </a>
+                </span>
+                <span class="text" style="float: left; color: #FFF;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>"><&= actor.name &></a><br>
+                    as <&= actor.character &>
+                </span>
+            </div>
+            <& }); &>
+        </p>
+        <& } &>
+    </div>
+
     <div style="padding: 20px; position: absolute; bottom: 0px; left: 0px; right: 0px; height: 150px;">
         <h1 id="title" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px; overflow: hidden; width: 550px;"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
         
@@ -17,7 +47,7 @@
         </div>
         
         <div style="margin-left: 160px; top: 18px; position: relative;">
-            <span class="label" style="color: #000; cursor: pointer;">
+            <span class="label showcast" style="color: #000; cursor: pointer;">
                 Cast
             </span>
             &nbsp;

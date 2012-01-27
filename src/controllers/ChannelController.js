@@ -2,7 +2,9 @@ var Channel = require('../lib/Channel');
 
 io.sockets.on('connection', function (socket) {
     socket.on('ChannelCollection:read', function (data, callback) {
-        if (!socket.handshake.session.loggedIn) {
+        console.log(data);
+        
+        if (!socket.handshake.session.loggedIn && data.install === undefined) {
             return false;
         }
 
