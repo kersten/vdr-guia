@@ -295,13 +295,24 @@ Bootstrap.prototype.setupDnode = function (callback) {
         if (doc.get('socialize') === true) {
             log.dbg('Setting up dnode ..');
             
-            Dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
+            var client = Dnode({
+                
+            });
+            
+            client.connect({
+                host: 'guia-server.yavdr.tv',
+                port: 7007,
+                reconnect: 600
+            }, function (remote, connection) {
                 remote.authenticate(doc.get('user'), doc.get('password'), doc.get('salt'), function (session) {
                     if (session) {
                         global.dnode = session;
+                        
+                        if (!self.dnodeReconnect) {
+                            self.dnodeReconnect = true;
+                            callback();
+                        }
                     }
-                    
-                    callback();
                 });
             });
         } else {
