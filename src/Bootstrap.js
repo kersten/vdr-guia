@@ -12,7 +12,7 @@ function Bootstrap (app, express) {
     this.logging = require('node-logging');
 
     var self = this;
-    
+
     global.io = require('socket.io').listen(this.app);
     self.setupSocketIo();
 
@@ -289,16 +289,17 @@ Bootstrap.prototype.setupSocketIo = function () {
 };
 
 Bootstrap.prototype.setupDnode = function (callback) {
+    var self = this;
     var user = mongoose.model('User');
-    
+
     user.findOne({}, function (err, doc) {
         if (doc.get('socialize') === true) {
             log.dbg('Setting up dnode ..');
-            
+
             var client = Dnode({
-                
+
             });
-            
+
             client.connect({
                 host: 'guia-server.yavdr.tv',
                 port: 7007,
@@ -307,10 +308,12 @@ Bootstrap.prototype.setupDnode = function (callback) {
                 remote.authenticate(doc.get('user'), doc.get('password'), doc.get('salt'), function (session) {
                     if (session) {
                         global.dnode = session;
-                        
+
                         if (!self.dnodeReconnect) {
                             self.dnodeReconnect = true;
                             callback();
+                        } else {
+                            log.dbg('Dnode reconnected');
                         }
                     }
                 });

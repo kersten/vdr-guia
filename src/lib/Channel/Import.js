@@ -12,6 +12,10 @@ ChannelImport.prototype.start = function (callback) {
 
     rest.get(self.restful + '/channels.json?start=0').on('success', function(data) {
         data.channels.forEach(function (channel) {
+            if (dnode) {
+                dnode.transmitChannel(channel);
+            }
+
             var channelSchema = new ChannelSchema(channel);
             channelSchema.save(function (err) {
                 if (err) {
