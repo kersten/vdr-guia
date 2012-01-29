@@ -9,22 +9,26 @@ function Actor () {
 Actor.prototype.fetchInformation = function (actor, callback) {
     log.dbg('Fetching actor informations for: ' + actor.name);
 
-    dnode.getActor(actor.name, function (res) {
-        if (res && res != {}) {
-            var actorDetailsSchema = new actorDetails(res);
-            actorDetailsSchema.save(function (err) {
-                actor.set({tmdbId: actorDetailsSchema._id});
+    if (socialize && dnode) {
+        dnode.getActor(actor.name, function (res) {
+            if (res && res != {}) {
+                var actorDetailsSchema = new actorDetails(res);
+                actorDetailsSchema.save(function (err) {
+                    actor.set({tmdbId: actorDetailsSchema._id});
 
-                actor.save(function () {
-                    log.dbg('Details saved for: ' + actor.name);
-                    callback();
+                    actor.save(function () {
+                        log.dbg('Details saved for: ' + actor.name);
+                        callback();
+                    });
                 });
-            });
-        } else {
-            log.dbg('Nohting found for: ' + actor.name);
-            callback();
-        }
-    });
+            } else {
+                log.dbg('Nohting found for: ' + actor.name);
+                callback();
+            }
+        });
+    } else {
+        callback();
+    }
 };
 
 Actor.prototype.fetchAll = function (callback) {

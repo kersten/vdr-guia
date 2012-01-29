@@ -293,6 +293,8 @@ Bootstrap.prototype.setupDnode = function (callback) {
     var user = mongoose.model('User');
 
     user.findOne({}, function (err, doc) {
+        global.socialize = doc.get('socialize') || false;
+
         if (doc.get('socialize') === true) {
             log.dbg('Setting up dnode ..');
 

@@ -12,7 +12,7 @@ ChannelImport.prototype.start = function (callback) {
 
     rest.get(self.restful + '/channels.json?start=0').on('success', function(data) {
         data.channels.forEach(function (channel) {
-            if (dnode) {
+            if (socialize && dnode) {
                 dnode.transmitChannel(channel);
             }
 

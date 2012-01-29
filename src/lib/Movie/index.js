@@ -12,9 +12,9 @@ function Movie () {
 
 Movie.prototype.fetchInformation = function (movie, callback) {
     log.dbg('Fetching movie informations for: ' + movie.title);
-    
+
     dnode.getMovie(movie.title, function (res) {
-        if (res && res != {}) {
+        if (res && res.name !== undefined) {
             var movieDetailsSchema = new movieDetails(res);
             movieDetailsSchema.save(function (err) {
                 movie.set({tmdbId: movieDetailsSchema._id});
@@ -34,7 +34,7 @@ Movie.prototype.fetchInformation = function (movie, callback) {
 Movie.prototype.fetchAll = function (callback) {
     var self = this;
     var query = events.find({
-        tmdbId: {$exists: false}
+        'tmdbId.name': {$exists: false}
     });
 
     query.sort('title', 1);
