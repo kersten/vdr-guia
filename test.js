@@ -3,7 +3,7 @@ var utils = require('util');
 var dnode = require('dnode');
 
 dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
-    remote.register('kersten', '0c7f7cb6c938789845d19c7744bda844deca3602021a062c7508b308e1ab3ea73db96cdcf9c51f14fbeae270895b327b5b0fa7f3a4ae59d9600f03cb5f4aab47', 'kerstenk@gmail.com', function (data) {
+    remote.register('kersten', 'peter', 'kerstenk@gmail.com', function (data) {
         console.log(data);
     });
 
