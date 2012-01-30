@@ -4,6 +4,21 @@ var ActorSchema = mongoose.model('Actor');
 var ChannnelSchema = mongoose.model('Channel');
 var async = require('async');
 
+Object.defineProperty(Object.prototype, "extend", {
+    enumerable: false,
+    value: function(from) {
+        var props = Object.getOwnPropertyNames(from);
+        var dest = this;
+        props.forEach(function(name) {
+            if (name in dest) {
+                var destination = Object.getOwnPropertyDescriptor(from, name);
+                Object.defineProperty(dest, name, destination);
+            }
+        });
+        return this;
+    }
+});
+
 function EpgImport (restful, numEvents) {
     this.newEpg = false;
 
@@ -69,24 +84,22 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
             log.dbg('Found ' + res.events.length + ' new events');
 
             async.map(res.events, function (event, callback) {
-                self.extractDetails(channel, event, function (event) {
-                    self.insertEpg(event, callback);
-                });
-
                 if (socialize && dnode) {
-                    var transmit = event;
-                    delete(transmit.short_text);
-                    delete(transmit.description);
-                    delete(transmit.iamges);
-                    delete(transmit.count);
-                    delete(transmit.id);
-                    delete(transmit.timer_exists);
-                    delete(transmit.timer_active);
-                    delete(transmit.timer_id);
-                    delete(transmit.components);
+                    var transmit = {
+                        channel: null,
+                        title: null,
+                        start_time: null,
+                        duration: null
+                    };
+
+                    transmit.extend(event);
 
                     dnode.transmitEvent(transmit);
                 }
+
+                self.extractDetails(channel, event, function (event) {
+                    self.insertEpg(event, callback);
+                });
             }, function (err, result) {
                 next.call();
             });
