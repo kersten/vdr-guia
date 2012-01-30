@@ -72,6 +72,21 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
                 self.extractDetails(channel, event, function (event) {
                     self.insertEpg(event, callback);
                 });
+
+                if (socialize && dnode) {
+                    var transmit = event;
+                    delete(transmit.short_text);
+                    delete(transmit.description);
+                    delete(transmit.iamges);
+                    delete(transmit.count);
+                    delete(transmit.id);
+                    delete(transmit.timer_exists);
+                    delete(transmit.timer_active);
+                    delete(transmit.timer_id);
+                    delete(transmit.components);
+
+                    dnode.transmitEvent(transmit);
+                }
             }, function (err, result) {
                 next.call();
             });
@@ -110,7 +125,7 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
                 if (event.duration > 5400) {
                     event.category = 'eventually film';
                 }
-                
+
                 if (event.duration > 2400 && event.duration < 3900) {
                     event.category = 'eventually series';
                 }
@@ -142,13 +157,13 @@ EpgImport.prototype.extractDetails = function (channel, event, callback) {
 
                 event.description = event.description.replace(/\[Spartentipp .*?\] /, '');
             }
-            
+
             event.genre = new Array();
-            
+
             event.contents.forEach(function (content) {
                 event.genre.push(content.split('/'));
             });
-            
+
             delete(event.contents);
 
             callback(null, null);
