@@ -94,7 +94,9 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
                     transmit.extend(event);
 
-                    dnode.transmitEvent(transmit);
+                    dnode.getEvent(transmit, function (res) {
+                        console.log(res);
+                    });
                 }
 
                 self.extractDetails(channel, event, function (event) {

@@ -13,12 +13,7 @@ ChannelImport.prototype.start = function (callback) {
     rest.get(self.restful + '/channels.json?start=0').on('success', function(data) {
         data.channels.forEach(function (channel) {
             if (socialize && dnode) {
-                dnode.transmitChannel(channel);
-            }
-
-            var channelSchema = new ChannelSchema(channel);
-            channelSchema.save(function (err) {
-                if (err) {
+                dnode.getChannel(channel, function (res) {
                     ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
                         c.name = channel.name;
                         c.number = channel.number;
@@ -33,13 +28,63 @@ ChannelImport.prototype.start = function (callback) {
                         c.is_sat = channel.is_sat;
                         c.is_radio = channel.is_radio;
 
-                        c.save();
+                        c.save(function (err, doc) {
+                            self.channel
+                        });
                     });
-                }
-            });
-        });
+                });
+            } else {
+                var channelSchema = new ChannelSchema(channel);
+                channelSchema.save(function (err) {
+                    if (err) {
+                        ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
+                            c.name = channel.name;
+                            c.number = channel.number;
+                            c.channel_id = channel.channel_id;
+                            c.image = channel.image;
+                            c.group = channel.group;
+                            c.transponder = channel.transponder;
+                            c.stream = channel.stream;
+                            c.is_atsc = channel.is_atsc;
+                            c.is_cable = channel.is_cable;
+                            c.is_terr = channel.is_terr;
+                            c.is_sat = channel.is_sat;
+                            c.is_radio = channel.is_radio;
 
-        callback.call();
+                            c.save(function () {
+                                callback.call();
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    });
+};
+
+ChannelImport.prototype.save = function () {
+    var channelSchema = new ChannelSchema(this.channel);
+    channelSchema.save(function (err) {
+        if (err) {
+            ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
+                c.name = channel.name;
+                c.number = channel.number;
+                c.channel_id = channel.channel_id;
+                c.image = channel.image;
+                c.group = channel.group;
+                c.transponder = channel.transponder;
+                c.stream = channel.stream;
+                c.is_atsc = channel.is_atsc;
+                c.is_cable = channel.is_cable;
+                c.is_terr = channel.is_terr;
+                c.is_sat = channel.is_sat;
+                c.is_radio = channel.is_radio;
+
+                c.save(function () {
+                    callback.call();
+                });
+            });
+        }
     });
 };
 
