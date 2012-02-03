@@ -6,7 +6,7 @@ var actorSchema = mongoose.model('Actor');
 
 function fetchActorDetails (actors, callback) {
     var result = new Array();
-    
+
     async.map(actors, function (actor, callback) {
         console.log(actor);
         var query = actorSchema.findOne({_id: actor});
@@ -80,7 +80,7 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
         timer_exists: doc.get('timer_exists'),
         timer_id: doc.get('timer_id')
     };
-    
+
     doc.get('type') !== undefined ? event.type = doc.get('type') : true;
     doc.get('actors') !== undefined ? event.actors = doc.get('actors') : true;
     doc.get('category') !== undefined ? event.category = doc.get('category') : true;
@@ -89,7 +89,7 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
     doc.get('genre') !== undefined ? event.genre = doc.get('genre') : true;
     doc.get('parental_rating') !== undefined ? event.parental_rating = doc.get('parental_rating') : true;
     doc.get('year') !== undefined ? event.year = doc.get('year') : true;
-    
+
     async.parallel([
         function (callback) {
             if (withSubEvents === true && doc.get('type') == 'series') {
@@ -138,15 +138,15 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
 
                 if (doc.get('tmdbId').get('backdrops') !== undefined) {
                     event.backdrops = doc.get('tmdbId').get('backdrops');
-                    
+
                     var rndBackdrop = new Array();
-                    
+
                     event.backdrops.forEach(function (backdrop) {
                         if (980 <= backdrop.image.width && 1280 >= backdrop.image.width) {
                             rndBackdrop.push(backdrop.image);
                         }
                     });
-                    
+
                     if (rndBackdrop.length != 0) {
                         event.randomBackdrop = rndBackdrop[Math.floor(Math.random() * rndBackdrop.length)];
                     }
@@ -162,7 +162,7 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
                     event.rating = doc.get('rating') * 2;
                 }
             }
-            
+
             event.event_id = doc.get('event_id');
 
             if (event.actors !== undefined && event.actors.length != 0) {
@@ -174,10 +174,11 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
                 callback();
             }
         }, function (callback) {
-            dnode.getRating('X-Men', function (result) {
+            /*dnode.getRating('X-Men', function (result) {
                 console.log(result);
                 callback();
-            });
+            });*/
+            callback();
         }
     ], function () {
         callback(event);
@@ -186,7 +187,7 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
 
 Epg.prototype._query = function (query, withSubEvents, callback) {
     var self = this;
-    
+
     query.populate('channel_id');
     query.populate('actors');
     query.populate('tmdbId');
@@ -198,9 +199,9 @@ Epg.prototype._query = function (query, withSubEvents, callback) {
             callback();
             return;
         }
-        
+
         var result = new Array();
-        
+
         async.map(docs instanceof Array ? docs : new Array(docs), function (doc, callback) {
             self._buildEvent(doc, withSubEvents, function (event) {
                 result.push(event);

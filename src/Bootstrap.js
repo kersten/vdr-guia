@@ -357,14 +357,7 @@ Bootstrap.prototype.setupViews = function () {
     jsFiles.push('/js/jquery/jquery-1.7.js');
 
     jsFiles.push('/js/jquery-plugins/blinky.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-alerts.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-buttons.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-dropdown.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-modal.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-scrollspy.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-tabs.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-twipsy.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap-popover.js');
+    jsFiles.push('/js/jquery-plugins/bootstrap.js');
     jsFiles.push('/js/jquery-plugins/jquery.endless-scroll.js');
     jsFiles.push('/js/jquery-plugins/jquery.fancybox.js');
     jsFiles.push('/js/jquery-plugins/lionbars.min.js');

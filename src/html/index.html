@@ -17,14 +17,14 @@
             html, body {
                 background-color: #eee;
             }
+
             body {
-                padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+                padding-top: 40px;
             }
+
             .container > footer p {
+                margin-top: 10px;
                 text-align: center; /* center align it with the container */
-            }
-            .container {
-                width: 940px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
             }
 
             /* The white background content wrapper */
@@ -40,14 +40,6 @@
                 box-shadow: 0 1px 2px rgba(0,0,0,.15);
             }
 
-            /* Page header tweaks */
-            .page-header {
-                background-color: #f5f5f5;
-                padding: 20px 20px 10px;
-                margin: -20px -20px 20px;
-            }
-
-
             /* Give a quick and non-cross-browser friendly divider */
             .content .span4 {
                 margin-left: 0;
@@ -55,25 +47,8 @@
                 border-left: 1px solid #eee;
             }
 
-            .topbar .btn {
-                border: 0;
-            }
-
             .span-one-third {
                 width: 260px;
-            }
-
-            .topbar .brand:hover {
-                background-color: #222;
-                background-color: #222222;
-                background-repeat: repeat-x;
-                background-image: -khtml-gradient(linear, left top, left bottom, from(#333333), to(#222222));
-                background-image: -moz-linear-gradient(top, #333333, #222222);
-                background-image: -ms-linear-gradient(top, #333333, #222222);
-                background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #333333), color-stop(100%, #222222));
-                background-image: -webkit-linear-gradient(top, #333333, #222222);
-                background-image: -o-linear-gradient(top, #333333, #222222);
-                background-image: linear-gradient(top, #333333, #222222);
             }
 
         </style>
@@ -92,8 +67,8 @@
     </head>
 
     <body>
-        <div class="topbar">
-            <div class="fill">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
                 <div class="container">
                     <a style="cursor: pointer;" class="brand" data-view="Welcome">GUIA</a>
 
@@ -109,10 +84,10 @@
             <div class="content" id="body" style="">
 
             </div>
-            
+
             <footer id="footer">
                 <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011/2012 - <a href="/!/About">About</a></p>
-                <div style="float: right; margin-top: -50px;"><div id="flattr"></div></div>
+                <div style="float: right; margin-top: -30px;"><div id="flattr"></div></div>
             </footer>
         </div>
 

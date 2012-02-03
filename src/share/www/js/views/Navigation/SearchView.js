@@ -2,7 +2,7 @@ var NavigationSearchView = Backbone.View.extend({
     template: 'NavigationSearchTemplate',
 
     tagName: 'form',
-    className: 'pull-right',
+    className: 'navbar-search pull-left',
 
     events: {
         'keyup input': 'query',

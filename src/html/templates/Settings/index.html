@@ -3,17 +3,19 @@
 </div>
 
 <div class="row">
-    <div class="span16 columns">
-        <ul class="tabs" data-tabs="tabs">
-            <li style="cursor: pointer;" data-section="Guia"><a><%- __('GUIA options') %></a></li>
-            <li style="cursor: pointer;" data-section="Database"><a><%- __('GUIA Database') %></a></li>
-            <li style="cursor: pointer;" data-section="Channels"><a><%- __('Channelmanager') %></a></li>
-            <li style="cursor: pointer;" data-section="Social"><a><%- __('Social options') %></a></li>
-            <li style="cursor: pointer;" data-section="Vdr"><a><%- __('VDR options') %></a></li>
-        </ul>
+    <div class="span12 columns">
+        <div class="tabbable tabs-right">
+            <ul class="nav nav-tabs" data-tabs="tabs">
+                <li style="cursor: pointer;" class="tab-pane" data-section="Guia"><a><%- __('GUIA options') %></a></li>
+                <li style="cursor: pointer;" class="tab-pane" data-section="Database"><a><%- __('GUIA Database') %></a></li>
+                <li style="cursor: pointer;" class="tab-pane" data-section="Channels"><a><%- __('Channelmanager') %></a></li>
+                <li style="cursor: pointer;" class="tab-pane" data-section="Social"><a><%- __('Social options') %></a></li>
+                <li style="cursor: pointer;" class="tab-pane" data-section="Vdr"><a><%- __('VDR options') %></a></li>
+            </ul>
+
+            <div class="tab-content" id="settingssection">
+
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="row" id="settingssection">
-
 </div>

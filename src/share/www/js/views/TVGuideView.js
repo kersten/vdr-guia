@@ -11,7 +11,7 @@ var TVGuideView = Backbone.View.extend({
 
         // Bind click for changing date
         'TVGuidePagination:dateSwitched': 'load',
-        
+
         'click .previousChannels': 'switchChannels',
         'click .nextChannels': 'switchChannels',
     },
@@ -128,7 +128,7 @@ var TVGuideView = Backbone.View.extend({
             }
         });
     },
-    
+
     switchChannels: function (ev) {
         if ($(ev.currentTarget).hasClass('nextChannels')) {
             this.options.page++;
@@ -256,7 +256,7 @@ var TVGuideView = Backbone.View.extend({
                         position: 'fixed',
                         top: 40,
                         width: $('#channels').width(),
-                        zIndex: 100000000000
+                        zIndex: 999
                     });
                 }
             } else {
@@ -276,7 +276,7 @@ var TVGuideView = Backbone.View.extend({
 
         return this;
     },
-    
+
     remove: function () {
         $(window).unbind('scroll');
         $(this.el).remove();

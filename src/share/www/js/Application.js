@@ -26,7 +26,7 @@ var GUIA = {
 
         this.collections.navigationCollection = new NavigationCollection;
         this.navigation = new NavigationView({
-            el: $('.topbar'),
+            el: $('.navbar'),
             collection: GUIA.collections.navigationCollection
         });
 
@@ -159,7 +159,7 @@ var GUIA = {
             this.currentView = new PersonView({
                 _id: _id
             });
-            
+
             this.currentView.render(function (el) {
                 $('#body').html(el);
                 GUIA.loadingOverlay('hide');

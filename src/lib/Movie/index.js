@@ -13,7 +13,7 @@ function Movie () {
 Movie.prototype.fetchInformation = function (movie, callback) {
     log.dbg('Fetching movie informations for: ' + movie.title);
 
-    dnode.getMovie(movie.title, function (res) {
+    /*dnode.getMovie(movie.title, function (res) {
         if (res && res.name !== undefined) {
             var movieDetailsSchema = new movieDetails(res);
             movieDetailsSchema.save(function (err) {
@@ -28,7 +28,7 @@ Movie.prototype.fetchInformation = function (movie, callback) {
             log.dbg('Nohting found for: ' + movie.title);
             callback();
         }
-    });
+    });*/
 };
 
 Movie.prototype.fetchAll = function (callback) {
