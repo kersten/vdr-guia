@@ -11,78 +11,32 @@ ChannelImport.prototype.start = function (callback) {
     log.dbg("Starting channel import ...");
 
     rest.get(self.restful + '/channels.json?start=0').on('success', function(data) {
-        data.channels.forEach(function (channel) {
+        async.map(data.channels, function (channel, callback) {
             if (socialize && dnode) {
                 dnode.getChannel(channel, function (res) {
-                    ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
-                        c.name = channel.name;
-                        c.number = channel.number;
-                        c.channel_id = channel.channel_id;
-                        c.image = channel.image;
-                        c.group = channel.group;
-                        c.transponder = channel.transponder;
-                        c.stream = channel.stream;
-                        c.is_atsc = channel.is_atsc;
-                        c.is_cable = channel.is_cable;
-                        c.is_terr = channel.is_terr;
-                        c.is_sat = channel.is_sat;
-                        c.is_radio = channel.is_radio;
-
-                        c.save(function (err, doc) {
-                            self.channel
-                        });
+                    self.save(function () {
+                        callback(null);
                     });
                 });
             } else {
-                var channelSchema = new ChannelSchema(channel);
-                channelSchema.save(function (err) {
-                    if (err) {
-                        ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
-                            c.name = channel.name;
-                            c.number = channel.number;
-                            c.channel_id = channel.channel_id;
-                            c.image = channel.image;
-                            c.group = channel.group;
-                            c.transponder = channel.transponder;
-                            c.stream = channel.stream;
-                            c.is_atsc = channel.is_atsc;
-                            c.is_cable = channel.is_cable;
-                            c.is_terr = channel.is_terr;
-                            c.is_sat = channel.is_sat;
-                            c.is_radio = channel.is_radio;
-
-                            c.save(function () {
-                                callback.call();
-                            });
-                        });
-                    }
+                self.save(channel, function () {
+                    callback(null);
                 });
             }
+        }, function (err, result) {
+            callback();
         });
     });
 };
 
-ChannelImport.prototype.save = function () {
-    var channelSchema = new ChannelSchema(this.channel);
+ChannelImport.prototype.save = function (obj) {
+    var channelSchema = new ChannelSchema(obj);
     channelSchema.save(function (err) {
         if (err) {
-            ChannelSchema.findOne({'channel_id': channel.channel_id}, function (err, c) {
-                c.name = channel.name;
-                c.number = channel.number;
-                c.channel_id = channel.channel_id;
-                c.image = channel.image;
-                c.group = channel.group;
-                c.transponder = channel.transponder;
-                c.stream = channel.stream;
-                c.is_atsc = channel.is_atsc;
-                c.is_cable = channel.is_cable;
-                c.is_terr = channel.is_terr;
-                c.is_sat = channel.is_sat;
-                c.is_radio = channel.is_radio;
-
-                c.save(function () {
-                    callback.call();
-                });
+            ChannelSchema.update({
+                channel_id: obj.channel_id
+            }, obj, {upsert: true}, function({
+                callback.call();
             });
         }
     });
