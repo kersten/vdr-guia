@@ -54,8 +54,7 @@ Backbone.View.prototype.renderTemplate = function () {
 Backbone.View.prototype.destructor = function () {
     $(this.el).children().remove();
     $(this.el).unbind();
-}
-
+};
 
 var socket = io.connect(location.origin, {'connect timeout': 5000});
 

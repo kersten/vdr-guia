@@ -2,28 +2,31 @@
     <h1>Installation <small>Setup GUIA // Step 2</small></h1>
 </div>
 <div class="row">
-    <div class="span14">
-        <form>
+    <div class="span12">
+        <form class="form-horizontal">
             <fieldset>
                 <legend>VDR configuration</legend>
-                <div class="clearfix">
-                    <label for="xlInput">VDR Host</label>
-                    <div class="input">
-                        <input type="text" size="30" id="VDRHost" class="xlarge" value="localhost" />
+                <div class="control-group">
+                    <label class="control-label" for="xlInput">VDR Host</label>
+                    <div class="controls">
+                        <input type="text" size="30" id="VDRHost" class="input-xlarge" value="localhost" />
                     </div>
                 </div>
 
-                <div class="clearfix">
-                    <label for="xlInput">Restful Port</label>
-                    <div class="input">
-                        <input type="text" size="30" id="restfulPort" class="xlarge" value="8002" />
+                <div class="control-group">
+                    <label class="control-label" for="xlInput">Restful Port</label>
+                    <div class="controls">
+                        <input type="text" size="30" id="restfulPort" class="input-xlarge" value="8002" />
                     </div>
                 </div>
             </fieldset>
         </form>
-
-        <div class="actions">
-            <button class="btn" id="previous" next="StepOne">Back</button>&nbsp;<button class="btn primary" id="next" next="StepThree">Next step</button>
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
+        <div class="form-actions">
+            <button class="btn btn-primary" id="next" next="StepThree">Next step</button>
         </div>
     </div>
 </div>

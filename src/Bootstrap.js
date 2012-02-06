@@ -307,7 +307,7 @@ Bootstrap.prototype.setupDnode = function (callback) {
                 port: 7007,
                 reconnect: 600
             }, function (remote, connection) {
-                remote.authenticate(doc.get('user'), doc.get('password'), doc.get('salt'), function (session) {
+                remote.authenticate(doc.get('user'), doc.get('password'), function (session) {
                     if (session) {
                         global.dnode = session;
 

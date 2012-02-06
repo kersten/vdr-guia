@@ -83,25 +83,37 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
             log.dbg('Found ' + res.events.length + ' new events');
 
-            async.map(res.events, function (event, callback) {
+            async.mapSeries(res.events, function (event, callback) {
                 if (socialize && dnode) {
+                    log.dbg('Sync event ' + event.title);
+                    
                     var transmit = {
                         channel: null,
-                        title: null,
-                        start_time: null,
-                        duration: null
+                        title: null
                     };
 
                     transmit.extend(event);
 
                     dnode.getEvent(transmit, function (res) {
                         console.log(res);
+                        
+                        res.start = event.start_time;
+                        res.duration = event.duration;
+                        res.channel_id = channel._id;
+                        res.event_id = event.id;
+                        
+                        delete(res.id);
+                        
+                        self.insertEpg(res, function () {
+                            log.dbg('Finished syncing ' + event.title);
+                            callback(null);
+                        });
+                    });
+                } else {
+                    self.extractDetails(channel, event, function (event) {
+                        self.insertEpg(event, callback);
                     });
                 }
-
-                self.extractDetails(channel, event, function (event) {
-                    self.insertEpg(event, callback);
-                });
             }, function (err, result) {
                 next.call();
             });
@@ -295,6 +307,10 @@ EpgImport.prototype.evaluateType = function (callback) {
 EpgImport.prototype.insertEpg = function (event, callback) {
     var eventSchema = new EventSchema(event);
     eventSchema.save(function (err, doc) {
+        if (err) {
+            console.log(err);
+        }
+        
         callback(null, doc);
     });
 };

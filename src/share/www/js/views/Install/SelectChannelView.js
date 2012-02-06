@@ -15,6 +15,8 @@ var InstallSelectChannelView = Backbone.View.extend({
                 restful: 'http://' + this.model.get('vdrhost') + ':' + this.model.get('restfulport')
             },
             success: function (collection) {
+                $('#channels > tbody', self.el).children().remove();
+                
                 collection.forEach(function (channel) {
                     $('#next', self.el).button('reset');
                     $('#next', self.el).removeClass('disabled');
