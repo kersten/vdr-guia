@@ -290,26 +290,27 @@ Bootstrap.prototype.setupSocketIo = function () {
 
 Bootstrap.prototype.setupDnode = function (callback) {
     var self = this;
-    var user = mongoose.model('User');
+    var config = mongoose.model('Configuration');
 
-    user.findOne({}, function (err, doc) {
-        global.socialize = doc.get('socialize') || false;
+    config.findOne({}, function (err, doc) {
+        global.socialize = (doc.get('socializeKey') != null) ? true : false;
 
-        if (doc.get('socialize') === true) {
+        if (socialize === true) {
             log.dbg('Setting up dnode ..');
 
-            var client = Dnode({
-
-            });
+            var client = Dnode();
 
             client.connect({
                 host: 'guia-server.yavdr.tv',
                 port: 7007,
                 reconnect: 600
             }, function (remote, connection) {
-                remote.authenticate(doc.get('user'), doc.get('password'), function (session) {
+                remote.authenticateVdr(doc.get('socializeKey'), function (session) {
+                    log.dbg('Dnode  connected ..');
+                    
                     if (session) {
-                        global.dnode = session;
+                        log.dbg('Dnode authenticated ..');
+                        global.dnodeVdr = session;
 
                         if (!self.dnodeReconnect) {
                             self.dnodeReconnect = true;
@@ -562,6 +563,7 @@ Bootstrap.prototype.setupExtendedDetails = function () {
 
     var self = this;
     var config = mongoose.model('Configuration');
+    var Channel = require('./lib/Channel');
     var ActorDetails = require('./lib/Actor');
     var MovieDetails = require('./lib/Movie');
     var SeasonDetails = require('./lib/Season');
@@ -569,52 +571,57 @@ Bootstrap.prototype.setupExtendedDetails = function () {
     var importer = new EpgImport();
 
     var ConfigurationSchema = mongoose.model('Configuration');
-
-    ConfigurationSchema.findOne({}, function (err, data) {
-        async.parallel([function (callback) {
-            importer.evaluateType(function () {
-                if (data.get('fetchThetvdbSeasons')) {
-                    log.inf('Thetvdb Seasons fetching started ..');
-
-                    var seasonDetails = new SeasonDetails();
-                    seasonDetails.fetchAll(function () {
-                        log.inf('Thetvdb Seasons fetching finished ..');
+    
+    var channels = new Channel();
+    channels.import(function () {
+        ConfigurationSchema.findOne({}, function (err, data) {
+            async.parallel([function (callback) {
+                importer.evaluateType(function () {
+                    if (data.get('fetchThetvdbSeasons')) {
+                        log.inf('Thetvdb Seasons fetching started ..');
+    
+                        var seasonDetails = new SeasonDetails();
+                        seasonDetails.fetchAll(function () {
+                            log.inf('Thetvdb Seasons fetching finished ..');
+                            callback(null, null);
+                        });
+                    } else {
+                        log.inf('Thetvdb Seasons fetching disabled ..');
+                        callback(null, null);
+                    }
+                });
+            }, function (callback) {
+                callback(null, null);
+                /*if (data.get('fetchTmdbMovies')) {
+                    log.inf('Tmdb Movies fetching started ..');
+    
+                    var movieDetails = new MovieDetails();
+                    movieDetails.fetchAll(function () {
+                        log.inf('Tmdb Movies fetching finished ..');
                         callback(null, null);
                     });
                 } else {
-                    log.inf('Thetvdb Seasons fetching disabled ..');
+                    log.inf('Tmdb Movies fetching disabled ..');
                     callback(null, null);
-                }
+                }*/
+            }, function (callback) {
+                callback(null, null);
+                /*if (data.get('fetchTmdbActors')) {
+                    log.inf('Tmdb Actors fetching started ..');
+    
+                    var actorDetails = new ActorDetails();
+                    actorDetails.fetchAll(function () {
+                        log.inf('Tmdb Actors fetching finished ..');
+                        callback(null, null);
+                    });
+                } else {
+                    log.inf('Tmdb Actors fetching disabled ..');
+                    callback(null, null);
+                }*/
+            }], function (err, result) {
+                log.inf('Extended details fetching finished ..');
+                self.extendedDetailsRunning = false;
             });
-        }, function (callback) {
-            if (data.get('fetchTmdbMovies')) {
-                log.inf('Tmdb Movies fetching started ..');
-
-                var movieDetails = new MovieDetails();
-                movieDetails.fetchAll(function () {
-                    log.inf('Tmdb Movies fetching finished ..');
-                    callback(null, null);
-                });
-            } else {
-                log.inf('Tmdb Movies fetching disabled ..');
-                callback(null, null);
-            }
-        }, function (callback) {
-            if (data.get('fetchTmdbActors')) {
-                log.inf('Tmdb Actors fetching started ..');
-
-                var actorDetails = new ActorDetails();
-                actorDetails.fetchAll(function () {
-                    log.inf('Tmdb Actors fetching finished ..');
-                    callback(null, null);
-                });
-            } else {
-                log.inf('Tmdb Actors fetching disabled ..');
-                callback(null, null);
-            }
-        }], function (err, result) {
-            log.inf('Extended details fetching finished ..');
-            self.extendedDetailsRunning = false;
         });
     });
 };

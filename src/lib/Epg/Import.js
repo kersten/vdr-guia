@@ -1,7 +1,7 @@
 var rest = require('restler');
 var EventSchema = mongoose.model('Event');
 var ActorSchema = mongoose.model('Actor');
-var ChannnelSchema = mongoose.model('Channel');
+var ChannelSchema = mongoose.model('Channel');
 var async = require('async');
 
 Object.defineProperty(Object.prototype, "extend", {
@@ -35,22 +35,20 @@ EpgImport.prototype.start = function (callback) {
 
     log.dbg("Starting epg import ...");
 
-    this.channelImporter.start(function () {
-        var channelQuery = ChannnelSchema.find({active: true});
+    var channelQuery = ChannelSchema.find({active: true});
 
-        channelQuery.each(function (err, channel, next) {
-            if (channel === undefined) {
-                callback(self.newEpg);
-                return;
-            }
+    channelQuery.each(function (err, channel, next) {
+        if (channel === undefined) {
+            callback(self.newEpg);
+            return;
+        }
 
-            if (next === undefined) {
-                callback(self.newEpg);
-                return;
-            }
+        if (next === undefined) {
+            callback(self.newEpg);
+            return;
+        }
 
-            self.fetchEpg(channel, next);
-        });
+        self.fetchEpg(channel, next);
     });
 };
 
@@ -84,7 +82,7 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
             log.dbg('Found ' + res.events.length + ' new events');
 
             async.mapSeries(res.events, function (event, callback) {
-                if (socialize && dnode) {
+                if (socialize !== undefined && socialize && dnodeVdr) {
                     log.dbg('Sync event ' + event.title);
                     
                     var transmit = {
@@ -94,19 +92,25 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
                     transmit.extend(event);
 
-                    dnode.getEvent(transmit, function (res) {
-                        console.log(res);
-                        
+                    dnodeVdr.getEvent(transmit, function (res) {
                         res.start = event.start_time;
                         res.duration = event.duration;
+                        res.stop = res.start + res.duration;
                         res.channel_id = channel._id;
                         res.event_id = event.id;
                         
                         delete(res.id);
+                        delete(res._id);
                         
-                        self.insertEpg(res, function () {
-                            log.dbg('Finished syncing ' + event.title);
-                            callback(null);
+                        ChannelSchema.findOne({channel_id: res.channel}, function (err, channel) {
+                            if (channel) {
+                                res.channel_id = channel.get('_id');
+                            
+                                self.insertEpg(res, function () {
+                                    log.dbg('Finished syncing ' + event.title);
+                                    callback(null);
+                                });
+                            }
                         });
                     });
                 } else {
@@ -308,10 +312,17 @@ EpgImport.prototype.insertEpg = function (event, callback) {
     var eventSchema = new EventSchema(event);
     eventSchema.save(function (err, doc) {
         if (err) {
-            console.log(err);
+            if (err.code == 11000) {
+                EventSchema.update({event_id: event.event_id, channel_id: event.channel_id}, event, {upsert: true}, function (err, doc) {
+                    callback(null, doc);
+                });
+            } else {
+                console.log(err);
+                callback(null, doc);
+            }
+        } else {
+            callback(null, doc);
         }
-        
-        callback(null, doc);
     });
 };
 

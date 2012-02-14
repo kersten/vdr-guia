@@ -1,3 +1,3 @@
-<div style="text-align: center; background-position: right; background-image: url('/logo/<&= channel.get('name') &>'); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
+<div style="text-align: center; background-position: right; background-image: url(<&= (channel.get('logo')) ? channel.get('logo') : ''http://placehold.it/64x36text=No+Logo'' &>); background-repeat: no-repeat; background-size: 64px 36px; height: 36px;">
     <h3 style="float: left;"><&= channel.get('name') &></h3>
 </div>
