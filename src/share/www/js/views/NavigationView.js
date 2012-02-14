@@ -15,10 +15,10 @@ var NavigationView = Backbone.View.extend({
         this.collection.fetch({success: function (collection, data) {
             if (!data.loggedIn) {
                 var template = _.template( $("#LoginFormTemplate").html(), {} );
-                self.el.children('div.navbar-inner', self.el).children('div.container').append(template);
+                $(self.el).children('div.navbar-inner').children('div.container').append(template);
             } else {
-                //var SearchView = new NavigationSearchView({});
-                //self.el.children('div.navbar-inner', self.el).children('div.container').append(SearchView.render().el);
+                var SearchView = new NavigationSearchView({});
+                $(self.el).children('div.navbar-inner', self.el).children('div.container').append(SearchView.render().el);
             }
 
             data.items.forEach(function (item) {
@@ -137,7 +137,7 @@ var NavigationView = Backbone.View.extend({
 
                     self.collection.fetch({success: function (collection, data) {
                         var SearchView = new NavigationSearchView({});
-                        self.el.children('div.navbar-inner').children('div.container').append(SearchView.render().el);
+                        $(self.el).children('div.navbar-inner').children('div.container').append(SearchView.render().el);
 
                         data.items.forEach(function (item) {
                             collection.add(item);
@@ -165,7 +165,7 @@ var NavigationView = Backbone.View.extend({
                 self.collection.fetch({success: function (collection, data) {
                     if (!data.loggedIn) {
                         var template = _.template( $("#LoginFormTemplate").html(), {} );
-                        self.el.children('div.fill').children('div.container').append(template);
+                        $(self.el).children('div.fill').children('div.container').append(template);
                     }
 
                     data.items.forEach(function (item) {
