@@ -15,10 +15,10 @@ var NavigationView = Backbone.View.extend({
         this.collection.fetch({success: function (collection, data) {
             if (!data.loggedIn) {
                 var template = _.template( $("#LoginFormTemplate").html(), {} );
-                self.el.children('div.navbar-inner').children('div.container').append(template);
+                self.el.children('div.navbar-inner', self.el).children('div.container').append(template);
             } else {
-                var SearchView = new NavigationSearchView({});
-                self.el.children('div.navbar-inner').children('div.container').append(SearchView.render().el);
+                //var SearchView = new NavigationSearchView({});
+                //self.el.children('div.navbar-inner', self.el).children('div.container').append(SearchView.render().el);
             }
 
             data.items.forEach(function (item) {
