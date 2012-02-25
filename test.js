@@ -1,5 +1,26 @@
 global.log = require('node-logging');
-var utils = require('util');
+var ffmpeg = require('fluent-ffmpeg');
+
+// http://192.168.0.5:8008/recstream.html?recid=recording_e12420a2e7faf6bb3f1e6bb0d2cb2371
+
+var proc = new ffmpeg('http://192.168.0.5:3000/S19.2E-1-1017-61301.ts')
+    .withSize('150x100')
+    .takeScreenshots({
+        count: 1,
+        timemarks: [ '0.5' ]
+    }, '/tmp/', function(err) {
+        console.log(arguments);
+        console.log('screenshots were saved')
+    });
+
+
+var ffmpegmeta = require('fluent-ffmpeg').Metadata;
+
+// make sure you set the correct path to your video file
+ffmpegmeta.get('http://192.168.0.5:3000/S19.2E-1-1017-61301.ts', function(metadata) {
+    console.log(arguments);
+});
+/*var utils = require('util');
 var dnode = require('dnode');
 
 dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
@@ -13,8 +34,8 @@ dnode.connect('guia-server.yavdr.tv', 7007, function (remote, connection) {
                 console.log(result);
             });
         }
-    });*/
-});
+    });
+});*/
 
 /* var trakt = require('trakt').Client;
 var user = require('trakt/user');

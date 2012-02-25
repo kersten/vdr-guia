@@ -1,12 +1,12 @@
-<div class="event">
+<div class="event" style="cursor: pointer;">
     <table>
         <tr>
             <td style="width: 47px;">
-                <&= event.start_time() &><br />
+                <strong><&= event.start_time() &></strong><br />
                 <&= parseInt(event.get('duration') / 60) &> min
             </td>
-            <td>
-                <&= event.get('title') &>
+            <td valign="top">
+                <strong><&= event.get('title') &></strong>
             </td>
         </tr>
     </table>

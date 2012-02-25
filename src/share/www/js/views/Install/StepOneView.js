@@ -52,21 +52,19 @@ var InstallStepOneView = Backbone.View.extend({
                 $('#username').parent().append($('<span></span>').addClass('help-inline').html('Username is empty'));
     
                 validationFailed = true;
-            } else {
-                this.model.set({username: $('#username').val()});
             }
-    
+
             if ($('#password').parent().parent().hasClass('error')) {
                 $('#password').parent().parent().removeClass('error');
                 $('#password').removeClass('error');
                 $('#password').parent().children('span').remove();
             }
-    
+
             if ($('#password').val() == '') {
                 $('#password').parent().parent().addClass('error');
                 $('#password').addClass('error');
                 $('#password').parent().append($('<span></span>').addClass('help-inline').html('Password is empty'));
-    
+
                 validationFailed = true;
             } else if ($('#password').val() != $('#repassword').val()) {
                 $('#password').parent().parent().addClass('error');
@@ -74,11 +72,7 @@ var InstallStepOneView = Backbone.View.extend({
                 $('#password').parent().append($('<span></span>').addClass('help-inline').html('Passwords do not match'));
     
                 validationFailed = true;
-            } else {
-                this.model.set({password: $('#password').val()});
             }
-    
-            this.model.set({socialize: $('#transmit').is(':checked')});
     
             if ($('#transmit').is(':checked')) {
                 if ($('#email').val() == '') {
@@ -88,11 +82,13 @@ var InstallStepOneView = Backbone.View.extend({
     
                     validationFailed = true;
                 } else {
+                    this.model.set({username: $('#username').val()});
+
                     this.model.set({socialize: true});
                     this.model.set({email: $('#email').val()});
                     
-                    var password = hex_sha512(self.model.get('password'));
-                    self.model.set({password: password});
+                    var password = hex_sha512($('#password').val());
+                    this.model.set({password: password});
                     
                     socket.emit('Install:CheckUser', {
                         model: this.model
@@ -128,9 +124,15 @@ var InstallStepOneView = Backbone.View.extend({
                     });
                 }
             } else {
-                this.model.set({socialize: false});
-                
                 if (!validationFailed) {
+                    this.model.set({username: $('#username').val()});
+                    this.model.set({email: $('#email').val()});
+
+                    this.model.set({socialize: false});
+
+                    var password = hex_sha512($('#password').val());
+                    self.model.set({password: password});
+
                     var view = new InstallStepTwoView({
                         model: this.model
                     });

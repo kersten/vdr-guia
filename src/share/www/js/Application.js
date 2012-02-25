@@ -61,6 +61,7 @@ var GUIA = {
         routes: {
             '': 'welcomeRoute',
             '!/Welcome': 'welcomeRoute',
+            '!/Login': 'loginRoute',
             '!/Highlights': 'highlightsRoute',
             '!/TVGuide': 'tvguideRoute',
             '!/TVGuide/:date': 'tvguideRoute',
@@ -98,8 +99,8 @@ var GUIA = {
                 var func_args = arguments;
 
                 socket.emit('loggedIn', function (loggedIn) {
-                    if (!loggedIn && (route != '!/Welcome' && route != '!/About')) {
-                        route = '!/Welcome';
+                    if (!loggedIn && (route != '!/Login' && route != '!/About')) {
+                        route = '!/Login';
 
                         GUIA.router.navigate(route, true);
                     } else {
@@ -121,6 +122,11 @@ var GUIA = {
 
         welcomeRoute: function () {
             this.currentView = new WelcomeView();
+            $('#body').html(this.currentView.render().el);
+        },
+
+        loginRoute: function () {
+            this.currentView = new LoginView();
             $('#body').html(this.currentView.render().el);
         },
 

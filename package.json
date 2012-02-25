@@ -36,7 +36,10 @@
         "dnode": "*",
         "node-uuid": "*",
         "MQTTClient": "*",
-        "file": "*"
+        "file": "*",
+        "underscore": "*",
+        "backbone": "*",
+        "fluent-ffmpeg": "*"
     },
     "licenses":[{
         "type" : "MIT",

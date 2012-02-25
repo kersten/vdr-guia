@@ -3,7 +3,7 @@ var EventModel = Backbone.Model.extend({
 
     initialize: function () {
         if (this.get('short_description') == "" && this.get('description') != "" && this.get('description') != null) {
-            this.set({short_description: cutwords(this.get('description'), 140)});
+            this.short_description = cutwords(this.get('description'), 140);
         }
     },
 

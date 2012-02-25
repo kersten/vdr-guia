@@ -43,26 +43,45 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('Event:record', function (data, callback) {
-        rest.post(vdr.restful + '/timers', {
-            data: {
-                channel: data.channel_id,
-                eventid: data.event_id,
-                minpre: 5,
-                minpost: 15
-            }
-        }).on('success', function (data) {
-            callback(data.timers[0]);
-        }).on('error', function () {
-        }).on('403', function () {
-        });
-    });
+    socket.on('EventModel:update', function (data, callback) {
+        var event = data.model;
 
-    socket.on('Event:deleteTimer', function (data, callback) {
-        rest.del(vdr.restful + '/timers/' + data.timer_id).on('success', function (data) {
-            callback();
-        }).on('error', function () {
-        }).on('403', function (e) {
-        });
+        console.log(event);
+
+        if (event.timer_exists) {
+            log.dbg('Create timer for ' + event.title);
+
+            rest.post(vdr.restful + '/timers', {
+                data: {
+                    channel: event.channel,
+                    eventid: event.event_id,
+                    minpre: 5,
+                    minpost: 15
+                }
+            }).on('success', function (data) {
+                event.timer_exists = true;
+                event.timer_id = data.timers[0].id;
+
+                events.update({_id: event._id}, {timer_exists: true, timer_id: data.timers[0].id}, {upsert: true});
+
+                callback(event);
+            }).on('error', function () {
+            }).on('403', function () {
+            });
+        } else if (!event.timer_exists && event.timer_id !== undefined) {
+            log.dbg('Delete timer for ' + event.title);
+
+            rest.del(vdr.restful + '/timers/' + event.timer_id).on('success', function (data) {
+                event.timer_exists = false;
+                event.timer_id = undefined;
+
+                events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_active: false, timer_exists: false}, {upsert: true});
+                callback(event);
+            }).on('error', function () {
+                console.log(arguments);
+            }).on('403', function (e) {
+                console.log(arguments);
+            });
+        }
     });
 });

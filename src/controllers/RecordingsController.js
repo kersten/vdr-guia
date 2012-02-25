@@ -31,7 +31,7 @@ io.sockets.on('connection', function (socket) {
             var records = new Array();
             var directories = new Array();
 
-            recordings.forEach(function (data) {
+            /*recordings.forEach(function (data) {
                 if (data.name.match(/~/)) {
                     var directory = data.name.split('~');
 
@@ -45,6 +45,10 @@ io.sockets.on('connection', function (socket) {
                 }
 
                 records.push(data);
+            });*/
+
+            recordings.forEach(function (data) {
+                records[data.number] = data;
             });
 
             callback(records);

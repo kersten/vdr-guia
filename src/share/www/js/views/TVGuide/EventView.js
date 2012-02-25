@@ -22,6 +22,8 @@ var TVGuideEventView = Backbone.View.extend({
     },
 
     showEventPopover: function (ev) {
+        return;
+
         var self = this;
         var el = this.el;
         

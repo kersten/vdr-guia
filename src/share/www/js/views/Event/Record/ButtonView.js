@@ -13,7 +13,7 @@ var EventRecordButtonView = Backbone.View.extend({
             image += 'Series';
         }
 
-        if (this.model.get('timer_active')) {
+        if (this.model.get('timer_exists')) {
             image += '-2';
         }
 
@@ -22,7 +22,7 @@ var EventRecordButtonView = Backbone.View.extend({
             verticalAlign: 'sub'
         }).attr({
             src: '/icons/devine/black/16x16/' + image + '.png',
-            title: !this.model.get('timer_active') ? 'Record' : 'Delete timer'
+            title: !this.model.get('timer_exists') ? 'Record' : 'Delete timer'
         });
         
         if (parseInt(this.model.get('stop')) < parseInt(new Date().getTime() / 1000)) {
@@ -56,14 +56,14 @@ var EventRecordButtonView = Backbone.View.extend({
             case 'mouseenter':
                 $(ev.currentTarget).attr({
                     src: '/icons/devine/black/16x16/' + image_record + '.png',
-                    title: !this.model.get('timer_active') ? 'Record' : 'Delete timer'
+                    title: !this.model.get('timer_exists') ? 'Record' : 'Delete timer'
                 });
                 break;
 
             case 'mouseleave':
                 $(ev.currentTarget).attr({
                     src: '/icons/devine/black/16x16/' + image + '.png',
-                    title: !this.model.get('timer_active') ? 'Record' : 'Delete timer'
+                    title: !this.model.get('timer_exists') ? 'Record' : 'Delete timer'
                 });
                 break;
         };
@@ -74,14 +74,14 @@ var EventRecordButtonView = Backbone.View.extend({
             return;
         }
         
-        if (this.model.get('timer_active')) {
+        if (this.model.get('timer_exists')) {
             console.log('Delete timer for: ' + this.model.get('_id'));
-            this.model.set({timer_active: false});
+            this.model.set({timer_exists: false});
 
             this.model.save();
         } else {
             console.log('Create timer for: ' + this.model.get('_id'));
-            this.model.set({timer_active: true});
+            this.model.set({timer_exists: true});
 
             this.model.save();
         }

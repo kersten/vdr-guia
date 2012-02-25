@@ -90,6 +90,8 @@ Backbone.sync = function (method, model, options) {
     });
 };
 
+Backbone.Model.prototype.idAttribute = "_id";
+
 XDate.parsers.unshift(function (str) {
     var parts = str.split('.');
     if (parts.length == 3) {

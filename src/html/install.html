@@ -110,7 +110,7 @@
             var socializeKey = '<%= socializeKey %>';
 
             $(document).ready(function () {
-                var config = new ConfigurationModel;
+                var config = new ConfigurationModel();
 
                 var installView = new InstallView({model: config});
                 $('#body').html(installView.render().el);

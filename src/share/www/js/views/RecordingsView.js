@@ -2,7 +2,8 @@ var RecordingsView = Backbone.View.extend({
     template: "RecordingsTemplate",
     
     events: {
-        'click .tabs > li': 'switchSection'
+        'click .tabs > li': 'switchSection',
+        'shown a[data-toggle="tab"]': 'switchSection'
     },
     
     initialize: function () {
@@ -12,8 +13,6 @@ var RecordingsView = Backbone.View.extend({
             this.options.section = 'Recordings';
         }
         
-        $('.tabs > li[data-section="' + this.options.section + '"]', this.el).addClass('active');
-        
         this.loadSection();
     },
 
@@ -21,26 +20,22 @@ var RecordingsView = Backbone.View.extend({
         return this;
     },
     
-    switchSection: function (ev) {
-        if ($(ev.currentTarget).hasClass('active')) {
-            return;
-        }
+    switchSection: function (e) {
+        this.options.section = $(e.target).data('view');
 
-        $('.tabs').find('li.active').removeClass('active');
-        $(ev.currentTarget).addClass('active');
-        
-        this.options.section = $(ev.currentTarget).data('section');
+        $('#' + $(e.target).data('view')).addClass('active');
+        $('#' + $(e.relatedTarget).data('view')).removeClass('active');
         
         this.loadSection();
     },
 
-    loadSection: function () {
+    loadSection: function (e) {
         if (this.subView != null) {
             this.subView.remove();
         }
         
         this.subView = new window['Recordings' + this.options.section + 'View']({});
-        $('#settingssection', this.el).html(this.subView.render().el);
+        $('#' + this.options.section, this.el).html(this.subView.render().el);
         
         GUIA.router.navigate('!/Recordings/' + this.options.section);
     }

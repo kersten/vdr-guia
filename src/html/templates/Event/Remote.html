@@ -1,0 +1,163 @@
+<div style="left: 0px; right: 0px; top: 40px; background-size: 100%; background-color: #EEE; background: url('<&= event.get('randomBackdrop').url &>') no-repeat; height: 560px; max-height: 560px; position: absolute; min-width: 940px;">
+    <div style="line-height: 12px; border-radius: 5px; position: absolute; top: 20px; color: #FFFFFF; right: 20px; height: 124px; width: 300px; z-index: 2;">
+        <img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Up/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Up/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
+        <img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[0] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[1] &>.png" />&nbsp;<img src="/icons/clock/Down/Left/<&= event.get('start_formatted')[3] &>.png" /><img src="/icons/clock/Down/Right/<&= event.get('start_formatted')[4] &>.png" /><br />
+    </div>
+</div>
+
+<div style="left: 0px; top: 40px; background-color: #EEE; height: 560px; max-height: 560px; position: absolute; width: 40px; min-width: 40px;"></div>
+<div style="right: 0px; top: 40px; background-color: #EEE; height: 560px; max-height: 560px; position: absolute; width: 40px; min-width: 40px;"></div>
+
+<div style="background-color: #000000; opacity: 0.8; padding: 20px; top: 410px; left: 0px; right: 0px; height: 150px; position: absolute;"></div>
+<div style="margin: -20px; height: 560px; max-height: 560px; position: relative;">
+    <div class="cast" style="position: absolute; top: 0px; left: 0px; right: 0px; max-height: 250px; height: 250px; background-color: #000000; opacity: 0.8; padding: 20px; overflow: hidden; display: none;"></div>
+    <div class="cast" style="position: absolute; top: 0px; left: 0px; right: 0px; max-height: 250px; padding: 20px; overflow: hidden; display: none;">
+        <& if (event.get('actors').length != 0) { &>
+        <h5 style="color: #FFF;">Actors</h5>
+        <p>
+            <& _.each(event.get('actors'), function (actor, index) { &>
+        <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
+                <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>">
+                        <& if (actor.tmdbId != null && actor.tmdbId.profile != null && actor.tmdbId.profile.length != 0) { &>
+                        <img src="<&= actor.tmdbId.profile[0].image.url &>" width="45">
+                        <& } else { &>
+                        <img src="http://placehold.it/45x55&text=No+Photo" width="45">
+                        <& } &>
+                    </a>
+                </span>
+                <span class="text" style="float: left; color: #FFF;">
+                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>"><&= actor.name &></a><br>
+                    as <&= actor.character &>
+                </span>
+        </div>
+        <& }); &>
+        </p>
+        <& } &>
+    </div>
+
+    <div style="padding: 20px; position: absolute; bottom: 0px; left: 0px; right: 0px; height: 150px;">
+        <h1 id="title" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px; overflow: hidden; width: 550px;"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+
+        <div class="eventDescription" style="color: #FFFFFF; margin-left: 160px; max-height: 68px; overflow: hidden; width: 550px;">
+        </div>
+
+        <div class="eventInfos" style="padding: 10px; border-radius: 5px; margin-left: 720px; background-color: #EEE; opacity: 0.5; position: absolute; top: 20px; color: #000; right: 20px; height: 124px; width: 200px;">
+            Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
+        </div>
+
+        <div style="margin-left: 160px; top: 18px; position: relative;">
+            <span class="label showcast" style="color: #000; cursor: pointer;">
+                Cast
+            </span>
+            &nbsp;
+            <span class="label success recordThis" style="color: #000; cursor: pointer;">
+                Record
+            </span>
+            &nbsp;
+            <span class="label notice amazonbuy" style="color: #000; cursor: pointer;">
+                <img src="/icons/amazon.png" style="position: relative; left: -3px; top: 1px; height: 16px; vertical-align: sub;" />
+                Buy on Amazon
+            </span>
+        </div>
+
+        <div style="position: absolute; bottom: 30px; left: 30px;">
+            <img width="130px" src="<&= event.get('image') &>" style="box-shadow: 0px 0px 8px #fff;" />
+        </div>
+    </div>
+</div>
+<!-- <div style="margin: -20px; background-image: url('<&= event.get('randomBackdrop').url &>'); height: <&= event.get('randomBackdrop').height &>px; max-height: 520px; position: relative;">
+    <div style="background-color: #000000; opacity: 0.8; padding: 20px; position: absolute; bottom: 0px; left: 0px; right: 0px; height: 150px;">
+        <h1 id="title" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px;"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+
+        <div class="eventDescription" style="opacity: 1.0; color: #FFFFFF; margin-left: 160px; max-height: 86px; overflow: hidden;">
+        </div>
+
+        <div style="opacity: 1.0; color: #FFFFFF; margin-left: 160px;">
+            <span class="label notice">Cast</span> <span class="label important">Record</span> <span class="label notice"><img src="/icons/amazon.png" style="height: 11px; vertical-align: sub;" /> Buy on Amazon</span>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 30px; left: 30px;">
+        <img width="130px" src="<&= event.get('image') &>" style="box-shadow: 0px 0px 8px #fff;" />
+    </div>
+</div>  -->
+<!-- <div class="page-header">
+    <div style="float:right;">
+        <img src="/icons/amazon.png" style="height: 16px; vertical-align: sub;" /> Buy it from <a style="cursor: pointer;" href="http://www.amazon.de/gp/search?index=aps&url=search-alias%3Ddvd&tag=meiblo05-21&keywords=<&= escape(event.get('title')) &>">Amazon</a>
+    </div>
+    <h1 id="title"><&= event.get('title') &> <small><&= event.get('category') &></small></h1>
+    <& if (event.get('short_description')) { &>
+    <p><&= event.get('short_description') &></p>
+    <& } &>
+</div>
+<div class="row">
+    <div class="span4">
+        <& if (event.get('image')) { &>
+            <img class="thumbnail" src="<&= event.get('image') &>" alt="" />
+
+            <p style="cursor: pointer;"><a style="cursor: pointer;" class="showDetails" data-view="posters">Show all posters</a></p>
+
+        <& } else { &>
+            <img class="thumbnail" src="http://placehold.it/185x263&text=No%20Picture" alt="" />
+        <& } &>
+
+        <& if (event.get('broadcastings')) { &>
+        <div>
+            <h6>Next broadcastings</h6>
+            <& _.each(event.get('broadcastings'), function (next) { &>
+            <div class="row">
+                <div class="span4 isSeries" style="cursor: pointer;" data-id="<&= next._id &>">
+                        <&= new XDate(next.start * 1000).toString('dd.MM HH:mm') + ' ' + (next.short_description != "" ? next.short_description : next.title) &>
+                </div>
+            </div>
+            <& }); &>
+        </div>
+        <& } &>
+    </div>
+
+    <div class="row eventDetails">
+        <div class="span12">
+            <div class="row">
+                <div class="span2">
+                    <a style="cursor: pointer;" class="goback"><%= __('Back to TVGuide') %></a>
+                </div>
+                <div class="span10 eventInfos">
+                    <p style="text-align: right;" class="recordThis">
+                        Broadcasting on <&= event.get('channel_id').name &> at <&= event.get('date') &> <&= event.get('start_formatted') &>
+                    </p>
+                </div>
+            </div>
+
+            <& if (event.get('rating')) { &>
+            <div class="row">
+                <div class="span12 eventRating">
+                        <& for (var i = 1; i < 11; i++) {
+                            if (event.get('rating') > i) { &>
+                                <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_full.png" />
+                            <& } else { &>
+                                <img style="height: 16px; vertical-align: sub;" src="/icons/stars/star_gray.png" />
+                            <& }
+                        } &>
+                        <& if (event.get('votes')) { &>
+                            <&= event.get('rating') &> / 10 (<&= event.get('votes') &> Votes)
+                        <& } &>
+                </div>
+            </div>
+            <& } &>
+
+            <div class="row">
+                <div class="span12 eventDescription">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<& if (event.get('url')) { &>
+<div class="row">
+    <div class="span12" style="font-size: 9px; text-align: right;">
+        <a href="<&= event.get('url') &>" target="_blank">Open in tmdb.org</a>
+    </div>
+</div>
+<& } &> -->

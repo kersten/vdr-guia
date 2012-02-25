@@ -153,15 +153,15 @@ var EventView = Backbone.View.extend({
 
                 console.log(event);
 
-                //var recordView = new EventRecordButtonView({
-                //    model: event
-                //});
+                var recordView = new EventRecordButtonView({
+                    model: event
+                });
 
-                //recordView.render();
+                recordView.render();
 
                 var template = _.template( $('#' + self.template).html(), {event: event} );
                 $(self.el).html( template );
-                //$('.recordThis', self.el).append(recordView.el);
+                $('.recordThis', self.el).append(recordView.el);
                 
                 if (event.get('stop') * 1000 < new Date().getTime()) {
                     $('.recordThis', self.el).remove();

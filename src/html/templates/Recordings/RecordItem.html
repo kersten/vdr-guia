@@ -1,0 +1,11 @@
+<div class="thumbnail">
+    <img src="http://placehold.it/260x180&text=<&= model.get('event_title') &>" alt="">
+    <div class="caption">
+        <h5 style="max-height: 20px; overflow: hidden; min-height: 20px; height: 20px;"><&= model.get('event_title') &></h5>
+        <h6 style="max-height: 20px; overflow: hidden; min-height: 20px; height: 20px;"><&= (model.get('event_short_text') != null && model.get('event_short_text') != "") ? model.get('event_short_text') : '&nbsp;' &></h6>
+
+        <p style="max-height: 90px; overflow: hidden; min-height: 90px; height: 90px;"><&= model.get('event_description') &></p>
+
+        <p><a href="#" class="btn btn-success">Play</a> <a href="#" class="btn btn-warning">Edit</a> <a href="#" class="btn btn-danger">Delete</a></p>
+    </div>
+</div>

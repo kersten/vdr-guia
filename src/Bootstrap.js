@@ -523,7 +523,7 @@ Bootstrap.prototype.setupEpgImport = function (restful) {
 
     var config = mongoose.model('Configuration');
     var EpgImport = require('./lib/Epg/Import');
-    var importer = new EpgImport(restful, 250);
+    var importer = new EpgImport(restful, 70);
 
     function runImporter () {
         importer.start(function (hadEpg) {
@@ -564,65 +564,10 @@ Bootstrap.prototype.setupExtendedDetails = function () {
     var self = this;
     var config = mongoose.model('Configuration');
     var Channel = require('./lib/Channel');
-    var ActorDetails = require('./lib/Actor');
-    var MovieDetails = require('./lib/Movie');
-    var SeasonDetails = require('./lib/Season');
-    var EpgImport = require('./lib/Epg/Import');
-    var importer = new EpgImport();
-
-    var ConfigurationSchema = mongoose.model('Configuration');
     
     var channels = new Channel();
     channels.import(function () {
-        ConfigurationSchema.findOne({}, function (err, data) {
-            async.parallel([function (callback) {
-                importer.evaluateType(function () {
-                    if (data.get('fetchThetvdbSeasons')) {
-                        log.inf('Thetvdb Seasons fetching started ..');
-    
-                        var seasonDetails = new SeasonDetails();
-                        seasonDetails.fetchAll(function () {
-                            log.inf('Thetvdb Seasons fetching finished ..');
-                            callback(null, null);
-                        });
-                    } else {
-                        log.inf('Thetvdb Seasons fetching disabled ..');
-                        callback(null, null);
-                    }
-                });
-            }, function (callback) {
-                callback(null, null);
-                /*if (data.get('fetchTmdbMovies')) {
-                    log.inf('Tmdb Movies fetching started ..');
-    
-                    var movieDetails = new MovieDetails();
-                    movieDetails.fetchAll(function () {
-                        log.inf('Tmdb Movies fetching finished ..');
-                        callback(null, null);
-                    });
-                } else {
-                    log.inf('Tmdb Movies fetching disabled ..');
-                    callback(null, null);
-                }*/
-            }, function (callback) {
-                callback(null, null);
-                /*if (data.get('fetchTmdbActors')) {
-                    log.inf('Tmdb Actors fetching started ..');
-    
-                    var actorDetails = new ActorDetails();
-                    actorDetails.fetchAll(function () {
-                        log.inf('Tmdb Actors fetching finished ..');
-                        callback(null, null);
-                    });
-                } else {
-                    log.inf('Tmdb Actors fetching disabled ..');
-                    callback(null, null);
-                }*/
-            }], function (err, result) {
-                log.inf('Extended details fetching finished ..');
-                self.extendedDetailsRunning = false;
-            });
-        });
+        self.extendedDetailsRunning = false;
     });
 };
 

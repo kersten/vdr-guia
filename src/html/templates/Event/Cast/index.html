@@ -5,22 +5,15 @@
 </p>
 
 <div class="row">
-    <div class="span12">
+    <div class="span9">
         <h5>Actors</h5>
         <p>
             <& _.each(cast.get('actors'), function (actor, index) { &>
             <div class="castItem" style="width: 290px; float: left; padding: 6px 0 0 0; display: block;">
                 <span class="image" style="float: left; padding: 0 20px 12px 0; width: 45px; height: 61px; overflow: hidden;">
-                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personId="<&= actor._id &>">
-                        <& if (actor.tmdbId != null && actor.tmdbId.profile.length != 0) { &>
-                        <img src="<&= actor.tmdbId.profile[0].image.url &>" width="45">
-                        <& } else { &>
-                        <img src="http://placehold.it/45x55&text=No+Photo" width="45">
-                        <& } &>
-                    </a>
                 </span>
                 <span class="text" style="float: left;">
-                    <a style="cursor: pointer;" class="showDetails" data-view="person" data-personid="<&= actor._id &>"><&= actor.name &></a><br>
+                    <strong><&= actor.name &></strong><br>
                     as <&= actor.character &>
                 </span>
             </div>
@@ -30,7 +23,7 @@
 </div>
 
 <div class="row">
-    <div class="span12">
+    <div class="span9">
         <& if (cast.get('crew') != null && cast.get('crew').length > 0) { &>
         <h5>Crew</h5>
         <p>
