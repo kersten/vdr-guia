@@ -46,8 +46,6 @@ io.sockets.on('connection', function (socket) {
     socket.on('EventModel:update', function (data, callback) {
         var event = data.model;
 
-        console.log(event);
-
         if (event.timer_exists) {
             log.dbg('Create timer for ' + event.title);
 
@@ -78,9 +76,8 @@ io.sockets.on('connection', function (socket) {
                 events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_active: false, timer_exists: false}, {upsert: true});
                 callback(event);
             }).on('error', function () {
-                console.log(arguments);
             }).on('403', function (e) {
-                console.log(arguments);
+
             });
         }
     });
