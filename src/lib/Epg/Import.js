@@ -64,7 +64,7 @@ EpgImport.prototype.fetchEpg = function (channel, next) {
 
     query.exec(function (err, e) {
         if (e != null) {
-            from = Math.round(e.stop + 60);
+            from = Math.round(e.stop - 60);
         }
 
         log.dbg('Get events from channel: ' + channel.name);

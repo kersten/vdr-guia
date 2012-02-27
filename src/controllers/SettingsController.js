@@ -6,7 +6,7 @@ var movieDetails = mongoose.model('MovieDetail');
 var async = require('async');
 
 io.sockets.on('connection', function (socket) {
-    socket.on('ChannelModel:create', function (data, callback) {
+    socket.on('ChannelModel:update', function (data, callback) {
         if (!socket.handshake.session.loggedIn) {
             return false;
         }

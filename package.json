@@ -39,7 +39,8 @@
         "file": "*",
         "underscore": "*",
         "backbone": "*",
-        "fluent-ffmpeg": "*"
+        "fluent-ffmpeg": "*",
+        "everyauth": "*"
     },
     "licenses":[{
         "type" : "MIT",

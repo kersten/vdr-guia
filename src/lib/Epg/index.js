@@ -194,8 +194,15 @@ Epg.prototype._query = function (query, withSubEvents, callback) {
     query.populate('tmdbId.actors');
 
     query.exec(function (err, docs) {
+        console.log(docs);
+
         if (err) {
             log.err(err);
+            callback();
+            return;
+        }
+
+        if (!docs) {
             callback();
             return;
         }
@@ -229,8 +236,20 @@ Epg.prototype.getEvent = function (eventId, callback) {
     this._query(query, true, callback);
 };
 
+Epg.prototype.getEventById = function (eventId, channelId, callback) {
+    console.log(arguments);
+    var query = events.findOne({event_id: eventId});
+
+    query.populate('channel_id', null, {channel_id: channelId});
+    query.populate('actors');
+    query.populate('tmdbId');
+    query.populate('tmdbId.actors');
+
+    this._query(query, true, callback);
+};
+
 Epg.prototype.getEventsRange = function (channelId, starttime, stoptime, callback) {
-    var query = events.find({}, ['title', 'type', 'description', 'short_description', 'timer_active', 'timer_exists', 'start', 'stop', 'duration']);
+    var query = events.find({}, ['event_id', 'title', 'channel', 'type', 'description', 'short_description', 'timer_active', 'timer_exists', 'timer_id', 'start', 'stop', 'duration']);
 
     query.where('channel_id', channelId);
     query.where('start').gte(starttime).lt(stoptime);

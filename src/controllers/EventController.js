@@ -45,9 +45,11 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('EventModel:update', function (data, callback) {
         var event = data.model;
+        log.dbg(JSON.stringify(event));
 
         if (event.timer_exists) {
             log.dbg('Create timer for ' + event.title);
+            log.dbg(JSON.stringify(event));
 
             rest.post(vdr.restful + '/timers', {
                 data: {
@@ -57,14 +59,18 @@ io.sockets.on('connection', function (socket) {
                     minpost: 15
                 }
             }).on('success', function (data) {
+                log.dbg('Timer created: ' + data.timers[0].id);
+
                 event.timer_exists = true;
                 event.timer_id = data.timers[0].id;
 
                 events.update({_id: event._id}, {timer_exists: true, timer_id: data.timers[0].id}, {upsert: true});
 
                 callback(event);
-            }).on('error', function () {
-            }).on('403', function () {
+            }).on('error', function (err) {
+                log.err('Error creating timer: ' + JSON.stringify(err));
+            }).on('403', function (err) {
+                log.err('Error creating timer: ' + JSON.stringify(err));
             });
         } else if (!event.timer_exists && event.timer_id !== undefined) {
             log.dbg('Delete timer for ' + event.title);

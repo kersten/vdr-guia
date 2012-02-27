@@ -3,7 +3,7 @@ var TimerCollection = Backbone.Collection.extend({
     model: TimerModel,
     
     parse: function (response) {
-        response.forEach(function (item, index) {
+        /*response.forEach(function (item, index) {
             var start = new Date(
                 item.start_timestamp.substr(0,4),
                 item.start_timestamp.substr(5,2),
@@ -25,7 +25,7 @@ var TimerCollection = Backbone.Collection.extend({
             item.stop = ((stop.getHours() < 10) ? '0' : '') + stop.getHours() + ':' + ((stop.getMinutes() < 10) ? '0' : '') + stop.getMinutes();
 
             item.day = ((start.getDate() < 10) ? '0' : '') + start.getDate() + '.' + (((start.getMonth() + 1)  < 10) ? '0' : '') + (start.getMonth() + 1);
-        });
+        }); */
         
         return response;
     }

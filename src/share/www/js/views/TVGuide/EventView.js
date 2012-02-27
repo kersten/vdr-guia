@@ -3,7 +3,7 @@ var TVGuideEventView = Backbone.View.extend({
     tagName: 'div',
 
     events: {
-        'click div.event': 'showEventDetails',
+        'click td.event': 'showEventDetails',
         'hover div.event': 'showEventPopover'
     },
 
@@ -59,6 +59,13 @@ var TVGuideEventView = Backbone.View.extend({
 
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
+
+        var recordButton = new EventRecordButtonView({
+            model: this.model
+        });
+
+        recordButton.render();
+        $('.recordThis', this.el).append(recordButton.el);
 
         return this
     }

@@ -216,7 +216,7 @@ var TVGuideView = Backbone.View.extend({
                     });
 
                     // Render the event
-                    eventDiv.html(eventView.render().el);
+                    eventDiv.append(eventView.render().el);
                 }
             });
         });

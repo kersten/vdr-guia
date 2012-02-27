@@ -1,3 +1,5 @@
+var async = require('async');
+var Epg = require('../lib/Epg');
 var EpgTimer = require('../lib/Epg/Timer');
 
 io.sockets.on('connection', function (socket) {
@@ -6,13 +8,20 @@ io.sockets.on('connection', function (socket) {
             return false;
         }
 
-        data = data.data;
-        var start = data.page * data.limit - data.limit;
+        rest.get(vdr.restful + '/timers.json').on('success',  function (timers) {
+            var EpgEvent = new Epg();
+            var result = [];
 
-        rest.get(vdr.restful + '/timers.json?start=' + start + '&limit=' + data.limit).on('success',  function (timers) {
-            callback(timers.timers);
+            async.map(timers.timers, function (timer, callback) {
+                EpgEvent.getEventById(timer.event_id, timer.channel, function (event) {
+                    result.push(event);
+                    callback(null);
+                });
+            }, function () {
+                callback(result);
+            });
         }).on('error', function (e) {
-            log.dbg(vdr.restful + '/timers.json?start=' + start + '&limit=' + data.limit);
+
         });
     });
 

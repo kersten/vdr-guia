@@ -7,6 +7,8 @@ var EventRecordButtonView = Backbone.View.extend({
     },
 
     initialize: function () {
+        this.model.on('change:timer_exists', this.initialize, this );
+
         var image = 'Circle';
 
         if (this.model.get('type') == 'series') {
@@ -44,7 +46,7 @@ var EventRecordButtonView = Backbone.View.extend({
 
         var image_record = image;
 
-        if (this.model.get('timer_active')) {
+        if (this.model.get('timer_exists')) {
             image += '-2';
             image_record += '';
         } else {
