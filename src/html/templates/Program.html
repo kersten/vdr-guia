@@ -1,0 +1,20 @@
+<div class="page-header">
+    <div style="float: right;">
+        <div class="btn-group">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="/!/Program/<&= channels.models[0].get('name') &>">
+                <img src="/logo/<&= channels.models[0].get('name') &>" style="height: 10px;" /> <&= channels.models[0].get('name') &>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <& _.each(channels.models, function (channel) { &>
+                <li>
+                    <a href="/!/Program/<&= channel.get('name') &>">
+                        <img src="/logo/<&= channel.get('name') &>" style="height: 10px;" /> <&= channel.get('name') &>
+                    </a>
+                </li>
+                <& }); &>
+            </ul>
+        </div>
+    </div>
+    <h1><%- __("Program") %></h1>
+</div>

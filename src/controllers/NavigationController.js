@@ -10,6 +10,10 @@ io.sockets.on('connection', function (socket) {
                 icon: 'list',
                 view: 'TVGuide'
             }, {
+                title: __('Program'),
+                icon: 'book',
+                view: 'Program'
+            }, {
                 title: __('Recordings'),
                 icon: 'facetime-video',
                 view: 'Recordings'

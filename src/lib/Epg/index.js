@@ -274,11 +274,13 @@ Epg.prototype.getEvents = function (channelId, start, limit, callback) {
 
 Epg.prototype.searchEvents = function (q, limit, callback) {
     var query = events.find({
-        title: new RegExp('(^| )' + q, "ig"),
+        title: new RegExp(q, "ig"),
         start: {
             $gt: parseInt(new Date().getTime() / 1000)
         }
     });
+
+    query.or([{short_description: new RegExp(q, "ig")}, {description: new RegExp(q, "ig")}]);
 
     query.sort('start', 1);
     query.limit(limit);
