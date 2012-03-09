@@ -153,7 +153,7 @@ var EventView = Backbone.View.extend({
 
                 console.log(event);
 
-                var recordView = new EventRecordButtonView({
+                var recordView = new ButtonRecordView({
                     model: event
                 });
 

@@ -3,16 +3,7 @@ var TVGuideEventView = Backbone.View.extend({
     tagName: 'div',
 
     events: {
-        'click td.event': 'showEventDetails',
-        'hover div.event': 'showEventPopover'
-    },
-
-    handlePopover: function (ev) {
-        if (ev.type == 'mouseenter') {
-            clearTimeout(ev.data.view.popoverId);
-        } else {
-            $(ev.data.view.popoverEl).popover('hide');
-        }
+        'click td.event': 'showEventDetails'
     },
 
     showEventDetails: function (ev) {
@@ -21,46 +12,13 @@ var TVGuideEventView = Backbone.View.extend({
         GUIA.router.navigate('!/Event/' + this.model.get('_id'), true);
     },
 
-    showEventPopover: function (ev) {
-        return;
-
-        var self = this;
-        var el = this.el;
-        
-        if (ev.type == 'mouseenter') {
-            this.popoverView = new TVGuidePopoverView({
-                popoverEl: el,
-                callback: function () {
-                    self.popoverView.remove();
-                },
-                model: this.model
-            });
-
-            $(this.el).append(this.popoverView.render().el);
-            
-            this.popoverView.show();
-
-            $('.event', el).css({
-                textDecoration: 'underline',
-                cursor: 'pointer'
-            });
-        } else {
-            $('.event', el).css({
-                textDecoration: 'none',
-                cursor: 'none'
-            });
-            
-            this.popoverView.hide();
-        }
-    },
-
     render: function () {
         var self = this;
 
         var template = _.template( $('#' + this.template).html(), {event: this.model} );
         $(this.el).html(template);
 
-        var recordButton = new EventRecordButtonView({
+        var recordButton = new ButtonRecordView({
             model: this.model
         });
 
