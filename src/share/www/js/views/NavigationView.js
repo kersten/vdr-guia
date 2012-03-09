@@ -88,6 +88,12 @@ var NavigationView = Backbone.View.extend({
                         delete(icon);
                     }
 
+                    if (item.type && item.type == 'channel') {
+                        var icon = $('<img></img>').attr('src', '/logo/<&= item.title').css({height: '10px', marginRight: '10px'});
+                        href.prepend(icon);
+                        delete(icon);
+                    }
+
                     var li = $('<li></li>').append(href);
 
                     if (typeof(item.id) != 'undefined') {

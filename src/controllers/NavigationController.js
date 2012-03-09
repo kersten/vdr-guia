@@ -11,7 +11,7 @@ io.sockets.on('connection', function (socket) {
                     docs.forEach(function (channel) {
                         channels_array.push({
                             title: channel.get('name'),
-                            icon: 'user',
+                            type: 'channel',
                             view: 'Program/' + channel.get('_id')
                         });
                     });

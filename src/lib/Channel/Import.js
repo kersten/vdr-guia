@@ -3,18 +3,18 @@ var ChannelSchema =  mongoose.model('Channel');
 var async = require('async');
 
 function ChannelImport (restful) {
-    this.restful = restful;
+    this.restful = (vdr.restful === undefined || vdr.restful == "" || vdr.restful == null) ? restful : vdr.restful;
 }
 
 ChannelImport.prototype.start = function (callback) {
     var self = this;
-    log.dbg("Starting channel import  ...");
+    log.dbg("Starting channel import ... " + this.restful + '/channels.json?start=0');
 
-    rest.get(vdr.restful + '/channels.json?start=0').on('success', function(data) {
+    rest.get(this.restful + '/channels.json?start=0').on('success', function(data) {
         log.dbg("Fetched from VDR ...");
         
         async.mapSeries(data.channels, function (channel, callback) {
-            if (socialize !== undefined && socialize && dnodeVdr) {
+            if (global.socialize !== undefined && global.socialize && global.dnodeVdr) {
                 log.dbg('Sync channel: ' + channel.name);
                 
                 dnodeVdr.getChannel(channel, function (res) {

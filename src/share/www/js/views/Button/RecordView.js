@@ -28,7 +28,6 @@ var ButtonRecordView = Backbone.View.extend({
             });
 
         if (parseInt(this.model.get('stop')) < parseInt(new Date().getTime() / 1000)) {
-            console.log(this.model.get('stop'));
             $(this.el).css({opacity: .5, filter: 'alpha(opacity=50)', cursor: 'auto'});
         }
     },
@@ -77,12 +76,10 @@ var ButtonRecordView = Backbone.View.extend({
         }
 
         if (this.model.get('timer_exists')) {
-            console.log('Delete timer for: ' + this.model.get('_id'));
             this.model.set({timer_exists: false});
 
             this.model.save();
         } else {
-            console.log('Create timer for: ' + this.model.get('_id'));
             this.model.set({timer_exists: true});
 
             this.model.save();

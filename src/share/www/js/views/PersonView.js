@@ -9,7 +9,6 @@ var PersonView = Backbone.View.extend({
             data: {
                 _id: this.options._id
             }, success: function (data) {
-                console.log(data);
                 self.model = person;
                 $(self.el).html(_.template( $('#' + self.template).html(), {person: self.model} ));
                 callback(self.el);

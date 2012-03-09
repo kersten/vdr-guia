@@ -10,7 +10,6 @@ var RecordingsScheduledView = Backbone.View.extend({
         this.collection = new TimerCollection();
         this.collection.fetch({success: function (collection) {
             collection.forEach(function (model) {
-                console.log(model);
                 var view = new RecordingsScheduledItemView({
                     model: model
                 });

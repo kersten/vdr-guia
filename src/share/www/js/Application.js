@@ -354,7 +354,7 @@ var GUIA = {
     loadingOverlay: function (method) {
         if (method == 'show') {
             if (!this.spinner.open) {
-        	this.spinner.open = true;
+                this.spinner.open = true;
                 this.spinner.overlayDiv = $('<div></div>').css({
                     position: 'fixed',
                     top: '0px',

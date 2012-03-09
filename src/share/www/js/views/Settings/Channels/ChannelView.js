@@ -14,7 +14,6 @@ var SettingsChannelsChannelView = Backbone.View.extend({
         }
 
         this.model.save(function (doc) {
-            console.log(doc);
         });
     },
 

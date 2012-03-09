@@ -21,14 +21,12 @@ var SettingsVdrView = Backbone.View.extend({
             key: 'vdrHost',
             value: GUIA.guia.vdrHost
         }, function (res) {
-                console.log(res);
         });
 
         socket.emit('Configuration:create', {
             key: 'restfulPort',
             value: GUIA.guia.restfulPort
         }, function (res) {
-                console.log(res);
         });
     },
 

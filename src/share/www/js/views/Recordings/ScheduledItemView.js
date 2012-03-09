@@ -4,7 +4,6 @@ var RecordingsScheduledItemView = Backbone.View.extend({
     className: 'span3',
 
     initialize: function () {
-        console.log(this.model);
         $(this.el).html(_.template( $('#' + this.template).html(), {model: this.model} ));
     },
 

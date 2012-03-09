@@ -8,6 +8,24 @@ var InstallSelectChannelView = Backbone.View.extend({
 
         this.channellist = new ChannelCollection();
 
+        var spinner = $('<div></div>').css({
+            position: 'fixed',
+            top: '0px',
+            width: $(window).width(),
+            height: $(window).height(),
+            zIndex: 10000,
+            opacity: 1
+        }).addClass('loadingoverlay').appendTo('body').spin({
+            lines: 12, // The number of lines to draw
+            length: 10, // The length of each line
+            width: 5, // The line thickness
+            radius: 22, // The radius of the inner circle
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 58, // Afterglow percentage
+            shadow: false // Whether to render a shadow
+        });
+
         var self = this;
         this.channellist.fetch({
             data: {
@@ -15,6 +33,9 @@ var InstallSelectChannelView = Backbone.View.extend({
                 restful: 'http://' + this.model.get('vdrhost') + ':' + this.model.get('restfulport')
             },
             success: function (collection) {
+                spinner.spin(false);
+                spinner.remove();
+
                 $('#channels > tbody', self.el).children().remove();
                 
                 collection.forEach(function (channel) {
@@ -35,7 +56,6 @@ var InstallSelectChannelView = Backbone.View.extend({
                         }
 
                         channel.save(function (doc) {
-                            console.log(doc);
                         });
                     });
 

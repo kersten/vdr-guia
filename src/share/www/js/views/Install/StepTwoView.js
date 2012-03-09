@@ -20,7 +20,6 @@ var InstallStepTwoView = Backbone.View.extend({
             vdrhost: $('#VDRHost').val(),
             restfulport: $('#restfulPort').val()
         }, function (data) {
-            console.log(data);
             if (data.reachable) {
                 self.model.save();
 

@@ -33,13 +33,9 @@ var TVGuidePopoverView = Backbone.View.extend({
     },
 
     handlePopover: function (ev) {
-        console.log(ev);
-
         if (ev.type == 'mouseenter') {
-            console.log(this.timerId);
             clearTimeout(this.timerId);
         } else {
-            console.log('RAVE OUT');
             this.hide();
         }
     },
@@ -65,7 +61,6 @@ var TVGuidePopoverView = Backbone.View.extend({
     },
 
     recordEvent: function () {
-        console.log(this);
     },
 
     show: function () {

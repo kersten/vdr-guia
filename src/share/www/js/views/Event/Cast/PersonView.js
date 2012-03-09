@@ -11,7 +11,6 @@ var EventCastPersonView = Backbone.View.extend({
     },
     
     render: function () {
-        console.log(this.model.get('tmdb').actors);
         $(this.el).html(_.template( $('#' + this.template).html(), {event: this.model} ));
         return this;
     }

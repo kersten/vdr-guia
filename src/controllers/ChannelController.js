@@ -10,9 +10,8 @@ io.sockets.on('connection', function (socket) {
         }
 
         var channels = new Channel();
-        var options = data;
 
-        channels.getAll(options, function (channels) {
+        channels.getAll(data, function (channels) {
             callback(channels);
         });
     });

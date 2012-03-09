@@ -151,8 +151,6 @@ var EventView = Backbone.View.extend({
                 event.set({start_formatted: start.toString('HH:mm')});
                 event.set({date: start.toString('dd.MM')});
 
-                console.log(event);
-
                 var recordView = new ButtonRecordView({
                     model: event
                 });
