@@ -30,6 +30,17 @@ io.sockets.on('connection', function (socket) {
         epg.getEventsRange(data.channel_id, starttime, stoptime, callback);
     });
 
+    socket.on('EventCollection:getEpg:read', function (data, callback) {
+        if (!socket.handshake.session.loggedIn && data.install === undefined) {
+            return false;
+        }
+
+        var epg = new Epg();
+        epg.getEvents(data._id, 0, 100, function (events) {
+            callback(events);
+        })
+    });
+
     socket.on('EventModel:read', function (data, callback) {
         var epg = new Epg();
         epg.getEvent(data._id, callback);
@@ -49,7 +60,13 @@ io.sockets.on('connection', function (socket) {
 
         if (event.timer_exists) {
             log.dbg('Create timer for ' + event.title);
-            log.dbg(JSON.stringify(event));
+
+            console.log(vdr.restful + '/timers', {
+                channel: event.channel,
+                eventid: event.event_id,
+                minpre: 5,
+                minpost: 15
+            });
 
             rest.post(vdr.restful + '/timers', {
                 data: {
@@ -64,7 +81,9 @@ io.sockets.on('connection', function (socket) {
                 event.timer_exists = true;
                 event.timer_id = data.timers[0].id;
 
-                events.update({_id: event._id}, {timer_exists: true, timer_id: data.timers[0].id}, {upsert: true});
+                events.update({_id: event._id}, {timer_exists: true, timer_id: data.timers[0].id}, {upsert: true}, function () {
+                    console.log(arguments);
+                });
 
                 callback(event);
             }).on('error', function (err) {
@@ -79,11 +98,14 @@ io.sockets.on('connection', function (socket) {
                 event.timer_exists = false;
                 event.timer_id = undefined;
 
-                events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_active: false, timer_exists: false}, {upsert: true});
+                events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_active: false, timer_exists: false}, {upsert: true}, function () {
+                    console.log(arguments);
+                });
                 callback(event);
-            }).on('error', function () {
-            }).on('403', function (e) {
-
+            }).on('error', function (err) {
+                log.err('Error deleting timer: ' + JSON.stringify(err));
+            }).on('403', function (err) {
+                log.err('Error deleting timer: ' + JSON.stringify(err));
             });
         }
     });

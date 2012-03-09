@@ -106,5 +106,7 @@
 	"Based on your tv behavior GUIA will recommend you shows and movies that could be interesting for you": "Based on your tv behavior GUIA will recommend you shows and movies that could be interesting for you",
 	"Installation <small>Introducing GUIA Social</small>": "Installation <small>Introducing GUIA Social</small>",
 	"GUIA Social": "GUIA Social",
-	"Program": "Program"
+	"Program": "Program",
+	"Program <small><&= channels.models[0].get('name') &></small>": "Program <small><&= channels.models[0].get('name') &></small>",
+	"Program <small><&= model.get('name') &></small>": "Program <small><&= model.get('name') &></small>"
 }

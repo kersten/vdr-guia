@@ -1,0 +1,21 @@
+<div class="span12" style="margin-bottom: 10px;">
+    <div class="row">
+        <div class="span2">
+            <& if (model.get('image')) { &>
+            <img class="thumbnail" src="<&= model.get('image') &>" alt="" />
+            <& } else { &>
+            <img class="thumbnail" src="http://placehold.it/185x263&text=<&= model.get('title') &>" alt="" />
+            <& } &>
+        </div>
+
+        <div class="span10">
+            <h3><&= model.get('title') &><small> <&= model.get('short_description') &></small></h3>
+             <&= model.start_time() &> - <&= model.stop_time() &>
+            <hr style="margin-top: 0px;"/>
+            
+            <p>
+                <&= model.get('description') &>
+            </p>
+        </div>
+    </div>
+</div>

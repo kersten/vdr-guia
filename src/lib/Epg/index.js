@@ -209,7 +209,7 @@ Epg.prototype._query = function (query, withSubEvents, callback) {
 
         var result = new Array();
 
-        async.map(docs instanceof Array ? docs : new Array(docs), function (doc, callback) {
+        async.mapSeries(docs instanceof Array ? docs : new Array(docs), function (doc, callback) {
             self._buildEvent(doc, withSubEvents, function (event) {
                 result.push(event);
                 callback(null, null);
@@ -259,12 +259,10 @@ Epg.prototype.getEventsRange = function (channelId, starttime, stoptime, callbac
 };
 
 Epg.prototype.getEvents = function (channelId, start, limit, callback) {
-    var date = new Date();
-
     var query = events.find({});
 
     query.where('channel_id', channelId);
-    query.$gt('stop', date.getTime() / 1000);
+    query.$gt('stop', parseInt(new Date().getTime() / 1000));
     query.sort('start', 1);
     query.skip(start);
     query.limit(limit);
@@ -274,13 +272,12 @@ Epg.prototype.getEvents = function (channelId, start, limit, callback) {
 
 Epg.prototype.searchEvents = function (q, limit, callback) {
     var query = events.find({
-        title: new RegExp(q, "ig"),
         start: {
             $gt: parseInt(new Date().getTime() / 1000)
         }
     });
 
-    query.or([{short_description: new RegExp(q, "ig")}, {description: new RegExp(q, "ig")}]);
+    query.or([{title: new RegExp(q, "ig")}, {short_description: new RegExp(q, "ig")}, {description: new RegExp(q, "ig")}]);
 
     query.sort('start', 1);
     query.limit(limit);

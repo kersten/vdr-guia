@@ -67,6 +67,7 @@ var GUIA = {
             '!/TVGuide/:date': 'tvguideRoute',
             '!/TVGuide/:date/:page': 'tvguideRoute',
             '!/Program': 'programRoute',
+            '!/Program/:channel': 'programRoute',
             '!/Event/:id': 'eventRoute',
             '!/Event/:id/:view': 'eventRoute',
             '!/Person/:id': 'personRoute',
@@ -145,8 +146,10 @@ var GUIA = {
             });
         },
 
-        programRoute: function () {
-            this.currentView = new ProgramView();
+        programRoute: function (channel) {
+            this.currentView = new ProgramView({
+                channel: channel
+            });
             $('#body').html(this.currentView.render().el);
         },
 
