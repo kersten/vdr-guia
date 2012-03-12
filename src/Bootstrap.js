@@ -4,6 +4,7 @@ var rest = require('restler');
 var uuid = require('node-uuid');
 var async = require('async');
 var file = require('file');
+var i18next = require('i18next');
 global.Dnode = require('dnode');
 
 function Bootstrap (app, express) {
@@ -20,6 +21,11 @@ function Bootstrap (app, express) {
         self.setupControllers();
         self.setupViews();
         self.setupPlugins();
+        
+        i18next.registerAppHelper(app)
+        .serveClientScript(app)
+        .serveDynamicResources(app)
+        .serveMissingKeyRoute(app);
     });
 }
 
@@ -57,6 +63,13 @@ Bootstrap.prototype.setupExpress = function (cb) {
     var express = this.express;
     var logging = this.logging;
     var self = this;
+    
+    i18next.init({
+        ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
+        resSetPath: __dirname + '/locales/__lng__/__ns__.json',
+        resGetPath: __dirname + '/locales/__lng__/__ns__.json',
+        saveMissing: true
+    });
 
     var SessionMongoose = require("session-mongoose");
     global.mongooseSessionStore = new SessionMongoose({
@@ -103,6 +116,8 @@ Bootstrap.prototype.setupExpress = function (cb) {
          */
         app.set('views', __dirname + '/html');
         app.set('view engine', 'html');
+        
+        app.use(i18next.handle);
     });
 
     app.configure('development', function () {
@@ -398,6 +413,7 @@ Bootstrap.prototype.setupViews = function () {
     });
 
     jsFiles.push('/socket.io/socket.io.js');
+    jsFiles.push('/i18next/i18next.js');
     jsFiles.push('/js/async.js');
     jsFiles.push('/js/bootstrap.js');
     jsFiles.push('/js/Application.js');
@@ -434,8 +450,11 @@ Bootstrap.prototype.setupViews = function () {
 
         self.app.get('*', function (req, res) {
             ConfigurationSchema.findOne({}, function (err, data) {
+                console.log(req.session);
+            
                 res.render('index', {
                     layout: false,
+                    locale: req.locale,
                     isLoggedIn: req.session.loggedIn,
                     vdr: JSON.stringify(vdr.plugins),
                     guia: JSON.stringify(data),

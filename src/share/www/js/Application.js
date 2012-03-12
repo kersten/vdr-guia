@@ -131,6 +131,8 @@ var GUIA = {
         loginRoute: function () {
             this.currentView = new LoginView();
             $('#body').html(this.currentView.render().el);
+            console.log($('[data-i18n]').i18n());
+            $('[data-i18n]').i18n();
         },
 
         highlightsRoute: function () {

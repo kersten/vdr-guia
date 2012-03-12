@@ -1,0 +1,8 @@
+{
+    "attr": {
+        "username": "attr.username"
+    },
+    "button": {
+        "login": "button.login"
+    }
+}

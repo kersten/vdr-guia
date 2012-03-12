@@ -2,22 +2,22 @@
     <div class="span12">
         <form class="form-horizontal">
             <fieldset>
-                <legend>Login</legend>
+                <legend><%- t('login') %></legend>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="text" class="input-xlarge" id="username" placeholder="Username" />
+                        <input type="text" class="input-xlarge" id="username" data-i18n="[placeholder]attr.username" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <div class="controls">
-                        <input type="password" class="input-xlarge" id="password" placeholder="Password" />
+                        <input type="password" class="input-xlarge" id="password" data-i18n="[placeholder]attr.password" />
                         <p class="help-block">Forgot password?</p>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <button class="btn btn-success" id="login">Login</button>
+                    <button class="btn btn-success" id="login"><%- t('button.login') %></button>
                 </div>
             </fieldset>
         </form>

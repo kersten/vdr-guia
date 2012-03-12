@@ -110,21 +110,36 @@
         <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
-                var app = GUIA;
-                app.vdr = {
-                    plugins: <%- vdr %>
+                var options = {
+                    ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
+                    useLocalStorage: false,
+                    resGetPath: '/locales/resources.json?lng=__lng__&ns=__ns__',
+                    resPostPath: '/locales/add/__lng__/__ns__',
+                    dynamicLoad: true,
+                    sendMissing: true
                 };
-
-                app.guia = <%- guia %>;
-
-                app.initialize();
-
-                FlattrLoader.render({
-                    uid: 'GOTTMODUS',
-                    url: location.href,
-                    title: 'VDR  GUIA',
-                    description: 'Webinterface for controlling the vdr'
-                }, 'flattr', 'replace');
+                
+                options.lng = '<%- locale %>';
+                
+                $.i18n.init(options, function() {
+                    console.log($.t('attr.username'));
+                    
+                    var app = GUIA;
+                    app.vdr = {
+                        plugins: <%- vdr %>
+                    };
+    
+                    app.guia = <%- guia %>;
+    
+                    app.initialize();
+    
+                    FlattrLoader.render({
+                        uid: 'GOTTMODUS',
+                        url: location.href,
+                        title: 'VDR  GUIA',
+                        description: 'Webinterface for controlling the vdr'
+                    }, 'flattr', 'replace');
+                });
             });
         </script>
     </body>
