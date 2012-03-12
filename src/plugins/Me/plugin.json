@@ -1,0 +1,8 @@
+{
+    name: 'Me',
+    version: '0.1',
+    mainMenu: {
+        title: 'Me',
+        icon: 'user'
+    }
+}

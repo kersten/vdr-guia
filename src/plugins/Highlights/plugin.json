@@ -1,0 +1,9 @@
+{
+    name: 'Highlights',
+    version: '0.1',
+    mainMenu: {
+        title: 'Highlights',
+        icon: 'heart',
+        view: 'Highlights'
+    }
+}

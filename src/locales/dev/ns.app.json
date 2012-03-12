@@ -4,5 +4,6 @@
     },
     "button": {
         "login": "button.login"
-    }
+    },
+    "login": "login"
 }
