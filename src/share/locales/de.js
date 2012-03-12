@@ -108,5 +108,6 @@
 	"GUIA Social": "GUIA Social",
 	"Program": "Program",
 	"Program <small><&= channels.models[0].get('name') &></small>": "Program <small><&= channels.models[0].get('name') &></small>",
-	"Program <small><&= model.get('name') &></small>": "Program <small><&= model.get('name') &></small>"
+	"Program <small><&= model.get('name') &></small>": "Program <small><&= model.get('name') &></small>",
+	"yaVDR": "yaVDR"
 }

@@ -1,0 +1,9 @@
+{
+    name: 'yaVDR',
+    version: '0.1',
+    mainMenu: {
+        title: 'yaVDR',
+        icon: 'edit',
+        view: 'yaVDR'
+    }
+}

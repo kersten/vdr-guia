@@ -26,6 +26,7 @@
         "express": "*",
         "sprintf" : "*",
         "i18n": "git://github.com/mashpie/i18n-node.git",
+        "i18next": "*",
         "dom-js": "git://github.com/teknopaul/dom-js.git",
         "request": "*",
         "restler": "*",

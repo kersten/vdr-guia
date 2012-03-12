@@ -19,6 +19,7 @@ function Bootstrap (app, express) {
     this.setup(function () {
         self.setupControllers();
         self.setupViews();
+        self.setupPlugins();
     });
 }
 
@@ -458,6 +459,29 @@ Bootstrap.prototype.setupControllers = function () {
             if (file != 'InstallController') {
                 require('./controllers/' + file);
             }
+        });
+    });
+};
+
+Bootstrap.prototype.setupPlugins = function () {
+    var self = this;
+
+    log.inf('Setting up plugins');
+
+    fs.readdir(__dirname + '/plugins', function (err, plugins) {
+        plugins.forEach(function (plugin) {
+            log.inf('Setting up plugin: ' + plugin);
+
+            fs.stat(__dirname + '/plugins/' + plugin + '/plugin.json', function(err, stat) {
+                if (err) {
+                    log.err('plugin.json file does not exists for plugin: ' + plugin);
+                    return;
+                }
+
+                var Plugin = require(__dirname + '/plugins/' + plugin);
+                var plg = new Plugin(self.app, self.express);
+                plg.init();
+            });
         });
     });
 };

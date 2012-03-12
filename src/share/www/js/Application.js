@@ -81,6 +81,7 @@ var GUIA = {
             '!/Settings': 'settingsRoute',
             '!/Settings/:section': 'settingsRoute',
             '!/About': 'aboutRoute',
+            '!/yaVDR': 'yavdrRoute',
             '*actions': 'notfoundRoute'
         },
 
@@ -225,6 +226,11 @@ var GUIA = {
 
         aboutRoute: function () {
             this.currentView = new AboutView();
+            $('#body').html(this.currentView.render().el);
+        },
+
+        yavdrRoute: function () {
+            this.currentView = new YavdrView();
             $('#body').html(this.currentView.render().el);
         },
 

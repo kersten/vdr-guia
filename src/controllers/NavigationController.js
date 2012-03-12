@@ -65,6 +65,10 @@ io.sockets.on('connection', function (socket) {
                         link: 'logout',
                         id: 'logoutBtn'
                     }]
+                }, {
+                    title: __('yaVDR'),
+                    icon: 'edit',
+                    view: 'yaVDR'
                 }];
 
                 callback({items: menu, loggedIn: true});
