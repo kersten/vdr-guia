@@ -1,0 +1,27 @@
+<ul>
+    <&
+    d = new XDate();
+
+    if (parseInt(d.toString('HH')) >= 0 && parseInt(d.toString('HH')) < 5) {
+    var checkNext = new XDate(active).toString('dd.MM.yyyy');
+    var yesterday = d.clone().addDays(-1);
+
+    console.log(checkNext, yesterday.toString('dd.MM.yyyy'));
+
+    if (checkNext == yesterday.toString('dd.MM.yyyy')) {
+    active = d.clone().toString('dd.MM.yyyy');
+    d.addDays(-1);
+    }
+    }
+    &>
+
+    <li  style="cursor: pointer;" class="<&= (active == d.toString('dd.MM.yyyy')) ? 'active' : '' &>" data-date="<&= d.toString('dd.MM.yyyy') &>" data-page="<&= page &>">
+        <a><&= d.toString('dd.MM') &></a>
+    </li>
+
+    <& for(i = 0; i < 12; i++) { &>
+    <li style="cursor: pointer" class="<&= (active == d.addDays(1).toString('dd.MM.yyyy')) ? 'active' : '' &>" data-date="<&= d.toString('dd.MM.yyyy') &>" data-page="<&= page &>">
+        <a style=""><&= d.toString('dd.MM') &></a>
+    </li>
+    <& } &>
+</ul>

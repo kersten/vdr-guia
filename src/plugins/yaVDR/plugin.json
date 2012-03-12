@@ -1,9 +1,10 @@
 {
-    name: 'yaVDR',
-    version: '0.1',
-    mainMenu: {
-        title: 'yaVDR',
-        icon: 'edit',
-        view: 'yaVDR'
+    "name": "yaVDR",
+    "version": "0.1",
+    "needslogin": true,
+    "mainMenu": {
+        "title": "yaVDR",
+        "icon": "edit",
+        "view": "yaVDR"
     }
 }

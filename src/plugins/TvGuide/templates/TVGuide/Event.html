@@ -1,0 +1,18 @@
+<div class="event">
+    <table>
+        <tr>
+            <td style="width: 47px;" valign="top">
+                <strong><&= event.start_time() &></strong><br />
+                <&= parseInt(event.get('duration') / 60) &> min
+                <br />
+                <div class="recordThis"></div>
+            </td>
+            <td valign="top" class="event" style="cursor: pointer;">
+                <strong><&= event.get('title') &></strong>
+                <& if (event.get('short_description')) { &>
+                <p><&= event.get('short_description') &></p>
+                <& } &>
+            </td>
+        </tr>
+    </table>
+</div>

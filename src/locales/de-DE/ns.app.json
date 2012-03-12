@@ -1,5 +1,16 @@
 {
     "attr": {
-        "username": "Username"
+        "username": "Benutzername"
+    },
+    "button": {
+        "login": "Anmelden"
+    },
+    "page": {
+        "title": {
+            "login": "Anmelden"
+        }
+    },
+    "help": {
+        "forgotpassword": "Passwort vergessen?"
     }
 }

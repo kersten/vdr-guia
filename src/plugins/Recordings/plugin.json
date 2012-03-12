@@ -1,9 +1,9 @@
 {
-    name: 'Recordings',
-    version: '0.1',
-    mainMenu: {
-        title: 'Recordings',
-        icon: 'facetime-video',
-        view: 'Recordings'
+    "name": "Recordings",
+    "version": "0.1",
+    "mainMenu": {
+        "title": "Recordings",
+        "icon": "facetime-video",
+        "view": "Recordings"
     }
 }

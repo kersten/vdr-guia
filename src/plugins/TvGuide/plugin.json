@@ -1,9 +1,9 @@
 {
-    name: 'TvGuide',
-    version: '0.1',
-    mainMenu: {
-        title: 'TvGuide',
-        icon: 'list',
-        view: 'TvGuide'
+    "name": "TvGuide",
+    "version": "0.1",
+    "mainMenu": {
+        "title": "TvGuide",
+        "icon": "list",
+        "view": "TvGuide"
     }
 }

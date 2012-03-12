@@ -17,15 +17,26 @@ function Bootstrap (app, express) {
     global.io = require('socket.io').listen(this.app);
     self.setupSocketIo();
 
+    var Navigation = require('./lib/Navigation');
+
+    this.navigation = new Navigation();
+
+    i18next.init({
+        ns: { namespaces: ['ns.app', 'ns.plugin.yavdr'], defaultNs: 'ns.app'},
+        resSetPath: __dirname + '/locales/__lng__/__ns__.json',
+        resGetPath: __dirname + '/locales/__lng__/__ns__.json',
+        saveMissing: true
+    });
+
     this.setup(function () {
         self.setupControllers();
         self.setupViews();
         self.setupPlugins();
         
-        i18next.registerAppHelper(app)
-        .serveClientScript(app)
-        .serveDynamicResources(app)
-        .serveMissingKeyRoute(app);
+        i18next.registerAppHelper(app);
+        i18next.serveClientScript(app);
+        i18next.serveDynamicResources(app);
+        i18next.serveMissingKeyRoute(app);
     });
 }
 
@@ -63,13 +74,6 @@ Bootstrap.prototype.setupExpress = function (cb) {
     var express = this.express;
     var logging = this.logging;
     var self = this;
-    
-    i18next.init({
-        ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
-        resSetPath: __dirname + '/locales/__lng__/__ns__.json',
-        resGetPath: __dirname + '/locales/__lng__/__ns__.json',
-        saveMissing: true
-    });
 
     var SessionMongoose = require("session-mongoose");
     global.mongooseSessionStore = new SessionMongoose({
@@ -491,10 +495,17 @@ Bootstrap.prototype.setupPlugins = function () {
         plugins.forEach(function (plugin) {
             log.inf('Setting up plugin: ' + plugin);
 
-            fs.stat(__dirname + '/plugins/' + plugin + '/plugin.json', function(err, stat) {
+            fs.readFile(__dirname + '/plugins/' + plugin + '/plugin.json', 'utf-8', function(err, config) {
                 if (err) {
                     log.err('plugin.json file does not exists for plugin: ' + plugin);
                     return;
+                }
+
+                config = JSON.parse(config);
+
+                if (config.mainMenu) {
+                    log.inf(JSON.stringify(GUIA.navigation));
+                    self.navigation.addItem(config.mainMenu, config.needslogin);
                 }
 
                 var Plugin = require(__dirname + '/plugins/' + plugin);

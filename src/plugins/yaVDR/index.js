@@ -4,7 +4,7 @@ function YaVDR (app, express) {
 }
 
 YaVDR.prototype.init = function () {
-    console.log(this.app);
+
 };
 
 module.exports = YaVDR;

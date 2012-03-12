@@ -2,6 +2,14 @@ var Channel = require('../lib/Channel');
 
 io.sockets.on('connection', function (socket) {
     socket.on('NavigationCollection:read', function (data, callback) {
+
+        callback({
+            items: GUIA.navigation.getMenu(socket.handshake.session.loggedIn),
+            loggedIn: socket.handshake.session.loggedIn
+        });
+
+        return;
+
         if (socket.handshake.session.loggedIn) {
             var channels = new Channel();
             channels.getAll({active: true}, function (docs) {

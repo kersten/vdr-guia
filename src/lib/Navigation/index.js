@@ -1,11 +1,11 @@
-var Channel = require('../lib/Channel');
+//var Channel = require('../lib/Channel');
 
 function Navigation () {
     this.menu = [];
 }
 
-Navigation.prototype.addItem = function () {
-
+Navigation.prototype.addItem = function (item, needsLogin) {
+    this.menu.push(item);
 };
 
 Navigation.prototype.getMenu = function (loggedIn) {

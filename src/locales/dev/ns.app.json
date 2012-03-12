@@ -5,5 +5,12 @@
     "button": {
         "login": "button.login"
     },
-    "login": "login"
+    "page": {
+        "title": {
+            "login": "Login"
+        }
+    },
+    "help": {
+        "forgotpassword": "help.forgotpassword"
+    }
 }

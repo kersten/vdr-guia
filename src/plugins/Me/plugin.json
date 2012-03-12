@@ -1,8 +1,30 @@
 {
-    name: 'Me',
-    version: '0.1',
-    mainMenu: {
-        title: 'Me',
-        icon: 'user'
+    "name": "Me",
+    "version": "0.1",
+    "mainMenu": {
+        "title": "Me",
+        "icon": "user",
+        "items": [{
+            "title": "navigation.profile",
+            "icon": "user",
+            "view": "Me"
+        }, {
+            "title": "navigation.help",
+            "icon": "question-sign",
+            "view": "Help"
+        }, {
+            "title": "navigation.shortcuts",
+            "icon": "cog",
+            "view": "Shortcuts"
+        }, {
+            "title": "navigation.settings",
+            "icon": "edit",
+            "view": "Settings"
+        }, {
+            "title": "navigation.logout",
+            "icon": "off",
+            "link": "logout",
+            "id": "logoutBtn"
+        }]
     }
 }
