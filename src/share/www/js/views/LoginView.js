@@ -21,9 +21,10 @@ var LoginView = Backbone.View.extend({
         var password = hex_sha512($('#password').val());
 
         socket.emit('User:login', {username: $('#username').val(), password: password}, function (data) {
+            console.log(data);
             if (data.loggedIn) {
                 GUIA.navigation.login();
-                GUIA.navigate('!/Me', true);
+                GUIA.router.navigate('!/Me', true);
             } else {
                 if (data.error == 'AccountNotActivated') {
                     $('#username').parent().append($('<span></span>').addClass('help-inline').html('Your account is not activated'));
