@@ -1,8 +1,10 @@
 {
     "name": "yaVDR",
     "version": "0.1",
+    "active": true,
     "needslogin": true,
     "mainMenu": {
+        "order": 6,
         "title": "yaVDR",
         "icon": "edit",
         "view": "yaVDR"

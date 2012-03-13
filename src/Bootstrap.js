@@ -1,21 +1,40 @@
-var fs = require("fs");
-var i18n = require('i18n');
-var rest = require('restler');
-var uuid = require('node-uuid');
-var async = require('async');
-var file = require('file');
-var i18next = require('i18next');
-global.Dnode = require('dnode');
+var async = require('async'),
+    fs = require('fs'),
+    logging = require('node-logging'),
+    socketIo = require('socket.io'),
+    mime = require('mime'),
+    Mongoose = require("session-mongoose"),
+    walk = require('walk');
 
 function Bootstrap (app, express) {
     this.app = app;
     this.express = express;
-    this.logging = require('node-logging');
+    this.log = logging;
 
-    var self = this;
+    var _this = this;
 
-    global.io = require('socket.io').listen(this.app);
-    self.setupSocketIo();
+    this.frontend = {
+        files: []
+    };
+
+    async.series([
+        function (cb) {
+            _this.initMongoose(cb);
+        }, function (cb) {
+            _this.initExpress(cb);
+        }, function (cb) {
+            _this.initBackendPlugins(cb);
+        }, function (cb) {
+            _this.initFrontendPlugins(cb);
+        }, function (cb) {
+            _this.initFrontend(cb);
+        }
+    ], function () {
+        _this.log.inf('GUIA ready');
+    });
+
+    global.io = socketIo.listen(this.app);
+    /*self.setupSocketIo();
 
     var Navigation = require('./lib/Navigation');
 
@@ -32,62 +51,31 @@ function Bootstrap (app, express) {
         self.setupControllers();
         self.setupViews();
         self.setupPlugins();
-        
+
         i18next.registerAppHelper(app);
         i18next.serveClientScript(app);
         i18next.serveDynamicResources(app);
         i18next.serveMissingKeyRoute(app);
-    });
+    });*/
 }
 
-Bootstrap.prototype.setup = function (callback) {
-    var self = this;
-
-    this.setupExpress(function () {
-        log.dbg('Express setup complete ..');
-
-        self.setupDatabase(function (data) {
-            log.dbg('Database setup complete ..');
-
-            global.installed = data.installed;
-
-            if (data.installed) {
-                vdr.host = data.vdrHost;
-                vdr.restfulPort = data.restfulPort;
-                vdr.restful = 'http://' + vdr.host + ':' + data.restfulPort;
-
-                self.setupDnode(function () {
-                    self.setupLogos();
-                    self.setupVdr();
-                });
-            }
-
-            if (callback !== undefined) {
-                callback();
-            }
-        });
-    });
-};
-
-Bootstrap.prototype.setupExpress = function (cb) {
-    var app = this.app;
-    var express = this.express;
-    var logging = this.logging;
-    var self = this;
-
-    var SessionMongoose = require("session-mongoose");
-    global.mongooseSessionStore = new SessionMongoose({
+Bootstrap.prototype.initMongoose = function (cb) {
+    this.sessionStore = new Mongoose({
         url: "mongodb://127.0.0.1/GUIAsession"
     });
 
-    app.configure(function () {
-        self.env = 'production';
+    cb(null);
+};
 
-        app.use(express.bodyParser());
-        app.use(express.cookieParser());
+Bootstrap.prototype.initExpress = function (cb) {
+    var _this = this;
 
-        app.use(express.session({
-            store: mongooseSessionStore,
+    this.app.configure(function () {
+        this.use(_this.express.bodyParser());
+        this.use(_this.express.cookieParser());
+
+        this.use(_this.express.session({
+            store: _this.sessionStore,
             secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
             key: 'guia.id',
             cookie: {
@@ -95,547 +83,134 @@ Bootstrap.prototype.setupExpress = function (cb) {
             }
         }));
 
-        app.use(i18n.init);
+        this.register('.html', require('ejs'));
+        this.register('.js', require('ejs'));
 
-        i18n.configure({
-            directory: __dirname + '/share/locales',
-            // setup some locales - other locales default to en silently
-            locales:['en', 'de'],
+        this.set('views', __dirname + '/application/frontend/html');
+        this.set('view engine', 'html');
 
-            // where to register __() and __n() to, might be "global" if you know what you are doing
-            register: global
-        });
-
-        app.use(express.static(__dirname + '/share/www'));
-        app.use(express.favicon(__dirname + '/share/www/icons/favicon.ico'));
-
-        /*
-         * Register Template engine with .html and .js
-         */
-        app.register('.html', require('ejs'));
-        app.register('.js', require('ejs'));
-
-        /*
-         * Register view directory
-         */
-        app.set('views', __dirname + '/html');
-        app.set('view engine', 'html');
-        
-        app.use(i18next.handle);
-    });
-
-    app.configure('development', function () {
-        self.env = 'developement';
-        logging.setLevel('debug');
-
-        app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
-        app.use(logging.requestLogger);
-    });
-
-    app.configure('production', function () {
-        logging.setLevel('info');
-    });
-
-    global.rest = rest;
-
-    global.vdr = {
-        host: null,
-        restful: null,
-        plugins: {}
-    };
-
-    global.log = this.logging;
-
-    cb.call();
-};
-
-Bootstrap.prototype.setupDatabase = function (cb) {
-    var self = this;
-
-    global.mongoose = require('mongoose');
-    global.Schema = mongoose.Schema;
-
-    log.dbg('Connect to database ..');
-
-    mongoose.connect('mongodb://127.0.0.1/GUIA');
-    mongoose.connection.on('error', function (e) {
-        throw e;
-    });
-
-    var schemas = fs.readdirSync(__dirname + '/schemas');
-
-    schemas.forEach(function (schema) {
-        schema = schema.replace('.js', '');
-        require(__dirname + '/schemas/' + schema);
-    });
-
-    var ConfigurationSchema = mongoose.model('Configuration');
-
-    ConfigurationSchema.count({}, function (err, cnt) {
-        if (cnt == 0) {
-            log.dbg('Not installed! Delivering installation');
-
-            require(__dirname + '/controllers/InstallController');
-
-            cb.apply(this, [{
-                installed: false
-            }]);
-        } else {
-            log.dbg('GUIA installed! Getting configuration ..');
-
-            ConfigurationSchema.findOne({}, function (err, data) {
-                global.guia = data;
-
-                if (data.get('dbversion') != '0.1') {
-                    async.parallel([
-                        function (callback) {
-                            var events = mongoose.model('Event');
-                            events.find({}, function (err, docs) {
-                                async.map(docs, function (doc, callback) {
-                                    doc.remove(function () {
-                                        callback(null, null);
-                                    });
-                                }, function () {
-                                    callback(null, null);
-                                });
-                            });
-                        }, function (callback) {
-                            var actors = mongoose.model('Actor');
-                            actors.find({}, function (err, docs) {
-                                async.map(docs, function (doc, callback) {
-                                    doc.remove(function () {
-                                        callback(null, null);
-                                    });
-                                }, function () {
-                                    callback(null, null);
-                                });
-                            });
-                        }, function (callback) {
-                            var actorDetails = mongoose.model('ActorDetail');
-                            actorDetails.find({}, function (err, docs) {
-                                async.map(docs, function (doc, callback) {
-                                    doc.remove(function () {
-                                        callback(null, null);
-                                    });
-                                }, function () {
-                                    callback(null, null);
-                                });
-                            });
-                        }, function (callback) {
-                            var movieDetails = mongoose.model('MovieDetail');
-                            movieDetails.find({}, function (err, docs) {
-                                async.map(docs, function (doc, callback) {
-                                    doc.remove(function () {
-                                        callback(null, null);
-                                    });
-                                }, function () {
-                                    callback(null, null);
-                                });
-                            });
-                        }, function (callback) {
-                            data.set({dbversion: '0.1'});
-                            data.save(function () {
-                                callback(null, null);
-                            });
-                        }], function () {
-                            mongoose.disconnect();
-                            self.setupDatabase(cb);
-                        }
-                    );
-
-                    return;
-                }
-
-                cb.apply(this, [{
-                    installed: true,
-                    vdrHost: data.vdrHost,
-                    restfulPort: data.restfulPort
-                }]);
-            });
-        }
+        cb(null);
     });
 };
 
-Bootstrap.prototype.setupSocketIo = function () {
-    var parseCookie = require('express/node_modules/connect').utils.parseCookie;
-    var Session = require('express/node_modules/connect').middleware.session.Session;
+Bootstrap.prototype.initBackendPlugins = function (cb) {
+    this.log.inf('Setting up backend plugins');
 
-    io.configure(function (){
-        io.set('authorization', function (data, accept) {
-            if (data.headers.cookie) {
-                data.cookie = parseCookie(data.headers.cookie);
-                data.sessionID = data.cookie['guia.id'];
+    cb(null);
+};
 
-                // save the session store to the data object
-                // (as required by the Session constructor)
+Bootstrap.prototype.initFrontendPlugins = function (cb) {
+    var _this = this;
 
-                data.sessionStore = mongooseSessionStore;
-                mongooseSessionStore.get(data.sessionID, function (err, session) {
-                    if (err) {
-                        accept(err.message, false);
-                    } else {
-                        // create a session object, passing data as request and our
-                        // just acquired session data
-                        data.session = new Session(data, session);
+    var pluginDir = __dirname + '/application/frontend/plugins';
 
-                        accept(null, true);
-                    }
-                });
-            } else {
-                return accept('No cookie transmitted.', false);
+    this.log.inf('Setting up frontend plugins');
+
+    async.map(fs.readdirSync(pluginDir), function (plugin, cb) {
+        _this.log.dbg('Setting up plugin: ' + plugin);
+
+        fs.readFile(pluginDir + '/' + plugin + '/plugin.json', 'utf-8', function(err, config) {
+            if (err) {
+                _this.log.err('plugin.json file does not exists for plugin: ' + plugin);
+                cb(null);
+                return;
             }
-        });
-    });
 
-    io.configure('production', function(){
-        io.set('log level', 1);
+            config = JSON.parse(config);
 
-        io.set('transports', [
-            'websocket'
-            , 'flashsocket'
-            , 'htmlfile'
-            , 'xhr-polling'
-            , 'jsonp-polling'
-        ]);
-
-        io.enable('browser client minification');
-        io.enable('browser client etag');
-        io.enable('browser client gzip');
-    });
-
-    io.configure('development', function(){
-        io.set('transports', ['websocket']);
-    });
-};
-
-Bootstrap.prototype.setupDnode = function (callback) {
-    var self = this;
-    var config = mongoose.model('Configuration');
-
-    config.findOne({}, function (err, doc) {
-        global.socialize = (doc.get('socializeKey') != null) ? true : false;
-
-        if (socialize === true) {
-            log.dbg('Setting up dnode ..');
-
-            var client = Dnode();
-
-            client.connect({
-                host: 'guia-server.yavdr.tv',
-                port: 7007,
-                reconnect: 600
-            }, function (remote, connection) {
-                remote.authenticateVdr(doc.get('socializeKey'), function (session) {
-                    log.dbg('Dnode  connected ..');
-                    
-                    if (session) {
-                        log.dbg('Dnode authenticated ..');
-                        global.dnodeVdr = session;
-
-                        if (!self.dnodeReconnect) {
-                            self.dnodeReconnect = true;
-                            callback();
-                        } else {
-                            log.dbg('Dnode reconnected');
-                        }
-                    }
-                });
-            });
-        } else {
-            callback();
-        }
-    });
-};
-
-Bootstrap.prototype.setupViews = function () {
-    var ConfigurationSchema = mongoose.model('Configuration');
-    log.dbg('Setting up views ..');
-
-    var templates = new Array();
-    var jsFiles = new Array();
-
-    file.walkSync(__dirname + '/html/templates', function (path, subDirs, files) {
-        if (!path.match('Install')) {
-            files.forEach(function (file) {
-                if (file.match(/^\./)) {
-                    return;
-                }
-
-                file = file.replace('.html', '');
-
-                var template = path + '/' + file;
-                var templateId = template.replace(__dirname + '/html/templates', '').replace(/\//g, '');
-
-                log.dbg('Select template: ' + template + ' :: ' + templateId);
-                templates.push({
-                    id: templateId.replace(/index$/, ''),
-                    path: path + '/' + file
-                });
-            });
-        }
-    });
-
-    jsFiles.push('/js/jquery/jquery-1.7.js');
-
-    jsFiles.push('/js/jquery-plugins/blinky.js');
-    jsFiles.push('/js/jquery-plugins/bootstrap.js');
-    jsFiles.push('/js/jquery-plugins/jquery.endless-scroll.js');
-    jsFiles.push('/js/jquery-plugins/jquery.fancybox.js');
-    jsFiles.push('/js/jquery-plugins/lionbars.min.js');
-    jsFiles.push('/js/jquery-plugins/mousewheel.js');
-    jsFiles.push('/js/jquery-plugins/spin.min.js');
-
-    jsFiles.push('/js/backbone/underscore.js');
-    jsFiles.push('/js/backbone/backbone.js');
-
-    var walkThroughJs = new Array(
-        __dirname + '/share/www/js/utils',
-        __dirname + '/share/www/js/models',
-        __dirname + '/share/www/js/collections',
-        __dirname + '/share/www/js/views'
-    );
-
-    walkThroughJs.forEach(function (dir) {
-        file.walkSync(dir, function (path, subDirs, files) {
-            if (!path.match('Install')) {
-                if (path.match('js/backbone') || path.match('js/jquery-plugins')) {
-                    files = files.reverse();
-                }
-
-                files.forEach(function (jsFile) {
-                    if (jsFile.match(/^\./)) {
-                        return;
-                    }
-
-                    jsFile = (path + '/' + jsFile).replace(__dirname + '/share/www', '');
-
-                    log.dbg('Select js: ' + jsFile);
-                    jsFiles.push(jsFile);
-                });
+            if (!config.active) {
+                cb(null);
+                return;
             }
-        });
-    });
 
-    jsFiles.push('/socket.io/socket.io.js');
-    jsFiles.push('/i18next/i18next.js');
-    jsFiles.push('/js/async.js');
-    jsFiles.push('/js/bootstrap.js');
-    jsFiles.push('/js/Application.js');
-
-    this.app.all('*', function (req, res, next) {
-        if (!installed && !req.url.match(/^\/templates\/install/)) {
-            log.dbg('serving installation ..');
-            res.render('install', {
-                layout: false,
-                socializeKey: uuid.v4()
+            walker = walk.walk(pluginDir + '/' + plugin + '/public', {
+                followLinks: false
             });
-        } else {
-            mongooseSessionStore.get(req.sessionID, function (err, session) {
-                if (session != null) {
-                    req.session.loggedIn = session.loggedIn;
-                }
 
+            walker.on("names", function (root, nodeNamesArray) {
+                nodeNamesArray.sort(function (a, b) {
+                    if (a > b) return 1;
+                    if (a < b) return -1;
+                    return 0;
+                });
+            });
+
+            walker.on("file", function (root, fileStats, next) {
+                var dir = root.replace(pluginDir + '/' + plugin + '/public/', '');
+
+                fs.readFile(root + '/' + fileStats.name, function (err, file) {
+                    type = mime.lookup(root + '/' + fileStats.name);
+
+                    _this.frontend.files.push({type: type, file: '/' + plugin + '/' + dir + '/' + fileStats.name});
+                    _this.app.get('/' + plugin + '/' + dir + '/' + fileStats.name, function (req, res) {
+
+
+                        if (!res.getHeader('Date')) res.setHeader('Date', new Date().toUTCString());
+                        if (!res.getHeader('Cache-Control')) res.setHeader('Cache-Control', 'public, max-age=' + (0 / 1000));
+                        if (!res.getHeader('Last-Modified')) res.setHeader('Last-Modified', fileStats.mtime.toUTCString());
+                        if (!res.getHeader('Content-Type')) {
+                            var charset = mime.charsets.lookup(type);
+                            res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
+                        }
+
+                        res.setHeader('Content-Length', fileStats.size);
+                        res.end(file.toString());
+                    });
+
+                    next();
+                });
+            });
+
+            walker.on("errors", function (root, nodeStatsArray, next) {
                 next();
             });
-        }
-    });
 
-    var self = this;
-
-    fs.readdir(__dirname + '/views', function (err, files) {
-        if (err) throw err;
-        files.forEach(function (file) {
-            file = file.replace('.js', '');
-
-            var view = require(__dirname + '/views/' + file);
-
-            self.app.get(view.url, view.func);
-        });
-
-        self.app.get('*', function (req, res) {
-            ConfigurationSchema.findOne({}, function (err, data) {
-                console.log(req.session);
-            
-                res.render('index', {
-                    layout: false,
-                    locale: req.locale,
-                    isLoggedIn: req.session.loggedIn,
-                    vdr: JSON.stringify(vdr.plugins),
-                    guia: JSON.stringify(data),
-                    env: self.env,
-                    templates: templates,
-                    jsFiles: jsFiles
-                });
+            walker.on("end", function () {
+                cb(null);
             });
         });
+    }, function () {
+        cb(null);
     });
-};
+        /*plugins.forEach(function (plugin) {
+            _this.log.inf('Setting up plugin: ' + plugin);
 
-Bootstrap.prototype.setupControllers = function () {
-    log.dbg('Setting up controllers ..');
-
-    fs.readdir(__dirname + '/controllers', function (err, files) {
-        if (err) throw err;
-        files.forEach(function (file) {
-            file = file.replace('.js', '');
-
-            if (file != 'InstallController') {
-                require('./controllers/' + file);
-            }
-        });
-    });
-};
-
-Bootstrap.prototype.setupPlugins = function () {
-    var self = this;
-
-    log.inf('Setting up plugins');
-
-    fs.readdir(__dirname + '/plugins', function (err, plugins) {
-        plugins.forEach(function (plugin) {
-            log.inf('Setting up plugin: ' + plugin);
-
-            fs.readFile(__dirname + '/plugins/' + plugin + '/plugin.json', 'utf-8', function(err, config) {
+            fs.readFile(__dirname + '/application/frontend/plugins/' + plugin + '/plugin.json', 'utf-8', function(err, config) {
                 if (err) {
-                    log.err('plugin.json file does not exists for plugin: ' + plugin);
+                    _this.log.err('plugin.json file does not exists for plugin: ' + plugin);
                     return;
                 }
 
                 config = JSON.parse(config);
 
+                if (!config.active) {
+                    return;
+                }
+
                 if (config.mainMenu) {
-                    log.inf(JSON.stringify(GUIA.navigation));
+                    _this.log.inf(JSON.stringify(GUIA.navigation));
                     self.navigation.addItem(config.mainMenu, config.needslogin);
                 }
 
-                var Plugin = require(__dirname + '/plugins/' + plugin);
+                var Plugin = require(__dirname + '/application/frontend/plugins/' + plugin);
                 var plg = new Plugin(self.app, self.express);
                 plg.init();
             });
         });
-    });
+    });*/
 };
 
-Bootstrap.prototype.setupLogos = function () {
-    var LogoSchema = mongoose.model('Logo');
-    log.dbg('Setting up logos ..');
-
-    LogoSchema.find({}, function (err, data) {
-        data.forEach(function (logo) {
-            try {
-                fs.lstatSync(__dirname + '/share/logos/' + logo.file);
-            } catch (e) {
-                logo.remove();
-            }
+Bootstrap.prototype.initFrontend = function (cb) {
+    this.app.get('*', function (req, res) {
+        res.render('index', {
+            layout: false,
+            locale: req.locale
         });
     });
 
-    fs.readdir(__dirname + '/share/logos', function (err, files) {
-        if (err) throw err;
+    console.log(this.frontend.files);
 
-        files.forEach(function (logo) {
-            logo = logo.replace(/\//, '|');
-
-            if (logo.match(/.png$/)) {
-                var logoModel = new LogoSchema({
-                    file: logo,
-                    name: logo.replace('.png', '')
-                });
-
-                logoModel.save();
-            }
-        });
-
-        log.dbg('done');
-    });
-};
-
-Bootstrap.prototype.setupVdr = function () {
-    var self = this;
-
-    rest.get(vdr.restful + '/info.json').on('success', function(data) {
-        vdr.plugins.epgsearch = false;
-
-        for (var i in data.vdr.plugins) {
-            vdr.plugins[data.vdr.plugins[i].name] = true;
-        }
-
-        self.setupEpgImport(vdr.restful, global.mongoose);
-        self.setupTimer(vdr.restful);
-    }).on('error', function () {
-        log.bad('VDR is not running .. retrying in 5 Minutes');
-        log.dbg(JSON.stringify(vdr), true);
-
-        setTimeout(function () {
-            self.setupVdr();
-        }, 300000);
-    });
-};
-
-Bootstrap.prototype.setupEpgImport = function (restful) {
-    var self = this;
-
-    var config = mongoose.model('Configuration');
-    var EpgImport = require('./lib/Epg/Import');
-    var importer = new EpgImport(restful, 70);
-
-    function runImporter () {
-        importer.start(function (hadEpg) {
-            if (hadEpg) {
-                runImporter();
-                return;
-            } else {
-                config.findOne({}, function (err, doc) {
-                    if (doc.epgscandelay === undefined) {
-                        log.dbg('Delayed new epg scan .. starting in one hour');
-
-                        setTimeout(function () {
-                            runImporter();
-                        }, 1000 * 60 * 60);
-                    } else {
-                        log.dbg('Delayed new epg scan .. starting in ' + doc.epgscandelay + ' hours');
-                        setTimeout(function () {
-                            runImporter();
-                        }, (1000 * 60 * 60) * doc.epgscandelay);
-                    }
-                });
-
-                self.setupExtendedDetails();
-            }
-        });
-    }
-
-    runImporter();
-};
-
-Bootstrap.prototype.setupExtendedDetails = function () {
-    if (this.extendedDetailsRunning === true) {
-        return;
-    }
-
-    this.extendedDetailsRunning = true;
-
-    var self = this;
-    var config = mongoose.model('Configuration');
-    var Channel = require('./lib/Channel');
-    
-    var channels = new Channel();
-    channels.import(function () {
-        self.extendedDetailsRunning = false;
-    });
-};
-
-Bootstrap.prototype.setupTimer = function (restful) {
-    var self = this;
-    var EpgTimer = require('./lib/Epg/Timer');
-    var timerSetup = new EpgTimer(restful);
-
-    timerSetup.refresh();
-    log.dbg('Delayed new timer scan .. starting in 5 minutes');
-
-    setTimeout(function () {
-        self.setupTimer(restful);
-    }, 1000 * 60 * 5);
+    cb(null);
 };
 
 module.exports = Bootstrap;

@@ -5,7 +5,9 @@ function Navigation () {
 }
 
 Navigation.prototype.addItem = function (item, needsLogin) {
-    this.menu.push(item);
+    if (item.order && this.menu[item.order] === undefined) {
+        this.menu[item.order] = item;
+    }
 };
 
 Navigation.prototype.getMenu = function (loggedIn) {

@@ -2,6 +2,7 @@
     "name": "Program",
     "version": "0.1",
     "mainMenu": {
+        "order": 3,
         "title": "Program",
         "icon": "edit",
         "view": "book"

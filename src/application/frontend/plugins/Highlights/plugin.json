@@ -2,6 +2,7 @@
     "name": "Highlights",
     "version": "0.1",
     "mainMenu": {
+        "order": 1,
         "title": "Highlights",
         "icon": "heart",
         "view": "Highlights"

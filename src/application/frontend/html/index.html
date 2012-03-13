@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <title>GUIA</title>
+        <meta http-equiv="content-type"
+              content="text/html;charset=utf-8" />
+
+        <!-- Include stylesheets -->
+        <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
+        <link href="/css/lionbars.css" type="text/css" rel="stylesheet" />
+        <link href="/css/jquery.fancybox.css" type="text/css" rel="stylesheet" />
+        <link href="/css/guia.css" type="text/css" rel="stylesheet" />
+        <style type="text/css">
+            /* Override some defaults */
+            html, body {
+                background-color: #eee;
+            }
+
+            body {
+                padding-top: 40px;
+            }
+
+            .container > footer p {
+                margin-top: 10px;
+                text-align: center; /* center align it with the container */
+            }
+
+            /* The white background content wrapper */
+            .content {
+                background-color: #fff;
+                padding: 20px;
+                margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+                -webkit-border-radius: 0 0 6px 6px;
+                -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            }
+
+            /* Give a quick and non-cross-browser friendly divider */
+            .content .span4 {
+                margin-left: 0;
+                padding-left: 19px;
+                border-left: 1px solid #eee;
+            }
+
+            .span-one-third {
+                width: 260px;
+            }
+
+        </style>
+
+        <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js?mode=auto"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a style="cursor: pointer;" class="brand" data-view="Welcome">GUIA</a>
+
+                    <ul class="nav" style="display: none;">
+                    </ul>
+
+                    <div id="clock" class="nav secondary-nav" style="margin-right: -20px; font-size: 20px; font-weight: 200; line-height: 1; color: white; display: block; padding: 8px 20px 12px; float: right;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="content">
+            <div class="content" id="body" style="">
+
+            </div>
+
+            <footer id="footer">
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011/2012 - <a href="/!/About">About</a></p>
+                <div style="float: right; margin-top: -30px;"><div id="flattr"></div></div>
+            </footer>
+        </div>
+
+        <!-- Start application -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var options = {
+                    ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
+                    useLocalStorage: false,
+                    resGetPath: '/locales/resources.json?lng=__lng__&ns=__ns__',
+                    resPostPath: '/locales/add/__lng__/__ns__',
+                    dynamicLoad: true,
+                    sendMissing: true
+                };
+                
+                $.i18n.init(options, function() {
+                    console.log($.t('attr.username'));
+                    
+                    var app = GUIA;
+    
+                    app.initialize();
+    
+                    FlattrLoader.render({
+                        uid: 'GOTTMODUS',
+                        url: location.href,
+                        title: 'VDR  GUIA',
+                        description: 'Webinterface for controlling the vdr',
+                        button: 'compact'
+                    }, 'flattr', 'replace');
+                });
+            });
+        </script>
+    </body>
+</html>

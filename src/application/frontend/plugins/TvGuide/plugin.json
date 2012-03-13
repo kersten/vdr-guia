@@ -1,7 +1,9 @@
 {
     "name": "TvGuide",
     "version": "0.1",
+    "active": true,
     "mainMenu": {
+        "order": 2,
         "title": "TvGuide",
         "icon": "list",
         "view": "TvGuide"

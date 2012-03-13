@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <title>GUIA</title>
+        <meta http-equiv="content-type"
+              content="text/html;charset=utf-8" />
+
+        <!-- Include stylesheets -->
+        <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
+        <style type="text/css">
+            /* Override some defaults */
+            html, body {
+                background-color: #eee;
+            }
+
+            body {
+                padding-top: 40px;
+            }
+
+            .container > footer p {
+                margin-top: 10px;
+                text-align: center; /* center align it with the container */
+            }
+
+            /* The white background content wrapper */
+            .content {
+                background-color: #fff;
+                padding: 20px;
+                margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+                -webkit-border-radius: 0 0 6px 6px;
+                -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+            }
+
+            /* Give a quick and non-cross-browser friendly divider */
+            .content .span4 {
+                margin-left: 0;
+                padding-left: 19px;
+                border-left: 1px solid #eee;
+            }
+
+            .span-one-third {
+                width: 260px;
+            }
+
+        </style>
+
+        <!-- Include jquery, backbone and underscore -->
+        <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
+        <script type="text/javascript" src="/js/backbone/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone/backbone.js"></script>
+
+        <!-- Include utitlities -->
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/js/utils/sha512.js"></script>
+        <script type="text/javascript" src="/js/utils/xdate.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+        <!-- Bootstrap application frontend -->
+        <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+        <!-- Load plugins -->
+        <script type="text/javascript" src="/js/jquery-plugins/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/spin.min.js"></script>
+
+
+        <!-- Load views -->
+        <script type="text/javascript" src="/js/views/InstallView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/SocializeView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/StepOneView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/StepTwoView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/SelectChannelView.js"></script>
+        <script type="text/javascript" src="/js/views/Install/StepThreeView.js"></script>
+
+        <script type="text/javascript" src="/js/models/ConfigurationModel.js"></script>
+        <script type="text/javascript" src="/js/models/ChannelModel.js"></script>
+        <script type="text/javascript" src="/js/collections/ChannelCollection.js"></script>
+
+        <!-- Include templates -->
+        <script type="text/template" id="InstallTemplate">
+            <%- partial('templates/Install/InstallView') %>
+        </script>
+
+        <script type="text/template" id="InstallSocializeTemplate">
+            <%- partial('templates/Install/Socialize') %>
+        </script>
+
+        <script type="text/template" id="InstallStepOneTemplate">
+            <%- partial('templates/Install/StepOne') %>
+        </script>
+
+        <script type="text/template" id="InstallStepTwoTemplate">
+            <%- partial('templates/Install/StepTwo') %>
+        </script>
+
+        <script type="text/template" id="InstallSelectChannelsTemplate">
+            <%- partial('templates/Install/SelectChannels') %>
+        </script>
+
+        <script type="text/template" id="InstallStepThreeTemplate">
+            <%- partial('templates/Install/StepThree') %>
+        </script>
+
+        <!-- Start installation -->
+        <script type="text/javascript">
+            var socializeKey = '<%= socializeKey %>';
+
+            $(document).ready(function () {
+                var config = new ConfigurationModel();
+
+                var installView = new InstallView({model: config});
+                $('#body').html(installView.render().el);
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a href="#" class="brand">GUIA</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="content" id="body">
+
+            </div>
+            <footer>
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> 2011</p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -7,7 +7,14 @@ var certificate = fs.readFileSync(__dirname + '/etc/cert/server.crt').toString()
 var config = require('./etc/config');
 
 var app = express.createServer({key: privateKey, cert: certificate});
-app.listen(config.web.port);
+app.listen(config.web.ssl);
+
+var appHttp = express.createServer();
+appHttp.listen(config.web.port);
+
+appHttp.all('*', function (req, res) {
+    res.redirect('https://' + req.headers["host"] + req.url);
+});
 
 var Bootstrap = require('./Bootstrap');
 

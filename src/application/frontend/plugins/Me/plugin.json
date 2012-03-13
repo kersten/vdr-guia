@@ -2,26 +2,27 @@
     "name": "Me",
     "version": "0.1",
     "mainMenu": {
-        "title": "Me",
+        "order": 5,
+        "title": "navigation.me",
         "icon": "user",
         "items": [{
-            "title": "navigation.profile",
+            "title": "navigation.me.profile",
             "icon": "user",
             "view": "Me"
         }, {
-            "title": "navigation.help",
+            "title": "navigation.me.help",
             "icon": "question-sign",
             "view": "Help"
         }, {
-            "title": "navigation.shortcuts",
+            "title": "navigation.me.shortcuts",
             "icon": "cog",
             "view": "Shortcuts"
         }, {
-            "title": "navigation.settings",
+            "title": "navigation.me.settings",
             "icon": "edit",
             "view": "Settings"
         }, {
-            "title": "navigation.logout",
+            "title": "navigation.me.logout",
             "icon": "off",
             "link": "logout",
             "id": "logoutBtn"

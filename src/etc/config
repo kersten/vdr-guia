@@ -17,6 +17,7 @@ config.vdr.mac = process.env.VDR_MAC || '00:01:2e:31:66:da'
 
 config.redis.secret = 'zy8qSFwF2OpIChvxZFz0TVUU7DLhQnEYsEB7nD1fP3SLkGVMlmC1i0fQscbky5w';
 
-config.web.port = process.env.WEB_PORT || 8007;
+config.web.port = process.env.WEB_PORT || 80;
+config.web.ssl = process.env.SSL_PORT || 443;
 
 module.exports = config;
