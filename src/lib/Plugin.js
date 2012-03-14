@@ -71,8 +71,6 @@ Plugin.prototype.initPublic = function (cb) {
 
             publicFiles.push({type: type, src: '/' + _this.name + '/' + dir + '/' + fileStats.name});
             _this.app.get('/' + _this.name + '/' + dir + '/' + fileStats.name, function (req, res) {
-
-
                 if (!res.getHeader('Date')) res.setHeader('Date', new Date().toUTCString());
                 if (!res.getHeader('Cache-Control')) res.setHeader('Cache-Control', 'public, max-age=0');
                 if (!res.getHeader('Last-Modified')) res.setHeader('Last-Modified', fileStats.mtime.toUTCString());

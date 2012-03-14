@@ -1,0 +1,21 @@
+{
+    "name": "Base",
+    "version": "0.1",
+    "needsLogin": false,
+    "active": true,
+    "mainMenu": {
+        "order": 0,
+        "title": "ns.plugin.base.navigation.welcome",
+        "icon": "home",
+        "view": "WelcomeView"
+    },
+    "routes": [{
+        "path": "",
+        "action": "welcomeRoute",
+        "view": "WelcomeView"
+    }, {
+        "path": "!/",
+        "action": "welcomeRoute",
+        "view": "WelcomeView"
+    }]
+}

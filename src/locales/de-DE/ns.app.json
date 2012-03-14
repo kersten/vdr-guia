@@ -1,4 +1,10 @@
 {
+    "application": {
+        "name": "GUIA"
+    },
+    "navigation": {
+        "about": "About"
+    },
     "attr": {
         "username": "Benutzername"
     },

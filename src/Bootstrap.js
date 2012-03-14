@@ -3,6 +3,7 @@ var async = require('async'),
     i18next = require('i18next'),
     logging = require('node-logging'),
     socketIo = require('socket.io'),
+    mime = require('mime'),
     Mongoose = require("session-mongoose"),
     Plugin = require('./lib/Plugin'),
     walk = require('walk');

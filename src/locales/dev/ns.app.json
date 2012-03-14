@@ -12,5 +12,11 @@
     },
     "help": {
         "forgotpassword": "help.forgotpassword"
+    },
+    "application": {
+        "name": "application.name"
+    },
+    "navigation": {
+        "about": "navigation.about"
     }
 }

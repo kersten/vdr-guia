@@ -3,26 +3,26 @@
     "version": "0.1",
     "mainMenu": {
         "order": 5,
-        "title": "navigation.me",
+        "title": "ns.plugin.me.navigation.me",
         "icon": "user",
         "items": [{
-            "title": "navigation.me.profile",
+            "title": "ns.plugin.me.navigation.me.profile",
             "icon": "user",
             "view": "Me"
         }, {
-            "title": "navigation.me.help",
+            "title": "ns.plugin.me.navigation.me.help",
             "icon": "question-sign",
             "view": "Help"
         }, {
-            "title": "navigation.me.shortcuts",
+            "title": "ns.plugin.me.navigation.me.shortcuts",
             "icon": "cog",
             "view": "Shortcuts"
         }, {
-            "title": "navigation.me.settings",
+            "title": "ns.plugin.me.navigation.me.settings",
             "icon": "edit",
             "view": "Settings"
         }, {
-            "title": "navigation.me.logout",
+            "title": "ns.plugin.me.navigation.me.logout",
             "icon": "off",
             "link": "logout",
             "id": "logoutBtn"
