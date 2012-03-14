@@ -8,5 +8,19 @@
         "title": "yaVDR",
         "icon": "edit",
         "view": "yaVDR"
-    }
+    },
+    "routes": [{
+        "path": "!/yaVDR",
+        "action": "yaVdrRoute",
+        "view": "YavdrView"
+    }, {
+        "path": "!/yaVDR/Network/:id+:search",
+        "action": "yaVdrNetworkRoute",
+        "view": "YavdrNetworkView",
+        "parameter": [{
+            "name": "id"
+        }, {
+            "name": "search"
+        }]
+    }]
 }

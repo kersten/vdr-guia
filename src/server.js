@@ -13,7 +13,8 @@ var appHttp = express.createServer();
 appHttp.listen(config.web.port);
 
 appHttp.all('*', function (req, res) {
-    res.redirect('https://' + req.headers["host"] + req.url);
+    var host = req.headers["host"].split(':');
+    res.redirect('https://' + host[0] + ':' + config.web.ssl + req.url);
 });
 
 var Bootstrap = require('./Bootstrap');

@@ -9,8 +9,6 @@
 
         <!-- Include stylesheets -->
         <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
-        <link href="/css/lionbars.css" type="text/css" rel="stylesheet" />
-        <link href="/css/jquery.fancybox.css" type="text/css" rel="stylesheet" />
         <link href="/css/guia.css" type="text/css" rel="stylesheet" />
         <style type="text/css">
             /* Override some defaults */
@@ -53,7 +51,24 @@
 
         </style>
 
-        <script type="text/javascript" src="http://api.flattr.com/js/0.6/load.js?mode=auto"></script>
+        <script type="text/javascript" src="https://api.flattr.com/js/0.6/load.js?mode=auto"></script>
+
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/i18next/i18next.js"></script>
+
+        <script type="text/javascript" src="/js/jquery/jquery-1.7.js"></script>
+        <script type="text/javascript" src="/js/jquery-plugins/bootstrap.js"></script>
+        <script type="text/javascript" src="/js/backbone/underscore.js"></script>
+        <script type="text/javascript" src="/js/backbone/backbone.js"></script>
+
+        <% files.forEach(function (file) {
+            switch (file.type) {
+                case 'application/javascript':
+        %>
+                    <script type="text/javascript" src="<%= file.src %>"></script>
+        <%          break;
+            }
+        }); %>
     </head>
 
     <body>
@@ -84,6 +99,14 @@
         <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
+                FlattrLoader.render({
+                    uid: 'GOTTMODUS',
+                    url: location.href,
+                    title: 'VDR  GUIA',
+                    description: 'Webinterface for controlling the vdr',
+                    button: 'compact'
+                }, 'flattr', 'replace');
+
                 var options = {
                     ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
                     useLocalStorage: false,
@@ -92,21 +115,47 @@
                     dynamicLoad: true,
                     sendMissing: true
                 };
+
+                var WorkspaceRouter = Backbone.Router.extend({
+                    routes: {
+                        '': 'welcomeRoute'
+                        <% routes.forEach(function (route) { %>
+                        ,'<%= route.path %>': '<%= route.action %>'
+                        <% }); %>
+                    },
+
+                    welcomeRoute: function () {
+                        console.log('welcomeAction');
+                    }
+
+                    <% routes.forEach(function (route) { %>
+                    ,<%= route.action %>: function (<% if (route.parameter) {
+                        var params = [];
+                        route.parameter.forEach(function (parameter) {
+                            params.push(parameter.name);
+                        }); %>
+                        <%= params.join(', ') %>
+                    <% } %>) {
+                        this.currentView = new <%= route.view %>(<% if (route.parameter) { %>
+                            {
+                            <%
+                            var params = [];
+                            route.parameter.forEach(function (parameter) {
+                                params.push(parameter.name + ': ' + parameter.name);
+                            }); %>
+                            <%= params.join(', ') %>
+                            }
+                        <% } %>);
+                        $('#body').html(this.currentView.render().el);
+                    }
+                    <% }); %>
+                });
                 
                 $.i18n.init(options, function() {
                     console.log($.t('attr.username'));
-                    
-                    var app = GUIA;
-    
-                    app.initialize();
-    
-                    FlattrLoader.render({
-                        uid: 'GOTTMODUS',
-                        url: location.href,
-                        title: 'VDR  GUIA',
-                        description: 'Webinterface for controlling the vdr',
-                        button: 'compact'
-                    }, 'flattr', 'replace');
+
+                    var wsRouter = new WorkspaceRouter();
+                    Backbone.history.start({pushState: true});
                 });
             });
         </script>

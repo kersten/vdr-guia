@@ -1,6 +1,6 @@
 var YavdrView = Backbone.View.extend({
-    initialization: function () {
-
+    initialize: function () {
+        console.log('yaVDR view init');
     },
 
     render: function () {

@@ -1,9 +1,10 @@
 var async = require('async'),
     fs = require('fs'),
+    i18next = require('i18next'),
     logging = require('node-logging'),
     socketIo = require('socket.io'),
-    mime = require('mime'),
     Mongoose = require("session-mongoose"),
+    Plugin = require('./lib/Plugin'),
     walk = require('walk');
 
 function Bootstrap (app, express) {
@@ -14,7 +15,9 @@ function Bootstrap (app, express) {
     var _this = this;
 
     this.frontend = {
-        files: []
+        files: [],
+        routes: [],
+        locales: ['ns.app']
     };
 
     async.series([
@@ -83,11 +86,15 @@ Bootstrap.prototype.initExpress = function (cb) {
             }
         }));
 
+        this.use(_this.express.static(__dirname + '/application/frontend/public'));
+
         this.register('.html', require('ejs'));
         this.register('.js', require('ejs'));
 
         this.set('views', __dirname + '/application/frontend/html');
         this.set('view engine', 'html');
+
+        this.use(i18next.handle);
 
         cb(null);
     });
@@ -117,56 +124,48 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
             }
 
             config = JSON.parse(config);
+            config.pluginDir = pluginDir;
 
-            if (!config.active) {
-                cb(null);
-                return;
-            }
+            var plug = new Plugin(plugin, config, _this.app);
+            plug.init(function (config) {
+                if (config.publicFiles) _this.frontend.files = _this.frontend.files.concat(config.publicFiles);
+                if (config.routes) _this.frontend.routes = _this.frontend.routes.concat(config.routes);
 
-            walker = walk.walk(pluginDir + '/' + plugin + '/public', {
-                followLinks: false
-            });
-
-            walker.on("names", function (root, nodeNamesArray) {
-                nodeNamesArray.sort(function (a, b) {
-                    if (a > b) return 1;
-                    if (a < b) return -1;
-                    return 0;
+                walker = walk.walk(pluginDir + '/' + plugin + '/locales', {
+                    followLinks: false
                 });
-            });
 
-            walker.on("file", function (root, fileStats, next) {
-                var dir = root.replace(pluginDir + '/' + plugin + '/public/', '');
-
-                fs.readFile(root + '/' + fileStats.name, function (err, file) {
-                    type = mime.lookup(root + '/' + fileStats.name);
-
-                    _this.frontend.files.push({type: type, file: '/' + plugin + '/' + dir + '/' + fileStats.name});
-                    _this.app.get('/' + plugin + '/' + dir + '/' + fileStats.name, function (req, res) {
-
-
-                        if (!res.getHeader('Date')) res.setHeader('Date', new Date().toUTCString());
-                        if (!res.getHeader('Cache-Control')) res.setHeader('Cache-Control', 'public, max-age=' + (0 / 1000));
-                        if (!res.getHeader('Last-Modified')) res.setHeader('Last-Modified', fileStats.mtime.toUTCString());
-                        if (!res.getHeader('Content-Type')) {
-                            var charset = mime.charsets.lookup(type);
-                            res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
-                        }
-
-                        res.setHeader('Content-Length', fileStats.size);
-                        res.end(file.toString());
+                walker.on("names", function (root, nodeNamesArray) {
+                    nodeNamesArray.sort(function (a, b) {
+                        if (a > b) return 1;
+                        if (a < b) return -1;
+                        return 0;
                     });
+                });
+
+                walker.on("file", function (root, fileStats, next) {
+                    var dir = root.replace(pluginDir + '/' + plugin + '/locales/', '');
+
+                    try {
+                        fs.mkdirSync(__dirname + '/locales/' + dir);
+                    } catch (e) {}
+
+                    try {
+                        fs.linkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
+                    } catch (e) {}
+
+                    _this.frontend.locales.push(fileStats.name.replace('.json', ''));
 
                     next();
                 });
-            });
 
-            walker.on("errors", function (root, nodeStatsArray, next) {
-                next();
-            });
+                walker.on("errors", function (root, nodeStatsArray, next) {
+                    next();
+                });
 
-            walker.on("end", function () {
-                cb(null);
+                walker.on("end", function () {
+                    cb(null);
+                });
             });
         });
     }, function () {
@@ -201,14 +200,28 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
 };
 
 Bootstrap.prototype.initFrontend = function (cb) {
+    var _this = this;
+
+    i18next.init({
+        ns: { namespaces: _this.frontend.locales, defaultNs: 'ns.app'},
+        resSetPath: __dirname + '/locales/__lng__/__ns__.json',
+        resGetPath: __dirname + '/locales/__lng__/__ns__.json',
+        saveMissing: true
+    });
+
+    i18next.registerAppHelper(this.app);
+    i18next.serveClientScript(this.app);
+    i18next.serveDynamicResources(this.app);
+    i18next.serveMissingKeyRoute(this.app);
+
     this.app.get('*', function (req, res) {
         res.render('index', {
             layout: false,
-            locale: req.locale
+            locale: req.locale,
+            files: _this.frontend.files,
+            routes: _this.frontend.routes
         });
     });
-
-    console.log(this.frontend.files);
 
     cb(null);
 };
