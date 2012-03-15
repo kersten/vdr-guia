@@ -5,7 +5,7 @@
     "menu": {
         "order": 4,
         "title": "ns.plugin.recordings:menu.title",
-        "icon": "facetime-video",
+        "icon": "film",
         "view": "Recordings"
     },
     "routes": [{

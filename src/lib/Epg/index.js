@@ -9,7 +9,6 @@ function fetchActorDetails (actors, callback) {
     var result = new Array();
 
     async.map(actors, function (actor, callback) {
-        console.log(actor);
         var query = actorSchema.findOne({_id: actor});
 
         query.populate('tmdbId', ['profile']);
@@ -62,7 +61,7 @@ Epg.prototype.getTodaysHighlight = function (channel_id) {
     query.sort('tmdbId.rating', -1);
 
     query.run(function (err, result) {
-        console.log(arguments);
+
     });
 };
 
@@ -190,13 +189,11 @@ Epg.prototype._query = function (query, withSubEvents, callback) {
     var self = this;
 
     query.populate('channel_id');
-    query.populate('actors');
-    query.populate('tmdbId');
-    query.populate('tmdbId.actors');
+    //query.populate('actors');
+    //query.populate('tmdbId');
+    //query.populate('tmdbId.actors');
 
     query.exec(function (err, docs) {
-        console.log(docs);
-
         if (err) {
             log.err(err);
             callback();
@@ -238,7 +235,6 @@ Epg.prototype.getEvent = function (eventId, callback) {
 };
 
 Epg.prototype.getEventById = function (eventId, channelId, callback) {
-    console.log(arguments);
     var query = events.findOne({event_id: eventId});
 
     query.populate('channel_id', null, {channel_id: channelId});

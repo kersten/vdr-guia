@@ -248,7 +248,7 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
                         } catch (e) {}
 
                         try {
-                            fs.symlinkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
+                            fs.symlinkSync('../..' + root.replace(__dirname, '') + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
                         } catch (e) {}
 
                         _this.frontend.locales.push(fileStats.name.replace('.json', ''));

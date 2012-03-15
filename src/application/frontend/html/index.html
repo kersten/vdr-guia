@@ -127,16 +127,11 @@
                             var func_args = arguments;
 
                             socket.emit('Authentication:loggedIn', function (loggedIn) {
-                                if (!loggedIn && (route != '!/Login' && route != '!/About')) {
+                                if (!loggedIn && (route != '!/' && route != '!/Login' && route != '!/About')) {
                                     route = '!/Login';
 
                                     _this.navigate(route, true);
                                 } else {
-                                    if (route == '!/Login') {
-                                        _this.navigate('!/', true);
-                                        return;
-                                    }
-
                                     callback.apply(self, func_args);
                                 }
                             });
@@ -186,13 +181,15 @@
                 };
                 
                 $.i18n.init(options, function() {
-                    var wsRouter = new WorkspaceRouter();
-                    Backbone.history.start({pushState: true});
-
                     var navigationCollection = new NavigationCollection;
                     var navigationView = new NavigationView({
                         el: $('.navbar'),
                         collection: navigationCollection
+                    });
+
+                    navigationView.done(function () {
+                        var wsRouter = new WorkspaceRouter();
+                        Backbone.history.start({pushState: true});
                     });
 
                     function setClock() {

@@ -10,10 +10,7 @@ var NavigationView = Backbone.View.extend({
         var _this = this;
 
         this.collection.fetch({success: function (collection, data) {
-            if (!data.loggedIn) {
-                var template = _.template( $("#LoginFormTemplate").html(), {} );
-                $(_this.el).children('div.navbar-inner').children('div.container').append(template);
-            } else {
+            if (data.loggedIn) {
                 var SearchView = new NavigationSearchView({});
                 $(_this.el).children('div.navbar-inner', _this.el).children('div.container').append(SearchView.render().el);
             }
@@ -104,6 +101,11 @@ var NavigationView = Backbone.View.extend({
 
                 $('.dropdown-toggle').dropdown();
             }
+
+            if (_this.router) {
+                _this.router();
+                delete(_this.router);
+            }
         });
     },
 
@@ -119,6 +121,10 @@ var NavigationView = Backbone.View.extend({
         }
 
         Backbone.history.navigate('!/Search', true);
+    },
+
+    done: function (cb) {
+        this.router = cb;
     },
 
     logout: function () {

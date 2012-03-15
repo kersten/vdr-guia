@@ -10,7 +10,12 @@
     },
 
     "day": {
+        "Monday": "Montag",
+        "Thusday": "Dienstag",
+        "Wednesday": "Mittwoch",
+        "Thursday": "Donnerstag",
         "Friday": "Freitag",
-        "Thursday": "Donnerstag"
+        "Saturday": "Samstag",
+        "Sunday": "Sonntag"
     }
 }

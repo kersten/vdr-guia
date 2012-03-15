@@ -1,6 +1,29 @@
 {
     "menu": {
-        "title": "yaVDR"
+        "title": "yaVDR",
+        "system": "System",
+        "network": "Netzwerk",
+        "hardware": "Hardware",
+        "commands": "Befehle",
+        "tools": "Tools"
+    },
+
+    "page": {
+        "commands": {
+            "title": "Befehle"
+        },
+        "hardware": {
+            "title": "Hardware"
+        },
+        "network": {
+            "title": "Netzwerk"
+        },
+        "system": {
+            "title": "System"
+        },
+        "tools": {
+            "title": "Tools"
+        }
     },
 
     "title": "yaVDR Einstellungen <small>Konfiguriere dein System</small>"

@@ -11,7 +11,7 @@ var Logo = {
 
                 Logos.findOne({name: channel_name}, function (err, data) {
                     try {
-                        var filename = __dirname + '/../share/logos/' + data.file;
+                        var filename = __dirname + '/../../../../share/logos/' + data.file;
                         res.contentType(filename);
 
                         var image = fs.readFileSync(filename);

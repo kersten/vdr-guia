@@ -34,22 +34,18 @@
             "00 o'clock": "Night program - 0.00 to 5.00 o'clock"
         }
     },
-    "navigation": {
-        "home": "navigation.home",
-        "login": "navigation.login",
-        "about": "navigation.about"
-    },
-    "application": {
-        "name": "application.name"
-    },
-    "Ich": "Ich",
     "yaVDR": "yaVDR",
-    "Highlights": "Highlights",
-    "TV Programm": "TV Programm",
-    "Kanäle": "Kanäle",
+    "Ich": "Ich",
     "Aufnahmen": "Aufnahmen",
+    "Kanäle": "Kanäle",
+    "TV Programm": "TV Programm",
+    "Highlights": "Highlights",
     "day": {
-        "Friday": "day.Friday",
-        "Thursday": "day.Thursday"
+        "Saturday": "day.Saturday",
+        "Sunday": "day.Sunday",
+        "Tuesday": "day.Tuesday"
+    },
+    "app": {
+        "name": "app.name"
     }
 }

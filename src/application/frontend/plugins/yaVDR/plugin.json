@@ -16,6 +16,31 @@
         "view": "YavdrView"
     }, {
         "needslogin": true,
+        "path": "!/yaVDR/System",
+        "action": "yaVdrSystemRoute",
+        "view": "YavdrSystemView"
+    }, {
+        "needslogin": true,
+        "path": "!/yaVDR/Network",
+        "action": "yaVdrNetworkRoute",
+        "view": "YavdrNetworkView"
+    }, {
+        "needslogin": true,
+        "path": "!/yaVDR/Hardware",
+        "action": "yaVdrHardwareRoute",
+        "view": "YavdrHardwareView"
+    }, {
+        "needslogin": true,
+        "path": "!/yaVDR/Commands",
+        "action": "yaVdrCommandsRoute",
+        "view": "YavdrCommandsView"
+    }, {
+        "needslogin": true,
+        "path": "!/yaVDR/Tools",
+        "action": "yaVdrToolsRoute",
+        "view": "YavdrToolsView"
+    }, {
+        "needslogin": true,
         "path": "!/yaVDR/Network/:id+:search",
         "action": "yaVdrNetworkRoute",
         "view": "YavdrNetworkView",
