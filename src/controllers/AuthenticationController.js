@@ -1,4 +1,5 @@
-var user = mongoose.model('User');
+var mongoose = require('mongoose'),
+    user = mongoose.model('User');
 var fs = require('fs');
 
 io.sockets.on('connection', function (socket) {

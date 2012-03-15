@@ -1,3 +1,6 @@
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+
 var ChannelSchema = new Schema({
     name: {
         type: String,

@@ -18,5 +18,51 @@
     },
     "navigation": {
         "about": "navigation.about"
+    },
+    "ns": {
+        "plugin": {
+            "tvguide": {
+                "header": {
+                    "name": "ns.plugin.tvguide.header.name",
+                    "title": "ns.plugin.tvguide.header.title"
+                }
+            },
+            "base": {
+                "page": {
+                    "title": "ns.plugin.base.page.title"
+                },
+                "help": {
+                    "password": "ns.plugin.base.help.password"
+                },
+                "button": {
+                    "login": "ns.plugin.base.button.login"
+                }
+            }
+        }
+    },
+    "Morning program - 5": {
+        "00 to 12": {
+            "00 o'clock": "Morning program - 5.00 to 12.00 o'clock"
+        }
+    },
+    "Afternoon program - 12": {
+        "00 to 18": {
+            "00 o'clock": "Afternoon program - 12.00 to 18.00 o'clock"
+        }
+    },
+    "Early evening program - 18": {
+        "00 to 20": {
+            "00 o'clock": "Early evening program - 18.00 to 20.00 o'clock"
+        }
+    },
+    "Evening program - 20": {
+        "00 to 0": {
+            "00 o'clock": "Evening program - 20.00 to 0.00 o'clock"
+        }
+    },
+    "Night program - 0": {
+        "00 to 5": {
+            "00 o'clock": "Night program - 0.00 to 5.00 o'clock"
+        }
     }
 }

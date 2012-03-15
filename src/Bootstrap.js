@@ -4,7 +4,8 @@ var async = require('async'),
     logging = require('node-logging'),
     socketIo = require('socket.io'),
     mime = require('mime'),
-    Mongoose = require("session-mongoose"),
+    MongooseSession = require("session-mongoose"),
+    Mongoose = require('mongoose'),
     Plugin = require('./lib/Plugin'),
     walk = require('walk');
 
@@ -18,7 +19,8 @@ function Bootstrap (app, express) {
     this.frontend = {
         files: [],
         routes: [],
-        locales: ['ns.app']
+        locales: ['ns.app'],
+        templates: []
     };
 
     async.series([
@@ -26,6 +28,8 @@ function Bootstrap (app, express) {
             _this.initMongoose(cb);
         }, function (cb) {
             _this.initExpress(cb);
+        }, function (cb) {
+            _this.initSocketIO(cb);
         }, function (cb) {
             _this.initBackendPlugins(cb);
         }, function (cb) {
@@ -36,20 +40,11 @@ function Bootstrap (app, express) {
     ], function () {
         _this.log.inf('GUIA ready');
     });
-
-    global.io = socketIo.listen(this.app);
     /*self.setupSocketIo();
 
     var Navigation = require('./lib/Navigation');
 
     this.navigation = new Navigation();
-
-    i18next.init({
-        ns: { namespaces: ['ns.app', 'ns.plugin.yavdr'], defaultNs: 'ns.app'},
-        resSetPath: __dirname + '/locales/__lng__/__ns__.json',
-        resGetPath: __dirname + '/locales/__lng__/__ns__.json',
-        saveMissing: true
-    });
 
     this.setup(function () {
         self.setupControllers();
@@ -64,8 +59,22 @@ function Bootstrap (app, express) {
 }
 
 Bootstrap.prototype.initMongoose = function (cb) {
-    this.sessionStore = new Mongoose({
+    this.sessionStore = new MongooseSession({
         url: "mongodb://127.0.0.1/GUIAsession"
+    });
+
+    this.mongoose = Mongoose;
+
+    this.mongoose.connect('mongodb://127.0.0.1/GUIA');
+    this.mongoose.connection.on('error', function (e) {
+        throw e;
+    });
+
+    var schemas = fs.readdirSync(__dirname + '/schemas');
+
+    schemas.forEach(function (schema) {
+        schema = schema.replace('.js', '');
+        require(__dirname + '/schemas/' + schema);
     });
 
     cb(null);
@@ -101,10 +110,92 @@ Bootstrap.prototype.initExpress = function (cb) {
     });
 };
 
-Bootstrap.prototype.initBackendPlugins = function (cb) {
-    this.log.inf('Setting up backend plugins');
+Bootstrap.prototype.initSocketIO = function (cb) {
+    var _this = this;
+
+    var parseCookie = require('express/node_modules/connect').utils.parseCookie;
+    var Session = require('express/node_modules/connect').middleware.session.Session;
+
+    this.io = socketIo.listen(this.app);
+
+    this.io.configure(function () {
+        this.set('authorization', function (data, accept) {
+            if (data.headers.cookie) {
+                data.cookie = parseCookie(data.headers.cookie);
+                data.sessionID = data.cookie['guia.id'];
+
+                // save the session store to the data object
+                // (as required by the Session constructor)
+
+                data.sessionStore = _this.sessionStore;
+                _this.sessionStore.get(data.sessionID, function (err, session) {
+                    if (err) {
+                        accept(err.message, false);
+                    } else {
+                        // create a session object, passing data as request and our
+                        // just acquired session data
+                        data.session = new Session(data, session);
+
+                        accept(null, true);
+                    }
+                });
+            } else {
+                return accept('No cookie transmitted.', false);
+            }
+        });
+    });
+
+    this.io.configure('production', function(){
+        this.set('log level', 1);
+
+        this.set('transports', [
+            'websocket'
+            , 'flashsocket'
+            , 'htmlfile'
+            , 'xhr-polling'
+            , 'jsonp-polling'
+        ]);
+
+        this.enable('browser client minification');
+        this.enable('browser client etag');
+        this.enable('browser client gzip');
+    });
+
+    this.io.configure('development', function(){
+        this.set('transports', ['websocket']);
+    });
 
     cb(null);
+};
+
+Bootstrap.prototype.initBackendPlugins = function (cb) {
+    var _this = this;
+
+    var pluginDir = __dirname + '/application/backend/plugins';
+
+    this.log.inf('Setting up backend plugins');
+
+    async.map(fs.readdirSync(pluginDir), function (plugin, cb) {
+        _this.log.dbg('Setting up plugin: ' + plugin);
+        var plg = require(pluginDir + '/' + plugin);
+
+        if (plg.listener) {
+            _this.io.sockets.on('connection', function (socket) {
+                for (var listener in plg.listener) {
+                    _this.log.dbg('Register socket listener: ' + plugin + ':' + listener);
+                    console.log(plg.listener[listener]);
+                    socket.on(plugin + ':' + listener, function () {
+                        console.log('CHECK: ' + plugin + ':' + listener);
+                        plg.listener[listener].apply(socket, arguments);
+                    });
+                }
+            });
+        }
+
+        cb(null);
+    }, function () {
+        cb(null);
+    });
 };
 
 Bootstrap.prototype.initFrontendPlugins = function (cb) {
@@ -127,44 +218,85 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
             config = JSON.parse(config);
             config.pluginDir = pluginDir;
 
+            if (!config.active) {
+                cb(null);
+                return;
+            }
+
+
             var plug = new Plugin(plugin, config, _this.app);
             plug.init(function (config) {
                 if (config.publicFiles) _this.frontend.files = _this.frontend.files.concat(config.publicFiles);
                 if (config.routes) _this.frontend.routes = _this.frontend.routes.concat(config.routes);
 
-                walker = walk.walk(pluginDir + '/' + plugin + '/locales', {
-                    followLinks: false
-                });
+                async.parallel([
+                    function (cb) {
+                        walker = walk.walk(pluginDir + '/' + plugin + '/locales', {
+                            followLinks: false
+                        });
 
-                walker.on("names", function (root, nodeNamesArray) {
-                    nodeNamesArray.sort(function (a, b) {
-                        if (a > b) return 1;
-                        if (a < b) return -1;
-                        return 0;
-                    });
-                });
+                        walker.on("names", function (root, nodeNamesArray) {
+                            nodeNamesArray.sort(function (a, b) {
+                                if (a > b) return 1;
+                                if (a < b) return -1;
+                                return 0;
+                            });
+                        });
 
-                walker.on("file", function (root, fileStats, next) {
-                    var dir = root.replace(pluginDir + '/' + plugin + '/locales/', '');
+                        walker.on("file", function (root, fileStats, next) {
+                            var dir = root.replace(pluginDir + '/' + plugin + '/locales/', '');
 
-                    try {
-                        fs.mkdirSync(__dirname + '/locales/' + dir);
-                    } catch (e) {}
+                            try {
+                                fs.mkdirSync(__dirname + '/locales/' + dir);
+                            } catch (e) {}
 
-                    try {
-                        fs.linkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
-                    } catch (e) {}
+                            try {
+                                fs.linkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
+                            } catch (e) {}
 
-                    _this.frontend.locales.push(fileStats.name.replace('.json', ''));
+                            _this.frontend.locales.push(fileStats.name.replace('.json', ''));
 
-                    next();
-                });
+                            next();
+                        });
 
-                walker.on("errors", function (root, nodeStatsArray, next) {
-                    next();
-                });
+                        walker.on("errors", function (root, nodeStatsArray, next) {
+                            next();
+                        });
 
-                walker.on("end", function () {
+                        walker.on("end", function () {
+                            cb(null);
+                        });
+                    }, function (cb) {
+                        walker = walk.walk(pluginDir + '/' + plugin + '/templates', {
+                            followLinks: false
+                        });
+
+                        walker.on("names", function (root, nodeNamesArray) {
+                            nodeNamesArray.sort(function (a, b) {
+                                if (a > b) return 1;
+                                if (a < b) return -1;
+                                return 0;
+                            });
+                        });
+
+                        walker.on("file", function (root, fileStats, next) {
+                            var dir = root.replace(pluginDir + '/' + plugin + '/templates/', '');
+                            _this.frontend.templates.push({
+                                id: plugin + fileStats.name.replace('index.html', '').replace('.html', '') + 'Template',
+                                src: dir + '/' + fileStats.name.replace('index.html', '').replace('.html', '')
+                            });
+                            next();
+                        });
+
+                        walker.on("errors", function (root, nodeStatsArray, next) {
+                            next();
+                        });
+
+                        walker.on("end", function () {
+                            cb(null);
+                        });
+                    }
+                ], function () {
                     cb(null);
                 });
             });
@@ -219,6 +351,7 @@ Bootstrap.prototype.initFrontend = function (cb) {
         res.render('index', {
             layout: false,
             locale: req.locale,
+            templates: _this.frontend.templates,
             files: _this.frontend.files,
             routes: _this.frontend.routes
         });
