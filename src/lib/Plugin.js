@@ -1,6 +1,8 @@
-var async = require('async'),
+var _ = require('underscore')._,
+    async = require('async'),
     fs = require('fs'),
-    mime = require('mime'),
+    mime = require('mime')
+    Navigation = require('./Navigation'),
     walk = require('walk');
 
 function Plugin (name, config, app) {
@@ -21,6 +23,10 @@ Plugin.prototype.init = function (cb) {
 
     async.parallel([
         function (cb) {
+            _this.initMenu(function () {
+                cb(null);
+            });
+        }, function (cb) {
             _this.initPublic(function (publicFiles) {
                 config.publicFiles = publicFiles;
                 cb(null);
@@ -34,6 +40,14 @@ Plugin.prototype.init = function (cb) {
     ], function () {
         cb(config);
     });
+};
+
+Plugin.prototype.initMenu = function (cb) {
+    if (this.config.menu) {
+        Navigation.addItem(this.config.menu);
+    }
+
+    cb(null);
 };
 
 Plugin.prototype.initRoutes = function (cb) {
@@ -66,11 +80,11 @@ Plugin.prototype.initPublic = function (cb) {
     walker.on("file", function (root, fileStats, next) {
         var dir = root.replace(pluginDir + '/' + _this.name + '/public/', '');
 
-        fs.readFile(root + '/' + fileStats.name, function (err, file) {
-            type = mime.lookup(root + '/' + fileStats.name);
+        var type = mime.lookup(root + '/' + fileStats.name);
 
-            publicFiles.push({type: type, src: '/' + _this.name + '/' + dir + '/' + fileStats.name});
-            _this.app.get('/' + _this.name + '/' + dir + '/' + fileStats.name, function (req, res) {
+        publicFiles.push({type: type, src: '/' + _this.name + '/' + dir + '/' + fileStats.name});
+        _this.app.get('/' + _this.name + '/' + dir + '/' + fileStats.name, function (req, res) {
+            fs.readFile(root + '/' + fileStats.name, function (err, file) {
                 if (!res.getHeader('Date')) res.setHeader('Date', new Date().toUTCString());
                 if (!res.getHeader('Cache-Control')) res.setHeader('Cache-Control', 'public, max-age=0');
                 if (!res.getHeader('Last-Modified')) res.setHeader('Last-Modified', fileStats.mtime.toUTCString());
@@ -79,12 +93,12 @@ Plugin.prototype.initPublic = function (cb) {
                     res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
                 }
 
-                res.setHeader('Content-Length', fileStats.size);
+                res.setHeader('Content-Length', file.length);
                 res.end(file.toString());
             });
-
-            next();
         });
+
+        next();
     });
 
     walker.on("errors", function (root, nodeStatsArray, next) {

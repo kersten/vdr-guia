@@ -1,0 +1,8 @@
+{
+    "title": "ns.plugin.recordings:title",
+    "menu": {
+        "recordings": "ns.plugin.recordings:menu.recordings",
+        "scheduled": "ns.plugin.recordings:menu.scheduled",
+        "cutting": "ns.plugin.recordings:menu.cutting"
+    }
+}

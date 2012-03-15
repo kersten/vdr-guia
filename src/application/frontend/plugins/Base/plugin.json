@@ -1,23 +1,26 @@
 {
     "name": "Base",
     "version": "0.1",
-    "needsLogin": false,
     "active": true,
-    "mainMenu": {
+    "menu": {
         "order": 0,
-        "title": "ns.plugin.base.navigation.welcome",
+        "needsLogin": false,
+        "title": "ns.plugin.base:menu.welcome.title",
         "icon": "home",
         "view": "WelcomeView"
     },
     "routes": [{
+        "needsLogin": false,
         "path": "",
         "action": "welcomeRoute",
         "view": "WelcomeView"
     }, {
+        "needsLogin": false,
         "path": "!/",
         "action": "welcomeRoute",
         "view": "WelcomeView"
     }, {
+        "needsLogin": false,
         "path": "!/Login",
         "action": "loginRoute",
         "view": "LoginView"

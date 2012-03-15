@@ -1,5 +1,5 @@
-var TVGuideView = Backbone.View.extend({
-    template: 'TVGuideTemplate',
+var TvGuideView = Backbone.View.extend({
+    template: 'TvGuideTemplate',
     tagName: 'div',
 
     events: {

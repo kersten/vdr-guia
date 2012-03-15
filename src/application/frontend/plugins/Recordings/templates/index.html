@@ -1,0 +1,21 @@
+<div class="page-header">
+    <h1><%- t('ns.plugin.recordings:title') %></h1>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <div class="tabbable" style="margin-bottom: 9px;">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#recordings" data-toggle="tab" data-view="Recordings"><%- t('ns.plugin.recordings:menu.recordings') %></a></li>
+                <li><a href="#scheduled" data-toggle="tab" data-view="Scheduled"><%- t('ns.plugin.recordings:menu.scheduled') %></a></li>
+                <li><a href="#cutting" data-toggle="tab" data-view="Cutting"><%- t('ns.plugin.recordings:menu.cutting') %></a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content" style="margin-left: -20px;">
+            <div class="tab-pane active" id="Recordings"></div>
+            <div class="tab-pane" id="Scheduled"></div>
+            <div class="tab-pane" id="Cutting"></div>
+        </div>
+    </div>
+</div>

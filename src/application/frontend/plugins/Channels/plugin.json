@@ -1,0 +1,25 @@
+{
+    "name": "Channels",
+    "version": "0.1",
+    "active": true,
+    "menu": {
+        "order": 3,
+        "title": "ns.plugin.channels:menu.title",
+        "icon": "book",
+        "view": "Channels"
+    },
+    "routes": [{
+        "needsLogin": true,
+        "path": "!/Channels",
+        "action": "channelsRoute",
+        "view": "ChannelsView"
+    }, {
+        "needsLogin": true,
+        "path": "!/Channels/:channel",
+        "action": "channelsChannelRoute",
+        "view": "ChannelsView",
+        "parameter": [{
+            "name": "channel"
+        }]
+    }]
+}

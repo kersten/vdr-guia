@@ -1,10 +1,17 @@
 {
     "name": "Recordings",
     "version": "0.1",
-    "mainMenu": {
+    "active": true,
+    "menu": {
         "order": 4,
-        "title": "Recordings",
+        "title": "ns.plugin.recordings:menu.title",
         "icon": "facetime-video",
         "view": "Recordings"
-    }
+    },
+    "routes": [{
+        "needsLogin": true,
+        "path": "!/Recordings",
+        "action": "recordingsRoute",
+        "view": "RecordingsView"
+    }]
 }

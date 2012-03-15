@@ -183,13 +183,16 @@ Bootstrap.prototype.initBackendPlugins = function (cb) {
             _this.io.sockets.on('connection', function (socket) {
                 for (var listener in plg.listener) {
                     _this.log.dbg('Register socket listener: ' + plugin + ':' + listener);
-                    console.log(plg.listener[listener]);
-                    socket.on(plugin + ':' + listener, function () {
-                        console.log('CHECK: ' + plugin + ':' + listener);
-                        plg.listener[listener].apply(socket, arguments);
-                    });
+
+                    socket.on(plugin + ':' + listener, plg.listener[listener]);
                 }
             });
+        }
+
+        if (plg.routes) {
+            for (var route in plg.routes) {
+                _this.app.get(route, plg.routes[route]);
+            }
         }
 
         cb(null);
@@ -223,80 +226,84 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
                 return;
             }
 
+            async.parallel([
+                function (cb) {
+                    walker = walk.walk(pluginDir + '/' + plugin + '/locales', {
+                        followLinks: false
+                    });
 
-            var plug = new Plugin(plugin, config, _this.app);
-            plug.init(function (config) {
-                if (config.publicFiles) _this.frontend.files = _this.frontend.files.concat(config.publicFiles);
-                if (config.routes) _this.frontend.routes = _this.frontend.routes.concat(config.routes);
-
-                async.parallel([
-                    function (cb) {
-                        walker = walk.walk(pluginDir + '/' + plugin + '/locales', {
-                            followLinks: false
+                    walker.on("names", function (root, nodeNamesArray) {
+                        nodeNamesArray.sort(function (a, b) {
+                            if (a > b) return 1;
+                            if (a < b) return -1;
+                            return 0;
                         });
+                    });
 
-                        walker.on("names", function (root, nodeNamesArray) {
-                            nodeNamesArray.sort(function (a, b) {
-                                if (a > b) return 1;
-                                if (a < b) return -1;
-                                return 0;
-                            });
+                    walker.on("file", function (root, fileStats, next) {
+                        var dir = root.replace(pluginDir + '/' + plugin + '/locales/', '');
+
+                        try {
+                            fs.mkdirSync(__dirname + '/locales/' + dir);
+                        } catch (e) {}
+
+                        try {
+                            fs.symlinkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
+                        } catch (e) {}
+
+                        _this.frontend.locales.push(fileStats.name.replace('.json', ''));
+
+                        next();
+                    });
+
+                    walker.on("errors", function (root, nodeStatsArray, next) {
+                        next();
+                    });
+
+                    walker.on("end", function () {
+                        cb(null);
+                    });
+                }, function (cb) {
+                    walker = walk.walk(pluginDir + '/' + plugin + '/templates', {
+                        followLinks: false
+                    });
+
+                    walker.on("names", function (root, nodeNamesArray) {
+                        nodeNamesArray.sort(function (a, b) {
+                            if (a > b) return 1;
+                            if (a < b) return -1;
+                            return 0;
                         });
+                    });
 
-                        walker.on("file", function (root, fileStats, next) {
-                            var dir = root.replace(pluginDir + '/' + plugin + '/locales/', '');
+                    walker.on("file", function (root, fileStats, next) {
+                        var dir = root.replace(pluginDir + '/' + plugin + '/templates', '');
 
-                            try {
-                                fs.mkdirSync(__dirname + '/locales/' + dir);
-                            } catch (e) {}
+                        var path = dir.split('/');
+                        path.push(fileStats.name.replace('index.html', '').replace('.html', ''));
+                        var id = plugin + path.join('');
 
-                            try {
-                                fs.linkSync(root + '/' + fileStats.name, __dirname + '/locales/' + dir + '/' + fileStats.name);
-                            } catch (e) {}
-
-                            _this.frontend.locales.push(fileStats.name.replace('.json', ''));
-
-                            next();
+                        _this.frontend.templates.push({
+                            id: id + 'Template',
+                            src: root + '/' + fileStats.name.replace('index.html', '').replace('.html', '')
                         });
+                        next();
+                    });
 
-                        walker.on("errors", function (root, nodeStatsArray, next) {
-                            next();
-                        });
+                    walker.on("errors", function (root, nodeStatsArray, next) {
+                        next();
+                    });
 
-                        walker.on("end", function () {
-                            cb(null);
-                        });
-                    }, function (cb) {
-                        walker = walk.walk(pluginDir + '/' + plugin + '/templates', {
-                            followLinks: false
-                        });
+                    walker.on("end", function () {
+                        cb(null);
+                    });
+                }
+            ], function () {
+                var plug = new Plugin(plugin, config, _this.app);
+                plug.init(function (config) {
+                    if (config.publicFiles) _this.frontend.files = _this.frontend.files.concat(config.publicFiles);
+                    if (config.routes) _this.frontend.routes = _this.frontend.routes.concat(config.routes);
 
-                        walker.on("names", function (root, nodeNamesArray) {
-                            nodeNamesArray.sort(function (a, b) {
-                                if (a > b) return 1;
-                                if (a < b) return -1;
-                                return 0;
-                            });
-                        });
-
-                        walker.on("file", function (root, fileStats, next) {
-                            var dir = root.replace(pluginDir + '/' + plugin + '/templates/', '');
-                            _this.frontend.templates.push({
-                                id: plugin + fileStats.name.replace('index.html', '').replace('.html', '') + 'Template',
-                                src: dir + '/' + fileStats.name.replace('index.html', '').replace('.html', '')
-                            });
-                            next();
-                        });
-
-                        walker.on("errors", function (root, nodeStatsArray, next) {
-                            next();
-                        });
-
-                        walker.on("end", function () {
-                            cb(null);
-                        });
-                    }
-                ], function () {
                     cb(null);
                 });
             });
@@ -304,32 +311,6 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
     }, function () {
         cb(null);
     });
-        /*plugins.forEach(function (plugin) {
-            _this.log.inf('Setting up plugin: ' + plugin);
-
-            fs.readFile(__dirname + '/application/frontend/plugins/' + plugin + '/plugin.json', 'utf-8', function(err, config) {
-                if (err) {
-                    _this.log.err('plugin.json file does not exists for plugin: ' + plugin);
-                    return;
-                }
-
-                config = JSON.parse(config);
-
-                if (!config.active) {
-                    return;
-                }
-
-                if (config.mainMenu) {
-                    _this.log.inf(JSON.stringify(GUIA.navigation));
-                    self.navigation.addItem(config.mainMenu, config.needslogin);
-                }
-
-                var Plugin = require(__dirname + '/application/frontend/plugins/' + plugin);
-                var plg = new Plugin(self.app, self.express);
-                plg.init();
-            });
-        });
-    });*/
 };
 
 Bootstrap.prototype.initFrontend = function (cb) {
@@ -339,6 +320,7 @@ Bootstrap.prototype.initFrontend = function (cb) {
         ns: { namespaces: _this.frontend.locales, defaultNs: 'ns.app'},
         resSetPath: __dirname + '/locales/__lng__/__ns__.json',
         resGetPath: __dirname + '/locales/__lng__/__ns__.json',
+        fallbackLng: 'en-US',
         saveMissing: true
     });
 
@@ -351,6 +333,7 @@ Bootstrap.prototype.initFrontend = function (cb) {
         res.render('index', {
             layout: false,
             locale: req.locale,
+            locales: _this.frontend.locales,
             templates: _this.frontend.templates,
             files: _this.frontend.files,
             routes: _this.frontend.routes

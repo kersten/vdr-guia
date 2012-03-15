@@ -2,10 +2,17 @@
     "name": "TvGuide",
     "version": "0.1",
     "active": true,
-    "mainMenu": {
+    "menu": {
+        "needsLogin": true,
         "order": 2,
-        "title": "TvGuide",
+        "title": "ns.plugin.tvguide:menu.title",
         "icon": "list",
         "view": "TvGuide"
-    }
+    },
+    "routes": [{
+        "needsLogin": true,
+        "path": "!/TvGuide",
+        "action": "tvguideRoute",
+        "view": "TvGuideView"
+    }]
 }

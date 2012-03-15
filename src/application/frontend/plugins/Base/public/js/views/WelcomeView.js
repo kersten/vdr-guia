@@ -1,5 +1,5 @@
 var WelcomeView = Backbone.View.extend({
-    template: 'WelcomeTemplate',
+    template: 'BaseWelcomeTemplate',
 
     render: function () {
         $(this.el).html(_.template( $('#' + this.template).html(), {} ));

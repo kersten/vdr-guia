@@ -2,21 +2,15 @@
     "application": {
         "name": "GUIA"
     },
+
     "navigation": {
-        "about": "About"
-    },
-    "attr": {
-        "username": "Benutzername"
-    },
-    "button": {
+        "about": "Information",
+        "home": "Startseite",
         "login": "Anmelden"
     },
-    "page": {
-        "title": {
-            "login": "Anmelden"
-        }
-    },
-    "help": {
-        "forgotpassword": "Passwort vergessen?"
+
+    "day": {
+        "Friday": "Freitag",
+        "Thursday": "Donnerstag"
     }
 }

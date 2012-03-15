@@ -1,28 +1,29 @@
 {
     "name": "Me",
     "version": "0.1",
-    "mainMenu": {
+    "active": true,
+    "menu": {
         "order": 5,
-        "title": "ns.plugin.me.navigation.me",
+        "title": "ns.plugin.me:menu.title",
         "icon": "user",
         "items": [{
-            "title": "ns.plugin.me.navigation.me.profile",
+            "title": "ns.plugin.me:menu.me.profile",
             "icon": "user",
             "view": "Me"
         }, {
-            "title": "ns.plugin.me.navigation.me.help",
+            "title": "ns.plugin.me:menu.me.help",
             "icon": "question-sign",
-            "view": "Help"
+            "view": "Me/Help"
         }, {
-            "title": "ns.plugin.me.navigation.me.shortcuts",
+            "title": "ns.plugin.me:menu.me.shortcuts",
             "icon": "cog",
-            "view": "Shortcuts"
+            "view": "Me/Shortcuts"
         }, {
-            "title": "ns.plugin.me.navigation.me.settings",
+            "title": "ns.plugin.me:menu.me.settings",
             "icon": "edit",
-            "view": "Settings"
+            "view": "Me/Settings"
         }, {
-            "title": "ns.plugin.me.navigation.me.logout",
+            "title": "ns.plugin.me:menu.me.logout",
             "icon": "off",
             "link": "logout",
             "id": "logoutBtn"

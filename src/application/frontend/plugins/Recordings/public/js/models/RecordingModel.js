@@ -1,0 +1,1 @@
+var RecordingModel = Backbone.Model.extend({});

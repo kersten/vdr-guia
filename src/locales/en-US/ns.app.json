@@ -1,41 +1,10 @@
 {
-    "attr": {
-        "username": "attr.username"
-    },
-    "button": {
-        "login": "button.login"
-    },
-    "page": {
-        "title": {
-            "login": "Login"
-        }
-    },
-    "help": {
-        "forgotpassword": "help.forgotpassword"
-    },
-    "application": {
-        "name": "application.name"
-    },
-    "navigation": {
-        "about": "navigation.about"
-    },
     "ns": {
         "plugin": {
             "tvguide": {
                 "header": {
                     "name": "ns.plugin.tvguide.header.name",
                     "title": "ns.plugin.tvguide.header.title"
-                }
-            },
-            "base": {
-                "page": {
-                    "title": "ns.plugin.base.page.title"
-                },
-                "help": {
-                    "password": "ns.plugin.base.help.password"
-                },
-                "button": {
-                    "login": "ns.plugin.base.button.login"
                 }
             }
         }
@@ -64,5 +33,23 @@
         "00 to 5": {
             "00 o'clock": "Night program - 0.00 to 5.00 o'clock"
         }
+    },
+    "navigation": {
+        "home": "navigation.home",
+        "login": "navigation.login",
+        "about": "navigation.about"
+    },
+    "application": {
+        "name": "application.name"
+    },
+    "Ich": "Ich",
+    "yaVDR": "yaVDR",
+    "Highlights": "Highlights",
+    "TV Programm": "TV Programm",
+    "Kanäle": "Kanäle",
+    "Aufnahmen": "Aufnahmen",
+    "day": {
+        "Friday": "day.Friday",
+        "Thursday": "day.Thursday"
     }
 }

@@ -1,8 +1,9 @@
-var async = require('async');
-var channels = mongoose.model('Channel');
-var events = mongoose.model('Event');
-var movies = mongoose.model('MovieDetail');
-var actorSchema = mongoose.model('Actor');
+var async = require('async'),
+    mongoose = require('mongoose'),
+    channels = mongoose.model('Channel'),
+    events = mongoose.model('Event'),
+    movies = mongoose.model('MovieDetail'),
+    actorSchema = mongoose.model('Actor');
 
 function fetchActorDetails (actors, callback) {
     var result = new Array();

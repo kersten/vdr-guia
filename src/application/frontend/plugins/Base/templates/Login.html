@@ -2,22 +2,22 @@
     <div class="span12">
         <form class="form-horizontal">
             <fieldset>
-                <legend><%- t('ns.plugin.base.page.title') %></legend>
+                <legend><%- t('ns.plugin.base:page.login.title') %></legend>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="text" class="input-xlarge" id="username" data-i18n="[placeholder]attr.username" />
+                        <input type="text" class="input-xlarge" id="username" data-i18n="[placeholder]ns.plugin.base:page.login.form.attr.username" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <div class="controls">
-                        <input type="password" class="input-xlarge" id="password" data-i18n="[placeholder]attr.password" />
-                        <p class="help-block"><%- t('ns.plugin.base.help.password') %></p>
+                        <input type="password" class="input-xlarge" id="password" data-i18n="[placeholder]ns.plugin.base:page.login.form.attr.password" />
+                        <p class="help-block"><a href="" id="lostPassword"><%- t('ns.plugin.base:page.login.form.help.password') %></a></p>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <button class="btn btn-success" id="login"><%- t('ns.plugin.base.button.login') %></button>
+                    <button class="btn btn-success"><%- t('ns.plugin.base:page.login.form.buttons.login') %></button>
                 </div>
             </fieldset>
         </form>

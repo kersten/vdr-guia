@@ -79,6 +79,9 @@
 
         <script type="text/javascript" src="/js/bootstrap.js"></script>
 
+        <script type="text/javascript" src="/js/models/EventModel.js"></script>
+        <script type="text/javascript" src="/js/collections/EventCollection.js"></script>
+
         <% files.forEach(function (file) {
             switch (file.type) {
                 case 'application/javascript':
@@ -97,15 +100,6 @@
         <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
-                var options = {
-                    ns: { namespaces: ['ns.common', 'ns.app'], defaultNs: 'ns.app'},
-                    useLocalStorage: false,
-                    resGetPath: '/locales/resources.json?lng=__lng__&ns=__ns__',
-                    resPostPath: '/locales/add/__lng__/__ns__',
-                    dynamicLoad: true,
-                    sendMissing: true
-                };
-
                 var WorkspaceRouter = Backbone.Router.extend({
                     routes: {
                         <% var appRoutes = [];
@@ -125,8 +119,8 @@
                         });
                     },
 
-                    route: function(route, name, callback) {
-                        return Backbone.Router.prototype.route.call(this, route, name, function() {
+                    route: function (route, name, callback) {
+                        return Backbone.Router.prototype.route.call(this, route, name, function () {
                             var _this = this;
                             this.trigger.apply(this, ['beforeroute:' + name].concat(_.toArray(arguments)));
                             var self = this;
@@ -138,6 +132,11 @@
 
                                     _this.navigate(route, true);
                                 } else {
+                                    if (route == '!/Login') {
+                                        _this.navigate('!/', true);
+                                        return;
+                                    }
+
                                     callback.apply(self, func_args);
                                 }
                             });
@@ -176,10 +175,37 @@
                     }
                     <% }); %>
                 });
+
+                var options = {
+                    ns: { namespaces: ['<%- locales.join('\', \'') %>'], defaultNs: 'ns.app'},
+                    useLocalStorage: false,
+                    resGetPath: '/locales/resources.json?lng=__lng__&ns=__ns__',
+                    resPostPath: '/locales/add/__lng__/__ns__',
+                    dynamicLoad: true,
+                    sendMissing: true
+                };
                 
                 $.i18n.init(options, function() {
                     var wsRouter = new WorkspaceRouter();
                     Backbone.history.start({pushState: true});
+
+                    var navigationCollection = new NavigationCollection;
+                    var navigationView = new NavigationView({
+                        el: $('.navbar'),
+                        collection: navigationCollection
+                    });
+
+                    function setClock() {
+                        var now = new Date();
+                        $('#clock').text((now.getHours() < 10 ? "0" : "") + now.getHours() + (now.getSeconds() %2 == 0 ? ":" : " ") + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
+                        setTimeout(setClock, 1000);
+                    }
+
+                    setClock();
+                });
+
+                $('[data-view="Welcome"]').click(function () {
+                    Backbone.history.navigate('!/', true);
                 });
             });
         </script>
@@ -189,7 +215,7 @@
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a style="cursor: pointer;" class="brand" data-view="Welcome"><%- t('application.name') %></a>
+                    <a style="cursor: pointer;" class="brand" data-view=""><%- t('application.name') %></a>
 
                     <ul class="nav" style="display: none;">
                     </ul>
@@ -205,9 +231,22 @@
             </div>
 
             <footer id="footer">
-                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011/2012 - <a href="/!/About"><%- t('navigation.about') %></a></p>
-                <div style="float: right; margin-top: -30px;"><a class="FlattrButton" style="display:none;" title="VDR  GUIA" data-flattr-uid="GOTTMODUS" data-flattr-tags="software, opensource, GUIA, vdr, record, tvguide, program, tv" data-flattr-category="software" data-flattr-button="compact" href="https://localhost:1443/"></a><noscript><a href="http://flattr.com/thing/095fbc870a68a6dcf5456d3e23ca6a7b/VDR-GUIA" target="_blank">
-<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript></div></div>
+                <p>&copy; <a href="http://github.com/kersten">Kersten Burkhardt</a> &amp; <a href="http://github.com/volkerrichert">Volker Richert</a> 2011/2012 - <a href="/!/About" onclick="javascript:Backbone.history.navigate('!/About', true); return false;"><%- t('navigation.about') %></a></p>
+                <div style="float: right; margin-top: -30px;" id="flattr">
+                    <a class="FlattrButton"
+                       style="display:none;"
+                       title="VDR  GUIA"
+                       data-flattr-uid="GOTTMODUS"
+                       data-flattr-tags="software, opensource, GUIA, vdr, record, tvguide, program, tv"
+                       data-flattr-category="software"
+                       data-flattr-button="compact"
+                       href="https://localhost:1443/"></a>
+                    <noscript>
+                        <a href="http://flattr.com/thing/095fbc870a68a6dcf5456d3e23ca6a7b/VDR-GUIA" target="_blank">
+                            <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
+                        </a>
+                    </noscript>
+                </div>
             </footer>
         </div>
     </body>

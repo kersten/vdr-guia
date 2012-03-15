@@ -1,0 +1,22 @@
+{
+    "navigation": {
+        "home": "ns.plugin.base:navigation.home",
+        "about": "ns.plugin.base:navigation.about"
+    },
+    "page": {
+        "login": {
+            "title": "ns.plugin.base:page.login.title",
+            "form": {
+                "help": {
+                    "password": "ns.plugin.base:page.login.form.help.password"
+                },
+                "buttons": {
+                    "login": "ns.plugin.base:page.login.form.buttons.login"
+                }
+            }
+        },
+        "welcome": {
+            "title": "ns.plugin.base:page.welcome.title"
+        }
+    }
+}

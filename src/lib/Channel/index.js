@@ -1,5 +1,6 @@
-var channels = mongoose.model('Channel');
-var rest = require('restler');
+var mongoose = require('mongoose'),
+    channels = mongoose.model('Channel'),
+    rest = require('restler');
 
 function Channel (restful) {
     this.restful = restful;

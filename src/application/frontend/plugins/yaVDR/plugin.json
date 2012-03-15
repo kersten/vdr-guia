@@ -2,18 +2,20 @@
     "name": "yaVDR",
     "version": "0.1",
     "active": true,
-    "needslogin": true,
-    "mainMenu": {
+    "menu": {
+        "needslogin": true,
         "order": 6,
-        "title": "yaVDR",
+        "title": "ns.plugin.yavdr:menu.title",
         "icon": "edit",
         "view": "yaVDR"
     },
     "routes": [{
+        "needslogin": true,
         "path": "!/yaVDR",
         "action": "yaVdrRoute",
         "view": "YavdrView"
     }, {
+        "needslogin": true,
         "path": "!/yaVDR/Network/:id+:search",
         "action": "yaVdrNetworkRoute",
         "view": "YavdrNetworkView",

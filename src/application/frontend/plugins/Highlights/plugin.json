@@ -1,9 +1,10 @@
 {
     "name": "Highlights",
     "version": "0.1",
-    "mainMenu": {
+    "active": true,
+    "menu": {
         "order": 1,
-        "title": "Highlights",
+        "title": "ns.plugin.highlights:menu.title",
         "icon": "heart",
         "view": "Highlights"
     }

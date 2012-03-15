@@ -1,7 +1,36 @@
 {
+    "navigation": {
+        "home": "Startseite",
+        "login": "Anmelden"
+    },
+
+    "search": {
+        "attr": {
+            "search": "Suchen"
+        }
+    },
+
     "page": {
         "login": {
-            "title": "Anmelden"
+            "title": "Anmelden",
+            "form": {
+                "buttons": {
+                    "login": "Einloggen"
+                },
+
+                "help": {
+                    "password": "Passwort vergessen?"
+                },
+
+                "attr": {
+                    "username": "Benutzername",
+                    "password": "Passwort"
+                }
+            }
+        },
+
+        "welcome": {
+            "title": "Willkommen bei GUIA <small>Verwalte deinen VDR</small>"
         }
     }
 }

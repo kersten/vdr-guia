@@ -1,30 +1,30 @@
-//var Channel = require('../lib/Channel');
+var t = require('i18next').t;
 
-function Navigation () {
-    this.menu = [];
-}
+var Navigation = {
+    menu: [],
 
-Navigation.prototype.addItem = function (item, needsLogin) {
-    if (item.order && this.menu[item.order] === undefined) {
-        this.menu[item.order] = item;
+    addItem: function (item, needsLogin) {
+        if (item.order && this.menu[item.order] === undefined) {
+            this.menu[item.order] = item;
+        }
+    },
+
+    getMenu: function (loggedIn) {
+        if (loggedIn) {
+            return this.menu;
+        }
+
+        return [{
+            title: t('navigation.home'),
+            view: ''
+        }, {
+            title: t('navigation.about'),
+            view: 'About'
+        }, {
+            title: t('navigation.login'),
+            view: 'Login'
+        }];
     }
-};
-
-Navigation.prototype.getMenu = function (loggedIn) {
-    if (loggedIn) {
-        return this.menu;
-    }
-
-    return [{
-        title: __('Home'),
-        view: 'Welcome'
-    }, {
-        title: __('About'),
-        view: 'About'
-    }, {
-        title: __('Login'),
-        view: 'Login'
-    }];
 };
 
 module.exports = Navigation;

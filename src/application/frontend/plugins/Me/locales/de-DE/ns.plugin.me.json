@@ -1,0 +1,12 @@
+{
+    "menu": {
+        "title": "Ich",
+        "me": {
+            "help": "Hilfe",
+            "profile": "Konto",
+            "shortcuts": "Tastenkürzel",
+            "settings": "Einstellungen",
+            "logout": "Ausloggen"
+        }
+    }
+}
