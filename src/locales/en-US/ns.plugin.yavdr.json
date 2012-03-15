@@ -1,3 +1,27 @@
 {
-    "title": "ns.plugin.yavdr:title"
+    "menu": {
+        "system": "ns.plugin.yavdr:menu.system",
+        "network": "ns.plugin.yavdr:menu.network",
+        "hardware": "ns.plugin.yavdr:menu.hardware",
+        "comands": "ns.plugin.yavdr:menu.comands",
+        "tools": "ns.plugin.yavdr:menu.tools",
+        "commands": "ns.plugin.yavdr:menu.commands"
+    },
+    "page": {
+        "commands": {
+            "title": "ns.plugin.yavdr:page.commands.title"
+        },
+        "hardware": {
+            "title": "ns.plugin.yavdr:page.hardware.title"
+        },
+        "network": {
+            "title": "ns.plugin.yavdr:page.network.title"
+        },
+        "system": {
+            "title": "ns.plugin.yavdr:page.system.title"
+        },
+        "tools": {
+            "title": "ns.plugin.yavdr:page.tools.title"
+        }
+    }
 }
