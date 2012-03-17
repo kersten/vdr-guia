@@ -1,6 +1,6 @@
 <div class="span12" style="margin-bottom: 10px;">
     <div class="row">
-        <div class="span2">
+        <div class="span3">
             <& if (model.get('image')) { &>
             <img class="thumbnail" src="<&= model.get('image') &>" />
             <& } else { &>
@@ -8,7 +8,7 @@
             <& } &>
         </div>
 
-        <div class="span10">
+        <div class="span9">
             <h3><&= model.get('title') &><small> <&= model.get('short_description') &></small></h3>
              <&= model.start_time() &> - <&= model.stop_time() &>
             <hr style="margin-top: 0px;"/>

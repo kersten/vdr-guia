@@ -34,6 +34,23 @@
                 "startup": "ns.plugin.yavdr:page.system.navigation.startup",
                 "shutdown": "ns.plugin.yavdr:page.system.navigation.shutdown",
                 "wakeup": "ns.plugin.yavdr:page.system.navigation.wakeup"
+            },
+            "base": {
+                "frontend": {
+                    "title": "ns.plugin.yavdr:page.system.base.frontend.title",
+                    "select": "ns.plugin.yavdr:page.system.base.frontend.select",
+                    "softhddevice": "ns.plugin.yavdr:page.system.base.frontend.softhddevice",
+                    "sxfe": "ns.plugin.yavdr:page.system.base.frontend.sxfe",
+                    "xine": "ns.plugin.yavdr:page.system.base.frontend.xine",
+                    "xbmc": "ns.plugin.yavdr:page.system.base.frontend.xbmc",
+                    "dummy": "ns.plugin.yavdr:page.system.base.frontend.dummy"
+                },
+                "backend": {
+                    "title": "ns.plugin.yavdr:page.system.base.backend.title",
+                    "select": "ns.plugin.yavdr:page.system.base.backend.select",
+                    "vdr": "ns.plugin.yavdr:page.system.base.backend.vdr",
+                    "dummy": "ns.plugin.yavdr:page.system.base.backend.dummy"
+                }
             }
         },
         "tools": {

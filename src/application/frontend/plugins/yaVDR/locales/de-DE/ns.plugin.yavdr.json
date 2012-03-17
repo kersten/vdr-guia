@@ -35,6 +35,23 @@
                 "startup": "Hochfahren",
                 "shutdown": "Runterfahren",
                 "wakeup": "Aufwachen"
+            },
+            "base": {
+                "frontend": {
+                    "title": "Ausgabegerät wählen",
+                    "select": "Auswählen",
+                    "softhddevice": "sohthddevice",
+                    "sxfe": "SXFE",
+                    "xine": "Xine",
+                    "xbmc": "XBMC",
+                    "dummy": "Dummy"
+                },
+                "backend": {
+                    "title": "Backend wählen",
+                    "select": "Auswählen",
+                    "vdr": "VDR",
+                    "dummy": "Dummy"
+                }
             }
         },
         "tools": {
