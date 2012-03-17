@@ -2,7 +2,7 @@ var LoginView = Backbone.View.extend({
     template: 'BaseLoginTemplate',
 
     events: {
-        'click button': 'loginAction',
+        'submit form': 'loginAction',
         'click #lostPassword': 'lostPasswordAction'
     },
 
@@ -23,8 +23,8 @@ var LoginView = Backbone.View.extend({
 
         socket.emit('Authentication:User:login', {username: $('#username', this.el).val(), password: password}, function (data) {
             if (data.loggedIn) {
-                //GUIA.navigation.login();
-                Backbone.history.navigate('!/Me', true);
+                EventEmitter.global.emit('loggedIn');
+                Backbone.history.navigate('!/Highlights', true);
             }
         });
     },

@@ -13,16 +13,36 @@
             "title": "Befehle"
         },
         "hardware": {
-            "title": "Hardware"
+            "title": "Hardware",
+            "navigation": {
+                "remote": "Fernbedienung",
+                "sound": "Audio",
+                "display": "Bildschirm",
+                "sundtek": "Sundtek"
+            }
         },
         "network": {
-            "title": "Netzwerk"
+            "title": "Netzwerk",
+            "navigation": {
+                "wol": "Wake on LAN",
+                "nfs": "Netzwerkspeicher"
+            }
         },
         "system": {
-            "title": "System"
+            "title": "System",
+            "navigation": {
+                "base": "Basis",
+                "startup": "Hochfahren",
+                "shutdown": "Runterfahren",
+                "wakeup": "Aufwachen"
+            }
         },
         "tools": {
-            "title": "Tools"
+            "title": "Tools",
+            "navigation": {
+                "editor": "Editor",
+                "watchdog": "Überwachung"
+            }
         }
     },
 

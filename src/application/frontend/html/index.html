@@ -71,6 +71,7 @@
         <script type="text/javascript" src="/js/backbone/underscore.js"></script>
         <script type="text/javascript" src="/js/backbone/backbone.js"></script>
 
+        <script type="text/javascript" src="/js/utils/EventEmitter.js"></script>
         <script type="text/javascript" src="/js/utils/xdate.js"></script>
         <script type="text/javascript" src="/js/utils/sha512.js"></script>
 
@@ -112,6 +113,8 @@
                     initialize: function () {
                         this.bind('all', function(ev) {
                             if (ev.indexOf('beforeroute:') === 0) {
+                                EventEmitter.global.emit('beforeroute', ev, Backbone.history.fragment);
+
                                 if (this.currentView != null) {
                                     this.currentView.remove();
                                 }
@@ -123,6 +126,7 @@
                         return Backbone.Router.prototype.route.call(this, route, name, function () {
                             var _this = this;
                             this.trigger.apply(this, ['beforeroute:' + name].concat(_.toArray(arguments)));
+
                             var self = this;
                             var func_args = arguments;
 

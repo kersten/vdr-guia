@@ -9,18 +9,18 @@ var NavigationView = Backbone.View.extend({
     initialize: function () {
         var _this = this;
 
+        EventEmitter.global.on('loggedIn', function () {
+            _this.collection.fetch({success: function (collection, data) {
+                $('ul.nav').fadeOut(function () {
+                    $('ul.nav').children().remove();
+
+                    _this.initNavigation.apply(_this, [collection, data]);
+                });
+            }});
+        });
+
         this.collection.fetch({success: function (collection, data) {
-            if (data.loggedIn) {
-                var SearchView = new NavigationSearchView({});
-                $(_this.el).children('div.navbar-inner', _this.el).children('div.container').append(SearchView.render().el);
-            }
-
-            data.items.forEach(function (item) {
-                collection.add(item);
-            });
-
-            $('.pull-left').fadeIn();
-            $('ul.nav').fadeIn();
+            _this.initNavigation.apply(_this, [collection, data]);
         }});
 
         this.collection.bind('add', function (item) {
@@ -107,6 +107,20 @@ var NavigationView = Backbone.View.extend({
                 delete(_this.router);
             }
         });
+    },
+
+    initNavigation: function (collection, data) {
+        if (data.loggedIn) {
+            var SearchView = new NavigationSearchView({});
+            $(this.el).children('div.navbar-inner', this.el).children('div.container').append(SearchView.render().el);
+        }
+
+        data.items.forEach(function (item) {
+            collection.add(item);
+        });
+
+        $('.pull-left').fadeIn();
+        $('ul.nav').fadeIn();
     },
 
     navigate: function (ev) {

@@ -1,3 +1,24 @@
 <div class="page-header">
     <h1><%- t('ns.plugin.yavdr:page.network.title') %></h1>
 </div>
+
+<div class="row">
+    <div class="span12 tabbable">
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a href="#wol" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.wol') %></a>
+            </li>
+            <li><a href="#nfs" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.nfs') %></a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="wol">
+                WOL
+            </div>
+
+            <div class="tab-pane" id="nfs">
+                NFS
+            </div>
+        </div>
+    </div>
+</div>

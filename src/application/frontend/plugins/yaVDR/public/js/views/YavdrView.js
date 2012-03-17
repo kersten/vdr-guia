@@ -6,7 +6,7 @@ var YavdrView = Backbone.View.extend({
 
         if ($('a.brand').data('view') != 'yaVDR') {
             $('.navbar-fixed-top ul.nav').fadeOut(function () {
-                $('.navbar-fixed-top ul.nav').children().remove();
+                $('.navbar-fixed-top ul.nav').children().hide();
                 _this.initMenu();
             });
 

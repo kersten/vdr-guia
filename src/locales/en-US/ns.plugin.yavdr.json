@@ -12,16 +12,36 @@
             "title": "ns.plugin.yavdr:page.commands.title"
         },
         "hardware": {
-            "title": "ns.plugin.yavdr:page.hardware.title"
+            "title": "ns.plugin.yavdr:page.hardware.title",
+            "navigation": {
+                "remote": "ns.plugin.yavdr:page.hardware.navigation.remote",
+                "sound": "ns.plugin.yavdr:page.hardware.navigation.sound",
+                "display": "ns.plugin.yavdr:page.hardware.navigation.display",
+                "sundtek": "ns.plugin.yavdr:page.hardware.navigation.sundtek"
+            }
         },
         "network": {
-            "title": "ns.plugin.yavdr:page.network.title"
+            "title": "ns.plugin.yavdr:page.network.title",
+            "navigation": {
+                "wol": "ns.plugin.yavdr:page.network.navigation.wol",
+                "nfs": "ns.plugin.yavdr:page.network.navigation.nfs"
+            }
         },
         "system": {
-            "title": "ns.plugin.yavdr:page.system.title"
+            "title": "ns.plugin.yavdr:page.system.title",
+            "navigation": {
+                "base": "ns.plugin.yavdr:page.system.navigation.base",
+                "startup": "ns.plugin.yavdr:page.system.navigation.startup",
+                "shutdown": "ns.plugin.yavdr:page.system.navigation.shutdown",
+                "wakeup": "ns.plugin.yavdr:page.system.navigation.wakeup"
+            }
         },
         "tools": {
-            "title": "ns.plugin.yavdr:page.tools.title"
+            "title": "ns.plugin.yavdr:page.tools.title",
+            "navigation": {
+                "editor": "ns.plugin.yavdr:page.tools.navigation.editor",
+                "watchdog": "ns.plugin.yavdr:page.tools.navigation.watchdog"
+            }
         }
     }
 }

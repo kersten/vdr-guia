@@ -21,3 +21,5 @@ var Bootstrap = require('./Bootstrap');
 
 var GUIA = new Bootstrap(app, express);
 global.GUIA = GUIA;
+
+process.setuid('www-data');
