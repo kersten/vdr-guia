@@ -43,7 +43,8 @@
         "fluent-ffmpeg": "*",
         "everyauth": "*",
         "walk": "*",
-        "mime": "*"
+        "mime": "*",
+        "haml": "*"
     },
     "licenses":[{
         "type" : "MIT",

@@ -100,6 +100,8 @@ Bootstrap.prototype.initExpress = function (cb) {
 
         this.register('.html', require('ejs'));
         this.register('.js', require('ejs'));
+        
+        this.register('.haml', require('haml'));
 
         this.set('views', __dirname + '/application/frontend/html');
         this.set('view engine', 'html');
@@ -280,7 +282,7 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
                         var dir = root.replace(pluginDir + '/' + plugin + '/templates', '');
 
                         var path = dir.split('/');
-                        path.push(fileStats.name.replace('index.html', '').replace('.html', ''));
+                        path.push(fileStats.name.replace('index.html', '').replace('.html', '').replace('.haml', ''));
                         var id = plugin + path.join('');
 
                         _this.frontend.templates.push({
