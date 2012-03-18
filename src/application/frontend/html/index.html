@@ -94,7 +94,7 @@
 
         <% templates.forEach(function (template) { %>
         <script type="text/template" id="<%= template.id %>">
-            <% partial(template.src) %>
+            <%- partial(template.src) %>
         </script>
         <% }); %>
         
