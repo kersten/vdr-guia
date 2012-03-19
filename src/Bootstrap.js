@@ -1,6 +1,9 @@
 var async = require('async'),
+    connect = require('express/node_modules/connect'),
     cronJob = require('cron').CronJob,
+    ejs = require('ejs'),
     fs = require('fs'),
+    haml = require('haml'),
     i18next = require('i18next'),
     logging = require('node-logging'),
     socketIo = require('socket.io'),
@@ -73,7 +76,7 @@ Bootstrap.prototype.initMongoose = function (cb) {
 
             cb(null);
         } else {
-            _this.log.inf('GUIA installed! Getting configuration ..');
+            _this.log.inf('GUIA installed! Getting configuration');
 
             ConfigurationSchema.findOne({}, function (err, data) {
                 _this.installed = true;
@@ -104,10 +107,10 @@ Bootstrap.prototype.initExpress = function (cb) {
 
         this.use(_this.express.static(__dirname + '/application/frontend/public'));
 
-        this.register('.html', require('ejs'));
-        this.register('.js', require('ejs'));
+        this.register('.html', ejs);
+        this.register('.js', ejs);
         
-        this.register('.haml', require('haml'));
+        this.register('.haml', haml);
 
         this.set('views', __dirname + '/application/frontend/html');
         this.set('view engine', 'html');
@@ -121,8 +124,8 @@ Bootstrap.prototype.initExpress = function (cb) {
 Bootstrap.prototype.initSocketIO = function (cb) {
     var _this = this;
 
-    var parseCookie = require('express/node_modules/connect').utils.parseCookie;
-    var Session = require('express/node_modules/connect').middleware.session.Session;
+    var parseCookie = connect.utils.parseCookie;
+    var Session = connect.middleware.session.Session;
 
     this.io = socketIo.listen(this.app);
 
