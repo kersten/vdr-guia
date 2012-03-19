@@ -10,46 +10,6 @@
         <!-- Include stylesheets -->
         <link href="/css/bootstrap.css" type="text/css" rel="stylesheet" />
         <link href="/css/guia.css" type="text/css" rel="stylesheet" />
-        <style type="text/css">
-            /* Override some defaults */
-            html, body {
-                background-color: #eee;
-            }
-
-            body {
-                padding-top: 40px;
-            }
-
-            .container > footer p {
-                margin-top: 10px;
-                text-align: center; /* center align it with the container */
-            }
-
-            /* The white background content wrapper */
-            .content {
-                background-color: #fff;
-                padding: 20px;
-                margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
-                -webkit-border-radius: 0 0 6px 6px;
-                -moz-border-radius: 0 0 6px 6px;
-                border-radius: 0 0 6px 6px;
-                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-                box-shadow: 0 1px 2px rgba(0,0,0,.15);
-            }
-
-            /* Give a quick and non-cross-browser friendly divider */
-            .content .span4 {
-                margin-left: 0;
-                padding-left: 19px;
-                border-left: 1px solid #eee;
-            }
-
-            .span-one-third {
-                width: 260px;
-            }
-
-        </style>
         
         <script type="text/javascript">
             /* <![CDATA[ */
@@ -131,6 +91,16 @@
                             var func_args = arguments;
 
                             socket.emit('Authentication:loggedIn', function (loggedIn) {
+                                if (loggedIn.installed !== undefined && !loggedIn.installed) {
+                                    if (route != '!/Setup') {
+                                        _this.navigate('!/Setup', true);
+                                    } else {
+                                        callback.apply(self, func_args);
+                                    }
+
+                                    return;
+                                }
+
                                 if (!loggedIn && (route != '!/' && route != '!/Login' && route != '!/About')) {
                                     route = '!/Login';
 
@@ -249,6 +219,15 @@
                     </noscript>
                 </div>
             </footer>
+        </div>
+
+        <div class="modal fade" id="appDisconnected">
+            <div class="modal-header">
+                <h3><%- t('modal.server.disconnected.title') %></h3>
+            </div>
+            <div class="modal-body">
+                <p><%- t('modal.server.disconnected.body') %></p>
+            </div>
         </div>
     </body>
 </html>

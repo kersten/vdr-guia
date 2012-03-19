@@ -1,14 +1,4 @@
 {
-    "ns": {
-        "plugin": {
-            "tvguide": {
-                "header": {
-                    "name": "ns.plugin.tvguide.header.name",
-                    "title": "ns.plugin.tvguide.header.title"
-                }
-            }
-        }
-    },
     "Morning program - 5": {
         "00 to 12": {
             "00 o'clock": "Morning program - 5.00 to 12.00 o'clock"
@@ -47,5 +37,27 @@
     },
     "app": {
         "name": "app.name"
+    },
+    "Highlights <small>Today</small>": "Highlights <small>Today</small>",
+    "modal": {
+        "server": {
+            "disconnected": {
+                "title": "modal.server.disconnected.title",
+                "body": "modal.server.disconnected.body"
+            }
+        }
+    },
+    "Startseite": "Startseite",
+    "Information": "Information",
+    "Anmelden": "Anmelden",
+    "ns": {
+        "plugin": {
+            "tvguide": {
+                "header": {
+                    "name": "ns.plugin.tvguide.header.name",
+                    "title": "ns.plugin.tvguide.header.title"
+                }
+            }
+        }
     }
 }

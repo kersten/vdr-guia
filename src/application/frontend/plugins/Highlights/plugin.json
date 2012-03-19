@@ -7,5 +7,11 @@
         "title": "ns.plugin.highlights:menu.title",
         "icon": "heart",
         "view": "Highlights"
-    }
+    },
+    "routes": [{
+        "needslogin": true,
+        "path": "!/Highlights",
+        "action": "highlightsRoute",
+        "view": "HighlightsView"
+    }]
 }

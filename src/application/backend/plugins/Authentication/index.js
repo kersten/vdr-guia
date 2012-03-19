@@ -4,7 +4,9 @@ var mongoose = require('mongoose');
 var Authentication = {
     listener: {
         'loggedIn': function (cb) {
-            if (this.handshake.session.loggedIn) {
+            if (!Authentication.installed) {
+                cb({installed: false});
+            } else if (this.handshake.session.loggedIn) {
                 cb(true);
             } else {
                 cb(false);

@@ -1,0 +1,82 @@
+<div class="page-header">
+    <h1><%- t('ns.plugin.setup:page.channels.title') %></h1>
+</div>
+<div class="row">
+    <div class="span6" style="height: 400px; overflow: auto;">
+        <p>
+            <%- t('ns.plugin.setup:page.channels.body') %>
+        </p>
+
+        <table class="table table-striped" id="channels">
+            <thead>
+                <tr>
+                    <th style="width: 20px;">
+                        #
+                    </th>
+                    <th style="width: 30px;">
+                        <%- t('ns.plugin.setup:page.channels.table.header.active') %>
+                    </th>
+                    <th>
+                        <%- t('ns.plugin.setup:page.channels.table.header.channel') %>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="span6">
+        <form>
+            <fieldset>
+                <legend>
+                    <%- t('ns.plugin.setup:page.channels.guia.defaults') %>
+                </legend>
+                <div class="control-group">
+                    <label class="control-label" for="epgscandelay"><%- t('ns.plugin.setup:page.channels.guia.epgpause') %></label>
+                    <div class="controls">
+                        <select class="medium" name="epgscandelay" id="epgscandelay">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="fetchTmdbActors"><%- t('ns.plugin.setup:page.channels.guia.fetch.actors') %></label>
+                    <div class="controls">
+                        <input type="checkbox" id="fetchTmdbActors" checked="checked" />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="fetchTmdbMovies"><%- t('ns.plugin.setup:page.channels.guia.fetch.movies') %></label>
+                    <div class="controls">
+                        <input type="checkbox" id="fetchTmdbMovies" checked="checked" />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="fetchThetvdbSeasons"><%- t('ns.plugin.setup:page.channels.guia.fetch.seasons') %></label>
+                    <div class="controls">
+                        <input type="checkbox" id="fetchThetvdbSeasons" checked="checked" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
+        <div class="form-actions" style="text-align: right;">
+            <button class="btn btn-disabled" id="previous" next="InstallView"><%- t('ns.plugin.setup:button.back') %></button>&nbsp;<button class="btn primary disabled" id="next" next="StepOne"><%- t('ns.plugin.setup:button.next') %></button>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 var async = require('async'),
+    cronJob = require('cron').CronJob,
     fs = require('fs'),
     i18next = require('i18next'),
     logging = require('node-logging'),
@@ -40,25 +41,11 @@ function Bootstrap (app, express) {
     ], function () {
         _this.log.inf('GUIA ready');
     });
-    /*self.setupSocketIo();
-
-    var Navigation = require('./lib/Navigation');
-
-    this.navigation = new Navigation();
-
-    this.setup(function () {
-        self.setupControllers();
-        self.setupViews();
-        self.setupPlugins();
-
-        i18next.registerAppHelper(app);
-        i18next.serveClientScript(app);
-        i18next.serveDynamicResources(app);
-        i18next.serveMissingKeyRoute(app);
-    });*/
 }
 
 Bootstrap.prototype.initMongoose = function (cb) {
+    var _this = this;
+
     this.sessionStore = new MongooseSession({
         url: "mongodb://127.0.0.1/GUIAsession"
     });
@@ -77,7 +64,25 @@ Bootstrap.prototype.initMongoose = function (cb) {
         require(__dirname + '/schemas/' + schema);
     });
 
-    cb(null);
+    var ConfigurationSchema = this.mongoose.model('Configuration');
+
+    ConfigurationSchema.count({}, function (err, cnt) {
+        if (cnt == 0) {
+            _this.log.inf('Not installed! Delivering installation');
+            _this.installed = false;
+
+            cb(null);
+        } else {
+            _this.log.inf('GUIA installed! Getting configuration ..');
+
+            ConfigurationSchema.findOne({}, function (err, data) {
+                _this.installed = true;
+                _this.configuration = data;
+
+                cb();
+            });
+        }
+    });
 };
 
 Bootstrap.prototype.initExpress = function (cb) {
@@ -92,7 +97,8 @@ Bootstrap.prototype.initExpress = function (cb) {
             secret: '4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a',
             key: 'guia.id',
             cookie: {
-                maxAge: 60000 * 60 * 24
+                maxAge: 60000 * 60 * 24,
+                originalMaxAge: 60000 * 60 * 24
             }
         }));
 
@@ -180,6 +186,7 @@ Bootstrap.prototype.initBackendPlugins = function (cb) {
     async.map(fs.readdirSync(pluginDir), function (plugin, cb) {
         _this.log.dbg('Setting up plugin: ' + plugin);
         var plg = require(pluginDir + '/' + plugin);
+        plg.installed = _this.installed;
 
         if (plg.listener) {
             _this.io.sockets.on('connection', function (socket) {
@@ -195,6 +202,16 @@ Bootstrap.prototype.initBackendPlugins = function (cb) {
             for (var route in plg.routes) {
                 _this.app.get(route, plg.routes[route]);
             }
+        }
+
+        if (plg.cronjobs) {
+            plg.cronjobs.forEach(function (cronjob) {
+                for (var time in cronjob) {
+                    try {
+                        cronJob(time, cronjob[time]);
+                    } catch (e) {}
+                }
+            });
         }
 
         cb(null);

@@ -5,28 +5,28 @@
 <div class="row">
     <div class="span12 tabbable">
         <ul class="nav nav-pills">
-            <li class="active">
-                <a href="#remote" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.remote') %></a>
+            <li>
+                <a href="#Remote" onclick="Backbone.history.navigate('!/yaVDR/Hardware/Remote')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.remote') %></a>
             </li>
-            <li><a href="#sound" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.sound') %></a></li>
-            <li><a href="#display" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.display') %></a></li>
-            <li><a href="#sundtek" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.sundtek') %></a></li>
+            <li><a href="#Sound" onclick="Backbone.history.navigate('!/yaVDR/Hardware/Sound')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.sound') %></a></li>
+            <li><a href="#Display" onclick="Backbone.history.navigate('!/yaVDR/Hardware/Display')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.display') %></a></li>
+            <li><a href="#Sundtek" onclick="Backbone.history.navigate('!/yaVDR/Hardware/Sundtek')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.hardware.navigation.sundtek') %></a></li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="remote">
+            <div class="tab-pane" id="Remote">
                 REMOTE
             </div>
 
-            <div class="tab-pane" id="sound">
+            <div class="tab-pane" id="Sound">
                 SOUND
             </div>
 
-            <div class="tab-pane" id="display">
+            <div class="tab-pane" id="Display">
                 DISPLAY
             </div>
 
-            <div class="tab-pane" id="sundtek">
+            <div class="tab-pane" id="Sundtek">
                 SUNDTEK
             </div>
         </div>

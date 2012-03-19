@@ -28,5 +28,39 @@
             "link": "logout",
             "id": "logoutBtn"
         }]
-    }
+    },
+    "routes": [{
+        "needsLogin": true,
+        "path": "!/Me",
+        "action": "meRoute",
+        "view": "MeView"
+    }, {
+        "needsLogin": true,
+        "path": "!/Me/Help",
+        "action": "meHelpRoute",
+        "view": "MeHelpView"
+    }, {
+        "needsLogin": true,
+        "path": "!/Me/Shortcuts",
+        "action": "meShortcutsRoute",
+        "view": "MeShortcutsView"
+    }, {
+        "needsLogin": true,
+        "path": "!/Me/Settings",
+        "action": "meSettingsRoute",
+        "view": "MeSettingsView"
+    }, {
+        "needsLogin": true,
+        "path": "!/Me/Settings/:section",
+        "action": "meSettingsSectionRoute",
+        "view": "MeSettingsView",
+        "parameter": [{
+            "name": "section"
+        }]
+    }, {
+        "needsLogin": true,
+        "path": "!/Me/Logout",
+        "action": "meLogoutRoute",
+        "view": "MeLogoutView"
+    }]
 }

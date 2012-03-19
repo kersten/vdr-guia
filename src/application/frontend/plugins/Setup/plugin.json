@@ -1,0 +1,11 @@
+{
+    "name": "Setup",
+    "version": "0.1",
+    "active": true,
+    "routes": [{
+        "needsLogin": false,
+        "path": "!/Setup",
+        "action": "setupRoute",
+        "view": "SetupView"
+    }]
+}

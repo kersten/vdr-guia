@@ -8,5 +8,57 @@
             "settings": "Einstellungen",
             "logout": "Ausloggen"
         }
+    },
+
+    "title": "Profil",
+    "settings": {
+        "tab": {
+            "guia": "GUIA",
+            "database": "Datenbank",
+            "channels": "Kanäle",
+            "social": "Social",
+            "vdr": "VDR"
+        },
+
+        "channels": {
+            "title": "Kanäle",
+            "active": "Aktiv",
+            "channel": "Kanal"
+        },
+        "database": {
+            "title": "Datenbank",
+            "statistics": "Statistik",
+            "size": "Größe",
+            "channels": "Kanäle",
+            "events": "Events",
+            "actors": "Schauspieler",
+            "social": {
+                "actor": "Schauspielerdetails",
+                "movie": "Filmdetails"
+            },
+            "button": {
+                "refresh": "Aktualisieren",
+                "reset": {
+                    "events": "Events löschen",
+                    "complete": "Komplette Datenbank löschen"
+                }
+            },
+            "reset": {
+                "database": "ns.plugin.me:settings.database.reset.database",
+                "events": "ns.plugin.me:settings.database.reset.events"
+            },
+            "confirm": "ns.plugin.me:settings.database.confirm",
+            "cancel": "ns.plugin.me:settings.database.cancel"
+        },
+        "guia": {
+            "title": "GUIA",
+            "epgpause": "Pause zwischen EPG updates"
+        },
+        "vdr": {
+            "title": "VDR",
+            "ip": "IP",
+            "port": "Port",
+            "update": "Update"
+        }
     }
 }

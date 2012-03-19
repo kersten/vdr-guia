@@ -1,0 +1,35 @@
+{
+    "page": {
+        "overview": {
+            "title": "GUIA Setup <small>Übersicht</small>",
+            "body": "ns.plugin.setup:page.overview.body"
+        },
+        "socialize": {
+            "title": "GUIA Setup <small>Social</small>",
+            "body": "ns.plugin.setup:page.socialize.body"
+        },
+        "channels": {
+            "title": "GUIA Setup <small>TV-Kanäle</small>",
+            "body": "Wähle die Kanäle aus, die GUIA anzeigen soll",
+            "table": {
+                "header": {
+                    "active": "Aktiv",
+                    "channel": "Kanal"
+                }
+            },
+            "guia": {
+                "defaults": "Standardeinstellungen",
+                "epgpause": "Pause zwischen EPG updates",
+                "fetch": {
+                    "actors": "Suche Schauspieler bei GUIASocial",
+                    "movies": "Suche Filme bei GUIASocial",
+                    "seasons": "Suche Serien bei GUIASocial"
+                }
+            }
+        }
+    },
+    "button": {
+        "next": "Weiter",
+        "back": "Zurück"
+    }
+}

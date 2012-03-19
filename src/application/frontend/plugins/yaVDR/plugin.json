@@ -21,14 +21,38 @@
         "view": "YavdrSystemView"
     }, {
         "needslogin": true,
+        "path": "!/yaVDR/System/:tab",
+        "action": "yaVdrSystemTabRoute",
+        "view": "YavdrSystemView",
+        "parameter": [{
+            "name": "tab"
+        }]
+    }, {
+        "needslogin": true,
         "path": "!/yaVDR/Network",
         "action": "yaVdrNetworkRoute",
         "view": "YavdrNetworkView"
     }, {
         "needslogin": true,
+        "path": "!/yaVDR/Network/:tab",
+        "action": "yaVdrNetworkTabRoute",
+        "view": "YavdrNetworkView",
+        "parameter": [{
+            "name": "tab"
+        }]
+    }, {
+        "needslogin": true,
         "path": "!/yaVDR/Hardware",
         "action": "yaVdrHardwareRoute",
         "view": "YavdrHardwareView"
+    }, {
+        "needslogin": true,
+        "path": "!/yaVDR/Hardware/:tab",
+        "action": "yaVdrHardwareTabRoute",
+        "view": "YavdrHardwareView",
+        "parameter": [{
+            "name": "tab"
+        }]
     }, {
         "needslogin": true,
         "path": "!/yaVDR/Commands",
@@ -41,13 +65,11 @@
         "view": "YavdrToolsView"
     }, {
         "needslogin": true,
-        "path": "!/yaVDR/Network/:id+:search",
-        "action": "yaVdrNetworkRoute",
-        "view": "YavdrNetworkView",
+        "path": "!/yaVDR/Tools/:tab",
+        "action": "yaVdrToolsTabRoute",
+        "view": "YavdrToolsView",
         "parameter": [{
-            "name": "id"
-        }, {
-            "name": "search"
+            "name": "tab"
         }]
     }]
 }

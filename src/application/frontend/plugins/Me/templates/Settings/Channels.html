@@ -1,0 +1,31 @@
+<p>
+    <%- t('ns.plugin.me:settings.channels.title') %>
+</p>
+
+<table class="table" id="channels">
+    <thead>
+    <tr>
+        <th style="width: 20px;">
+            #
+        </th>
+        <th style="width: 60px;">
+            <input type="checkbox" id="selectAllChannels" style="float: left; margin-right:4px;" /> <%- t('ns.plugin.me:settings.channels.active') %>
+        </th>
+        <th>
+            <%- t('ns.plugin.me:settings.channels.channel') %>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td colspan="3">
+            <div class="progress progress-info
+                     progress-striped active">
+                <div class="bar"
+                     style="width: 20%;"></div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,81 @@
+<p>
+    <%- t('ns.plugin.me:settings.database.title') %>
+</p>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th colspan="2">
+            <%- t('ns.plugin.me:settings.database.statistics') %>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td style="width: 200px;"><%- t('ns.plugin.me:settings.database.size') %></td>
+        <td id="sizeOfDatabase"></td>
+    </tr>
+
+    <tr>
+        <td><%- t('ns.plugin.me:settings.database.channels') %></td>
+        <td id="channelCount"></td>
+    </tr>
+
+    <tr>
+        <td><%- t('ns.plugin.me:settings.database.events') %></td>
+        <td id="eventCount"></td>
+    </tr>
+
+    <tr>
+        <td><%- t('ns.plugin.me:settings.database.actors') %></td>
+        <td id="actorCount"></td>
+    </tr>
+
+    <tr>
+        <td><%- t('ns.plugin.me:settings.database.social.actor') %></td>
+        <td id="actorDetailCount"></td>
+    </tr>
+
+    <tr>
+        <td><%- t('ns.plugin.me:settings.database.social.movie') %></td>
+        <td id="movieDetailCount"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="form-actions">
+    <button action="refreshStats" class="btn btn-success"><%- t('ns.plugin.me:settings.database.button.refresh') %></button>
+    <button action="resetEvents" class="btn btn-danger"><%- t('ns.plugin.me:settings.database.button.reset.events') %></button>
+    <button action="resetDatabase" class="btn btn-danger"><%- t('ns.plugin.me:settings.database.button.reset.complete') %></button>
+</div>
+
+<div class="modal hide fade" id="resetDatabaseDialog">
+    <div class="modal-header">
+        <a class="close" href="#">×</a>
+        <h3><%- t('ns.plugin.me:settings.database.reset.database') %></h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to reset the database?</p>
+        <p>If you click "confirm" all of your data except the user configurations will be completely deleted!!</p>
+    </div>
+    <div class="modal-footer">
+        <button action="confirmDialog" class="btn danger"><%- t('ns.plugin.me:settings.database.confirm') %></button>
+        <button action="closeDialog" class="btn"><%- t('ns.plugin.me:settings.database.cancel') %></button>
+    </div>
+</div>
+
+<div class="modal hide fade" id="resetEventsDialog">
+    <div class="modal-header">
+        <a class="close" href="#">×</a>
+        <h3><%- t('ns.plugin.me:settings.database.reset.events') %></h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to reset the events?</p>
+        <p>If you click "confirm" your EPG data, actors and details will be completely deleted!!</p>
+    </div>
+    <div class="modal-footer">
+        <button action="confirmDialog" class="btn danger"><%- t('ns.plugin.me:settings.database.confirm') %></button>
+        <button action="closeDialog" class="btn"><%- t('ns.plugin.me:settings.database.cancel') %></button>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{
+    "page": {
+        "overview": {
+            "title": "ns.plugin.setup:page.overview.title",
+            "body": "ns.plugin.setup:page.overview.body"
+        },
+        "socialize": {
+            "title": "ns.plugin.setup:page.socialize.title",
+            "body": "ns.plugin.setup:page.socialize.body"
+        },
+        "channels": {
+            "title": "ns.plugin.setup:page.channels.title",
+            "body": "ns.plugin.setup:page.channels.body",
+            "table": {
+                "header": {
+                    "active": "ns.plugin.setup:page.channels.table.header.active",
+                    "channel": "ns.plugin.setup:page.channels.table.header.channel"
+                }
+            },
+            "guia": {
+                "defaults": "ns.plugin.setup:page.channels.guia.defaults",
+                "epgpause": "ns.plugin.setup:page.channels.guia.epgpause",
+                "fetch": {
+                    "actors": "ns.plugin.setup:page.channels.guia.fetch.actors",
+                    "movies": "ns.plugin.setup:page.channels.guia.fetch.movies",
+                    "seasons": "ns.plugin.setup:page.channels.guia.fetch.seasons"
+                }
+            }
+        }
+    },
+    "button": {
+        "next": "ns.plugin.setup:button.next",
+        "back": "ns.plugin.setup:button.back"
+    }
+}

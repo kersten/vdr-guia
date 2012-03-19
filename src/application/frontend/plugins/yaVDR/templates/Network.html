@@ -5,14 +5,14 @@
 <div class="row">
     <div class="span12 tabbable">
         <ul class="nav nav-pills">
-            <li class="active">
-                <a href="#wol" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.wol') %></a>
+            <li>
+                <a href="#WOL" onclick="Backbone.history.navigate('!/yaVDR/Network/WOL')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.wol') %></a>
             </li>
-            <li><a href="#nfs" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.nfs') %></a></li>
+            <li><a href="#NFS" onclick="Backbone.history.navigate('!/yaVDR/Network/NFS')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.network.navigation.nfs') %></a></li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="wol">
+            <div class="tab-pane" id="WOL">
                 WOL
             </div>
 

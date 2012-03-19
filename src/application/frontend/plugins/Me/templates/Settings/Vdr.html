@@ -1,0 +1,22 @@
+<form class="form-horizontal">
+    <fieldset>
+        <legend><%- t('ns.plugin.me:settings.vdr.title') %></legend>
+        <div class="control-group">
+            <label class="control-label" for="vdrIP"><%- t('ns.plugin.me:settings.vdr.ip') %></label>
+            <div class="controls docs-input-sizes">
+                <input class="span2" type="text" id="vdrIP" />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="restfulPort"><%- t('ns.plugin.me:settings.vdr.port') %></label>
+            <div class="controls">
+                <input class="span2" type="text" id="restfulPort" />
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<div class="form-actions">
+    <button action="update" class="btn btn-primary"><%- t('ns.plugin.me:settings.vdr.update') %></button>
+</div>

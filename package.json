@@ -44,7 +44,8 @@
         "everyauth": "*",
         "walk": "*",
         "mime": "*",
-        "haml": "*"
+        "haml": "*",
+        "cron": "*"
     },
     "licenses":[{
         "type" : "MIT",

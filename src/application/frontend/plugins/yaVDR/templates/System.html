@@ -5,16 +5,16 @@
 <div class="row">
     <div class="span12 tabbable">
         <ul class="nav nav-pills">
-            <li class="active">
-                <a href="#base" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.base') %></a>
+            <li>
+                <a href="#Base" onclick="Backbone.history.navigate('!/yaVDR/System/Base')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.base') %></a>
             </li>
-            <li><a href="#startup" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.startup') %></a></li>
-            <li><a href="#shutdown" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.shutdown') %></a></li>
-            <li><a href="#wakeup" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.wakeup') %></a></li>
+            <li><a href="#Startup" onclick="Backbone.history.navigate('!/yaVDR/System/Startup')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.startup') %></a></li>
+            <li><a href="#Shutdown" onclick="Backbone.history.navigate('!/yaVDR/System/Shutdown')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.shutdown') %></a></li>
+            <li><a href="#Wakeup" onclick="Backbone.history.navigate('!/yaVDR/System/Wakeup')" data-toggle="tab"><%- t('ns.plugin.yavdr:page.system.navigation.wakeup') %></a></li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="base">
+            <div class="tab-pane" id="Base">
                 <form class="form-horizontal">
                     <fieldset>
                         <legend><%- t('ns.plugin.yavdr:page.system.base.frontend.title') %></legend>
@@ -63,14 +63,14 @@
                     </fieldset>
                 </form>
             </div>
-            <div class="tab-pane" id="startup">
+            <div class="tab-pane" id="Startup">
                 <p>Howdy, I'm in Section 2.</p>
             </div>
-            <div class="tab-pane" id="shutdown">
-                <p>Howdy, I'm in Section 2.</p>
+            <div class="tab-pane" id="Shutdown">
+                <p>Howdy, I'm in Section 3.</p>
             </div>
-            <div class="tab-pane" id="wakeup">
-                <p>Howdy, I'm in Section 2.</p>
+            <div class="tab-pane" id="Wakeup">
+                <p>Howdy, I'm in Section 4.</p>
             </div>
         </div>
     </div>
