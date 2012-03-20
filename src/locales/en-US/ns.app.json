@@ -1,4 +1,15 @@
 {
+    "Highlights <small>Today</small>": "Highlights <small>Today</small>",
+    "ns": {
+        "plugin": {
+            "tvguide": {
+                "header": {
+                    "name": "ns.plugin.tvguide.header.name",
+                    "title": "ns.plugin.tvguide.header.title"
+                }
+            }
+        }
+    },
     "Morning program - 5": {
         "00 to 12": {
             "00 o'clock": "Morning program - 5.00 to 12.00 o'clock"
@@ -24,21 +35,6 @@
             "00 o'clock": "Night program - 0.00 to 5.00 o'clock"
         }
     },
-    "yaVDR": "yaVDR",
-    "Ich": "Ich",
-    "Aufnahmen": "Aufnahmen",
-    "Kanäle": "Kanäle",
-    "TV Programm": "TV Programm",
-    "Highlights": "Highlights",
-    "day": {
-        "Saturday": "day.Saturday",
-        "Sunday": "day.Sunday",
-        "Tuesday": "day.Tuesday"
-    },
-    "app": {
-        "name": "app.name"
-    },
-    "Highlights <small>Today</small>": "Highlights <small>Today</small>",
     "modal": {
         "server": {
             "disconnected": {
@@ -47,17 +43,13 @@
             }
         }
     },
-    "Startseite": "Startseite",
-    "Information": "Information",
-    "Anmelden": "Anmelden",
-    "ns": {
-        "plugin": {
-            "tvguide": {
-                "header": {
-                    "name": "ns.plugin.tvguide.header.name",
-                    "title": "ns.plugin.tvguide.header.title"
-                }
-            }
-        }
+    "Highlights": "Highlights",
+    "TV Programm": "TV Programm",
+    "Kanäle": "Kanäle",
+    "Aufnahmen": "Aufnahmen",
+    "Ich": "Ich",
+    "yaVDR": "yaVDR",
+    "day": {
+        "Tuesday": "day.Tuesday"
     }
 }

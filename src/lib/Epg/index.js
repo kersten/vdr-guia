@@ -174,10 +174,6 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
                 callback();
             }
         }, function (callback) {
-            /*dnode.getRating('X-Men', function (result) {
-                console.log(result);
-                callback();
-            });*/
             callback();
         }
     ], function () {

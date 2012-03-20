@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Installation <small>Setup GUIA // Step 1</small></h1>
+    <h1><%- t('ns.plugin.setup:setup.user.title') %></h1>
 </div>
 <div class="row">
     <div class="span12">
@@ -8,29 +8,29 @@
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" id="existingaccount" />
-                            Use existing GUIA Social account
+                            <input type="checkbox" id="existingaccount" disabled/>
+                            <%- t('ns.plugin.setup:setup.user.form.existing') %>
                         </label>
                     </div>
                 </div>
                 
-                <legend>User configuration</legend>
+                <legend><%- t('ns.plugin.setup:setup.user.form.user.legend') %></legend>
                 <div class="control-group">
-                    <label class="control-label" for="xlInput">Username</label>
+                    <label class="control-label" for="username"><%- t('ns.plugin.setup:setup.user.form.user.name') %></label>
                     <div class="controls">
                         <input type="text" size="30" id="username" class="input-xlarge" />
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="xlInput">Password</label>
+                    <label class="control-label" for="password"><%- t('ns.plugin.setup:setup.user.form.user.password') %></label>
                     <div class="controls">
                         <input type="password" size="30" id="password" class="input-xlarge" />
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="xlInput">Re-Type Password</label>
+                    <label class="control-label" for="repassword"><%- t('ns.plugin.setup:setup.user.form.user.repassword') %></label>
                     <div class="controls">
                         <input type="password" size="30" id="repassword" class="input-xlarge" />
                     </div>
@@ -38,20 +38,20 @@
             </fieldset>
 
             <fieldset>
-                <legend>GUIA Social details</legend>
+                <legend><%- t('ns.plugin.setup:setup.user.form.social.legend') %></legend>
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" id="transmit" checked="checked" />
-                            Use GUIA Social as EPG source (recommended)
+                            <input type="checkbox" id="transmit" disabled/>
+                            <%- t('ns.plugin.setup:setup.user.form.social.use') %>
                         </label>
                     </div>
                 </div>
                 
                 <div class="control-group">
-                    <label class="control-label" for="xlInput">Email</label>
+                    <label class="control-label" for="email"><%- t('ns.plugin.setup:setup.user.form.social.email') %></label>
                     <div class="controls">
-                        <input type="text" size="30" id="email" class="input-xlarge" />
+                        <span id="email" class="uneditable-input" />
                     </div>
                 </div>
             </fieldset>
@@ -61,7 +61,7 @@
 <div class="row">
     <div class="span12">
         <div class="form-actions" style="text-align: right;">
-            <button class="btn" id="previous" next="Socialize">Back</button>&nbsp;<button class="btn btn-primary" id="next" next="StepTwo">Next step</button>
+            <button class="btn" id="previous" next="Socialize"><%- t('ns.plugin.setup:button.back') %></button>&nbsp;<button class="btn btn-primary" id="next" next="StepTwo"><%- t('ns.plugin.setup:button.next') %></button>
         </div>
     </div>
 </div>

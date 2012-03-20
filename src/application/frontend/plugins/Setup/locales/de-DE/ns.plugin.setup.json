@@ -31,5 +31,24 @@
     "button": {
         "next": "Weiter",
         "back": "Zurück"
+    },
+    "setup": {
+        "user": {
+            "title": "GUIA Einrichtung <small>Benutzer erstellen</small>",
+            "form": {
+                "existing": "Bereits vorhandnen GUIASocial Account benutzen",
+                "user": {
+                    "legend": "Benutzerdetails",
+                    "name": "Benutzername",
+                    "password": "Passwort",
+                    "repassword": "Passwort bestätigen"
+                },
+                "social": {
+                    "legend": "GUIASocial",
+                    "use": "Nutze GUIA Social für den EPG abgleich (wird empfohlen, zur Zeit noch nicht verfügbar)",
+                    "email": "E-Mail-Adresse"
+                }
+            }
+        }
     }
 }

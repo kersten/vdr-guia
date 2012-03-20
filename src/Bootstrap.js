@@ -1,6 +1,6 @@
 var async = require('async'),
     connect = require('express/node_modules/connect'),
-    cronJob = require('cron').CronJob,
+    cron = require('cron'),
     ejs = require('ejs'),
     fs = require('fs'),
     haml = require('haml'),
@@ -191,6 +191,10 @@ Bootstrap.prototype.initBackendPlugins = function (cb) {
         var plg = require(pluginDir + '/' + plugin);
         plg.installed = _this.installed;
 
+        if (plg.init) {
+            plg.init();
+        }
+
         if (plg.listener) {
             _this.io.sockets.on('connection', function (socket) {
                 for (var listener in plg.listener) {
@@ -211,7 +215,7 @@ Bootstrap.prototype.initBackendPlugins = function (cb) {
             plg.cronjobs.forEach(function (cronjob) {
                 for (var time in cronjob) {
                     try {
-                        cronJob(time, cronjob[time]);
+                        new cron.CronJob(time, cronjob[time]);
                     } catch (e) {}
                 }
             });

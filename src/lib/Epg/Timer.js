@@ -1,39 +1,56 @@
-var rest = require('restler');
-var events = mongoose.model('Event');
+var rest = require('restler'),
+    log = require('node-logging'),
+    mongoose = require('mongoose'),
+    Configuration = mongoose.model('Configuration'),
+    events = mongoose.model('Event');
 
-function EpgTimer (restful) {
-    this.restful = restful;
-}
+function EpgTimer () {}
+
+EpgTimer.prototype.getRestful = function (cb) {
+    var _this = this;
+
+    Configuration.findOne({}, function (err, doc) {
+        if (doc) {
+            _this.restful = 'http://' + doc.get('vdrHost') + ':' + doc.get('restfulPort');
+            cb.apply(_this, []);
+        }
+    });
+};
 
 EpgTimer.prototype.refresh = function () {
-    rest.get(this.restful + '/timers.json').on('success', function (res) {
-        res.timers.forEach(function (timer) {
-            var query = events.find({event_id: timer.event_id});
-            query.populate('channel_id', null, {channel_id: timer.channel});
-            
-            query.each(function (err, doc, next) {
-                if (doc == null) {
-                    return;
-                }
-                
-                if (err || doc.channel_id == null) {
+    this.getRestful(function () {
+        rest.get(this.restful + '/timers.json').on('success', function (res) {
+            res.timers.forEach(function (timer) {
+                var query = events.find({event_id: timer.event_id});
+                query.populate('channel_id', null, {channel_id: timer.channel});
+
+                query.each(function (err, doc, next) {
+                    if (doc == null) {
+                        return;
+                    }
+
+                    if (err || doc.channel_id == null) {
+                        next();
+                        return;
+                    }
+
+                    doc.set({
+                        timer_id: timer.id,
+                        timer_active: timer.is_active,
+                        timer_exists: timer.is_active
+                    });
+
+                    doc.save();
+
                     next();
-                    return;
-                }
-                
-                doc.set({
-                    timer_id: timer.id,
-                    timer_active: timer.is_active,
-                    timer_exists: timer.is_active
                 });
-                
-                doc.save();
-                
-                next();
             });
+
+            log.inf('Timer refresh finished');
+        }).on('error', function () {
+            log.err('Timer refresh failed');
+            return;
         });
-    }).on('error', function () {
-        return;
     });
 };
 

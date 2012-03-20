@@ -1,5 +1,5 @@
-var RecordingsCuttingView = Backbone.View.extend({
-    template: 'RecordingsCuttingTemplate',
+var RecordingsNewView = Backbone.View.extend({
+    template: 'RecordingsNewTemplate',
     className: 'span12 columns',
 
     initialize: function () {

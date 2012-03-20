@@ -40,6 +40,8 @@
 
         <script type="text/javascript" src="/js/bootstrap.js"></script>
 
+        <script type="text/javascript" src="/js/backbone/backbone.validation.js"></script>
+
         <script type="text/javascript" src="/js/models/EventModel.js"></script>
         <script type="text/javascript" src="/js/collections/EventCollection.js"></script>
 
@@ -57,7 +59,7 @@
             <%- partial(template.src) %>
         </script>
         <% }); %>
-        
+
         <!-- Start application -->
         <script type="text/javascript">
             $(document).ready(function () {
@@ -153,7 +155,7 @@
                     dynamicLoad: true,
                     sendMissing: true
                 };
-                
+
                 $.i18n.init(options, function() {
                     var navigationCollection = new NavigationCollection;
                     var navigationView = new NavigationView({

@@ -8,7 +8,7 @@ var MeSettingsChannelsView = Backbone.View.extend({
 
     initialize: function () {
         $(this.el).html(_.template( $('#' + this.template).html(), {} ));
-        GUIA.loadingOverlay('show');
+        //GUIA.loadingOverlay('show');
 
         this.channellist = new ChannelCollection();
 
@@ -26,7 +26,7 @@ var MeSettingsChannelsView = Backbone.View.extend({
                     $('#channels > tbody', self.el).append(channelView.render().el);
                 });
 
-                GUIA.loadingOverlay('hide');
+                //GUIA.loadingOverlay('hide');
             }
         });
     },

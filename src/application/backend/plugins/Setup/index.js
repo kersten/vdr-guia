@@ -14,6 +14,10 @@ var Setup = {
                 clearTimeout(sendFalse);
                 cb({reachable: false});
             });
+        },
+
+        CheckUser: function () {
+
         }
     }
 };

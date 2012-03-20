@@ -71,7 +71,7 @@ var ChannelsView = Backbone.View.extend({
 
         this.model = this.collection.get($(ev.currentTarget).data('_id'));
 
-        $('.dropdown-toggle', this.el).html('<img src="/logo/' + this.model.get('_id') + '" style="height: 10px;" /> ' + this.model.get('name') + '<span class="caret"></span>');
+        $('.dropdown-toggle', this.el).html('<img src="/logo/' + this.model.get('name') + '" style="height: 10px;" /> ' + this.model.get('name') + '<span class="caret"></span>');
         $('.page-header > h1 > small').html(this.model.get('name'));
 
         Backbone.history.navigate($(ev.currentTarget).attr('href'));

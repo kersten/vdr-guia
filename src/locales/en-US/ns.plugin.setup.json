@@ -31,5 +31,24 @@
     "button": {
         "next": "ns.plugin.setup:button.next",
         "back": "ns.plugin.setup:button.back"
+    },
+    "setup": {
+        "user": {
+            "title": "ns.plugin.setup:setup.user.title",
+            "form": {
+                "existing": "ns.plugin.setup:setup.user.form.existing",
+                "user": {
+                    "legend": "ns.plugin.setup:setup.user.form.user.legend",
+                    "name": "ns.plugin.setup:setup.user.form.user.name",
+                    "password": "ns.plugin.setup:setup.user.form.user.password",
+                    "repassword": "ns.plugin.setup:setup.user.form.user.repassword"
+                },
+                "social": {
+                    "legend": "ns.plugin.setup:setup.user.form.social.legend",
+                    "use": "ns.plugin.setup:setup.user.form.social.use",
+                    "email": "ns.plugin.setup:setup.user.form.social.email"
+                }
+            }
+        }
     }
 }
