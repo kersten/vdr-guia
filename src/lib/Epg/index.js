@@ -1,5 +1,6 @@
 var async = require('async'),
     mongoose = require('mongoose'),
+    log = require('node-logging'),
     channels = mongoose.model('Channel'),
     events = mongoose.model('Event'),
     movies = mongoose.model('MovieDetail'),
@@ -244,7 +245,10 @@ Epg.prototype.getEventById = function (eventId, channelId, callback) {
 Epg.prototype.getEventsRange = function (channelId, starttime, stoptime, callback) {
     var query = events.find({}, ['event_id', 'title', 'channel', 'type', 'description', 'short_description', 'timer_active', 'timer_exists', 'timer_id', 'start', 'stop', 'duration']);
 
-    query.where('channel_id', channelId);
+    if (channelId != null) {
+        query.where('channel_id', channelId);
+    }
+
     query.where('start').gte(starttime).lt(stoptime);
     query.sort('start', 1);
 

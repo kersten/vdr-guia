@@ -41,7 +41,8 @@
         "walk": "*",
         "mime": "*",
         "haml": "*",
-        "cron": "*"
+        "cron": "*",
+        "natural": "*"
     },
     "licenses":[{
         "type" : "MIT",
