@@ -48,5 +48,10 @@
     "Kanäle": "Kanäle",
     "Aufnahmen": "Aufnahmen",
     "yaVDR": "yaVDR",
-    "Ich": "Ich"
+    "day": {
+        "Tuesday": "day.Tuesday"
+    },
+    "Startseite": "Startseite",
+    "Anmelden": "Anmelden",
+    "Information": "Information"
 }

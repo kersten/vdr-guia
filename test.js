@@ -19,7 +19,42 @@ tfidf.tfidfs('Kokowääh', function(i, measure) {
 
 // [ 'your', 'dog', 'has', 'flees' ]
 // http://192.168.0.5:8008/recstream.html?recid=recording_e12420a2e7faf6bb3f1e6bb0d2cb2371
+/*
+var fs = require('fs'),
+    stream = require('stream'),
+    request = require('request'),
+    http = require('http');
 
+
+http.createServer(function (req, res) {
+    var date = new Date();
+    res.writeHead(200, {
+        'Date':date.toUTCString(),
+        'Connection':'close',
+        'Cache-Control':'private',
+        'Content-Type': 'video/h264'
+    });
+    
+    var mypulldata = new stream.Stream();
+    mypulldata.writable = true;
+
+    var videoReq = request('http://192.168.0.5:3000/S19.2E-133-6-129.ts').pipe(mypulldata);
+
+    mypulldata.write = function (chunk) {
+        res.write(chunk);
+    };
+    
+    mypulldata.end = function () {
+        res.end();
+    };
+    
+    res.connection.on('close', function() {
+        videoReq.end();
+    });  
+
+}).listen(8000);
+
+// http://192.168.0.5:8008/recstream.html?recid=recording_e12420a2e7faf6bb3f1e6bb0d2cb2371
 /*var proc = new ffmpeg('http://192.168.0.5:3000/S19.2E-1-1017-61301.ts')
     .withSize('150x100')
     .takeScreenshots({
