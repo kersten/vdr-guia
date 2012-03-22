@@ -14,3 +14,15 @@ guia.tmproj
 
 test_bak.js
 .idea
+
+src/application/frontend/plugins/Channels
+
+src/application/frontend/plugins/Highlights
+
+src/application/frontend/plugins/Me
+
+src/application/frontend/plugins/Recordings
+
+src/application/frontend/plugins/TvGuide
+
+src/application/frontend/plugins/yaVDR
