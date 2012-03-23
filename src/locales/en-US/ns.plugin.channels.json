@@ -1,6 +1,0 @@
-{
-    "getMoreEvents": "ns.plugin.channels:getMoreEvents",
-    "menu": {
-        "title": "ns.plugin.channels:menu.title"
-    }
-}

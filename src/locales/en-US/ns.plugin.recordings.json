@@ -1,9 +1,0 @@
-{
-    "title": "ns.plugin.recordings:title",
-    "menu": {
-        "recordings": "ns.plugin.recordings:menu.recordings",
-        "scheduled": "ns.plugin.recordings:menu.scheduled",
-        "new": "ns.plugin.recordings:menu.new",
-        "title": "ns.plugin.recordings:menu.title"
-    }
-}
