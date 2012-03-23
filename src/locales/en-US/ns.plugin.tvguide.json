@@ -15,5 +15,11 @@
         "night": {
             "title": "ns.plugin.tvguide:section.night.title"
         }
+    },
+    "header": {
+        "title": "ns.plugin.tvguide:header.title"
+    },
+    "menu": {
+        "title": "ns.plugin.tvguide:menu.title"
     }
 }

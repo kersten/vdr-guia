@@ -49,5 +49,15 @@
             "update": "ns.plugin.me:settings.vdr.update"
         },
         "title": "ns.plugin.me:settings.title"
+    },
+    "menu": {
+        "title": "ns.plugin.me:menu.title",
+        "me": {
+            "help": "ns.plugin.me:menu.me.help",
+            "profile": "ns.plugin.me:menu.me.profile",
+            "shortcuts": "ns.plugin.me:menu.me.shortcuts",
+            "logout": "ns.plugin.me:menu.me.logout",
+            "settings": "ns.plugin.me:menu.me.settings"
+        }
     }
 }
