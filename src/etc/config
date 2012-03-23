@@ -4,17 +4,6 @@ config.vdr = {};
 config.redis = {};
 config.web = {};
 
-config.app = {
-    entries: 20,
-    username: 'kersten',
-    password: 'manager'
-}
-
-config.vdr.host = process.env.VDR_IP || '127.0.0.1';
-config.vdr.restfulport = 8002
-
-config.vdr.mac = process.env.VDR_MAC || '00:01:2e:31:66:da'
-
 config.redis.secret = 'zy8qSFwF2OpIChvxZFz0TVUU7DLhQnEYsEB7nD1fP3SLkGVMlmC1i0fQscbky5w';
 
 config.web.port = process.env.WEB_PORT || 8080;

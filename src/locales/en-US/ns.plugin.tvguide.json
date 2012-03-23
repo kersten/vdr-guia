@@ -1,0 +1,19 @@
+{
+    "section": {
+        "morning": {
+            "title": "ns.plugin.tvguide:section.morning.title"
+        },
+        "afternoon": {
+            "title": "ns.plugin.tvguide:section.afternoon.title"
+        },
+        "earlyevening": {
+            "title": "ns.plugin.tvguide:section.earlyevening.title"
+        },
+        "evening": {
+            "title": "ns.plugin.tvguide:section.evening.title"
+        },
+        "night": {
+            "title": "ns.plugin.tvguide:section.night.title"
+        }
+    }
+}

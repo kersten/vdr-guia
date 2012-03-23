@@ -40,7 +40,7 @@
         "backbone": "*",
         "walk": "*",
         "mime": "*",
-        "haml": "*",
+        "hamljs": "*",
         "cron": "*",
         "natural": "*"
     },

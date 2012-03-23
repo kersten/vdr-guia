@@ -5,14 +5,16 @@ var _ = require('underscore')._,
     Navigation = require('./Navigation'),
     walk = require('walk');
 
-function Plugin (name, config, app) {
+function Plugin (name, config, app, io) {
     this.name = name;
     this.config = config;
     this.app = app;
+    this.io = io;
 }
 
 Plugin.prototype.init = function (cb) {
-    var _this = this;
+    var _this = this,
+        pluginDir = __dirname + '/../application/frontend/plugins';
 
     if (!this.config.active) {
         cb({});
@@ -22,6 +24,22 @@ Plugin.prototype.init = function (cb) {
     var config = {};
 
     async.parallel([
+        function (cb) {
+            fs.readFile(pluginDir + '/' + _this.name + '/index.js', 'utf-8', function(err) {
+                if (err) {
+                    cb(null);
+                    return;
+                }
+
+                var Plg = require(pluginDir + '/' + _this.name);
+                Plg.prototype.io = _this.io;
+
+                var plg = new Plg();
+                plg.init();
+
+                cb(null);
+            });
+        },
         function (cb) {
             _this.initMenu(function () {
                 cb(null);

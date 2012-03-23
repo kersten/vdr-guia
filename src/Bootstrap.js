@@ -3,7 +3,7 @@ var async = require('async'),
     cron = require('cron'),
     ejs = require('ejs'),
     fs = require('fs'),
-    haml = require('haml'),
+    haml = require('hamljs'),
     i18next = require('i18next'),
     logging = require('node-logging'),
     socketIo = require('socket.io'),
@@ -306,13 +306,14 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
                         var dir = root.replace(pluginDir + '/' + plugin + '/templates', '');
 
                         var path = dir.split('/');
-                        path.push(fileStats.name.replace('index.html', '').replace('.html', '').replace('.haml', ''));
+                        path.push(fileStats.name.replace('index', '').replace('.html', '').replace('.haml', ''));
                         var id = plugin + path.join('');
 
                         _this.frontend.templates.push({
                             id: id + 'Template',
                             src: root + '/' + fileStats.name.replace('index.html', '').replace('.html', '')
                         });
+
                         next();
                     });
 
@@ -325,7 +326,7 @@ Bootstrap.prototype.initFrontendPlugins = function (cb) {
                     });
                 }
             ], function () {
-                var plug = new Plugin(plugin, config, _this.app);
+                var plug = new Plugin(plugin, config, _this.app, _this.io);
                 plug.init(function (config) {
                     if (config.publicFiles) _this.frontend.files = _this.frontend.files.concat(config.publicFiles);
                     if (config.routes) _this.frontend.routes = _this.frontend.routes.concat(config.routes);
