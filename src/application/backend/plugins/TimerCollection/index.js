@@ -40,6 +40,10 @@ var TimerCollection = {
             timer.del(model, function () {
                 cb();
             });
+        },
+
+        read: function (data, cb) {
+
         }
     },
 
