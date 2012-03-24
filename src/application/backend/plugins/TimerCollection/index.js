@@ -43,12 +43,20 @@ var TimerCollection = {
         }
     },
 
+    init: function () {
+        this.refreshTimer();
+    },
+
+    refreshTimer: function () {
+        log.inf('Refresh timer');
+
+        var timer = new EpgTimer();
+        timer.refresh();
+    },
+
     cronjobs: [{
         '0 */5 * * * *': function () {
-            log.inf('Refresh timer');
-
-            var timer = new EpgTimer();
-            timer.refresh();
+            TimerCollection.refreshTimer();
         }
     }]
 };
