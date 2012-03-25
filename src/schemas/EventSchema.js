@@ -100,5 +100,6 @@ var EventSchema = new Schema({
 });
 
 EventSchema.index({event_id: 1, channel_id: 1}, {unique: true});
+EventSchema.index({timer_id: 1});
 
 mongoose.model('Event', EventSchema);

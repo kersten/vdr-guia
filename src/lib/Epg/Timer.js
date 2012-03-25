@@ -6,6 +6,18 @@ var rest = require('restler'),
 
 function EpgTimer () {}
 
+
+EpgTimer.prototype.getAll = function (cb) {
+    "use strict";
+
+    var query = events.find({timer_id: {$exists: true, $ne: ''}, start: {$gte: new Date().getTime() / 1000}});
+    query.asc('start');
+
+    query.run(function (err, docs) {
+        cb(docs);
+    });
+};
+
 EpgTimer.prototype.getRestful = function (cb) {
     var _this = this;
 

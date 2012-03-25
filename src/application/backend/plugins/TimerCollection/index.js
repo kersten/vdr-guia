@@ -43,7 +43,13 @@ var TimerCollection = {
         },
 
         read: function (data, cb) {
+            if (!this.handshake.session.loggedIn) {
+                return false;
+            }
 
+            var timer = new EpgTimer();
+
+            timer.getAll(cb);
         }
     },
 
