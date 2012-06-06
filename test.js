@@ -1,6 +1,40 @@
 var sparql = require('sparql');
 
-var client = new sparql.Client('http://dbpedia.org/sparql');
+var client = new sparql.Client('http://de.dbpedia.org/sparql');
+
+var query = '\
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+        PREFIX dc: <http://purl.org/dc/elements/1.1/> \
+        PREFIX : <http://de.dbpedia.org/resource/> \
+        PREFIX dbpedia2: <http://de.dbpedia.org/property/> \
+        PREFIX dbpedia: <http://de.dbpedia.org/> \
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
+        PREFIX dbo: <http://de.dbpedia.org/ontology/> \
+    SELECT ?s ?p ?o { \
+        ?s rdfs:label "' + process.argv[2] + '"@de . \
+        ?s ?p ?o \
+    } ORDER BY 2';
+
+client.query(query, function (err, res) {
+    console.log('RAVE');
+
+    if (err) {
+        console.log(err);
+    }
+
+    res.results.bindings.forEach(function (res) {
+        console.log(res);
+        //if (res.abstract['xml:lang'] == 'de')
+        //console.log(res.abstract.value, res);
+        /*if (res.l['xml:lang'] == 'de' || res.l['xml:lang'] == 'en') {
+         console.log(res.l.value);
+         }*/
+    });
+});
 
 /*
     dbpedia-owl:abstract
@@ -36,7 +70,7 @@ var client = new sparql.Client('http://dbpedia.org/sparql');
     dbpprop:terrAvail
     dbpprop:terrChan
     dbpprop:terrServ
-    dbpprop:web	
+    dbpprop:web
     dbpprop:headquarters
     dbpprop:keyPeople
     dbpprop:launchDate
@@ -72,18 +106,18 @@ var client = new sparql.Client('http://dbpedia.org/sparql');
     dbpprop:studio of
 */
 
-client.query('\
+/*client.query('\
         PREFIX owl: <http://www.w3.org/2002/07/owl#> \
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
         PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
         PREFIX dc: <http://purl.org/dc/elements/1.1/> \
-        PREFIX : <http://dbpedia.org/resource/> \
-        PREFIX dbpedia2: <http://dbpedia.org/property/> \
-        PREFIX dbpedia: <http://dbpedia.org/> \
+        PREFIX : <http://de.dbpedia.org/resource/> \
+        PREFIX dbpedia2: <http://de.dbpedia.org/property/> \
+        PREFIX dbpedia: <http://de.dbpedia.org/> \
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
-        PREFIX dbo: <http://dbpedia.org/ontology/> \
+        PREFIX dbo: <http://de.dbpedia.org/ontology/> \
     SELECT ?s ?p ?o { \
         ?s rdfs:label "' + process.argv[2] + '"@en . \
         ?s ?p ?o . \
@@ -96,9 +130,9 @@ client.query('\
         console.log(res);
         /*if (res.l['xml:lang'] == 'de' || res.l['xml:lang'] == 'en') {
             console.log(res.l.value);
-        }*/
+        }
     });
-});
+});  */
 
 
 /*var natural = require('natural'),
