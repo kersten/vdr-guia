@@ -11,6 +11,7 @@ EpgTimer.prototype.getAll = function (cb) {
     "use strict";
 
     var query = events.find({timer_id: {$exists: true, $ne: ''}, start: {$gte: new Date().getTime() / 1000}});
+    query.populate('channel_id');
     query.asc('start');
 
     query.run(function (err, docs) {
@@ -48,8 +49,10 @@ EpgTimer.prototype.refresh = function () {
 
                     doc.set({
                         timer_id: timer.id,
-                        timer_active: timer.is_active,
-                        timer_exists: timer.is_active
+                        timer_exists: timer.is_active,
+                        timer_start: timer.start_timestamp,
+                        timer_stop: timer.stop_timestamp,
+                        timer_filename: timer.filename
                     });
 
                     doc.save();
@@ -85,9 +88,7 @@ EpgTimer.prototype.create = function (event, callback) {
                 callback(event);
             });
         }).on('error', function () {
-            events.update({_id: event._id}, {timer_active: true}, null, function () {
-                callback();
-            });
+            callback();
         });
     });
 };
@@ -101,16 +102,16 @@ EpgTimer.prototype.del = function (event, callback) {
                 event.timer_exists = false;
                 event.timer_id = undefined;
 
-                events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_active: false, timer_exists: false}, {upsert: true}, function () {
+                events.update({_id: event._id}, {$unset: {timer_id: 1}, timer_exists: false}, {upsert: true}, function () {
                     callback(event);
                 });
             }).on('error', function () {
-                events.update({_id: event._id}, {timer_active: false}, null, function () {
+                events.update({_id: event._id}, {timer_exists: false}, null, function () {
                     callback();
                 });
             });
         } else {
-            events.update({_id: event._id}, {timer_active: false}, null, function () {
+            events.update({_id: event._id}, {timer_exists: false}, null, function () {
                 callback();
             });
         }

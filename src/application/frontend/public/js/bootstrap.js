@@ -5,57 +5,6 @@ _.templateSettings = {
 
 Backbone.View.prototype.template = null;
 
-Backbone.View.prototype.generateHTML = function (callback) {
-    callback.apply(this, [_.template(this.template, {})]);
-};
-
-Backbone.View.prototype.render = function () {
-    var self = this;
-
-    if (this.template == null) {
-        return this;
-    }
-
-    this.generateHTML(function (res) {
-        self.el.html(res);
-        $(document).attr('title', $('#header_div').attr('title'));
-
-        Application.loadingOverlay('hide');
-
-        if (typeof(self.postRender) == 'function') {
-            self.postRender();
-        }
-    });
-
-    return this;
-};
-
-Backbone.View.prototype.renderTemplate = function () {
-    if (typeof(this.url) == 'undefined') {
-        return this;
-    }
-
-    var self = this;
-
-    if (this.template == null) {
-        $.ajax({
-            url: "/templates/" + self.url,
-            success: function (res) {
-                self.template = res;
-                self.render();
-            }
-        });
-    } else {
-        this.template = $('#' + this.template);
-        this.render();
-    }
-};
-
-Backbone.View.prototype.destructor = function () {
-    $(this.el).children().remove();
-    $(this.el).unbind();
-};
-
 var socket = io.connect(location.origin, {'connect timeout': 5000, 'max reconnection attempts': 500});
 
 socket.on('disconnect', function () {

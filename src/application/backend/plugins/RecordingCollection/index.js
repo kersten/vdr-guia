@@ -1,4 +1,6 @@
-var rest = require('restler');
+var rest = require('restler'),
+    mongoose = require('mongoose'),
+    Configuration = mongoose.model('Configuration');
 
 var RecordingCollection = {
     listener: {
@@ -7,35 +9,37 @@ var RecordingCollection = {
                 return false;
             }
 
-            /*rest.get(vdr.restful + '/recordings.json').on('success',  function (recordings) {
-                recordings = recordings.recordings;
-                var records = new Array();
-                var directories = new Array();
+            Configuration.findOne({}, function (err, doc) {
+                if (doc) {
+                    var restful = 'http://' + doc.get('vdrHost') + ':' + doc.get('restfulPort');
 
-                /*recordings.forEach(function (data) {
-                 if (data.name.match(/~/)) {
-                 var directory = data.name.split('~');
+                    rest.get(restful + '/recordings.json').on('success',  function (recordings) {
+                        recordings = recordings.recordings;
+                        var records = [],
+                            directories = [];
 
-                 if (directories.indexOf(directory[0]) != -1) {
-                 return;
-                 }
+                        /*recordings.forEach(function (data) {
+                         if (data.name.match(/~/)) {
+                         var directory = data.name.split('~');
 
-                 directories.push(directory[0])
-                 data.name = directory[0];
-                 data.directory = true;
-                 }
+                         if (directories.indexOf(directory[0]) != -1) {
+                         return;
+                         }
 
-                 records.push(data);
-                 });*/
+                         directories.push(directory[0])
+                         data.name = directory[0];
+                         data.directory = true;
+                         }
 
-                /*recordings.forEach(function (data) {
-                    records[data.number] = data;
-                });
+                         records.push(data);
+                         });*/
 
-                cb(records);
-            }).on('error', function (e) {
-                //log.dbg(vdr.restful + '/recordings.json?start=' + start + '&limit=' + 20);
-            });*/
+                         cb(recordings);
+                     }).on('error', function (e) {
+                         //log.dbg(vdr.restful + '/recordings.json?start=' + start + '&limit=' + 20);
+                     });
+                }
+            });
         }
     }
 };

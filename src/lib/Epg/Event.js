@@ -29,7 +29,6 @@ function EpgEvent () {
         images: null,
         count: null,
         timer_exists: null,
-        timer_active: null,
         timer_id: null,
         components: null
     };

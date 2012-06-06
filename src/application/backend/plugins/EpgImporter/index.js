@@ -5,10 +5,14 @@ var EpgImporter = {
     running: false,
 
     init: function () {
+        "use strict";
+
         this.importer();
     },
 
     importer: function () {
+        "use strict";
+
         var _this = this;
 
         if (this.running) {

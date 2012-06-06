@@ -77,9 +77,11 @@ Epg.prototype._buildEvent = function (doc, withSubEvents, callback) {
         start: doc.get('start'),
         stop: doc.get('stop'),
         duration: doc.get('duration'),
-        timer_active: doc.get('timer_active'),
+        timer_id: doc.get('timer_id'),
         timer_exists: doc.get('timer_exists'),
-        timer_id: doc.get('timer_id')
+        timer_start: doc.get('timer_start'),
+        timer_stop: doc.get('timer_stop'),
+        timer_filename: doc.get('timer_filename')
     };
 
     doc.get('type') !== undefined ? event.type = doc.get('type') : true;

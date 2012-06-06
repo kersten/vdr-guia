@@ -1,6 +1,6 @@
 var TimerCollection = Backbone.Collection.extend({
     url: 'TimerCollection',
-    model: TimerModel,
+    model: EventModel,
     
     parse: function (response) {
         /*response.forEach(function (item, index) {

@@ -7,12 +7,12 @@ var LoginView = Backbone.View.extend({
     },
 
     loginAction: function (event) {
+        "use strict";
+
         $('.error', this.el).removeClass('error');
         $('.help-inline', this.el).remove();
 
         event.preventDefault();
-
-        var _this = this;
 
         if ($('#username', this.el).val() == "" || $('#password', this.el).val() == "") {
             // Show error dialog
@@ -30,12 +30,20 @@ var LoginView = Backbone.View.extend({
     },
 
     lostPasswordAction: function (event) {
+        "use strict";
+
         event.preventDefault();
         Backbone.history.navigate('!/Password/Lost', true);
     },
 
     render: function () {
-        $(this.el).html(_.template( $('#' + this.template).html(), {} ));
+        "use strict";
+
+        $(this.el).html(_.template($('#' + this.template).html(), {}));
+
+        setTimeout(function () {
+            $('#username', this.el).focus();
+        }, 100);
 
         $('form', this.el).i18n();
 

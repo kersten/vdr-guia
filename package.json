@@ -29,6 +29,7 @@
         "request": "*",
         "restler": "*",
         "socket.io": "*",
+        "hook.io": "*",
         "wake_on_lan": "*",
         "mongoose": "*",
         "session-mongoose": "*",
