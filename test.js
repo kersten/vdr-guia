@@ -2,7 +2,78 @@ var sparql = require('sparql');
 
 var client = new sparql.Client('http://dbpedia.org/sparql');
 
-client.query('PREFIX owl: <http://www.w3.org/2002/07/owl#> \
+/*
+    dbpedia-owl:abstract
+    dbpedia-owl:broadcstArea
+    dbpedia-owl:country
+    dbpedia-owl:firstAirDate
+    dbpedia-owl:formerName
+    dbpedia-owl:headquarter
+    dbpedia-owl:locationCountry
+    dbpedia-owl:owningCompany
+    dbpedia-owl:pictureFormat
+    dbpedia-owl:shareOfAudience
+    dbpedia-owl:keyPerson
+    dbpedia-owl:locationCountry
+    dbpedia-owl:slogan
+    dbpedia-owl:thumbnail
+    dbpedia-owl:wikiPageExternalLink
+    dbprop:available
+    dbprop:country
+    dbpprop:cableChan
+    dbpprop:cableAvail
+    dbpprop:cableServ
+    dbpprop:formerNames
+    dbpprop:launch
+    dbpprop:logofile
+    dbpprop:logosize
+    dbpprop:name
+    dbpprop:owner
+    dbpprop:pictureFormat
+    dbpprop:satAvail
+    dbpprop:satChan
+    dbpprop:satServ
+    dbpprop:terrAvail
+    dbpprop:terrChan
+    dbpprop:terrServ
+    dbpprop:web	
+    dbpprop:headquarters
+    dbpprop:keyPeople
+    dbpprop:launchDate
+    dbpprop:networkLogo
+    dbpprop:networkName
+    dbpprop:networkType
+    dbpprop:slogan
+    dbpprop:website
+    rdfs:comment
+    rdfs:label
+    foaf:depiction
+    foaf:homepage
+    foaf:name
+    foaf:page
+    dbpedia-owl:channel of
+    dbpedia-owl:company of
+    dbpedia-owl:network of
+    dbpedia-owl:creator of
+    dbpedia-owl:employer of
+    dbpedia-owl:parentCompany of
+    dbpedia-owl:sisterStation of
+    dbpprop:channel of
+    dbpprop:broadcaster of
+    dbpprop:creator of
+    dbpprop:employer of
+    dbpprop:parent of
+    dbpprop:company of
+    dbpprop:network of
+    dbpprop:sisterStation of
+    dbpprop:distributor of
+    dbpprop:producer of
+    dbpprop:sisterNames of
+    dbpprop:studio of
+*/
+
+client.query('\
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
@@ -13,17 +84,19 @@ client.query('PREFIX owl: <http://www.w3.org/2002/07/owl#> \
         PREFIX dbpedia: <http://dbpedia.org/> \
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
         PREFIX dbo: <http://dbpedia.org/ontology/> \
-    SELECT * { \
-        :RTL_Television ?p ?f. \
-        ?f rdfs:label ?l \
-    }', function (err, res) {
+    SELECT ?s ?p ?o { \
+        ?s rdfs:label "' + process.argv[2] + '"@en . \
+        ?s ?p ?o . \
+    } order by 2', function (err, res) {
     if (err) {
         console.log(err);
     }
 
     res.results.bindings.forEach(function (res) {
-        //console.log(res.l['xml:lang']);
         console.log(res);
+        /*if (res.l['xml:lang'] == 'de' || res.l['xml:lang'] == 'en') {
+            console.log(res.l.value);
+        }*/
     });
 });
 
