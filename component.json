@@ -1,0 +1,14 @@
+{
+    "name": "guia",
+    "version": "0.1.0",
+    "main": "./public/css/main.css",
+    "dependencies": {
+        "jquery"    : "*",
+        "backbone-amd"  : "*",
+        "bootstrap" : "*",
+        "requirejs" : "*",
+        "requirejs-text" : "*",
+        "jquery-retina": "git://github.com/tylercraft/jQuery-Retina.git",
+        "underscore-amd": "git://github.com/amdjs/underscore.git"
+    }
+}

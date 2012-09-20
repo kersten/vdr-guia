@@ -1,0 +1,21 @@
+{
+    "name"        : "guia",
+    "version"     : "0.1.0",
+    "author"      : "Kersten Burkhardt <burkhardt@nurago.com>",
+    "description" : "Website for vdrdb.com",
+    "dependencies": {
+        "jslint"    : "*",
+        "jshint"    : "*",
+        "uglify-js" : "*",
+        "docco"     : "*",
+        "express"   : "3.x",
+        "consolidate"   : "*",
+        "hogan.js"  : "*",
+        "less-middleware" : "*"
+    },
+
+    "engines": {
+        "node": "0.8.x",
+        "npm": "1.1.x"
+    }
+}
