@@ -1,1 +1,0 @@
-var SearchtimerCollection = Backbone.Collection.extend({});
